@@ -649,9 +649,10 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
           infoCampaign.symbolTokenEarn = !!instanceTokenEarn
             ? await instanceTokenEarn.methods.symbol().call()
             : '';
-          infoCampaign.balanceTokenEarn = !!instanceTokenEarn
-            ? await instanceTokenEarn.methods.balanceOf(walletAddress).call()
-            : 0;
+          infoCampaign.balanceTokenEarn =
+            !!instanceTokenEarn && !!walletAddress
+              ? await instanceTokenEarn.methods.balanceOf(walletAddress).call()
+              : null;
           infoCampaign.balanceNFT = !!balanceNFT ? balanceNFT : 0;
           infoCampaign.tokensYetClaim = !!tokensYetClaim ? tokensYetClaim : [];
           infoCampaign.canCancel = canCancel;
@@ -924,6 +925,53 @@ export const addMoreSlots = (campaignId, slots) => async (dispatch, getState) =>
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         message.success('Add More Slots Successfully !');
+        return true;
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        message.error('Oh no! Something went wrong !');
+        return false;
+      });
+    return result;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const rescheduleCampaign = (campaignId, startTime, endTime) => async (
+  dispatch,
+  getState
+) => {
+  let { nftCampaign, walletAddress } = getState();
+  try {
+    let result = await nftCampaign.methods
+      .rescheduleCampaign(campaignId, startTime, endTime)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        message.success('Change Time Successfully !');
+        return true;
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        message.error('Oh no! Something went wrong !');
+        return false;
+      });
+    return result;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const extendCampaign = (campaignId, endTime) => async (dispatch, getState) => {
+  let { nftCampaign, walletAddress } = getState();
+  try {
+    let result = await nftCampaign.methods
+      .extendCampaign(campaignId, endTime)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        message.success('Extend Time Successfully !');
         return true;
       })
       .on('error', (error, receipt) => {
