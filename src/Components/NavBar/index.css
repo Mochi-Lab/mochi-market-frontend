@@ -1,0 +1,123 @@
+@import '../../dark.css';
+@import '../../light.css';
+.input-search-nft {
+  border-radius: 1rem !important;
+  background-color: var(--input-background) !important;
+}
+
+.input-search-nft .ant-input {
+  background-color: var(--input-background) !important;
+  color: var(--color) !important;
+}
+
+.ant-select-selector {
+  background-color: var(--input-background) !important;
+}
+
+.menu-bar {
+  z-index: 2;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  transform: translate3d(0px, 0px, 0px);
+  background-color: rgb(255, 255, 255);
+}
+
+.leftMenu {
+  height: 48px;
+  width: 25%;
+}
+
+.nav-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.justifyContent {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alignItems {
+  display: flex;
+  align-items: center;
+}
+
+.leftMenu .ant-col {
+  background: var(--background-color);
+}
+
+.rightMenu .ant-menu {
+  background: var(--background-color) !important;
+}
+
+.rightMenu .ant-menu-horizontal .ant-menu-item a {
+  color: var(--color) !important;
+}
+
+.rightMenu .ant-menu-horizontal {
+  color: var(--color) !important;
+}
+
+.menuCon .leftMenu {
+  float: left;
+  margin-left: 2rem;
+}
+
+.ant-menu-submenu-expand-icon,
+.ant-menu-submenu-arrow {
+  right: 50px !important;
+}
+
+@media (max-width: 1437px) {
+  .leftMenu {
+    width: 20%;
+  }
+
+  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
+    margin: 0 10px;
+  }
+  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
+    padding: 10px 10px;
+  }
+}
+@media (max-width: 1345px) {
+  .leftMenu {
+    width: 15%;
+  }
+  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
+    margin: 0 7px;
+  }
+  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
+    padding: 10px 7px;
+  }
+}
+@media (max-width: 1024px) {
+  .leftMenu {
+    width: 13%;
+  }
+
+  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
+    margin: 0 5px;
+  }
+  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
+    padding: 10px 5px;
+  }
+}
+
+@media (max-width: 992px) {
+  .barsMenu {
+    display: block !important;
+  }
+
+  .rightMenu {
+    display: none;
+  }
+
+  .leftMenu {
+    width: 100%;
+  }
+}

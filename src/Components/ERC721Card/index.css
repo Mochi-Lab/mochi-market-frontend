@@ -1,0 +1,26 @@
+@import '../../dark.css';
+@import '../../light.css';
+.erc721-img {
+  width: 100% !important;
+  margin: auto;
+  height: 250px;
+  object-fit: contain;
+}
+
+.sp-between {
+  display: flex;
+  color: var(--color) !important;
+  justify-content: space-between;
+}
+
+.card-token {
+  background-color: var(--nft-background) !important;
+  box-shadow: 0 6px 15px rgb(36 37 38 / 8%);
+  border-radius: 1rem !important;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card-token .ant-card-meta-description {
+  color: var(--color) !important;
+}
