@@ -35,10 +35,9 @@
 .banner-airdrop-nearest {
   max-width: 789px;
   width: 100%;
-  height: 285px;
+  height: auto;
   border-radius: 1.5rem;
   position: relative;
-  margin: 0 auto;
   margin: 0 auto;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
     rgba(17, 17, 26, 0.1) 0px 16px 56px;
@@ -73,7 +72,7 @@
   backdrop-filter: blur(27px);
   -webkit-backdrop-filter: blur(27px);
   background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
+  /* position: absolute; */
   bottom: 0px;
   width: 100%;
   padding: 16px;
@@ -507,8 +506,10 @@
 .banner-campaign {
   width: 100%;
   height: 100%;
-  border-radius: 1.5rem;
+  /* border-radius: 1.5rem; */
   cursor: pointer;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
 }
 
 .your-nft {
