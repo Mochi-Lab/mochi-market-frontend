@@ -363,15 +363,15 @@ export default function FormCreateCampaign() {
                   validator: validateTokenClaim,
                 },
               ]}
+              className='mb-ip'
               hasFeedback
-              style={{ marginBottom: '0.5rem' }}
             >
               <Input
                 placeholder='airdrop token'
                 size='large'
+                className='mb-ip'
                 value={tokenAddress}
                 onChange={changeTokenAddress}
-                style={{ marginBottom: '0.5rem' }}
               />
             </Form.Item>
             <Row gutter={8}>

@@ -9,6 +9,10 @@
   margin: 0 auto;
 }
 
+.mb-ip {
+  margin-bottom: 0.5rem !important;
+}
+
 .title-airdrop {
   padding: 1rem 0 0 0;
   text-align: center;

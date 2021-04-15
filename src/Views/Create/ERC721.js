@@ -2,7 +2,7 @@ import { Form, Input, Button, Row, message, Radio } from 'antd';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import IconLoading from 'Components/IconLoading';
+import LoadingModal from 'Components/LoadingModal';
 import Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
 import BackButton from 'Components/BackButton';
@@ -14,6 +14,7 @@ const { TextArea } = Input;
 
 export default function CreateERC721() {
   const { walletAddress } = useSelector((state) => state);
+  const [visible, setVisible] = useState(false);
   const [storage, setStorage] = useState(0);
   const [isCreateNew, setIsCreateNew] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,21 +41,17 @@ export default function CreateERC721() {
 
   const onFinish = (values) => {
     if (files.length > 0) {
-      if (storage === 0) uploadIPFS(values, form, files, setFiles, setIsLoading, isCreateNew);
+      if (storage === 0)
+        uploadIPFS(values, form, files, setFiles, setIsLoading, isCreateNew, setVisible);
       else uploadSia(values, form, files, setFiles, setIsLoading, isCreateNew);
     } else message.warn('Did you forget upload an Image ?');
   };
 
   return (
     <div className='center create-pt'>
+      {isLoading ? <LoadingModal title={'Upload Image'} visible={true} /> : <></>}
       <div className='my-collection'>
-        {isLoading ? (
-          <div className='center loading'>
-            <IconLoading />
-          </div>
-        ) : (
-          <></>
-        )}
+        <LoadingModal title={'Create NFT'} visible={visible} />
         <BackButton />
         <h2 className='textmode'>You can create NFT for your own !!!</h2>
 

@@ -34,8 +34,11 @@ html[data-theme='light'] {
   color: black !important;
 }
 
+[data-theme='light'] .ant-menu-vertical > .ant-menu-item-selected {
+  background-color: #e6f7ff !important;
+}
+
 [data-theme='light'] .ant-menu-submenu-popup > .ant-menu,
-.center,
 .ant-radio-button-wrapper {
   background-color: #fff !important;
 }

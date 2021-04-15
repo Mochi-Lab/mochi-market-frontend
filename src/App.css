@@ -56,7 +56,7 @@
 }
 
 .logo a img {
-  width: 60px;
+  width: 50px;
 }
 
 .menuCon {
@@ -253,6 +253,10 @@ div.line-loading {
   height: 100%;
   border-top-color: #1890ff;
   animation: rotateLoading 4s infinite linear;
+}
+
+.mgb-0 {
+  margin-bottom: 0px;
 }
 
 @keyframes rotateLoading {

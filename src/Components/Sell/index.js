@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import LoadingModal from 'Components/LoadingModal';
 import bnb from 'Assets/binance-coin.svg';
 
 import './index.css';
@@ -12,8 +13,8 @@ export default function Sell({ token }) {
   const dispatch = useDispatch();
   const { addressToken, id } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const { web3 } = useSelector((state) => state);
-  const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -23,12 +24,12 @@ export default function Sell({ token }) {
 
   const onSubmit = useCallback(
     async (values) => {
-      setLoading(true);
+      setVisible(true);
       await dispatch(
         createSellOrder(addressToken, id, web3.utils.toWei(values.price.toString(), 'ether'))
       );
       setIsModalVisible(false);
-      setLoading(false);
+      setVisible(false);
     },
     [dispatch, addressToken, id, web3.utils]
   );
@@ -44,37 +45,21 @@ export default function Sell({ token }) {
   return (
     <>
       <div className='gSzfBw'>
+        <LoadingModal title={'Sell'} visible={visible} />
         <Button type='primary' shape='round' size='large' onClick={showModal}>
           Sell
         </Button>
       </div>
 
       <Modal
-        title={
-          <h3 className='textmode' style={{ marginBottom: 0 }}>
-            Sell order
-          </h3>
-        }
+        title={<h3 className='textmode mgb-0'>Sell order</h3>}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
-          <Button
-            key='cancel'
-            shape='round'
-            size='large'
-            loading={loading}
-            onClick={() => handleCancel()}
-          >
+          <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>
             Cancel
           </Button>,
-          <Button
-            key='sell'
-            type='primary'
-            shape='round'
-            size='large'
-            loading={loading}
-            onClick={() => handleOk()}
-          >
+          <Button key='sell' type='primary' shape='round' size='large' onClick={() => handleOk()}>
             Sell
           </Button>,
         ]}
@@ -96,6 +81,7 @@ export default function Sell({ token }) {
             <Form.Item name={['price']} rules={[{ required: true, message: 'Enter price' }]}>
               <InputNumber
                 size='large'
+                className='search-style'
                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 style={{ width: 250 }}
                 placeholder='Set Price'

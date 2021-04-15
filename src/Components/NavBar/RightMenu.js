@@ -59,9 +59,9 @@ const RightMenu = () => {
             </strong>
             <div>
               <div className='address' onClick={() => copyToClipboard()}>
-                <p>
+                <p className='textmode'>
                   {shortAddress}
-                  <span className='icon-coppy'>
+                  <span className='icon-coppy' style={{ paddingLeft: '10px' }}>
                     {isCopied ? (
                       <svg
                         viewBox='0 0 14 11'
