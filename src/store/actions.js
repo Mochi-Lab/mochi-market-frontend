@@ -15,24 +15,12 @@ import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
 import { message } from 'antd';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
+import { getWeb3List } from 'utils/getWeb3List';
 const IPFS = require('ipfs-http-client');
 
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 var contractAddress;
 
-////////////////////
-// 3box
-////////////////////
-
-export const SET_THREEBOX = 'SET_THREEBOX';
-export const setThreebox = (threeboxProfile, box) => (dispatch) => {
-  dispatch({ type: SET_THREEBOX, threeboxProfile, box });
-};
-
-export const SET_SPACE = 'SET_SPACE';
-export const setSpace = (space) => (dispatch) => {
-  dispatch({ type: SET_SPACE, space });
-};
 ////////////////////
 // Common
 ////////////////////
@@ -61,6 +49,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setVault(vault));
   dispatch(setCreativeStudio(creativeStudio));
   dispatch(setNftClaimToken(nftCampaign));
+  dispatch(setAdminAddress(addressesProvider));
 
   dispatch(setAvailableSellOrder());
 };
@@ -68,6 +57,15 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
 export const SET_CHAINID = 'SET_CHAINID';
 export const setChainId = (chainId) => (dispatch) => {
   dispatch({ type: SET_CHAINID, chainId });
+};
+
+export const SET_ADMIN_ADDRESS = 'SET_ADMIN_ADDRESS';
+export const setAdminAddress = (addressesProvider) => async (dispatch) => {
+  let adminAddress = await addressesProvider.methods.getAdmin().call();
+  dispatch({
+    type: SET_ADMIN_ADDRESS,
+    adminAddress,
+  });
 };
 
 export const SET_ADDRESS = 'SET_ADDRESS';
@@ -292,6 +290,29 @@ export const registerNft = (contractAddress) => async (dispatch, getState) => {
   }
 };
 
+export const acceptNft = (contractAddress) => async (dispatch, getState) => {
+  const { nftList, walletAddress, web3 } = getState();
+
+  try {
+    // is contract address
+    let ERC721token = new web3.eth.Contract(ERC721.abi, contractAddress);
+    await ERC721token.methods.name().call();
+    nftList.methods
+      .acceptNFT(contractAddress)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        message.success('Accept Successfully');
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        message.error('Oh no! Something went wrong !');
+      });
+  } catch (error) {
+    console.log(error);
+    message.error('Sorry, but this is not contract address');
+  }
+};
+
 export const SET_ACCEPTED_NFTS = 'SET_ACCEPTED_NFTS';
 export const setAcceptedNfts = () => async (dispatch, getState) => {
   const { nftList } = getState();
@@ -432,19 +453,17 @@ export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, 
 };
 
 export const buyNft = (orderDetail) => async (dispatch, getState) => {
-  const { market, walletAddress, erc721Instances } = getState();
+  const { market, walletAddress, erc721Instances, chainId } = getState();
+  let link = null;
   try {
     await market.methods
       .buy(orderDetail.sellId, 1, '0x')
       .send({ from: walletAddress, value: orderDetail.price })
       .on('receipt', (receipt) => {
-        message.success('Successfully purchased !');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        link = getWeb3List(chainId).explorer + receipt.transactionHash;
       });
   } catch (error) {
+    console.log(error);
     message.error('Oh no! Something went wrong !');
   }
 
@@ -452,6 +471,7 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
   dispatch(setAvailableSellOrder());
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
+  return link;
 };
 
 export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {

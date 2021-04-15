@@ -245,8 +245,7 @@ export default function DetailNFT() {
                     <div className='calc-fee'>
                       <div className='feeService textmode'>
                         Service fee
-                        <span className='pt textmode'> 2.5% </span>.
-                        <span className='eth-usd'> 0.308 BNB $470.95 </span>
+                        <span className='pt textmode'> 2.5% </span>
                       </div>
                     </div>
                   </div>

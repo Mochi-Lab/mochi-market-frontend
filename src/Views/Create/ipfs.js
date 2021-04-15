@@ -11,7 +11,8 @@ const generateURI = async (
   form,
   setFiles,
   setIsLoading,
-  isCreateNew
+  isCreateNew,
+  setVisible
 ) => {
   let draw = {
     name,
@@ -20,17 +21,20 @@ const generateURI = async (
   };
   draw = JSON.stringify(draw);
   try {
-    let results = await ipfs.add(draw);
-    let ipfsHash = results.cid.string;
-    setIsLoading(false);
-    let tokenUri = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
-    await store.dispatch(generateNFT(isCreateNew, tokenUri));
-
-    // reset input
-    setFiles([]);
-    form.resetFields();
+    for await (const results of ipfs.add(draw)) {
+      let ipfsHash = results.path;
+      setIsLoading(false);
+      let tokenUri = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+      setVisible(true);
+      await store.dispatch(generateNFT(isCreateNew, tokenUri));
+      setVisible(false);
+      // reset input
+      setFiles([]);
+      form.resetFields();
+    }
   } catch (error) {
     setIsLoading(false);
+    setVisible(false);
     // reset input
     setFiles([]);
     form.resetFields();
@@ -38,17 +42,26 @@ const generateURI = async (
   }
 };
 
-export const uploadIPFS = async (values, form, files, setFiles, setIsLoading, isCreateNew) => {
+export const uploadIPFS = async (
+  values,
+  form,
+  files,
+  setFiles,
+  setIsLoading,
+  isCreateNew,
+  setVisible
+) => {
   setIsLoading(true);
   // post file to IPFS, get the IPFS hash and store it in contract
   try {
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(files[0]); // convert file to array for buffer
     reader.onloadend = async () => {
-      let results = await ipfs.add(reader.result);
-      let ipfsHash = results.cid.string;
-      let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
-      generateURI(values, image, form, setFiles, setIsLoading, isCreateNew);
+      for await (const results of ipfs.add(reader.result)) {
+        let ipfsHash = results.path;
+        let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+        await generateURI(values, image, form, setFiles, setIsLoading, isCreateNew, setVisible);
+      }
     };
   } catch (error) {
     console.error(error);

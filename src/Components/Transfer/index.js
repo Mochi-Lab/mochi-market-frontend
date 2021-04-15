@@ -2,22 +2,25 @@ import 'Views/DetailNFT/style.css';
 import { useState } from 'react';
 import { Modal, Button, Input } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { transferNft } from 'store/actions';
+import LoadingModal from 'Components/LoadingModal';
 
 export default function Transfer({ token }) {
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [transferTo, setTransferTo] = useState('');
   const { addressToken, id } = useParams();
-  const { isLoadingTx } = useSelector((state) => state);
+  const [visible, setVisible] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleOk = async () => {
-    dispatch(transferNft(addressToken, transferTo, id));
+    setVisible(true);
+    await dispatch(transferNft(addressToken, transferTo, id));
+    setVisible(false);
     setIsModalVisible(false);
   };
 
@@ -32,16 +35,13 @@ export default function Transfer({ token }) {
   return (
     <>
       <div className='gSzfBw'>
-        <Button shape='round' size='large' onClick={showModal} loading={isLoadingTx}>
+        <LoadingModal title='Transfer' visible={visible} />
+        <Button shape='round' size='large' onClick={showModal}>
           Transfer
         </Button>
       </div>
       <Modal
-        title={
-          <h3 className='textmode' style={{ marginBottom: 0 }}>
-            Transfer
-          </h3>
-        }
+        title={<h3 className='textmode mgb-0'>Transfer</h3>}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
@@ -60,6 +60,7 @@ export default function Transfer({ token }) {
         <div className='price-des'>
           <Input
             size='large'
+            className='search-style'
             onChange={onChange}
             style={{ width: '100%' }}
             placeholder='Transfer to address'
