@@ -1,28 +1,8 @@
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { setChainId, setWeb3, setAddress, setAcceptedNfts, setThreebox } from 'store/actions';
+import { setChainId, setWeb3, setAddress, setAcceptedNfts } from 'store/actions';
 import store from 'store/index';
-import Box from '3box';
-
-const getThreeBox = async (address) => {
-  const profile = await Box.getProfile(address);
-  return profile;
-};
-
-const Sync3Box = async (address, provider) => {
-  try {
-    const threeBoxProfile = await getThreeBox(address);
-
-    const box = await Box.openBox(address, provider);
-
-    await box.syncDone;
-
-    store.dispatch(setThreebox(threeBoxProfile, box));
-  } catch (e) {
-    console.log(e);
-  }
-};
 
 const providerOptions = {
   walletconnect: {
@@ -60,9 +40,6 @@ export const connectWeb3Modal = async () => {
     store.dispatch(setWeb3(web3));
 
     if (accounts.length > 0) {
-      // Sync 3box
-      Sync3Box(accounts[0], provider);
-
       store.dispatch(setAddress(accounts[0]));
 
       // Init ERC721
@@ -76,7 +53,6 @@ export const connectWeb3Modal = async () => {
   provider.on('accountsChanged', (accounts) => {
     store.dispatch(setAddress(accounts[0]));
     store.dispatch(setAcceptedNfts());
-    Sync3Box(accounts[0], provider);
   });
 
   // Subscribe to chainId change

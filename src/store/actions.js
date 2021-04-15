@@ -21,19 +21,6 @@ const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 var contractAddress;
 
 ////////////////////
-// 3box
-////////////////////
-
-export const SET_THREEBOX = 'SET_THREEBOX';
-export const setThreebox = (threeboxProfile, box) => (dispatch) => {
-  dispatch({ type: SET_THREEBOX, threeboxProfile, box });
-};
-
-export const SET_SPACE = 'SET_SPACE';
-export const setSpace = (space) => (dispatch) => {
-  dispatch({ type: SET_SPACE, space });
-};
-////////////////////
 // Common
 ////////////////////
 
@@ -61,6 +48,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setVault(vault));
   dispatch(setCreativeStudio(creativeStudio));
   dispatch(setNftClaimToken(nftCampaign));
+  dispatch(setAdminAddress(addressesProvider));
 
   dispatch(setAvailableSellOrder());
 };
@@ -68,6 +56,15 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
 export const SET_CHAINID = 'SET_CHAINID';
 export const setChainId = (chainId) => (dispatch) => {
   dispatch({ type: SET_CHAINID, chainId });
+};
+
+export const SET_ADMIN_ADDRESS = 'SET_ADMIN_ADDRESS';
+export const setAdminAddress = (addressesProvider) => async (dispatch) => {
+  let adminAddress = await addressesProvider.methods.getAdmin().call();
+  dispatch({
+    type: SET_ADMIN_ADDRESS,
+    adminAddress,
+  });
 };
 
 export const SET_ADDRESS = 'SET_ADDRESS';
@@ -281,6 +278,29 @@ export const registerNft = (contractAddress) => async (dispatch, getState) => {
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         message.success('Register Successfully');
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        message.error('Oh no! Something went wrong !');
+      });
+  } catch (error) {
+    console.log(error);
+    message.error('Sorry, but this is not contract address');
+  }
+};
+
+export const acceptNft = (contractAddress) => async (dispatch, getState) => {
+  const { nftList, walletAddress, web3 } = getState();
+
+  try {
+    // is contract address
+    let ERC721token = new web3.eth.Contract(ERC721.abi, contractAddress);
+    await ERC721token.methods.name().call();
+    nftList.methods
+      .acceptNft(contractAddress)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        message.success('Accept Successfully');
       })
       .on('error', (error, receipt) => {
         console.log(error);

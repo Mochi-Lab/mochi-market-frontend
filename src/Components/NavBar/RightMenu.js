@@ -12,7 +12,7 @@ const { useBreakpoint } = Grid;
 
 const RightMenu = () => {
   const screen = useBreakpoint();
-  const { shortAddress, threeboxProfile, walletAddress } = useSelector((state) => state);
+  const { shortAddress, walletAddress } = useSelector((state) => state);
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -45,15 +45,7 @@ const RightMenu = () => {
           key='sub1'
           title={
             <div>
-              <img
-                className='nav-avatar'
-                src={
-                  threeboxProfile && threeboxProfile.image
-                    ? 'https://gateway.ipfs.io/ipfs/' + threeboxProfile.image[0].contentUrl['/']
-                    : avatarDefault
-                }
-                alt='avatar'
-              />
+              <img className='nav-avatar' src={avatarDefault} alt='avatar' />
             </div>
           }
         >
@@ -63,13 +55,7 @@ const RightMenu = () => {
             disabled
           >
             <strong>
-              {threeboxProfile && threeboxProfile.name ? (
-                <h3 style={{ margin: 0 }} className='nav-textmode'>
-                  {threeboxProfile.name}
-                </h3>
-              ) : (
-                <h3 className='nav-textmode'>Unnamed</h3>
-              )}
+              <h3 className='nav-textmode'>Unnamed</h3>
             </strong>
             <div>
               <div className='address' onClick={() => copyToClipboard()}>

@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "3box": "^1.19.1",
-    "3box-profile-edit-react": "^0.0.9",
     "@ant-design/icons": "^4.5.0",
     "@fractalsoftware/random-avatar-generator": "^1.0.5",
     "@portis/web3": "^3.0.3",
@@ -16,7 +14,7 @@
     "authereum": "^0.1.0",
     "axios": "^0.21.1",
     "fortmatic": "^2.2.1",
-    "ipfs-http-client": "^49.0.4",
+    "ipfs-http-client": "44.3.0",
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-alice-carousel": "^2.4.0",
@@ -59,8 +57,5 @@
   },
   "devDependencies": {
     "prettier": "2.2.1"
-  },
-  "resolutions": {
-    "pull-ws": "3.3.2"
   }
 }
