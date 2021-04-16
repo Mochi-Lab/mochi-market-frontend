@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux';
 import IconLoading from 'Components/IconLoading';
 import Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
-import { uploadSia } from './sia';
-import { uploadIPFS } from './ipfs';
-import './index.css';
+import { uploadSia } from './UploadSia';
+import { uploadIPFS } from './UploadIpfs';
 import BackButton from 'Components/BackButton';
+import './index.css';
 
 const { TextArea } = Input;
 

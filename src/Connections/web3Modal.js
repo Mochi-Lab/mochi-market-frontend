@@ -25,26 +25,26 @@ const autoAddNetworkBSC = () => {
     method: 'wallet_addEthereumChain',
     params: [
       // {
-      //   chainId: '0x61',
-      //   chainName: 'BSC-Testnet',
+      //   chainId: '0x38',
+      //   chainName: 'Binance Smart Chain',
       //   nativeCurrency: {
       //     name: 'BNB',
       //     symbol: 'BNB',
       //     decimals: 18,
       //   },
-      //   rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-      //   blockExplorerUrls: ['https://testnet.bscscan.com/'],
+      //   rpcUrls: ['https://bsc-dataseed.binance.org/'],
+      //   blockExplorerUrls: ['https://bscscan.com/'],
       // },
       {
-        chainId: '0x38',
-        chainName: 'Binance Smart Chain',
+        chainId: '0x61',
+        chainName: 'BSC-Testnet',
         nativeCurrency: {
           name: 'BNB',
           symbol: 'BNB',
           decimals: 18,
         },
-        rpcUrls: ['https://bsc-dataseed.binance.org/'],
-        blockExplorerUrls: ['https://bscscan.com/'],
+        rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+        blockExplorerUrls: ['https://testnet.bscscan.com/'],
       },
     ],
   });
@@ -88,7 +88,7 @@ export const connectWeb3Modal = async () => {
   // Subscribe to chainId change
   provider.on('chainChanged', (chainId) => {
     chainId = parseInt(web3.utils.hexToNumber(chainId));
-    if (chainId === 56 || chainId === 97 || chainId === 0x38 || chainId === 0x61) {
+    if (chainId === 56 || chainId === 97) {
       store.dispatch(setChainId(chainId));
       store.dispatch(setAcceptedNfts());
       store.dispatch(setWeb3(web3));

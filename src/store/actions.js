@@ -16,9 +16,8 @@ import { getContractAddress } from 'utils/getContractAddress';
 import { message } from 'antd';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
 import { getWeb3List } from 'utils/getWeb3List';
-const IPFS = require('ipfs-http-client');
+import { uploadToIpfs } from 'utils/ipfs';
 
-const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 var contractAddress;
 
 ////////////////////
@@ -403,6 +402,12 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
       dispatch(setLoadingErc721(false));
     } catch (e) {
       console.log(e);
+      dispatch({
+        type: SET_AVAILABLE_SELL_ORDER,
+        availableSellOrder721: [],
+        availableSellOrder1155: [],
+        convertErc721Tokens: [],
+      });
       return null;
     }
   }
@@ -529,10 +534,6 @@ export const generateNFT = (isUserCollection, tokenUri) => async (dispatch, getS
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         message.success('Create Successfully !');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
       });
   } catch (error) {
     console.log(error);
@@ -732,8 +733,7 @@ export const addCampaign = (
           const readerIcon = new window.FileReader();
           readerIcon.readAsArrayBuffer(iconToken); // convert file to array for buffer
           readerIcon.onloadend = async () => {
-            let results = await ipfs.add(readerIcon.result);
-            let ipfsHash = results.cid.string;
+            let ipfsHash = await uploadToIpfs(readerIcon.result);
             resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
           };
         } else {
@@ -746,8 +746,7 @@ export const addCampaign = (
           const readerBanner = new window.FileReader();
           readerBanner.readAsArrayBuffer(bannerImg);
           readerBanner.onloadend = async () => {
-            let results = await ipfs.add(readerBanner.result);
-            let ipfsHash = results.cid.string;
+            let ipfsHash = await uploadToIpfs(readerBanner.result);
             resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
           };
         } else {
@@ -763,8 +762,7 @@ export const addCampaign = (
       contentCampaign.urlIcon = result[0] ? result[0] : '';
       contentCampaign.urlBanner = result[1] ? result[1] : '';
       contentCampaign = JSON.stringify(contentCampaign);
-      let results = await ipfs.add(contentCampaign);
-      let ipfsHash = results.cid.string;
+      let ipfsHash = await uploadToIpfs(contentCampaign);
       let infoURL = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
 
       amountPerSlot = web3.utils.toWei(amountPerSlot.toString(), 'ether');
