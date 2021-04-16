@@ -27,7 +27,8 @@ const initialState = {
   acceptedNftsAddress: [],
 
   //SellOrderList
-  availableSellOrder: [],
+  availableSellOrder721: [],
+  availableSellOrder1155: [],
   convertErc721Tokens: [],
   mySellOrder: [],
   isLoadingTx: false,

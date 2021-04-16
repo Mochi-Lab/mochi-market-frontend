@@ -1,9 +1,6 @@
 import store from 'store/index';
 import { generateNFT } from 'store/actions';
-
-const IPFS = require('ipfs-http-client');
-export const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
-// use infuria IPFS node to instantie this IPFS instance
+import { uploadToIpfs } from 'utils/ipfs';
 
 const generateURI = async (
   { name, description },
@@ -21,17 +18,16 @@ const generateURI = async (
   };
   draw = JSON.stringify(draw);
   try {
-    for await (const results of ipfs.add(draw)) {
-      let ipfsHash = results.path;
-      setIsLoading(false);
-      let tokenUri = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
-      setVisible(true);
-      await store.dispatch(generateNFT(isCreateNew, tokenUri));
-      setVisible(false);
-      // reset input
-      setFiles([]);
-      form.resetFields();
-    }
+    const ipfsHash = await uploadToIpfs(draw);
+
+    setIsLoading(false);
+    let tokenUri = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+    setVisible(true);
+    await store.dispatch(generateNFT(isCreateNew, tokenUri));
+    setVisible(false);
+    // reset input
+    setFiles([]);
+    form.resetFields();
   } catch (error) {
     setIsLoading(false);
     setVisible(false);
@@ -57,11 +53,9 @@ export const uploadIPFS = async (
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(files[0]); // convert file to array for buffer
     reader.onloadend = async () => {
-      for await (const results of ipfs.add(reader.result)) {
-        let ipfsHash = results.path;
-        let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
-        await generateURI(values, image, form, setFiles, setIsLoading, isCreateNew, setVisible);
-      }
+      const ipfsHash = await uploadToIpfs(reader.result);
+      let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+      await generateURI(values, image, form, setFiles, setIsLoading, isCreateNew, setVisible);
     };
   } catch (error) {
     console.error(error);

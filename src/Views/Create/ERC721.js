@@ -6,8 +6,8 @@ import LoadingModal from 'Components/LoadingModal';
 import Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
 import BackButton from 'Components/BackButton';
-import { uploadSia } from './sia';
-import { uploadIPFS } from './ipfs';
+import { uploadSia } from './UploadSia';
+import { uploadIPFS } from './UploadIpfs';
 import './index.css';
 
 const { TextArea } = Input;
