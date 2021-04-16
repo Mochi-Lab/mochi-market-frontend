@@ -44,12 +44,12 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setAddressesProvider(addressesProvider));
   dispatch(setMarket(market));
   dispatch(setNftList(nftList));
+  dispatch(setAcceptedNftsUser());
   dispatch(setSellOrderList(sellOrderList));
   dispatch(setVault(vault));
   dispatch(setCreativeStudio(creativeStudio));
   dispatch(setNftClaimToken(nftCampaign));
   dispatch(setAdminAddress(addressesProvider));
-
   dispatch(setAvailableSellOrder());
 };
 
@@ -108,12 +108,33 @@ export const setStrSearch = (strSearch) => (dispatch) => {
 ////////////////////
 export const INIT_ERC721 = 'INIT_ERC721';
 export const initERC721 = (nftList) => async (dispatch, getState) => {
-  let { web3 } = getState();
-  let erc721Instances = [];
-  if (!!nftList) {
-    erc721Instances = await nftList.map((contract) => new web3.eth.Contract(ERC721.abi, contract));
-    dispatch({ type: INIT_ERC721, erc721Instances });
-    dispatch(getOwnedERC721(erc721Instances));
+  try {
+    let { web3 } = getState();
+    let erc721Instances = [];
+    if (!!nftList) {
+      erc721Instances = await nftList.map(
+        (contract) => new web3.eth.Contract(ERC721.abi, contract)
+      );
+      dispatch({ type: INIT_ERC721, erc721Instances });
+      dispatch(getOwnedERC721(erc721Instances));
+    }
+  } catch (err) {
+    console.log({ err });
+  }
+};
+
+export const initERC721User = (nftList) => async (dispatch, getState) => {
+  try {
+    let { web3 } = getState();
+    let erc721Instances = [];
+    if (!!nftList) {
+      erc721Instances = await nftList.map(
+        (contract) => new web3.eth.Contract(ERC721.abi, contract)
+      );
+      dispatch({ type: INIT_ERC721, erc721Instances });
+    }
+  } catch (err) {
+    console.log({ err });
   }
 };
 
@@ -165,6 +186,58 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
   });
 
   dispatch({ type: GET_OWNED_ERC721, erc721Tokens });
+
+  // Loading done
+  dispatch(setLoadingErc721(false));
+};
+
+export const GET_ERC721_OF_USER = 'GET_ERC721_OF_USER';
+export const getERC721OfUser = (erc721Instances, user) => async (dispatch) => {
+  // Start loading
+  dispatch(setLoadingErc721(true));
+
+  var getERC721 = (instance) => {
+    return new Promise(async (resolve) => {
+      let ERC721token = {};
+      let balance = await instance.methods.balanceOf(user).call();
+      if (balance > 0) {
+        ERC721token.balanceOf = await instance.methods.balanceOf(user).call();
+        ERC721token.name = await instance.methods.name().call();
+        ERC721token.symbol = await instance.methods.symbol().call();
+        ERC721token.tokens = [];
+
+        for (let i = 0; i < ERC721token.balanceOf; i++) {
+          let token = {};
+          token.index = await instance.methods.tokenOfOwnerByIndex(user, i).call();
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.tokens.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.tokens.push(token);
+          }
+        }
+        resolve(ERC721token);
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  let erc721Tokens = await Promise.all(
+    erc721Instances.map(async (instance) => {
+      return await getERC721(instance);
+    })
+  );
+
+  erc721Tokens = erc721Tokens.filter(function (el) {
+    return el != null;
+  });
+
+  dispatch({ type: GET_ERC721_OF_USER, erc721Tokens });
 
   // Loading done
   dispatch(setLoadingErc721(false));
@@ -319,6 +392,18 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
     let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
     dispatch(initERC721(acceptedNftsAddress));
+  } catch (e) {
+    console.log(e);
+    return e;
+  }
+};
+
+export const setAcceptedNftsUser = () => async (dispatch, getState) => {
+  const { nftList } = getState();
+  try {
+    let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
+    dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
+    dispatch(initERC721User(acceptedNftsAddress));
   } catch (e) {
     console.log(e);
     return e;

@@ -14,6 +14,7 @@ const initialState = {
   erc721Instances: null,
   erc721Tokens: null,
   isLoadingErc721: null,
+  erc721OfUser: null,
 
   // Main contracts
   addressesProvider: null,
@@ -84,6 +85,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         erc721Tokens: action.erc721Tokens,
+      };
+    case actions.GET_ERC721_OF_USER:
+      return {
+        ...state,
+        erc721OfUser: action.erc721Tokens,
       };
     case actions.IS_LOADING_ERC721:
       return {

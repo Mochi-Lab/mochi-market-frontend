@@ -9,6 +9,7 @@ import './App.css';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
+const PublicProfile = lazy(() => import('Views/PublicProfile'));
 const DetailNFT = lazy(() => import('Views/DetailNFT'));
 const SubmitNFT = lazy(() => import('Views/SubmitNft'));
 const Create = lazy(() => import('Views/Create'));
@@ -43,6 +44,7 @@ function App() {
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/profile' component={Profile} />
+              <Route exact path='/profile/:address' component={PublicProfile} />
               <Route exact path='/submit-Nfts' component={SubmitNFT} />
               <Route exact path='/create' component={Create} />
               <Route exact path='/browse' component={Browse} />
