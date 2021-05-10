@@ -170,3 +170,15 @@ html[data-theme='dark'] {
 [data-theme='dark'] .sidenav-item h2 {
   color: white;
 }
+[data-theme='dark'] .barsMenu {
+  background: none !important;
+  color: white;
+}
+
+[data-theme='dark'] .footer-sidebar .actions-buy-bid {
+  background: rgb(0 0 0 / 45%) !important;
+}
+
+[data-theme='dark'] .info-nft {
+  background: rgb(0 0 0 / 33%) !important;
+}

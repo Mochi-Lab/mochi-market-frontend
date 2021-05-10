@@ -20,7 +20,10 @@ export default function Create() {
         </p>
 
         <div className='justifyContentSa'>
-          <div className='box input-mode-bc slt center' onClick={() => push('/create/erc721/')}>
+          <div
+            className='box input-mode-bc slt center mr-1d5rem'
+            onClick={() => push('/create/erc721/')}
+          >
             <img
               src='https://rarible.com/static/2a78e39400f51f1dbeba13832f421092.png'
               alt='single'

@@ -6,8 +6,6 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import imgNotFound from 'Assets/notfound.png';
 
-const { Meta } = Card;
-
 function ERC721Card({ token, strSearch }) {
   const { web3 } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
@@ -31,26 +29,22 @@ function ERC721Card({ token, strSearch }) {
   return !!detailNFT &&
     (detailNFT.name.toLocaleLowerCase().includes(strSearch.toLowerCase()) ||
       token.collections.toLocaleLowerCase().includes(strSearch.toLowerCase())) ? (
-    <Col className='gutter-row' xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+    <Col
+      className='gutter-row'
+      xs={{ span: 24 }}
+      sm={{ span: 12 }}
+      md={{ span: 8 }}
+      lg={{ span: 6 }}
+      xl={{ span: 4 }}
+      xxl={{ span: 4 }}
+    >
       {!!detailNFT ? (
         <Link to={`/token/${token.addressToken}/${token.index}`}>
-          <Card
-            hoverable
-            style={{ width: '100%', margin: 'auto', padding: '12px' }}
-            cover={<img className='erc721-img' alt={token.index} src={detailNFT.image} />}
-            className='card-token'
-          >
-            <Meta
-              title={
-                <div className='sp-between'>
-                  <strong>{detailNFT.name}</strong>
-                  <strong>
-                    {!!token.price ? `${web3.utils.fromWei(token.price, 'ether')} BNB` : <></>}
-                  </strong>
-                </div>
-              }
-              description={token.collections}
-            />
+          <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
+            <div className='ant-card-meta-title'>{detailNFT.name}</div>
+            <div className='ant-card-meta-description textmode'>
+              {!!token.price ? `${web3.utils.fromWei(token.price, 'ether')} BNB` : <></>}
+            </div>
           </Card>
         </Link>
       ) : (
@@ -69,8 +63,8 @@ export default function ERC721({ tokens }) {
   }, [tokens]);
 
   return (
-    <div>
-      <Row gutter={[16, 24]} style={{ margin: 0 }}>
+    <div className='explore-nft content-list-nft'>
+      <Row style={{ margin: 0 }} justify='start'>
         {!!afterFilter ? (
           afterFilter.map((token, index) => (
             <ERC721Card key={index} token={token} strSearch={strSearch} />

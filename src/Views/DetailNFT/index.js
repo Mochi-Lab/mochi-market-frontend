@@ -138,19 +138,19 @@ export default function DetailNFT() {
         ) : (
           <div className='detail-nft'>
             <div className='content-nft'>
-              <div className='nft-content content'>
-                <div className='btns-actions'>
-                  <div className='btns justifyContent'>
-                    <BackButton />
+              <div className='btns-actions'>
+                <div className='btns justifyContent'>
+                  <BackButton />
 
-                    <Button
-                      shape='circle'
-                      icon={<ExpandAltOutlined />}
-                      size='large'
-                      onClick={() => setExpandImgDetail(true)}
-                    />
-                  </div>
+                  <Button
+                    shape='circle'
+                    icon={<ExpandAltOutlined />}
+                    size='large'
+                    onClick={() => setExpandImgDetail(true)}
+                  />
                 </div>
+              </div>
+              <div className='nft-content content'>
                 {indexAvailable - 1 < 0 ? (
                   <></>
                 ) : (
@@ -209,7 +209,7 @@ export default function DetailNFT() {
                             <div className='price-eth'>
                               {web3.utils.fromWei(orderDetail.price, 'ether')} BNB
                             </div>
-                            <div className='amount-nft'>1 of 1</div>
+                            <div className='amount-nft textmode'>1 of 1</div>
                           </div>
                         </div>
                       </div>

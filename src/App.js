@@ -1,6 +1,7 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
 import IconLoading from 'Components/IconLoading';
+import FormFeedback from 'Components/FormFeedback';
 import { setAvailableSellOrder } from 'store/actions';
 import store from 'store/index';
 
@@ -28,8 +29,9 @@ function App() {
     fetchDataInit();
   }, []);
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: '100vh', position: 'relative' }}>
       <BrowserRouter>
+        <FormFeedback />
         <div className='page content'>
           <div className='bg-header'></div>
           <NavBar />
