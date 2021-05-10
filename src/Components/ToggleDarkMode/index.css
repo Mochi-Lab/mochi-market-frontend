@@ -4,16 +4,16 @@ div {
   padding: 0;
 }
 
-.darkmode-switch{
+.darkmode-switch {
   position: relative;
 }
 
 .toggle {
-  position: absolute;
-  top: 50%;
+  position: relative;
+  /* top: 50%;
   left: 50%;
   transform: translate(-100%, -50%);
-  overflow: visible;
+  overflow: visible; */
 }
 
 .toggle input {

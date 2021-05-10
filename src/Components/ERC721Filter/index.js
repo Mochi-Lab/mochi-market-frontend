@@ -70,13 +70,13 @@ export default function ERC721Filter({ erc721Tokens, isLoadingErc721 }) {
           innerWidth='50'
         />
       </div>
-      <Layout style={{ height: '100%' }}>
+      <Layout style={{ minHeight: '100%' }}>
         <Sider className='site-layout-background style-sider-left'>
           <Menu
             mode='inline'
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
-            style={{ height: '100%', borderRight: 0 }}
+            style={{ minHeight: '100%', borderRight: 0 }}
           >
             <SubMenu
               key='sub1'
@@ -87,7 +87,7 @@ export default function ERC721Filter({ erc721Tokens, isLoadingErc721 }) {
               <Menu.Item key='1' onClick={() => selectToken(null, null)}>
                 <Input
                   size='large'
-                  className='input-search-collections'
+                  className='input-search-collections input-search-nft'
                   allowClear
                   style={{ width: '100%' }}
                   placeholder='Search Collections'

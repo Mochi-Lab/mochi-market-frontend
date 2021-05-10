@@ -104,18 +104,17 @@ const RightMenu = () => {
               <strong className='nav-textmode'>Profile</strong>
             </Link>
           </Menu.Item>
-          <Menu.Item key='setting:1' disabled>
-            <div style={{ cursor: 'pointer', color: 'black' }} className='justifyContent'>
-              <strong className='nav-textmode'>Dark mode</strong>
-              <div style={{ margin: 5 }}>
-                <ToggleDarkMode />
-              </div>
-            </div>
-          </Menu.Item>
         </SubMenu>
       ) : (
         <></>
       )}
+      <Menu.Item key='setting:1' disabled>
+        <div style={{ cursor: 'pointer', color: 'black' }} className='justifyContent'>
+          <div>
+            <ToggleDarkMode />
+          </div>
+        </div>
+      </Menu.Item>
     </Menu>
   );
 };

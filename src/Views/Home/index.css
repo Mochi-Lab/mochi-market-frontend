@@ -22,16 +22,17 @@
 
 .carousel-banner-home {
   width: 100%;
+  margin-top: 2rem;
 }
 
-
-.carousel-banner {
+/* .carousel-banner {
   height: 370px;
-}
+} */
 
 .carousel-banner > img {
   object-fit: cover;
   width: 100%;
+  border-radius: 2rem;
 }
 
 .carousel-banner-home .item-carousel {
