@@ -38,8 +38,7 @@ html[data-theme='dark'] {
 [data-theme='dark'] .menu-bar,
 .background-mode {
   background-color: var(--background-color) !important;
-  border-bottom: solid 1px rgb(38 38 38) !important;
-  box-shadow: 0 0 12px #616161;
+  /* border-bottom: solid 1px rgb(38 38 38) !important; */
 }
 
 [data-theme='dark'] .background-airdrop-mode,
@@ -141,9 +140,10 @@ html[data-theme='dark'] {
   border-color: #777;
 }
 [data-theme='dark'] .input-mode-bc {
-  background-color: #525252 !important;
   border-color: #525252 !important;
+  color: #fff !important;
 }
+
 [data-theme='dark'] .amount-time-airdrop {
   background: #464646 0% 0% no-repeat padding-box;
   border: 1px solid #4c4c4c;
@@ -151,4 +151,22 @@ html[data-theme='dark'] {
 }
 [data-theme='dark'] .amount-airdrop .num-uers-amount {
   color: aliceblue;
+}
+
+[data-theme='dark'] .input-search-nft,
+[data-theme='dark'] .input-search-nft .ant-input {
+  background-color: var(--input-background) !important;
+  color: white;
+}
+
+[data-theme='dark'] .style-sider-left {
+  background-color: var(--input-background) !important;
+  box-shadow: 0 0 12px #000000;
+}
+[data-theme='dark'] .sidenav-item {
+  background-color: #545353;
+  color: white;
+}
+[data-theme='dark'] .sidenav-item h2 {
+  color: white;
 }

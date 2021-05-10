@@ -33,7 +33,7 @@ export default function LeftNar() {
     <Col
       span={md ? 40 : 25}
       className={location.pathname === '/browse' ? 'center' : 'alignItems'}
-      style={{ height: '46px', paddingLeft: md ? '0px' : '10px' }}
+      style={{ paddingLeft: md ? '0px' : '10px' }}
     >
       <Tag color='success' className='radius-1rem'>
         <div className='box-live-time'>
@@ -46,7 +46,6 @@ export default function LeftNar() {
 
       {location.pathname === '/browse' ? (
         <Input
-          size='large'
           allowClear
           style={{ width: '100%' }}
           placeholder='Search by name, collection'

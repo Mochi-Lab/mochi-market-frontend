@@ -42,13 +42,15 @@ export default function Home() {
   };
   return (
     <div className='content-home '>
-      <Slider {...carouselBanner} className='carousel-banner-home'>
-        {banners.map((banner, index) => (
-          <div key={index} className='carousel-banner center'>
-            <img src={banner.src} alt={banner.alt} />
-          </div>
-        ))}
-      </Slider>
+      <div className='container'>
+        <Slider {...carouselBanner} className='carousel-banner-home'>
+          {banners.map((banner, index) => (
+            <div key={index} className='carousel-banner center'>
+              <img src={banner.src} alt={banner.alt} />
+            </div>
+          ))}
+        </Slider>
+      </div>
       {isLoadingErc721 || isLoadingErc721 === null ? (
         // Loading if done load the first type of token user have, if user select other load other
         <div className='center' style={{ width: '100%', height: '100%' }}>

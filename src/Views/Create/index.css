@@ -131,7 +131,7 @@
 }
 
 .input-mode-bc {
-  background-color: var(--input-background) !important;
+  /* background-color: var(--input-background) !important; */
   color: var(--color) !important;
   width: 100%;
 }

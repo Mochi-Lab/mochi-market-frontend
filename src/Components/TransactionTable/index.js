@@ -242,12 +242,12 @@ export default function TransactionTable() {
 
   return (
     <Layout>
-      <Sider width={200} className='site-layout-background style-sider-left'>
+      <Sider className='site-layout-background style-sider-left'>
         <Menu
           mode='inline'
           defaultSelectedKeys={['1']}
           defaultOpenKeys={['sub1']}
-          style={{ height: '100%', borderRight: 0 }}
+          style={{ minHeight: '100%', borderRight: 0 }}
         >
           <SubMenu
             key='sub1'
@@ -285,7 +285,7 @@ export default function TransactionTable() {
           </SubMenu>
         </Menu>
       </Sider>
-      <Layout style={{ padding: '0 24px 24px' }} className='background-mode'>
+      <Layout style={{ padding: '0 24px 24px', minHeight: '100vh' }} className='background-mode'>
         <Content
           className='site-layout-background'
           style={{

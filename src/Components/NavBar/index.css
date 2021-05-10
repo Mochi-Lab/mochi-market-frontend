@@ -2,11 +2,11 @@
 @import '../../light.css';
 .input-search-nft {
   border-radius: 1rem !important;
-  background-color: var(--input-background) !important;
+  /* background-color: var(--input-background) !important; */
 }
 
 .input-search-nft .ant-input {
-  background-color: var(--input-background) !important;
+  /* background-color: var(--input-background) !important; */
   color: var(--color) !important;
 }
 
@@ -21,11 +21,6 @@
   top: 0px;
   transform: translate3d(0px, 0px, 0px);
   background-color: rgb(255, 255, 255);
-}
-
-.leftMenu {
-  height: 48px;
-  width: 25%;
 }
 
 .nav-avatar {
@@ -46,6 +41,10 @@
   align-items: center;
 }
 
+.leftMenu {
+  width: 40%;
+}
+
 .leftMenu .ant-col {
   background: var(--background-color);
 }
@@ -62,19 +61,18 @@
   color: var(--color) !important;
 }
 
-.menuCon .leftMenu {
-  float: left;
-  margin-left: 2rem;
-}
-
 .ant-menu-submenu-expand-icon,
 .ant-menu-submenu-arrow {
   right: 50px !important;
 }
 
+.ant-tag {
+  margin-left: 8px !important;
+}
+
 @media (max-width: 1437px) {
   .leftMenu {
-    width: 20%;
+    width: 48%;
   }
 
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
@@ -86,7 +84,7 @@
 }
 @media (max-width: 1345px) {
   .leftMenu {
-    width: 15%;
+    width: 37%;
   }
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 7px;
@@ -97,7 +95,7 @@
 }
 @media (max-width: 1024px) {
   .leftMenu {
-    width: 13%;
+    width: 38%;
   }
 
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
