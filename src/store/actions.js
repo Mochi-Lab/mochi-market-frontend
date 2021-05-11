@@ -120,6 +120,9 @@ export const initERC721 = (nftList) => async (dispatch, getState) => {
 export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
 export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) => {
   let { walletAddress } = getState();
+
+  if (!walletAddress) return;
+
   // Start loading
   dispatch(setLoadingErc721(true));
 

@@ -42,3 +42,7 @@ html[data-theme='light'] {
 .ant-radio-button-wrapper {
   background-color: #fff !important;
 }
+
+[data-theme='light'] .footer-sidebar .actions-buy-bid {
+  background-color: #fff !important;
+}

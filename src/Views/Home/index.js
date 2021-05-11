@@ -79,7 +79,7 @@ export default function Home() {
                 Explore <img src={iconShop} className='icon-new' alt='icon-explore' />
               </h2>
             </div>
-            <Row justify='center'>
+            <Row justify='start'>
               {mergeAllCollections().map((nft, i) => (
                 <CardNFTHome token={nft} strSearch={strSearch} key={i} />
               ))}

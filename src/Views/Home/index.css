@@ -239,10 +239,10 @@
   }
 
   .slick-arrow.slick-next::before {
-    margin-left: 15px;
+    margin-left: 5px;
   }
   .slick-arrow.slick-prev::before {
-    margin-left: 15px;
+    margin-left: 0;
   }
 
   .name-user-top {
