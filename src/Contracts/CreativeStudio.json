@@ -1,23 +1,9 @@
 {
   "abi": [
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "collection",
-          "type": "address"
-        }
-      ],
-      "name": "ERC1155CollectionCreated",
-      "type": "event"
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
       "anonymous": false,
@@ -33,9 +19,15 @@
           "internalType": "address",
           "name": "collection",
           "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isERC1155",
+          "type": "bool"
         }
       ],
-      "name": "ERC721CollectionCreated",
+      "name": "CollectionCreated",
       "type": "event"
     },
     {
@@ -68,7 +60,12 @@
       "inputs": [
         {
           "internalType": "string",
-          "name": "uri",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "symbol",
           "type": "string"
         }
       ],
@@ -96,26 +93,46 @@
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "erc1155Factory",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "user",
+          "internalType": "contract IERC1155Factory",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "getCollectionByUser",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "erc721Factory",
+      "outputs": [
+        {
+          "internalType": "contract IERC721Factory",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAllCollections",
       "outputs": [
         {
           "components": [
             {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
               "internalType": "address",
               "name": "contractAddress",
               "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isERC721",
-              "type": "bool"
             },
             {
               "internalType": "bool",
@@ -128,7 +145,7 @@
               "type": "address"
             }
           ],
-          "internalType": "struct DataTypes.Collection[]",
+          "internalType": "struct CollectionType.Collection[]",
           "name": "",
           "type": "tuple[]"
         }
@@ -139,8 +156,113 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCollectionById",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "contractAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "isERC1155",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "creator",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct CollectionType.Collection",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "getCollectionsByUser",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "contractAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "isERC1155",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "creator",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct CollectionType.Collection[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getNumberOfCollection",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "provider",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "erc721FactoryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "erc1155FactoryAddress",
           "type": "address"
         }
       ],

@@ -16,18 +16,12 @@
           "type": "uint256"
         }
       ],
-      "name": "FeeUpdated",
+      "name": "MOMAFeeUpdated",
       "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "provider",
-          "type": "address"
-        },
         {
           "indexed": false,
           "internalType": "uint256",
@@ -41,8 +35,21 @@
           "type": "uint256"
         }
       ],
-      "name": "Initialized",
+      "name": "RegularFeeUpdated",
       "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "SAFE_NUMBER",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [
@@ -81,7 +88,7 @@
       "name": "addressesProvider",
       "outputs": [
         {
-          "internalType": "contract IAddressesProvider",
+          "internalType": "contract MiniIAddressesProvider",
           "name": "",
           "type": "address"
         }
@@ -93,13 +100,18 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "sellId",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
         },
         {
           "internalType": "bytes",
@@ -116,7 +128,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "exchangeId",
           "type": "uint256"
         }
       ],
@@ -129,7 +141,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "sellId",
           "type": "uint256"
         }
       ],
@@ -142,33 +154,38 @@
       "inputs": [
         {
           "internalType": "address[]",
-          "name": "nftAddress",
+          "name": "nftAddresses",
           "type": "address[]"
         },
         {
           "internalType": "uint256[]",
-          "name": "tokenId",
+          "name": "tokenIds",
           "type": "uint256[]"
         },
         {
           "internalType": "uint256[]",
-          "name": "amount",
+          "name": "nftAmounts",
           "type": "uint256[]"
         },
         {
-          "internalType": "bytes",
-          "name": "sellerData",
-          "type": "bytes"
+          "internalType": "address[]",
+          "name": "tokens",
+          "type": "address[]"
         },
         {
-          "internalType": "address",
-          "name": "token",
-          "type": "address"
+          "internalType": "uint256[]",
+          "name": "prices",
+          "type": "uint256[]"
         },
         {
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
+          "internalType": "address[]",
+          "name": "users",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "data",
+          "type": "bytes[]"
         }
       ],
       "name": "createExchangeOrder",
@@ -213,8 +230,18 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "exchangeId",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "destinationId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
         },
         {
           "internalType": "bytes",
@@ -242,7 +269,25 @@
     },
     {
       "inputs": [],
-      "name": "getFee",
+      "name": "getMomaFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getRegularFee",
       "outputs": [
         {
           "internalType": "uint256",
@@ -266,13 +311,28 @@
           "type": "address"
         },
         {
+          "internalType": "address",
+          "name": "momaToken",
+          "type": "address"
+        },
+        {
           "internalType": "uint256",
-          "name": "numerator",
+          "name": "momaFeeNumerator",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "denominator",
+          "name": "momaFeeDenominator",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "regularFeeNumerator",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "regularFeeDenominator",
           "type": "uint256"
         }
       ],
@@ -283,15 +343,41 @@
     },
     {
       "inputs": [],
-      "name": "nftList",
+      "name": "moma",
       "outputs": [
         {
-          "internalType": "contract INFTList",
+          "internalType": "address",
           "name": "",
           "type": "address"
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nftList",
+      "outputs": [
+        {
+          "internalType": "contract MiniINFTList",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "revokeToken",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -310,37 +396,6 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "token",
-          "type": "address"
-        }
-      ],
-      "name": "unAcceptToken",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "id",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "newPrice",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateExchangePrice",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "uint256",
           "name": "numerator",
           "type": "uint256"
@@ -351,7 +406,7 @@
           "type": "uint256"
         }
       ],
-      "name": "updateFee",
+      "name": "updateMomaFee",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -370,6 +425,24 @@
         }
       ],
       "name": "updatePrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "numerator",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "denominator",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateRegularFee",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
