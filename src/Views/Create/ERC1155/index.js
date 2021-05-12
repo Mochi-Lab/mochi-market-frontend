@@ -1,23 +1,25 @@
-import { Form, Input, Button, Row, message, Radio } from 'antd';
+import { Form, Input, Button, Row, message } from 'antd';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
-import IconLoading from 'Components/IconLoading';
-import Collections from './Collections';
+import { useSelector, useDispatch } from 'react-redux';
+import ERC1155Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
-import { uploadSia } from './UploadSia';
-import { uploadIPFS } from './UploadIpfs';
+import { uploadIPFS } from '../UploadIpfs';
 import BackButton from 'Components/BackButton';
-import './index.css';
+import { generateERC1155NFT } from 'store/actions';
+import LoadingModal from 'Components/LoadingModal';
+
+import '../index.css';
 
 const { TextArea } = Input;
 
 export default function CreateERC1155() {
   const { walletAddress } = useSelector((state) => state);
-  const [storage, setStorage] = useState(0);
-  const [isCreateNew, setIsCreateNew] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [collectionId, setCollectionId] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
+  const dispatch = useDispatch();
 
   const [form] = Form.useForm();
 
@@ -34,27 +36,30 @@ export default function CreateERC1155() {
     },
   });
 
-  const handleStorageChange = (e) => {
-    setStorage(e.target.value);
-  };
-
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     if (files.length > 0) {
-      if (storage === 0) uploadIPFS(values, form, files, setFiles, setIsLoading, isCreateNew);
-      else uploadSia(values, form, files, setFiles, setIsLoading, isCreateNew);
+      setVisible();
+      // upload image
+      setIsLoading(true);
+      let tokenUri = await uploadIPFS(values, files);
+      setIsLoading(false);
+
+      // mint token
+      setVisible(true);
+      await dispatch(generateERC1155NFT(collectionId, values.id, values.amount, tokenUri));
+      setVisible(false);
+
+      // reset form and file
+      setFiles([]);
+      form.resetFields();
     } else message.warn('Did you forget upload an Image ?');
   };
 
   return (
     <div className='center create-pt'>
+      {isLoading ? <LoadingModal title={'Upload Image'} visible={true} /> : <></>}
       <div className='my-collection'>
-        {isLoading ? (
-          <div className='center loading'>
-            <IconLoading />
-          </div>
-        ) : (
-          <></>
-        )}
+        <LoadingModal title={'Create NFT'} visible={visible} />
         <BackButton />
 
         <h2 className='textmode'>You can create NFT for your own !!!</h2>
@@ -76,16 +81,11 @@ export default function CreateERC1155() {
                 )}
               </div>
             </div>
-            <h3 className='text-upload-image textmode'>Select Storage</h3>
-            <Radio.Group value={storage} onChange={handleStorageChange}>
-              <Radio.Button value={0}>IPFS</Radio.Button>
-              <Radio.Button value={1}>Sia</Radio.Button>
-            </Radio.Group>
           </div>
           <div className='input-area'>
             <div>
               <h3 className='text-upload-image textmode'>Choose collection</h3>
-              <Collections isCreateNew={isCreateNew} setIsCreateNew={setIsCreateNew} />
+              <ERC1155Collections collectionId={collectionId} setCollectionId={setCollectionId} />
             </div>
             <Form onFinish={onFinish} form={form} layout='vertical'>
               <Form.Item
@@ -101,6 +101,38 @@ export default function CreateERC1155() {
                 <Input
                   className='input-name-nft input-mode-bc'
                   placeholder='Name of Nft'
+                  size='large'
+                />
+              </Form.Item>
+              {collectionId !== -1 ? (
+                <Form.Item
+                  label='Id'
+                  name='id'
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input id!',
+                    },
+                  ]}
+                >
+                  <Input className='input-name-nft input-mode-bc' placeholder='Id' size='large' />
+                </Form.Item>
+              ) : (
+                <></>
+              )}
+              <Form.Item
+                label='Amount'
+                name='amount'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input number of NFT!',
+                  },
+                ]}
+              >
+                <Input
+                  className='input-name-nft input-mode-bc'
+                  placeholder='Number of NFT'
                   size='large'
                 />
               </Form.Item>
