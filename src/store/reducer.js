@@ -75,7 +75,7 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         strSearch: action.strSearch,
       };
-    case actions.INIT_ERC721:
+    case actions.INIT_INSTANCE_NFTS:
       return {
         ...state,
         erc721Instances: action.erc721Instances,

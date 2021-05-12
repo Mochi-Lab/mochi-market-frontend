@@ -1,5 +1,5 @@
 import { parseBalance } from 'utils/helper';
-// import ERC1155 from 'Contracts/ERC1155.json';
+import ERC1155 from 'Contracts/ERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
 import SampleERC721 from 'Contracts/SampleERC721.json';
 import SampleERC1155 from 'Contracts/SampleERC1155.json';
@@ -108,13 +108,17 @@ export const setStrSearch = (strSearch) => (dispatch) => {
 ////////////////////
 // ERC721
 ////////////////////
-export const INIT_ERC721 = 'INIT_ERC721';
-export const initERC721 = (nftList) => async (dispatch, getState) => {
+export const INIT_INSTANCE_NFTS = 'INIT_INSTANCE_NFTS';
+export const initInstancesNFT = (nftList) => async (dispatch, getState) => {
   let { web3 } = getState();
   let erc721Instances = [];
   if (!!nftList) {
-    erc721Instances = await nftList.map((contract) => new web3.eth.Contract(ERC721.abi, contract));
-    dispatch({ type: INIT_ERC721, erc721Instances });
+    erc721Instances = await nftList.map((infoNFT) =>
+      !!infoNFT.isERC1155
+        ? new web3.eth.Contract(ERC1155.abi, infoNFT.nftAddress)
+        : new web3.eth.Contract(ERC721.abi, infoNFT.nftAddress)
+    );
+    dispatch({ type: INIT_INSTANCE_NFTS, erc721Instances });
     dispatch(getOwnedERC721(erc721Instances));
   }
 };
@@ -312,9 +316,18 @@ export const SET_ACCEPTED_NFTS = 'SET_ACCEPTED_NFTS';
 export const setAcceptedNfts = () => async (dispatch, getState) => {
   const { nftList } = getState();
   try {
-    let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
+    let acceptedNftsAddress = [];
+    let allNFTll = await nftList.methods.getAllNFT().call();
+    allNFTll.forEach((e, i) => {
+      if (!!e.isAccepted)
+        acceptedNftsAddress.push({
+          nftAddress: e['nftAddress'],
+          isERC1155: e['isERC1155'],
+        });
+    });
+    // let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
-    dispatch(initERC721(acceptedNftsAddress));
+    dispatch(initInstancesNFT(acceptedNftsAddress));
   } catch (e) {
     console.log(e);
     return e;
