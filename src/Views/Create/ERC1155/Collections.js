@@ -90,8 +90,8 @@ export default function ERC1155Collections({ collectionId, setCollectionId }) {
         )}
 
         <div
-          className={`${!collectionId ? 'active' : ''} box input-mode-bc`}
-          onClick={() => setCollectionId(false)}
+          className={`${collectionId === -1 ? 'active' : ''} box input-mode-bc`}
+          onClick={() => setCollectionId(-1)}
         >
           <strong className='textmode'>Mochi</strong>
           <p className='textmode'>MOC</p>

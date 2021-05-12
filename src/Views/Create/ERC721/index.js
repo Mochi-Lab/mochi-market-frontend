@@ -15,7 +15,7 @@ const { TextArea } = Input;
 export default function CreateERC721() {
   const { walletAddress } = useSelector((state) => state);
   const [visible, setVisible] = useState(false);
-  const [collectionId, setCollectionId] = useState(false);
+  const [collectionId, setCollectionId] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();

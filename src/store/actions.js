@@ -321,16 +321,6 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
   }
 };
 
-export const getNftInfo = async (nftAddress, nftList) => {
-  try {
-    let nftInfo = await nftList.methods.getNFTInfor(nftAddress).call();
-    return nftInfo;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-};
-
 ////////////////////
 // SellOrders List
 ////////////////////
@@ -520,24 +510,37 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
       SampleERC721.abi,
       userCollections[collectionId].contractAddress
     );
+
+    try {
+      await erc721Instance.methods
+        .mint(walletAddress, tokenUri, '0x0000000000000000000000000000000000000000')
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          message.success('Create Successfully !');
+        });
+    } catch (error) {
+      console.log(error);
+      message.error('Oh no! Something went wrong !');
+    }
   } else {
     erc721Instance = await new web3.eth.Contract(
       MochiERC721NFT.abi,
       contractAddress.MochiERC721NFT
     );
+
+    try {
+      await erc721Instance.methods
+        .mint(tokenUri)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          message.success('Create Successfully !');
+        });
+    } catch (error) {
+      console.log(error);
+      message.error('Oh no! Something went wrong !');
+    }
   }
 
-  try {
-    await erc721Instance.methods
-      .mint(walletAddress, tokenUri, '0x0000000000000000000000000000000000000000')
-      .send({ from: walletAddress })
-      .on('receipt', (receipt) => {
-        message.success('Create Successfully !');
-      });
-  } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
-  }
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
 };
@@ -555,24 +558,37 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
       SampleERC1155.abi,
       userCollections[collectionId].contractAddress
     );
+
+    try {
+      await erc1155Instance.methods
+        .mint(walletAddress, id, amount, tokenUri, '0x0000000000000000000000000000000000000000')
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          message.success('Create Successfully !');
+        });
+    } catch (error) {
+      console.log(error);
+      message.error('Oh no! Something went wrong !');
+    }
   } else {
     erc1155Instance = await new web3.eth.Contract(
-      MochiERC721NFT.abi,
-      contractAddress.MochiERC721NFT
+      MochiERC1155NFT.abi,
+      contractAddress.MochiERC1155NFT
     );
+
+    try {
+      await erc1155Instance.methods
+        .mint(amount, tokenUri, '0x0000000000000000000000000000000000000000')
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          message.success('Create Successfully !');
+        });
+    } catch (error) {
+      console.log(error);
+      message.error('Oh no! Something went wrong !');
+    }
   }
 
-  try {
-    await erc1155Instance.methods
-      .mint(walletAddress, id, amount, tokenUri, '0x0000000000000000000000000000000000000000')
-      .send({ from: walletAddress })
-      .on('receipt', (receipt) => {
-        message.success('Create Successfully !');
-      });
-  } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
-  }
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
 };

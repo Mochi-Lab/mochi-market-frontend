@@ -16,7 +16,7 @@ const { TextArea } = Input;
 export default function CreateERC1155() {
   const { walletAddress } = useSelector((state) => state);
   const [visible, setVisible] = useState(false);
-  const [collectionId, setCollectionId] = useState(false);
+  const [collectionId, setCollectionId] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
@@ -104,18 +104,22 @@ export default function CreateERC1155() {
                   size='large'
                 />
               </Form.Item>
-              <Form.Item
-                label='Id'
-                name='id'
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input id!',
-                  },
-                ]}
-              >
-                <Input className='input-name-nft input-mode-bc' placeholder='Id' size='large' />
-              </Form.Item>
+              {collectionId !== -1 ? (
+                <Form.Item
+                  label='Id'
+                  name='id'
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input id!',
+                    },
+                  ]}
+                >
+                  <Input className='input-name-nft input-mode-bc' placeholder='Id' size='large' />
+                </Form.Item>
+              ) : (
+                <></>
+              )}
               <Form.Item
                 label='Amount'
                 name='amount'
