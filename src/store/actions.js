@@ -1,5 +1,5 @@
 import { parseBalance } from 'utils/helper';
-// import ERC1155 from 'Contracts/ERC1155.json';
+import ERC1155 from 'Contracts/ERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
 import SampleERC721 from 'Contracts/SampleERC721.json';
 import SampleERC1155 from 'Contracts/SampleERC1155.json';
@@ -109,12 +109,22 @@ export const setStrSearch = (strSearch) => (dispatch) => {
 // ERC721
 ////////////////////
 export const INIT_ERC721 = 'INIT_ERC721';
-export const initERC721 = (nftList) => async (dispatch, getState) => {
-  let { web3 } = getState();
+export const INIT_ERC1155 = 'INIT_ERC1155';
+export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {
+  let { web3, nftList } = getState();
   let erc721Instances = [];
-  if (!!nftList) {
-    erc721Instances = await nftList.map((contract) => new web3.eth.Contract(ERC721.abi, contract));
+  let erc1155Instances = [];
+  if (!!acceptedNftsAddress) {
+    for (let i = 0; i < acceptedNftsAddress.length; i++) {
+      let is1155 = await nftList.methods.isERC1155(acceptedNftsAddress[i]).call();
+      if (is1155) {
+        erc1155Instances.push(new web3.eth.Contract(ERC1155.abi, acceptedNftsAddress[i]));
+      } else {
+        erc721Instances.push(new web3.eth.Contract(ERC721.abi, acceptedNftsAddress[i]));
+      }
+    }
     dispatch({ type: INIT_ERC721, erc721Instances });
+    dispatch({ type: INIT_ERC1155, erc1155Instances });
     dispatch(getOwnedERC721(erc721Instances));
   }
 };
