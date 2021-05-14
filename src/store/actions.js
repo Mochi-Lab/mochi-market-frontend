@@ -1,4 +1,4 @@
-import { parseBalance } from 'utils/helper';
+import { parseBalance, listTokensOfOwner } from 'utils/helper';
 import ERC1155 from 'Contracts/ERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
 import SampleERC721 from 'Contracts/SampleERC721.json';
@@ -141,16 +141,17 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
   var getERC721 = (instance) => {
     return new Promise(async (resolve) => {
       let ERC721token = {};
-      let balance = await instance.methods.balanceOf(walletAddress).call();
-      if (balance > 0) {
-        ERC721token.balanceOf = await instance.methods.balanceOf(walletAddress).call();
+      let tokenIds = await listTokensOfOwner(instance, walletAddress);
+      let balanceOf = tokenIds.length;
+      if (balanceOf > 0) {
+        ERC721token.tokenIds = tokenIds;
         ERC721token.name = await instance.methods.name().call();
         ERC721token.symbol = await instance.methods.symbol().call();
         ERC721token.tokens = [];
 
-        for (let i = 0; i < ERC721token.balanceOf; i++) {
+        for (let i = 0; i < balanceOf; i++) {
           let token = {};
-          token.index = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+          token.index = tokenIds[i];
           token.tokenURI = await instance.methods.tokenURI(token.index).call();
           token.addressToken = instance._address;
           try {
@@ -734,12 +735,11 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
           let allNFTsOfOwner = [];
           if (!!walletAddress) {
             let instanceNFT = new web3.eth.Contract(ERC721.abi, instance.nftAddress);
-            balanceNFT = await instanceNFT.methods.balanceOf(walletAddress).call();
+            let tokenIds = await listTokensOfOwner(instanceNFT, walletAddress);
+            balanceNFT = tokenIds.length;
             if (balanceNFT > 0) {
               for (let i = 0; i < balanceNFT; i++) {
-                let tokenId = await instanceNFT.methods
-                  .tokenOfOwnerByIndex(walletAddress, i)
-                  .call();
+                let tokenId = tokenIds[i];
                 let claimStatus = await nftCampaign.methods
                   .getClaimStatus(instance.campaignId, tokenId)
                   .call();
