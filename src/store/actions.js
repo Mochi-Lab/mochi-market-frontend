@@ -391,8 +391,8 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
       );
       dispatch({
         type: SET_AVAILABLE_SELL_ORDER,
-        availableSellOrder721: availableSellOrder.erc721,
-        availableSellOrder1155: availableSellOrder.erc1155,
+        availableSellOrder721: availableSellOrder.resultERC721,
+        availableSellOrder1155: availableSellOrder.resultERC1155,
         convertErc721Tokens,
       });
       dispatch(setLoadingErc721(false));

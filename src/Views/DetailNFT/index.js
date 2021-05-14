@@ -67,16 +67,15 @@ export default function DetailNFT() {
         if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
           // Check if the token is in the order list?
           let isOnList = await sellOrderList.methods
-            .checkDuplicate_ERC721(addressToken, id, tokenOwner)
+            .checkDuplicateERC721(addressToken, id, tokenOwner)
             .call();
           isOnList ? setStatus(3) : setStatus(2);
         } else {
           let isOnList = await sellOrderList.methods
-            .checkDuplicate_ERC721(addressToken, id, tokenOwner)
+            .checkDuplicateERC721(addressToken, id, tokenOwner)
             .call();
           isOnList ? setStatus(1) : setStatus(0);
         }
-
         let fil = availableSellOrder721.filter(
           (token) => token.nftAddress === addressToken && token.tokenId === id
         );
