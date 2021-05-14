@@ -141,17 +141,23 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
   var getERC721 = (instance) => {
     return new Promise(async (resolve) => {
       let ERC721token = {};
-      let tokenIds = await listTokensOfOwner(instance, walletAddress);
-      let balanceOf = tokenIds.length;
-      if (balanceOf > 0) {
-        ERC721token.tokenIds = tokenIds;
+      const listIdToken = await listTokensOfOwner(instance, walletAddress, contractAddress.Market);
+      let tokenIdOwner = listIdToken.owned;
+      let tokenIdOnSale = listIdToken.onSale;
+
+      let balanceOfOwner = tokenIdOwner.length;
+      let balanceOfOnSale = tokenIdOnSale.length;
+
+      if (balanceOfOwner > 0 || balanceOfOnSale > 0) {
+        ERC721token.tokenIdOwner = tokenIdOwner;
         ERC721token.name = await instance.methods.name().call();
         ERC721token.symbol = await instance.methods.symbol().call();
         ERC721token.tokens = [];
+        ERC721token.onSale = [];
 
-        for (let i = 0; i < balanceOf; i++) {
+        for (let i = 0; i < balanceOfOwner; i++) {
           let token = {};
-          token.index = tokenIds[i];
+          token.index = tokenIdOwner[i];
           token.tokenURI = await instance.methods.tokenURI(token.index).call();
           token.addressToken = instance._address;
           try {
@@ -161,6 +167,20 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
           } catch (error) {
             token.detail = { name: 'Unnamed', description: '' };
             ERC721token.tokens.push(token);
+          }
+        }
+        for (let i = 0; i < balanceOfOnSale; i++) {
+          let token = {};
+          token.index = tokenIdOnSale[i];
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.onSale.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.onSale.push(token);
           }
         }
         resolve(ERC721token);
@@ -445,16 +465,16 @@ export const setMySellOrder = () => async (dispatch, getState) => {
 };
 
 export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, getState) => {
-  const { market, walletAddress, web3 } = getState();
+  const { market, walletAddress, web3, erc721Instances } = getState();
   try {
-    const erc721Instances = await new web3.eth.Contract(ERC721.abi, nftAddress);
+    const erc721Instance = await new web3.eth.Contract(ERC721.abi, nftAddress);
 
     // Check to see if nft have accepted
-    let addressApproved = await erc721Instances.methods.getApproved(tokenId).call();
+    let addressApproved = await erc721Instance.methods.getApproved(tokenId).call();
 
     if (addressApproved !== market._address)
       // Approve ERC721
-      await erc721Instances.methods.approve(market._address, tokenId).send({ from: walletAddress });
+      await erc721Instance.methods.approve(market._address, tokenId).send({ from: walletAddress });
 
     // Create Sell Order
     await market.methods
@@ -475,6 +495,8 @@ export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, 
 
   // Fetch new availableOrderList
   dispatch(setAvailableSellOrder());
+  // get own nft
+  dispatch(getOwnedERC721(erc721Instances));
 };
 
 export const buyNft = (orderDetail) => async (dispatch, getState) => {
@@ -759,7 +781,9 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
           let allNFTsOfOwner = [];
           if (!!walletAddress) {
             let instanceNFT = new web3.eth.Contract(ERC721.abi, instance.nftAddress);
-            let tokenIds = await listTokensOfOwner(instanceNFT, walletAddress);
+            let tokenIds = (
+              await listTokensOfOwner(instanceNFT, walletAddress, contractAddress.Market)
+            ).owned;
             balanceNFT = tokenIds.length;
             if (balanceNFT > 0) {
               for (let i = 0; i < balanceNFT; i++) {

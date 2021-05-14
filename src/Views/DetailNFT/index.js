@@ -55,7 +55,6 @@ export default function DetailNFT() {
     (state) => state
   );
   const { addressToken, id } = useParams();
-
   useEffect(() => {
     const getNFTDetails = async () => {
       try {
@@ -150,9 +149,7 @@ export default function DetailNFT() {
                 </div>
               </div>
               <div className='nft-content content'>
-                {indexAvailable - 1 < 0 ? (
-                  <></>
-                ) : (
+                {indexAvailable - 1 > 0 ? (
                   <div className='btns btL'>
                     <Link
                       to={`/token/${availableSellOrder721[indexAvailable - 1].nftAddress}/${
@@ -162,6 +159,8 @@ export default function DetailNFT() {
                       <Button shape='circle' icon={<LeftOutlined />} size='large' />
                     </Link>
                   </div>
+                ) : (
+                  <></>
                 )}
 
                 <div className='content-nft-img PE'>
@@ -174,9 +173,7 @@ export default function DetailNFT() {
                     </div>
                   </div>
                 </div>
-                {indexAvailable + 1 >= availableSellOrder721.length ? (
-                  <></>
-                ) : (
+                {!!availableSellOrder721 && indexAvailable + 1 < availableSellOrder721.length ? (
                   <div className='btns btR'>
                     <Link
                       to={`/token/${availableSellOrder721[indexAvailable + 1].nftAddress}/${
@@ -186,6 +183,8 @@ export default function DetailNFT() {
                       <Button shape='circle' icon={<RightOutlined />} size='large' />
                     </Link>
                   </div>
+                ) : (
+                  <></>
                 )}
               </div>
             </div>

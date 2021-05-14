@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
-import { WalletOutlined, HistoryOutlined } from '@ant-design/icons';
+import { WalletOutlined, HistoryOutlined, ShopOutlined } from '@ant-design/icons';
 import ERC721Filter from 'Components/ERC721Filter';
 import Edit from './Edit';
 import { useHistory } from 'react-router-dom';
@@ -94,11 +94,26 @@ export default function Profile() {
           <TabPane
             tab={
               <div className='action-profile'>
+                <ShopOutlined />
+                <strong>On Sale</strong>
+              </div>
+            }
+            key='1'
+          >
+            <ERC721Filter
+              erc721Tokens={erc721Tokens}
+              isLoadingErc721={isLoadingErc721}
+              type={'onSale'}
+            />
+          </TabPane>
+          <TabPane
+            tab={
+              <div className='action-profile'>
                 <WalletOutlined />
                 <strong>My Wallet</strong>
               </div>
             }
-            key='1'
+            key='2'
           >
             <ERC721Filter erc721Tokens={erc721Tokens} isLoadingErc721={isLoadingErc721} />
           </TabPane>
@@ -109,7 +124,7 @@ export default function Profile() {
                 <strong>Activity</strong>
               </div>
             }
-            key='2'
+            key='3'
           >
             <TransactionTable />
           </TabPane>
