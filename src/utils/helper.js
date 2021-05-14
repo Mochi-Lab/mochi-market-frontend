@@ -56,3 +56,18 @@ export function convertTimestampToDate(timestamp) {
 
   return convdataTime;
 }
+
+export async function listTokensOfOwner(token, walletAddress) {
+  const logs = await token.getPastEvents('Transfer', { fromBlock: 0 }).then((events) => events);
+
+  const owned = new Set();
+  for (const log of logs) {
+    const { from, to, tokenId } = log.returnValues;
+    if (to.toLowerCase() === walletAddress.toLowerCase()) {
+      owned.add(tokenId.toString());
+    } else if (from.toLowerCase() === walletAddress.toLowerCase()) {
+      owned.delete(tokenId.toString());
+    }
+  }
+  return [...owned];
+}
