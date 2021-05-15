@@ -39,7 +39,7 @@ const RenderSwitch = ({ status, token, orderDetail }) => {
     case 1:
       return <Buy orderDetail={orderDetail} />;
     default:
-      return <div></div>;
+      return <Buy orderDetail={orderDetail} />;
   }
 };
 
