@@ -338,7 +338,7 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
 
 export const SET_AVAILABLE_SELL_ORDER = 'SET_AVAILABLE_SELL_ORDER';
 export const setAvailableSellOrder = () => async (dispatch, getState) => {
-  const { sellOrderList, web3 } = getState();
+  const { sellOrderList, web3, nftList } = getState();
   const pushErc721 = async (listNftContract) => {
     let ERC721token = { name: '', symbol: '', avatarToken: '', tokens: [] };
     ERC721token.name = await listNftContract.instance.methods.name().call();
@@ -371,11 +371,26 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
       let availableSellOrder = await sellOrderList.methods
         .getSellOrdersByIdList(availableSellOrderIdList.resultERC721)
         .call();
+
+      let availableSellOrderERC721 = [];
+      let availableSellOrderERC1155 = [];
+
+      if (!!availableSellOrder && availableSellOrder.length > 0) {
+        for (let i = 0; i < availableSellOrder.length; i++) {
+          let is1155 = await nftList.methods.isERC1155(availableSellOrder[i].nftAddress).call();
+          if (is1155) {
+            availableSellOrderERC1155.push(availableSellOrder[i]);
+          } else {
+            availableSellOrderERC721.push(availableSellOrder[i]);
+          }
+        }
+      }
+
       var convertErc721Tokens = [];
       var listNftContracts = [];
 
-      if (!!availableSellOrder) {
-        availableSellOrder.map(async (sellOrder, i) => {
+      if (!!availableSellOrderERC721) {
+        availableSellOrderERC721.map(async (sellOrder, i) => {
           let token = { tokenId: [], price: [] };
           let nftindex = listNftContracts.findIndex(
             (nft) => nft.nftAddress === sellOrder.nftAddress
@@ -400,8 +415,8 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
       );
       dispatch({
         type: SET_AVAILABLE_SELL_ORDER,
-        availableSellOrder721: availableSellOrderIdList.resultERC721,
-        availableSellOrder1155: availableSellOrderIdList.resultERC1155,
+        availableSellOrder721: availableSellOrderERC721,
+        availableSellOrder1155: availableSellOrderERC1155,
         convertErc721Tokens,
       });
       dispatch(setLoadingErc721(false));
@@ -467,7 +482,7 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
   let link = null;
   try {
     await market.methods
-      .buy(orderDetail.sellId, 1, '0x')
+      .buy(orderDetail.sellId, 1, walletAddress, '0x')
       .send({ from: walletAddress, value: orderDetail.price })
       .on('receipt', (receipt) => {
         link = getWeb3List(chainId).explorer + receipt.transactionHash;
