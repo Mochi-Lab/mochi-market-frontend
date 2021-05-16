@@ -321,15 +321,14 @@ div.line-loading {
 }
 
 @media (max-width: 768px) {
-  .bg-header {
-    height: 60px;
-  }
   .logo {
     width: 75px;
-    height: 60px;
   }
   .logo a img {
     width: 50px;
+  }
+  .barsMenu {
+    padding-top: 0 !important;
   }
 }
 
