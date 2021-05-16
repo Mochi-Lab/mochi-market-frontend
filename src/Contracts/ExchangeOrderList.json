@@ -65,13 +65,19 @@
           "type": "uint256"
         },
         {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
           "indexed": false,
           "internalType": "uint256",
           "name": "destinationId",
           "type": "uint256"
         },
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
           "name": "buyer",
           "type": "address"
@@ -88,6 +94,12 @@
           "internalType": "uint256",
           "name": "exchangeId",
           "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
         }
       ],
       "name": "ExchangeOrderDeactive",
