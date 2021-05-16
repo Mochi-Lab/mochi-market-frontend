@@ -272,6 +272,14 @@ div.line-loading {
   margin-right: 1.5rem;
 }
 
+.pink-font {
+  color: #973b5e !important;
+}
+
+.bt-cnlo:hover {
+  color: #e35188 !important;
+}
+
 @keyframes rotateLoading {
   0% {
     transform: rotate(0);

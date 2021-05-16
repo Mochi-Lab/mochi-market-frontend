@@ -121,7 +121,6 @@ export default function CreateERC1155() {
                 <></>
               )}
               <Form.Item
-                label='Amount'
                 name='amount'
                 rules={[
                   {
@@ -130,6 +129,7 @@ export default function CreateERC1155() {
                   },
                 ]}
               >
+                <h3 className='text-upload-image textmode'>Amount</h3>
                 <Input
                   className='input-name-nft input-mode-bc'
                   placeholder='Number of NFT'
