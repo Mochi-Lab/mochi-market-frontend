@@ -57,17 +57,26 @@ export function convertTimestampToDate(timestamp) {
   return convdataTime;
 }
 
-export async function listTokensOfOwner(token, walletAddress) {
-  const logs = await token.getPastEvents('Transfer', { fromBlock: 0 }).then((events) => events);
+export async function listTokensOfOwner(token, walletAddress, addressMarket) {
+  const logs = await token
+    .getPastEvents('Transfer', { fromBlock: 1000000 })
+    .then((events) => events);
 
   const owned = new Set();
+  const onSale = new Set();
   for (const log of logs) {
     const { from, to, tokenId } = log.returnValues;
     if (to.toLowerCase() === walletAddress.toLowerCase()) {
       owned.add(tokenId.toString());
     } else if (from.toLowerCase() === walletAddress.toLowerCase()) {
       owned.delete(tokenId.toString());
+      if (
+        from.toLowerCase() === walletAddress.toLowerCase() &&
+        to.toLowerCase() === addressMarket.toLowerCase()
+      ) {
+        onSale.add(tokenId.toString());
+      }
     }
   }
-  return [...owned];
+  return { owned: [...owned], onSale: [...onSale] };
 }

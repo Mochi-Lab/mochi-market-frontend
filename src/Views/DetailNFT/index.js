@@ -39,7 +39,7 @@ const RenderSwitch = ({ status, token, orderDetail }) => {
     case 1:
       return <Buy orderDetail={orderDetail} />;
     default:
-      return <Buy orderDetail={orderDetail} />;
+      return <div></div>;
   }
 };
 
@@ -51,11 +51,10 @@ export default function DetailNFT() {
   const [indexAvailable, setIndexAvailable] = useState(null);
   const [expandImgDetail, setExpandImgDetail] = useState(false);
   // get details nft
-  const { web3, walletAddress, sellOrderList, availableSellOrder721 } = useSelector(
+  const { web3, walletAddress, sellOrderList, availableSellOrder721, market } = useSelector(
     (state) => state
   );
   const { addressToken, id } = useParams();
-
   useEffect(() => {
     const getNFTDetails = async () => {
       try {
@@ -64,7 +63,18 @@ export default function DetailNFT() {
         // check if user is owner of token
         let tokenOwner = await erc721Instances.methods.ownerOf(id).call();
         setOwner(tokenOwner);
-        if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
+
+        let isSelling;
+
+        if (!!walletAddress) {
+          isSelling = await sellOrderList.methods
+            .checkDuplicateERC721(addressToken, id, walletAddress)
+            .call();
+        }
+
+        if (walletAddress && isSelling) {
+          setStatus(3);
+        } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
           // Check if the token is in the order list?
           let isOnList = await sellOrderList.methods
             .checkDuplicateERC721(addressToken, id, tokenOwner)
@@ -74,7 +84,8 @@ export default function DetailNFT() {
           let isOnList = await sellOrderList.methods
             .checkDuplicateERC721(addressToken, id, tokenOwner)
             .call();
-          isOnList ? setStatus(1) : setStatus(0);
+
+          isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
         }
         let fil = availableSellOrder721.filter(
           (token) => token.nftAddress === addressToken && token.tokenId === id
@@ -150,9 +161,7 @@ export default function DetailNFT() {
                 </div>
               </div>
               <div className='nft-content content'>
-                {indexAvailable - 1 < 0 ? (
-                  <></>
-                ) : (
+                {indexAvailable - 1 > 0 ? (
                   <div className='btns btL'>
                     <Link
                       to={`/token/${availableSellOrder721[indexAvailable - 1].nftAddress}/${
@@ -162,6 +171,8 @@ export default function DetailNFT() {
                       <Button shape='circle' icon={<LeftOutlined />} size='large' />
                     </Link>
                   </div>
+                ) : (
+                  <></>
                 )}
 
                 <div className='content-nft-img PE'>
@@ -174,9 +185,7 @@ export default function DetailNFT() {
                     </div>
                   </div>
                 </div>
-                {indexAvailable + 1 >= availableSellOrder721.length ? (
-                  <></>
-                ) : (
+                {!!availableSellOrder721 && indexAvailable + 1 < availableSellOrder721.length ? (
                   <div className='btns btR'>
                     <Link
                       to={`/token/${availableSellOrder721[indexAvailable + 1].nftAddress}/${
@@ -186,6 +195,8 @@ export default function DetailNFT() {
                       <Button shape='circle' icon={<RightOutlined />} size='large' />
                     </Link>
                   </div>
+                ) : (
+                  <></>
                 )}
               </div>
             </div>
