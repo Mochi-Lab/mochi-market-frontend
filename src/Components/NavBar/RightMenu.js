@@ -59,7 +59,7 @@ const RightMenu = () => {
             </strong>
             <div>
               <div className='address' onClick={() => copyToClipboard()}>
-                <p className='textmode'>
+                <p className='nav-textmode'>
                   {shortAddress}
                   <span className='icon-coppy' style={{ paddingLeft: '10px' }}>
                     {isCopied ? (

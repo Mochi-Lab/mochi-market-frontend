@@ -12,7 +12,6 @@ export default function Create() {
   return (
     <div className='center create-pt'>
       <div className='create-box'>
-        <BackButton />
         <h2 className='textmode'>Create collectible</h2>
         <p className='textmode'>
           Choose “Single” if you want your collectible to be one of a kind or “Multiple” if you want

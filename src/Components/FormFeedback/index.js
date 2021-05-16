@@ -7,7 +7,7 @@ export default function FormFeedback() {
     <a href='https://forms.gle/Z8BJciPFQL2xsbZg8' target='_blank' rel='noreferrer'>
       <div className='form-feedback'>
         <Avatar
-          size={{ xs: 40, sm: 40, md: 40, lg: 50, xl: 50, xxl: 50 }}
+          size={{ xs: 50, sm: 50, md: 50, lg: 50, xl: 50, xxl: 50 }}
           icon={
             <>
               <FormOutlined />
@@ -15,7 +15,7 @@ export default function FormFeedback() {
           }
           className='icon-feedback'
         />
-        <p>feedback</p>
+        <p>Feedback</p>
       </div>
     </a>
   );
