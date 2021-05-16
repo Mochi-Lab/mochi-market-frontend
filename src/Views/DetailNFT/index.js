@@ -63,7 +63,18 @@ export default function DetailNFT() {
         // check if user is owner of token
         let tokenOwner = await erc721Instances.methods.ownerOf(id).call();
         setOwner(tokenOwner);
-        if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
+
+        let isSelling;
+
+        if (!!walletAddress) {
+          isSelling = await sellOrderList.methods
+            .checkDuplicateERC721(addressToken, id, walletAddress)
+            .call();
+        }
+
+        if (walletAddress && isSelling) {
+          setStatus(3);
+        } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
           // Check if the token is in the order list?
           let isOnList = await sellOrderList.methods
             .checkDuplicateERC721(addressToken, id, tokenOwner)
