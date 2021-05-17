@@ -38,7 +38,7 @@ const tokensPayment = {
   ],
   //BSC Testnet
   97: [
-    { address: '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C', icon: moma, symbol: 'MOMA' },
+    { address: '0x9980a36dFdcE320E24e2CAcB2Ac3e91022A91A2f', icon: moma, symbol: 'MOMA' },
     { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
   ],
 };
@@ -51,7 +51,7 @@ const symbolToken = {
   },
   //BSC Testnet
   97: {
-    '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C': 'MOMA',
+    '0x9980a36dFdcE320E24e2CAcB2Ac3e91022A91A2f': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
   },
 };
