@@ -1,22 +1,33 @@
 import 'Views/DetailNFT/style.css';
-import { Button, InputNumber, Modal, Form } from 'antd';
-import { useState, useCallback } from 'react';
+import { Button, InputNumber, Modal, Form, Input, Select } from 'antd';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingModal from 'Components/LoadingModal';
-import bnb from 'Assets/binance-coin.svg';
+import { getTokensPayment } from 'utils/getContractAddress';
 
 import './index.css';
 
+const { Option } = Select;
+
 export default function Sell({ token }) {
   const dispatch = useDispatch();
+
+  const { web3, chainId } = useSelector((state) => state);
+
   const { addressToken, id } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [visible, setVisible] = useState(false);
-  const { web3 } = useSelector((state) => state);
+  const [tokenPayment, setTokenPayment] = useState();
 
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (!!chainId) {
+      setTokenPayment(getTokensPayment(chainId)[0].address);
+    }
+  }, [chainId]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -24,14 +35,23 @@ export default function Sell({ token }) {
 
   const onSubmit = useCallback(
     async (values) => {
-      setVisible(true);
-      await dispatch(
-        createSellOrder(addressToken, id, web3.utils.toWei(values.price.toString(), 'ether'))
-      );
-      setIsModalVisible(false);
-      setVisible(false);
+      if (parseFloat(values.price) > 0) {
+        setVisible(true);
+        const result = await dispatch(
+          createSellOrder(
+            addressToken,
+            id,
+            web3.utils.toWei(values.price.toString(), 'ether'),
+            tokenPayment
+          )
+        );
+        if (!!result) {
+          setIsModalVisible(false);
+        }
+        setVisible(false);
+      }
     },
-    [dispatch, addressToken, id, web3.utils]
+    [dispatch, addressToken, id, web3.utils, tokenPayment]
   );
 
   const handleOk = async () => {
@@ -73,13 +93,23 @@ export default function Sell({ token }) {
 
           <p className='textmode'>Will be on sale until you transfer this item or cancel it.</p>
         </div>
-        <div style={{ display: 'flex' }}>
-          <div className='center' style={{ height: 38, padding: '0px 10px 0px 10px' }}>
-            <img className='bnb-coin' src={bnb} alt='bnb' />
-          </div>
-          <Form onFinish={onSubmit} form={form}>
+        <Form onFinish={onSubmit} form={form} className='input-sell'>
+          <Input.Group compact>
+            <Select size='large' value={tokenPayment} onChange={(value) => setTokenPayment(value)}>
+              {!!getTokensPayment(chainId)
+                ? getTokensPayment(chainId).map((token, i) => {
+                    return (
+                      <Option value={token.address} key={i}>
+                        <img className='bnb-coin' src={token.icon} alt={token.symbol} />
+                      </Option>
+                    );
+                  })
+                : null}
+            </Select>
+
             <Form.Item name={['price']} rules={[{ required: true, message: 'Enter price' }]}>
               <InputNumber
+                min='0'
                 size='large'
                 className='search-style'
                 formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -87,8 +117,8 @@ export default function Sell({ token }) {
                 placeholder='Set Price'
               />
             </Form.Item>
-          </Form>
-        </div>
+          </Input.Group>
+        </Form>
       </Modal>
     </>
   );

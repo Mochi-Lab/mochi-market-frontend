@@ -90,7 +90,7 @@ export default function Profile() {
             </p>
           </div>
         </div>
-        <Tabs defaultActiveKey='1' type='card' size={'large'} className='tabs-actions-profile'>
+        <Tabs defaultActiveKey='2' type='card' size={'large'} className='tabs-actions-profile'>
           <TabPane
             tab={
               <div className='action-profile'>

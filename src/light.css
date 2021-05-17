@@ -3,6 +3,7 @@ html[data-theme='light'] {
   --background-color: rgb(255, 255, 255);
   --nft-background: #fafafa;
   --input-background: #ededed;
+  --input-background-white: white;
 }
 
 [data-theme='light'] .ant-card-bordered {

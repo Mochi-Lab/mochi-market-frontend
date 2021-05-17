@@ -20,6 +20,8 @@ import { getWeb3List } from 'utils/getWeb3List';
 import { uploadToIpfs } from 'utils/ipfs';
 
 var contractAddress;
+const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+const VALUE_MAX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
 ////////////////////
 // Common
@@ -468,6 +470,7 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
         token.collections = ERC721token.name;
         token.symbolCollections = ERC721token.symbol;
         token.sortIndex = order.sortIndex;
+        token.tokenPayment = listNftContract.tokenPayment[index];
         return token;
       })
     );
@@ -503,7 +506,7 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
 
       if (!!availableSellOrderERC721) {
         availableSellOrderERC721.map(async (sellOrder, i) => {
-          let token = { tokenId: [], price: [] };
+          let token = { tokenId: [], price: [], tokenPayment: [] };
           let nftindex = listNftContracts.findIndex(
             (nft) => nft.nftAddress === sellOrder.nftAddress
           );
@@ -512,10 +515,12 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
             token.instance = new web3.eth.Contract(ERC721.abi, sellOrder.nftAddress);
             token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             token.price.push(sellOrder.price);
+            token.tokenPayment.push(sellOrder.token);
             listNftContracts.push(token);
           } else {
             listNftContracts[nftindex].tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             listNftContracts[nftindex].price.push(sellOrder.price);
+            listNftContracts[nftindex].tokenPayment.push(sellOrder.token);
           }
         });
       }
@@ -556,7 +561,10 @@ export const setMySellOrder = () => async (dispatch, getState) => {
   }
 };
 
-export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, getState) => {
+export const createSellOrder = (nftAddress, tokenId, price, token) => async (
+  dispatch,
+  getState
+) => {
   const { market, walletAddress, web3, erc721Instances } = getState();
   try {
     const erc721Instance = await new web3.eth.Contract(ERC721.abi, nftAddress);
@@ -571,7 +579,7 @@ export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, 
     // Create Sell Order
     await market.methods
       // TODO : can sale with other token
-      .createSellOrder(nftAddress, tokenId, 1, price, '0x0000000000000000000000000000000000000000')
+      .createSellOrder(nftAddress, tokenId, 1, price, token)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         let noti = {};
@@ -579,25 +587,48 @@ export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, 
         noti.message = 'Create Sell Order Successfully !';
         dispatch(showNotification(noti));
       });
+    // Fetch new availableOrderList
+    dispatch(setAvailableSellOrder());
+    // get own nft
+    dispatch(getOwnedERC721(erc721Instances));
+    return true;
   } catch (error) {
     console.log({ error });
     error.type = 'error';
     dispatch(showNotification(error));
   }
-
-  // Fetch new availableOrderList
-  dispatch(setAvailableSellOrder());
-  // get own nft
-  dispatch(getOwnedERC721(erc721Instances));
 };
 
 export const buyNft = (orderDetail) => async (dispatch, getState) => {
-  const { market, walletAddress, erc721Instances, chainId } = getState();
+  const { market, walletAddress, erc721Instances, chainId, web3 } = getState();
   let link = null;
+  let value = 0;
+
+  if (orderDetail.token !== NULL_ADDRESS) {
+    const instaneErc20 = new web3.eth.Contract(ERC20.abi, orderDetail.token);
+    const allowance = await instaneErc20.methods.allowance(walletAddress, market._address).call();
+    if (parseInt(allowance) <= 0) {
+      await instaneErc20.methods
+        .approve(market._address, VALUE_MAX)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          message.success('Approve Successfully !');
+          return true;
+        })
+        .on('error', (error, receipt) => {
+          console.log('approveERC20: ', error);
+          // message.error('Oh no! Something went wrong !');
+          return false;
+        });
+    }
+  } else {
+    value = orderDetail.price;
+  }
+
   try {
     await market.methods
       .buy(orderDetail.sellId, 1, walletAddress, '0x')
-      .send({ from: walletAddress, value: orderDetail.price })
+      .send({ from: walletAddress, value: value })
       .on('receipt', (receipt) => {
         link = getWeb3List(chainId).explorer + receipt.transactionHash;
       });
@@ -664,7 +695,7 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
 
     try {
       await erc721Instance.methods
-        .mint(walletAddress, tokenUri, '0x0000000000000000000000000000000000000000')
+        .mint(walletAddress, tokenUri, NULL_ADDRESS)
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
@@ -718,7 +749,7 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
 
     try {
       await erc1155Instance.methods
-        .mint(walletAddress, id, amount, tokenUri, '0x0000000000000000000000000000000000000000')
+        .mint(walletAddress, id, amount, tokenUri, NULL_ADDRESS)
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
@@ -738,7 +769,7 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
 
     try {
       await erc1155Instance.methods
-        .mint(amount, tokenUri, '0x0000000000000000000000000000000000000000')
+        .mint(amount, tokenUri, NULL_ADDRESS)
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
@@ -1056,7 +1087,7 @@ export const checkWhiteListNft = (addressNft) => async (dispatch, getState) => {
   }
 };
 
-export const checkAllowance = (addressToken, amount) => async (dispatch, getState) => {
+export const checkAllowanceCampaign = (addressToken, amount) => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
     const instaneErc20 = new web3.eth.Contract(ERC20.abi, addressToken);
@@ -1088,10 +1119,7 @@ export const approveERC20 = (addressToken, amount) => async (dispatch, getState)
   try {
     const instaneErc20 = new web3.eth.Contract(ERC20.abi, addressToken);
     await instaneErc20.methods
-      .approve(
-        contractAddress.NFTCampaign,
-        '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      )
+      .approve(contractAddress.NFTCampaign, VALUE_MAX)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         let noti = {};
