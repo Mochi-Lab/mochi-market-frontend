@@ -1,4 +1,3 @@
-import BackButton from 'Components/BackButton';
 import { useHistory } from 'react-router';
 import './index.css';
 

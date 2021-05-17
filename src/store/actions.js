@@ -46,6 +46,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setAddressesProvider(addressesProvider));
   dispatch(setMarket(market));
   dispatch(setNftList(nftList));
+  dispatch(setAcceptedNftsUser());
   dispatch(setSellOrderList(sellOrderList));
   dispatch(setVault(vault));
   dispatch(setCreativeStudio(creativeStudio));
@@ -206,6 +207,91 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
   });
 
   dispatch({ type: GET_OWNED_ERC721, erc721Tokens });
+
+  // Loading done
+  dispatch(setLoadingErc721(false));
+};
+
+export const setAcceptedNftsUser = () => async (dispatch, getState) => {
+  const { nftList } = getState();
+  try {
+    let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
+    dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
+    dispatch(initERC721(acceptedNftsAddress));
+  } catch (e) {
+    console.log(e);
+    return e;
+  }
+};
+
+export const GET_ERC721_OF_USER = 'GET_ERC721_OF_USER';
+export const getERC721OfUser = (erc721Instances, user) => async (dispatch, getState) => {
+  // Start loading
+  dispatch(setLoadingErc721(true));
+
+  var getERC721 = (instance) => {
+    return new Promise(async (resolve) => {
+      let ERC721token = {};
+      const listIdToken = await listTokensOfOwner(instance, user, contractAddress.Market);
+      let tokenIdOwner = listIdToken.owned;
+      let tokenIdOnSale = listIdToken.onSale;
+
+      let balanceOfOwner = tokenIdOwner.length;
+      let balanceOfOnSale = tokenIdOnSale.length;
+
+      if (balanceOfOwner > 0 || balanceOfOnSale > 0) {
+        ERC721token.tokenIdOwner = tokenIdOwner;
+        ERC721token.name = await instance.methods.name().call();
+        ERC721token.symbol = await instance.methods.symbol().call();
+        ERC721token.tokens = [];
+        ERC721token.onSale = [];
+
+        for (let i = 0; i < balanceOfOwner; i++) {
+          let token = {};
+          token.index = tokenIdOwner[i];
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.tokens.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.tokens.push(token);
+          }
+        }
+        for (let i = 0; i < balanceOfOnSale; i++) {
+          let token = {};
+          token.index = tokenIdOnSale[i];
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.onSale.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.onSale.push(token);
+          }
+        }
+        resolve(ERC721token);
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  let erc721Tokens = await Promise.all(
+    erc721Instances.map(async (instance) => {
+      return await getERC721(instance);
+    })
+  );
+
+  erc721Tokens = erc721Tokens.filter(function (el) {
+    return el != null;
+  });
+
+  dispatch({ type: GET_ERC721_OF_USER, erc721Tokens });
 
   // Loading done
   dispatch(setLoadingErc721(false));
