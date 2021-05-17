@@ -8,6 +8,7 @@ const initialState = {
   shortAddress: null,
   adminAddress: null,
   balance: 0,
+  allowanceToken: 0,
   strSearch: '',
 
   // Erc721
@@ -76,6 +77,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         balance: action.balance,
+      };
+    case actions.SET_ALLOWANCE:
+      return {
+        ...state,
+        allowanceToken: action.allowanceToken,
       };
     case actions.SET_STR_SEARCH:
       return {

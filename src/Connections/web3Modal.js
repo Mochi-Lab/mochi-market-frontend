@@ -73,9 +73,9 @@ export const connectWeb3Modal = async () => {
 
     if (accounts.length > 0) {
       store.dispatch(setAddress(accounts[0]));
-      await axios.post(`${serverUrl}/user/checkin`, {
-        address: accounts[0],
-      });
+      // await axios.post(`${serverUrl}/user/checkin`, {
+      //   address: accounts[0],
+      // });
 
       // Init ERC721
       store.dispatch(setAcceptedNfts());
