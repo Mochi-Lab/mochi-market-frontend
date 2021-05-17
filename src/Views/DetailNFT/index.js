@@ -67,10 +67,16 @@ export default function DetailNFT() {
         const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
 
         const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
+        let tokenOwner;
         // check if user is owner of token
-        const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
-        let tokenOwner = order.seller;
-        setOwner(tokenOwner);
+        if (!!sellId.found) {
+          const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
+          tokenOwner = order.seller;
+          setOwner(tokenOwner);
+        } else {
+          tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+          setOwner(tokenOwner);
+        }
 
         let isSelling;
 
@@ -255,6 +261,7 @@ export default function DetailNFT() {
               <div className='footer-sidebar'>
                 <div className='actions-buy-bid'>
                   <div className='PE'>
+                    {console.log(status)}
                     {walletAddress ? (
                       <RenderSwitch status={status} token={token} orderDetail={orderDetail} />
                     ) : (
