@@ -3,6 +3,9 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { setChainId, setWeb3, setAddress, setAcceptedNfts } from 'store/actions';
 import store from 'store/index';
+import axios from 'axios';
+
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 const providerOptions = {
   walletconnect: {
@@ -70,6 +73,9 @@ export const connectWeb3Modal = async () => {
 
     if (accounts.length > 0) {
       store.dispatch(setAddress(accounts[0]));
+      await axios.post(`${serverUrl}/user/checkin`, {
+        address: accounts[0],
+      });
 
       // Init ERC721
       store.dispatch(setAcceptedNfts());
@@ -77,8 +83,11 @@ export const connectWeb3Modal = async () => {
   }
 
   // Subscribe to accounts change
-  provider.on('accountsChanged', (accounts) => {
+  provider.on('accountsChanged', async (accounts) => {
     store.dispatch(setAddress(accounts[0]));
+    await axios.post(`${serverUrl}/user/checkin`, {
+      address: accounts[0],
+    });
     store.dispatch(setAcceptedNfts());
   });
 
