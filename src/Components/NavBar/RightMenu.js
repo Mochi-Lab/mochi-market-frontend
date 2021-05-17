@@ -32,9 +32,9 @@ const RightMenu = () => {
       <Menu.Item key='/submit-Nfts'>
         <Link to='/submit-Nfts'>Submit NFTs</Link>
       </Menu.Item>
-      <Menu.Item key='/airdrops'>
+      {/* <Menu.Item key='/airdrops'>
         <Link to='/airdrops'>Airdrops</Link>
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item key='/create'>
         <Link to='/create'>Create</Link>
       </Menu.Item>

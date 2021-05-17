@@ -22,7 +22,6 @@ export default function PublicProfile() {
   useEffect(() => {
     if (erc721Instances) {
       dispatch(getERC721OfUser(erc721Instances, address));
-      console.log({ erc721OfUser });
     }
   }, [erc721Instances, dispatch, address]);
 

@@ -14,7 +14,7 @@ const Profile = lazy(() => import('Views/Profile'));
 const DetailNFT = lazy(() => import('Views/DetailNFT'));
 const SubmitNFT = lazy(() => import('Views/SubmitNft'));
 const Create = lazy(() => import('Views/Create'));
-const Airdrops = lazy(() => import('Views/Airdrops'));
+// const Airdrops = lazy(() => import('Views/Airdrops'));
 const CreateERC721 = lazy(() => import('Views/Create/ERC721'));
 const CreateERC1155 = lazy(() => import('Views/Create/ERC1155'));
 const Browse = lazy(() => import('Views/Browse'));
@@ -54,7 +54,7 @@ function App() {
               <Route exact path='/create/erc721' component={CreateERC721} />
               <Route exact path='/create/erc1155' component={CreateERC1155} />
               <Route exact path='/token/:addressToken/:id' component={DetailNFT} />
-              <Route exact path='/airdrops' component={Airdrops} />
+              {/* <Route exact path='/airdrops' component={Airdrops} /> */}
               <Route exact path='/profile/:address' component={PublicProfile} />
             </Switch>
           </Suspense>
