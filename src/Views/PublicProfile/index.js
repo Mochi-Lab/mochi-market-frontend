@@ -24,7 +24,7 @@ export default function PublicProfile() {
       dispatch(getERC721OfUser(erc721Instances, address));
       console.log({ erc721OfUser });
     }
-  }, [erc721Instances, dispatch, address]);
+  }, [erc721Instances, dispatch, address, erc721OfUser]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(address);

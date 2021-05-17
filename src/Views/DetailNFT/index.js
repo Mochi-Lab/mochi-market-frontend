@@ -19,6 +19,7 @@ import ConnectWallet from 'Components/ConnectWallet';
 import Share from 'Components/Share';
 import './style.css';
 import BackButton from 'Components/BackButton';
+import { getSymbol } from 'utils/getContractAddress';
 
 const { TabPane } = Tabs;
 
@@ -51,9 +52,14 @@ export default function DetailNFT() {
   const [indexAvailable, setIndexAvailable] = useState(null);
   const [expandImgDetail, setExpandImgDetail] = useState(false);
   // get details nft
-  const { web3, walletAddress, sellOrderList, availableSellOrder721, market } = useSelector(
-    (state) => state
-  );
+  const {
+    web3,
+    walletAddress,
+    sellOrderList,
+    availableSellOrder721,
+    market,
+    chainId,
+  } = useSelector((state) => state);
   const { addressToken, id } = useParams();
   useEffect(() => {
     const getNFTDetails = async () => {
@@ -217,7 +223,8 @@ export default function DetailNFT() {
                         <div className='doaTrL'>
                           <div className='lapozE'>
                             <div className='price-eth'>
-                              {web3.utils.fromWei(orderDetail.price, 'ether')} BNB
+                              {web3.utils.fromWei(orderDetail.price, 'ether')}{' '}
+                              {getSymbol(chainId)[orderDetail.token]}
                             </div>
                             <div className='amount-nft textmode'>1 of 1</div>
                           </div>

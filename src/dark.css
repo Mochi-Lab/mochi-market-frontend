@@ -176,7 +176,7 @@ html[data-theme='dark'] {
 }
 
 [data-theme='dark'] .footer-sidebar .actions-buy-bid {
-  background: rgb(0 0 0 / 45%) !important;
+  background: rgb(51 51 51) !important;
 }
 
 [data-theme='dark'] .info-nft {
@@ -197,4 +197,14 @@ html[data-theme='dark'] {
 
 [data-theme='dark'] .ant-menu-item a {
   color: #fff;
+}
+
+[data-theme='dark'] .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
+  background: rgb(61, 61, 61) !important;
+}
+[data-theme='dark'] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: rgb(61, 61, 61) !important;
+}
+[data-theme='dark'] .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: rgb(83, 83, 83) !important;
 }

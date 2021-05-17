@@ -18,6 +18,7 @@ const CheckboxGroup = Checkbox.Group;
 
 const plainOptions = ['Created', 'List', 'Sale', 'Cancel', 'Transfer'];
 const defaultCheckedList = ['Created', 'List', 'Sale', 'Cancel', 'Transfer'];
+const NullAddress = '0x0000000000000000000000000000000000000000';
 
 export default function TransactionTable() {
   const dispatch = useDispatch();
@@ -52,10 +53,7 @@ export default function TransactionTable() {
             },
             function (error, event) {
               event.key = event.id;
-              event.event =
-                event.returnValues.from === '0x0000000000000000000000000000000000000000'
-                  ? 'Created'
-                  : 'Transfer';
+              event.event = event.returnValues.from === NullAddress ? 'Created' : 'Transfer';
               if (event.returnValues.from !== market._address) {
                 setTxns((txns) => [...txns, event]);
               }
