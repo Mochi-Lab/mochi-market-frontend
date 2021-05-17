@@ -1,6 +1,7 @@
 import { useHistory } from 'react-router';
 import './index.css';
-
+import create721Icon from 'Assets/images/create721.png';
+import create1155Icon from 'Assets/images/create1155.png';
 export default function Create() {
   const history = useHistory();
 
@@ -22,18 +23,12 @@ export default function Create() {
             className='box input-mode-bc slt center mr-1d5rem'
             onClick={() => push('/create/erc721/')}
           >
-            <img
-              src='https://rarible.com/static/2a78e39400f51f1dbeba13832f421092.png'
-              alt='single'
-            />
+            <img src={create721Icon} alt='single' />
             <p>Single</p>
           </div>
 
-          <div className='box input-mode-bc slt center' onClick={() => push('/create/erc1155')}>
-            <img
-              src='https://rarible.com/static/48dc30c106da96755b60ead8627c8888.png'
-              alt='multiple'
-            />
+          <div className='box input-mode-bc slt center'>
+            <img src={create1155Icon} alt='multiple' />
             <p>Multiple</p>
           </div>
         </div>
