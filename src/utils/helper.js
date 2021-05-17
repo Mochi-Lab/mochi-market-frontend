@@ -1,3 +1,7 @@
+import { getContractAddress } from 'utils/getContractAddress';
+const Web3 = require('web3');
+const ERC20 = require('Contracts/ERC20.json');
+
 export function parseBalance(_balanceWei, _decimals) {
   if (!_balanceWei) {
     return 0;
@@ -88,3 +92,21 @@ export async function listTokensOfOwner(token, walletAddress, addressMarket) {
   }
   return { owned: [...owned], onSale: [...onSale] };
 }
+
+export const balanceOf = async (tokenAddress, walletAddress) => {
+  const web3 = new Web3(window.ethereum);
+  let balance;
+  const erc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
+  balance = await erc20.methods.balanceOf(walletAddress).call();
+  return balance;
+};
+
+export const allowance = async (tokenAddress, walletAddress, chainId) => {
+  const web3 = new Web3(window.ethereum);
+  const instaneErc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
+  const contractAddress = getContractAddress(chainId);
+  let allowance = await instaneErc20.methods
+    .allowance(walletAddress, contractAddress.Market)
+    .call();
+  return allowance;
+};

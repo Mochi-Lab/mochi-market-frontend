@@ -132,7 +132,7 @@
           "type": "uint256"
         }
       ],
-      "name": "cancleExchangeOrder",
+      "name": "cancelExchangeOrder",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -145,7 +145,7 @@
           "type": "uint256"
         }
       ],
-      "name": "cancleSellOrder",
+      "name": "cancelSellOrder",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -365,6 +365,105 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "onERC1155Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "onERC721Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "exchangeId",
+          "type": "uint256"
+        }
+      ],
+      "name": "removeExchangeOrder",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "sellId",
+          "type": "uint256"
+        }
+      ],
+      "name": "removeSellOrder",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {

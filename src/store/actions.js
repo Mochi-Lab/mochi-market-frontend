@@ -599,6 +599,34 @@ export const createSellOrder = (nftAddress, tokenId, price, token) => async (
   }
 };
 
+export const SET_ALLOWANCE = 'SET_ALLOWANCE';
+export const approveToken = (orderDetail) => async (dispatch, getState) => {
+  const { market, walletAddress, web3 } = getState();
+
+  if (orderDetail.token !== NULL_ADDRESS) {
+    const instaneErc20 = new web3.eth.Contract(ERC20.abi, orderDetail.token);
+    const allowance = await instaneErc20.methods.allowance(walletAddress, market._address).call();
+    if (parseInt(allowance) <= 0) {
+      await instaneErc20.methods
+        .approve(market._address, VALUE_MAX)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Approve Successfully !';
+          dispatch(showNotification(noti));
+          dispatch({ type: SET_ALLOWANCE, allowanceToken: VALUE_MAX });
+          return true;
+        })
+        .on('error', (error, receipt) => {
+          console.log('approveERC20: ', error);
+          // message.error('Oh no! Something went wrong !');
+          return false;
+        });
+    }
+  }
+};
+
 export const buyNft = (orderDetail) => async (dispatch, getState) => {
   const { market, walletAddress, erc721Instances, chainId, web3 } = getState();
   let link = null;
@@ -652,7 +680,7 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
   try {
     await dispatch(setLoadingTx(true));
     await market.methods
-      .cancleSellOrder(orderDetail.sellId)
+      .cancelSellOrder(orderDetail.sellId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         let noti = {};
