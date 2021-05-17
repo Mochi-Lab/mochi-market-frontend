@@ -44,6 +44,9 @@ const initialState = {
   nftCampaign: null,
   listCampaign: [],
   loadingCampaign: false,
+
+  // Notification
+  noti: null, // notification = {type:"success/error",message="......"}
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -183,6 +186,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         erc721OfUser: action.erc721Tokens,
+      };
+    case actions.NOTI:
+      return {
+        ...state,
+        noti: action.noti,
       };
     default:
       return state;
