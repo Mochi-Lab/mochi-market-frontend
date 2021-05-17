@@ -182,3 +182,19 @@ html[data-theme='dark'] {
 [data-theme='dark'] .info-nft {
   background: rgb(0 0 0 / 33%) !important;
 }
+
+[data-theme='dark'] .ant-drawer-content {
+  background: #464646 0% 0% no-repeat padding-box;
+  border: 1px solid #4c4c4c;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .ant-menu {
+  background: #464646 0% 0% no-repeat padding-box;
+  border: 1px solid #4c4c4c;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .ant-menu-item a {
+  color: #fff;
+}
