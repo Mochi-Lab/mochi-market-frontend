@@ -4,6 +4,7 @@ import { createERC721Collection } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import ConnectWallet from 'Components/ConnectWallet';
 import SampleERC721 from 'Contracts/SampleERC721.json';
+import LoadingModal from 'Components/LoadingModal';
 
 import '../index.css';
 
@@ -37,13 +38,22 @@ const NFTinfo = ({ userCollection, web3 }) => {
 export default function ERC721Collections({ collectionId, setCollectionId }) {
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
   const { walletAddress, userCollections, web3 } = useSelector((state) => state);
 
   const [form] = Form.useForm();
 
   const onSubmit = useCallback(
     (values) => {
-      dispatch(createERC721Collection(values));
+      setIsDeploying(true);
+      dispatch(createERC721Collection(values))
+        .then(() => {
+          setIsDeploying(false);
+        })
+        .catch((e) => {
+          console.log(e);
+          setIsDeploying(false);
+        });
     },
     [dispatch]
   );
@@ -64,6 +74,7 @@ export default function ERC721Collections({ collectionId, setCollectionId }) {
 
   return (
     <>
+      <LoadingModal title={'Deploying Collection'} visible={isDeploying} />
       <div className='choose'>
         <div className={'box input-mode-bc'} onClick={showModal}>
           <strong className='textmode'>Create</strong>
