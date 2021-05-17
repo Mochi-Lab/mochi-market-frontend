@@ -52,8 +52,13 @@ export default function Buy({ orderDetail }) {
   const approve = async () => {
     if (!orderDetail) return;
     setVisibleApprove(true);
-    dispatch(approveToken(orderDetail));
-    setVisibleApprove(false);
+    await dispatch(approveToken(orderDetail))
+      .then(() => {
+        setVisibleApprove(false);
+      })
+      .catch((e) => {
+        setVisibleApprove(false);
+      });
   };
 
   const openNotification = (link) => {
