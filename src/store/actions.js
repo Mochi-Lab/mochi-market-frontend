@@ -612,7 +612,10 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
         .approve(market._address, VALUE_MAX)
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Approve Successfully !');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Approve Successfully !';
+          dispatch(showNotification(noti));
           return true;
         })
         .on('error', (error, receipt) => {
