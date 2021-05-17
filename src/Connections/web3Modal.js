@@ -20,8 +20,8 @@ const providerOptions = {
   },
 };
 
-const autoAddNetworkBSC = () => {
-  window.ethereum.request({
+const autoAddNetworkBSC = async () => {
+  await window.ethereum.request({
     method: 'wallet_addEthereumChain',
     params: [
       // {
@@ -56,11 +56,8 @@ export const connectWeb3Modal = async () => {
     network: 'binance',
     providerOptions, // required
   });
-
   autoAddNetworkBSC();
-
   const provider = await web3Modal.connect();
-
   const web3 = new Web3(provider);
 
   let chainId = await web3.eth.net.getId();
