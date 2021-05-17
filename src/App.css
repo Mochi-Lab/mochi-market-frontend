@@ -272,6 +272,14 @@ div.line-loading {
   margin-right: 1.5rem;
 }
 
+.pink-font {
+  color: #973b5e !important;
+}
+
+.bt-cnlo:hover {
+  color: #e35188 !important;
+}
+
 @keyframes rotateLoading {
   0% {
     transform: rotate(0);
@@ -330,15 +338,14 @@ div.line-loading {
 }
 
 @media (max-width: 768px) {
-  .bg-header {
-    height: 60px;
-  }
   .logo {
     width: 75px;
-    height: 60px;
   }
   .logo a img {
     width: 50px;
+  }
+  .barsMenu {
+    padding-top: 0 !important;
   }
 }
 

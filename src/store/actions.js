@@ -55,6 +55,11 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setAvailableSellOrder());
 };
 
+export const LOGOUT = 'LOGOUT';
+export const logout = () => (dispatch) => {
+  dispatch({ type: LOGOUT });
+};
+
 export const SET_CHAINID = 'SET_CHAINID';
 export const setChainId = (chainId) => (dispatch) => {
   dispatch({ type: SET_CHAINID, chainId });

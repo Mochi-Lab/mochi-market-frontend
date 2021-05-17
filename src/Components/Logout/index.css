@@ -1,0 +1,13 @@
+.ant-modal-footer {
+  border: 0 !important;
+}
+
+.btn-logout {
+  border-radius: 1rem !important;
+  background: #e35188 !important;
+  border-color: #e35188 !important;
+}
+
+.wl-fs {
+  font-size: 18px;
+}
