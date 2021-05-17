@@ -66,8 +66,10 @@ export default function DetailNFT() {
       try {
         const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
 
+        const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
         // check if user is owner of token
-        let tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+        const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
+        let tokenOwner = order.seller;
         setOwner(tokenOwner);
 
         let isSelling;
