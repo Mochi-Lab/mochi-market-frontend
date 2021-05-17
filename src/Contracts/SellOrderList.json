@@ -85,6 +85,12 @@
           "type": "uint256"
         },
         {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
           "indexed": false,
           "internalType": "address",
           "name": "buyer",
@@ -108,6 +114,12 @@
           "internalType": "uint256",
           "name": "sellId",
           "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
         }
       ],
       "name": "SellOrderDeactive",

@@ -314,6 +314,15 @@ div.line-loading {
   background: none !important;
 }
 
+.events-history {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+}
+
 @media (max-width: 992px) {
   .logo {
     width: 85px;

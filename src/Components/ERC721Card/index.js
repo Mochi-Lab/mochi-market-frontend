@@ -64,7 +64,7 @@ export default function ERC721({ tokens }) {
 
   return (
     <div className='explore-nft content-list-nft'>
-      <Row style={{ margin: 0 }} justify='start'>
+      <Row justify='start'>
         {!!afterFilter ? (
           afterFilter.map((token, index) => (
             <ERC721Card key={index} token={token} strSearch={strSearch} />

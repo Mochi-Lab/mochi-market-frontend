@@ -112,7 +112,7 @@ export default function DetailNFT() {
       }
     };
     if (web3 && sellOrderList && availableSellOrder721) getNFTDetails();
-  }, [web3, addressToken, id, walletAddress, sellOrderList, availableSellOrder721]);
+  }, [web3, addressToken, id, walletAddress, sellOrderList, availableSellOrder721, market]);
 
   return (
     <>
