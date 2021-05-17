@@ -15,7 +15,6 @@ import NFTCampaign from 'Contracts/NFTCampaign.json';
 import ERC20 from 'Contracts/ERC20.json';
 import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
-import { message } from 'antd';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
 import { getWeb3List } from 'utils/getWeb3List';
 import { uploadToIpfs } from 'utils/ipfs';
@@ -314,17 +313,17 @@ export const transferNft = (contractAddress, to, tokenId) => async (dispatch, ge
       .safeTransferFrom(walletAddress, to, tokenId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Transfer Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log('transferNft: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Transfer Successfully';
+        dispatch(showNotification(noti));
       });
+
     await dispatch(setLoadingTx(false));
   } catch (error) {
-    console.log('transferNft: ', error);
     await dispatch(setLoadingTx(false));
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
@@ -396,14 +395,15 @@ export const registerNft = (contractAddress) => async (dispatch, getState) => {
       .registerNFT(contractAddress)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Register Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log('registerNft: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Register Successfully';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    message.error('Sorry, but this is not contract address');
+    error.message = 'Sorry, but this is not contract address or this address has been accepted';
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -418,15 +418,15 @@ export const acceptNft = (contractAddress) => async (dispatch, getState) => {
       .acceptNFT(contractAddress)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Accept Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log('acceptNft: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Accept Successfully';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log('acceptNft: ', error);
-    message.error('Sorry, but this is not contract address');
+    error.message = 'Sorry, but this is not contract address or this address has been accepted';
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -437,9 +437,10 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
     let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
     dispatch(initERC721(acceptedNftsAddress));
-  } catch (e) {
-    console.log(e);
-    return e;
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification(error));
+    return error;
   }
 };
 
@@ -573,15 +574,15 @@ export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, 
       .createSellOrder(nftAddress, tokenId, 1, price, '0x0000000000000000000000000000000000000000')
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Create Sell Order Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log('createSellOrder: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Create Sell Order Successfully !';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log('createSellOrder: ', error);
-    // message.error('Oh no! Something went wrong !');
+    console.log({ error });
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 
   // Fetch new availableOrderList
@@ -601,8 +602,8 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
         link = getWeb3List(chainId).explorer + receipt.transactionHash;
       });
   } catch (error) {
-    console.log('buyNft: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 
   // Fetch new availableOrderList
@@ -620,18 +621,17 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
       .cancleSellOrder(orderDetail.sellId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Cancel Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log('cancelSellOrder: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Cancel Successfully !';
+        dispatch(showNotification(noti));
       });
-    await dispatch(setLoadingTx(false));
   } catch (error) {
-    console.log('cancelSellOrder: ', error);
-    await dispatch(setLoadingTx(false));
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
+
+  await dispatch(setLoadingTx(false));
 
   // Fetch new availableOrderList
   dispatch(setAvailableSellOrder());
@@ -667,11 +667,14 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
         .mint(walletAddress, tokenUri, '0x0000000000000000000000000000000000000000')
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Create Successfully !');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
         });
     } catch (error) {
-      console.log(error);
-      // message.error('Oh no! Something went wrong !');
+      error.type = 'error';
+      dispatch(showNotification(error));
     }
   } else {
     erc721Instance = await new web3.eth.Contract(
@@ -684,11 +687,14 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
         .mint(tokenUri)
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Create Successfully !');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
         });
     } catch (error) {
-      console.log('generateERC721NFT: ', error);
-      // message.error('Oh no! Something went wrong !');
+      error.type = 'error';
+      dispatch(showNotification(error));
     }
   }
 
@@ -715,11 +721,14 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
         .mint(walletAddress, id, amount, tokenUri, '0x0000000000000000000000000000000000000000')
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Create Successfully !');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
         });
     } catch (error) {
-      console.log('generateERC1155NFT: ', error);
-      // message.error('Oh no! Something went wrong !');
+      error.type = 'error';
+      dispatch(showNotification(error));
     }
   } else {
     erc1155Instance = await new web3.eth.Contract(
@@ -732,11 +741,14 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
         .mint(amount, tokenUri, '0x0000000000000000000000000000000000000000')
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Create Successfully !');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
         });
     } catch (error) {
-      console.log('generateERC1155NFT: ', error);
-      // message.error('Oh no! Something went wrong !');
+      error.type = 'error';
+      dispatch(showNotification(error));
     }
   }
 
@@ -769,8 +781,8 @@ export const setCollectionByUser = () => async (dispatch, getState) => {
 
     dispatch({ type: SET_USER_COLLECTIONS, userCollections: formatUserCollections });
   } catch (error) {
-    console.log('setCollectionByUser: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -783,15 +795,14 @@ export const createERC1155Collection = ({ name, symbol }) => async (dispatch, ge
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         dispatch(setCollectionByUser());
-        message.success('Create Successfully !');
-      })
-      .on('error', (error, receipt) => {
-        console.log('createERC1155Collection: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Create Successfully !';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log('createERC1155Collection: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
   // get own nft
   dispatch(setAcceptedNfts());
@@ -805,15 +816,14 @@ export const createERC721Collection = ({ name, symbol }) => async (dispatch, get
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         dispatch(setCollectionByUser());
-        message.success('Create Successfully !');
-      })
-      .on('error', (error, receipt) => {
-        console.log('createERC721Collection: ', error);
-        // message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Create Successfully !';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log('createERC721Collection: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
   // get own nft
   dispatch(setAcceptedNfts());
@@ -935,8 +945,8 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
       dispatch(setLoadingCampaign(false));
     }
   } catch (error) {
-    console.log('fetchListCampaign: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -1016,18 +1026,17 @@ export const addCampaign = (
         )
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Create Campaign Successfully');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Campaign Successfully';
+          dispatch(showNotification(noti));
           return true;
-        })
-        .on('error', (error, receipt) => {
-          console.log('addCampaign: ', error);
-          // message.error('Oh no! Something went wrong !');
-          return false;
         });
     }
     return resultAdd;
   } catch (error) {
-    console.log('addCampaign: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1042,8 +1051,8 @@ export const checkWhiteListNft = (addressNft) => async (dispatch, getState) => {
     const result = await nftList.methods.isAcceptedNFT(addressNft).call();
     return result;
   } catch (error) {
-    console.log('checkWhiteListNft: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -1056,8 +1065,8 @@ export const checkAllowance = (addressToken, amount) => async (dispatch, getStat
       .call();
     return allowance;
   } catch (error) {
-    console.log('checkAllowance: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -1069,8 +1078,8 @@ export const checkBalance = (addressToken) => async (dispatch, getState) => {
     let symbol = await instaneErc20.methods.symbol().call();
     return { weiBalance, symbol };
   } catch (error) {
-    console.log('checkBalance: ', error);
-    // message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -1085,16 +1094,16 @@ export const approveERC20 = (addressToken, amount) => async (dispatch, getState)
       )
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Approve Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Approve Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('approveERC20: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
   } catch (error) {
     console.log('approveERC20: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1106,17 +1115,16 @@ export const forceEndCampaign = (campaignId) => async (dispatch, getState) => {
       .forceEnd(campaignId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Cancel Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Cancel Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('forceEndCampaign: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
     return result;
   } catch (error) {
-    console.log('forceEndCampaign: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1128,17 +1136,17 @@ export const claimTokenByNFT = (campaignId, tokenIds) => async (dispatch, getSta
       .claim(campaignId, tokenIds, walletAddress)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Claim Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Claim Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('claimTokenByNFT: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log('claimTokenByNFT: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1150,17 +1158,17 @@ export const acceptCampaign = (campaignId) => async (dispatch, getState) => {
       .acceptCampaign(campaignId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Accept Campaign Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Accept Campaign Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('acceptCampaign: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log('acceptCampaign: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1180,17 +1188,17 @@ export const addMoreSlots = (campaignId, slots) => async (dispatch, getState) =>
       .addMoreSlots(campaignId, slots)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Add More Slots Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Add More Slots Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('addMoreSlots: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log('addMoreSlots: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1205,17 +1213,17 @@ export const rescheduleCampaign = (campaignId, startTime, endTime) => async (
       .rescheduleCampaign(campaignId, startTime, endTime)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Change Time Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Change Time Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('rescheduleCampaign: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log('rescheduleCampaign: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -1227,17 +1235,21 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
       .extendCampaign(campaignId, endTime)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Extend Time Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Extend Time Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log('extendCampaign: ', error);
-        // message.error('Oh no! Something went wrong !');
-        return false;
       });
     return result;
   } catch (error) {
-    console.log('extendCampaign: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
+};
+
+export const NOTI = 'NOTI';
+export const showNotification = (noti) => (dispatch) => {
+  dispatch({ type: NOTI, noti });
 };

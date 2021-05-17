@@ -7,6 +7,7 @@ import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
 import './App.css';
+import Notification from 'Components/Notification';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -35,6 +36,7 @@ function App() {
         <FormFeedback />
         <div className='page content'>
           <div className='bg-header'></div>
+          <Notification />
           <NavBar />
           <Suspense
             fallback={
