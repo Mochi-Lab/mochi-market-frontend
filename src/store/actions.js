@@ -55,6 +55,11 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setAvailableSellOrder());
 };
 
+export const LOGOUT = 'LOGOUT';
+export const logout = () => (dispatch) => {
+  dispatch({ type: LOGOUT });
+};
+
 export const SET_CHAINID = 'SET_CHAINID';
 export const setChainId = (chainId) => (dispatch) => {
   dispatch({ type: SET_CHAINID, chainId });
@@ -226,13 +231,14 @@ export const transferNft = (contractAddress, to, tokenId) => async (dispatch, ge
         message.success('Transfer Successfully');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('transferNft: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
     await dispatch(setLoadingTx(false));
   } catch (error) {
+    console.log('transferNft: ', error);
     await dispatch(setLoadingTx(false));
-    message.error('Oh no! Something went wrong !');
+    // message.error('Oh no! Something went wrong !');
   }
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
@@ -307,11 +313,10 @@ export const registerNft = (contractAddress) => async (dispatch, getState) => {
         message.success('Register Successfully');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('registerNft: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
   } catch (error) {
-    console.log(error);
     message.error('Sorry, but this is not contract address');
   }
 };
@@ -330,11 +335,11 @@ export const acceptNft = (contractAddress) => async (dispatch, getState) => {
         message.success('Accept Successfully');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('acceptNft: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
   } catch (error) {
-    console.log(error);
+    console.log('acceptNft: ', error);
     message.error('Sorry, but this is not contract address');
   }
 };
@@ -485,12 +490,12 @@ export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, 
         message.success('Create Sell Order Successfully');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('createSellOrder: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('createSellOrder: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 
   // Fetch new availableOrderList
@@ -510,8 +515,8 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
         link = getWeb3List(chainId).explorer + receipt.transactionHash;
       });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('buyNft: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 
   // Fetch new availableOrderList
@@ -522,7 +527,7 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
 };
 
 export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
-  const { market, walletAddress } = getState();
+  const { market, walletAddress, erc721Instances } = getState();
   try {
     await dispatch(setLoadingTx(true));
     await market.methods
@@ -532,17 +537,20 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
         message.success('Cancel Successfully');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('cancelSellOrder: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
     await dispatch(setLoadingTx(false));
   } catch (error) {
+    console.log('cancelSellOrder: ', error);
     await dispatch(setLoadingTx(false));
-    message.error('Oh no! Something went wrong !');
+    // message.error('Oh no! Something went wrong !');
   }
 
   // Fetch new availableOrderList
   dispatch(setAvailableSellOrder());
+  // get own nft
+  dispatch(getOwnedERC721(erc721Instances));
 };
 
 export const IS_LOADING_TX = 'IS_LOADING_TX';
@@ -577,7 +585,7 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
         });
     } catch (error) {
       console.log(error);
-      message.error('Oh no! Something went wrong !');
+      // message.error('Oh no! Something went wrong !');
     }
   } else {
     erc721Instance = await new web3.eth.Contract(
@@ -593,8 +601,8 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
           message.success('Create Successfully !');
         });
     } catch (error) {
-      console.log(error);
-      message.error('Oh no! Something went wrong !');
+      console.log('generateERC721NFT: ', error);
+      // message.error('Oh no! Something went wrong !');
     }
   }
 
@@ -624,8 +632,8 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
           message.success('Create Successfully !');
         });
     } catch (error) {
-      console.log(error);
-      message.error('Oh no! Something went wrong !');
+      console.log('generateERC1155NFT: ', error);
+      // message.error('Oh no! Something went wrong !');
     }
   } else {
     erc1155Instance = await new web3.eth.Contract(
@@ -641,8 +649,8 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
           message.success('Create Successfully !');
         });
     } catch (error) {
-      console.log(error);
-      message.error('Oh no! Something went wrong !');
+      console.log('generateERC1155NFT: ', error);
+      // message.error('Oh no! Something went wrong !');
     }
   }
 
@@ -675,8 +683,8 @@ export const setCollectionByUser = () => async (dispatch, getState) => {
 
     dispatch({ type: SET_USER_COLLECTIONS, userCollections: formatUserCollections });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('setCollectionByUser: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 };
 
@@ -692,12 +700,12 @@ export const createERC1155Collection = ({ name, symbol }) => async (dispatch, ge
         message.success('Create Successfully !');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('createERC1155Collection: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('createERC1155Collection: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
   // get own nft
   dispatch(setAcceptedNfts());
@@ -714,12 +722,12 @@ export const createERC721Collection = ({ name, symbol }) => async (dispatch, get
         message.success('Create Successfully !');
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('createERC721Collection: ', error);
+        // message.error('Oh no! Something went wrong !');
       });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('createERC721Collection: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
   // get own nft
   dispatch(setAcceptedNfts());
@@ -841,8 +849,8 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
       dispatch(setLoadingCampaign(false));
     }
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('fetchListCampaign: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 };
 
@@ -926,14 +934,14 @@ export const addCampaign = (
           return true;
         })
         .on('error', (error, receipt) => {
-          console.log(error);
-          message.error('Oh no! Something went wrong !');
+          console.log('addCampaign: ', error);
+          // message.error('Oh no! Something went wrong !');
           return false;
         });
     }
     return resultAdd;
   } catch (error) {
-    console.log(error);
+    console.log('addCampaign: ', error);
     return false;
   }
 };
@@ -948,8 +956,8 @@ export const checkWhiteListNft = (addressNft) => async (dispatch, getState) => {
     const result = await nftList.methods.isAcceptedNFT(addressNft).call();
     return result;
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('checkWhiteListNft: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 };
 
@@ -962,8 +970,8 @@ export const checkAllowance = (addressToken, amount) => async (dispatch, getStat
       .call();
     return allowance;
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('checkAllowance: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 };
 
@@ -975,8 +983,8 @@ export const checkBalance = (addressToken) => async (dispatch, getState) => {
     let symbol = await instaneErc20.methods.symbol().call();
     return { weiBalance, symbol };
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log('checkBalance: ', error);
+    // message.error('Oh no! Something went wrong !');
   }
 };
 
@@ -995,12 +1003,12 @@ export const approveERC20 = (addressToken, amount) => async (dispatch, getState)
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('approveERC20: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
   } catch (error) {
-    console.log(error);
+    console.log('approveERC20: ', error);
     return false;
   }
 };
@@ -1016,13 +1024,13 @@ export const forceEndCampaign = (campaignId) => async (dispatch, getState) => {
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('forceEndCampaign: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('forceEndCampaign: ', error);
     return false;
   }
 };
@@ -1038,13 +1046,13 @@ export const claimTokenByNFT = (campaignId, tokenIds) => async (dispatch, getSta
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('claimTokenByNFT: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('claimTokenByNFT: ', error);
     return false;
   }
 };
@@ -1060,13 +1068,13 @@ export const acceptCampaign = (campaignId) => async (dispatch, getState) => {
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('acceptCampaign: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('acceptCampaign: ', error);
     return false;
   }
 };
@@ -1090,13 +1098,13 @@ export const addMoreSlots = (campaignId, slots) => async (dispatch, getState) =>
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('addMoreSlots: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('addMoreSlots: ', error);
     return false;
   }
 };
@@ -1115,13 +1123,13 @@ export const rescheduleCampaign = (campaignId, startTime, endTime) => async (
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('rescheduleCampaign: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('rescheduleCampaign: ', error);
     return false;
   }
 };
@@ -1137,13 +1145,13 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
         return true;
       })
       .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        console.log('extendCampaign: ', error);
+        // message.error('Oh no! Something went wrong !');
         return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('extendCampaign: ', error);
     return false;
   }
 };

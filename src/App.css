@@ -272,6 +272,14 @@ div.line-loading {
   margin-right: 1.5rem;
 }
 
+.pink-font {
+  color: #973b5e !important;
+}
+
+.bt-cnlo:hover {
+  color: #e35188 !important;
+}
+
 @keyframes rotateLoading {
   0% {
     transform: rotate(0);
@@ -312,6 +320,15 @@ div.line-loading {
 
 .ant-layout {
   background: none !important;
+}
+
+.events-history {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
 }
 
 @media (max-width: 992px) {

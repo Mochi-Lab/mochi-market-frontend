@@ -77,6 +77,14 @@ export async function listTokensOfOwner(token, walletAddress, addressMarket) {
         onSale.add(tokenId.toString());
       }
     }
+
+    if (
+      (owned.has(tokenId.toString()) && onSale.has(tokenId.toString())) ||
+      (from.toLowerCase() === addressMarket.toLowerCase() &&
+        to.toLowerCase() !== walletAddress.toLowerCase())
+    ) {
+      onSale.delete(tokenId.toString());
+    }
   }
   return { owned: [...owned], onSale: [...onSale] };
 }

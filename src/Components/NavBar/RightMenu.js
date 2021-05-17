@@ -5,6 +5,7 @@ import ConnectWallet from 'Components/ConnectWallet';
 import { useSelector } from 'react-redux';
 import avatarDefault from 'Assets/avatar-default.svg';
 import ToggleDarkMode from 'Components/ToggleDarkMode';
+import LogoutWallet from 'Components/Logout';
 
 const SubMenu = Menu.SubMenu;
 
@@ -50,7 +51,7 @@ const RightMenu = () => {
           }
         >
           <Menu.Item
-            key='setting:3'
+            key='setting:4'
             style={{ width: '240px', height: '80px', cursor: 'pointer' }}
             disabled
           >
@@ -99,10 +100,13 @@ const RightMenu = () => {
               </div>
             </div>
           </Menu.Item>
-          <Menu.Item key='setting:2'>
+          <Menu.Item key='setting:3'>
             <Link to='/profile'>
               <strong className='nav-textmode'>Profile</strong>
             </Link>
+          </Menu.Item>
+          <Menu.Item key='setting:2'>
+            <LogoutWallet />
           </Menu.Item>
         </SubMenu>
       ) : (

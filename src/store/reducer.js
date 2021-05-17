@@ -170,6 +170,14 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         loadingCampaign: action.loadingCampaign,
       };
+    case actions.LOGOUT:
+      return {
+        ...state,
+        walletAddress: null,
+        shortAddress: null,
+        adminAddress: null,
+        balance: 0,
+      };
     default:
       return state;
   }
