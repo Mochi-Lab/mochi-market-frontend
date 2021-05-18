@@ -1312,7 +1312,7 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
 export const faucetMOMA = () => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
-    if (!!contractAddress.MOMATestnet && !!walletAddress) {
+    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
       const instaneMOMATestnet = new web3.eth.Contract(
         MOMATestnet.abi,
         contractAddress.MOMATestnet
@@ -1340,7 +1340,7 @@ export const faucetMOMA = () => async (dispatch, getState) => {
 export const checkFaucet = (addressToken) => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
-    if (!!contractAddress.MOMATestnet && !!walletAddress) {
+    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
       const instaneMOMATestnet = new web3.eth.Contract(
         MOMATestnet.abi,
         contractAddress.MOMATestnet
