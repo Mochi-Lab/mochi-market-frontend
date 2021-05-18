@@ -1,30 +1,37 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { faucetMOMA, checkFaucet } from 'store/actions';
 import ConnectWallet from 'Components/ConnectWallet';
 import { Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import useInterval from 'utils/useInterval.js';
 
 import './index.css';
 
 export default function Faucet() {
   const dispatch = useDispatch();
-  const { walletAddress } = useSelector((state) => state);
+  const { walletAddress, chainId } = useSelector((state) => state);
   const [statusFaucet, setStatusFaucet] = useState(true);
   const [loadingFaucet, setLoadingFaucet] = useState(false);
 
+  const checkStatusFaucet = useCallback(async () => {
+    setStatusFaucet(await dispatch(checkFaucet()));
+  }, [dispatch]);
+
   useEffect(() => {
-    const checkStatusFaucet = async () => {
-      setStatusFaucet(await dispatch(checkFaucet()));
-    };
     checkStatusFaucet();
-  });
+  }, [dispatch, walletAddress, chainId, checkStatusFaucet]);
 
   const handleFaucetMOMA = async () => {
     setLoadingFaucet(true);
     await dispatch(faucetMOMA());
+    checkStatusFaucet();
     setLoadingFaucet(false);
   };
+
+  useInterval(() => {
+    checkStatusFaucet();
+  }, 15000);
 
   return (
     <div className='page-faucet'>
