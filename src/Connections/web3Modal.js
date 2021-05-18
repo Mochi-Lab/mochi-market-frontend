@@ -72,23 +72,32 @@ export const connectWeb3Modal = async () => {
     store.dispatch(setWeb3(web3));
 
     if (accounts.length > 0) {
-      store.dispatch(setAddress(accounts[0]));
-      // await axios.post(`${serverUrl}/user/checkin`, {
-      //   address: accounts[0],
-      // });
+      try {
+        await axios.post(`${serverUrl}/user/checkin`, {
+          address: accounts[0],
+        });
+      } catch (err) {
+      } finally {
+        store.dispatch(setAddress(accounts[0]));
 
-      // Init ERC721
-      store.dispatch(setAcceptedNfts());
+        // Init ERC721
+        store.dispatch(setAcceptedNfts());
+      }
     }
   }
 
   // Subscribe to accounts change
   provider.on('accountsChanged', async (accounts) => {
-    store.dispatch(setAddress(accounts[0]));
-    await axios.post(`${serverUrl}/user/checkin`, {
-      address: accounts[0],
-    });
-    store.dispatch(setAcceptedNfts());
+    try {
+      await axios.post(`${serverUrl}/user/checkin`, {
+        address: accounts[0],
+      });
+    } catch (err) {
+    } finally {
+      store.dispatch(setAddress(accounts[0]));
+
+      store.dispatch(setAcceptedNfts());
+    }
   });
 
   // Subscribe to chainId change
