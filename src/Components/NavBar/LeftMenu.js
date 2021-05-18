@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Input, Grid, Col, Tag } from 'antd';
-import { setStrSearch, setWeb3 } from 'store/actions';
+import { setStrSearch, setWeb3, setChainId } from 'store/actions';
 import { SearchOutlined } from '@ant-design/icons';
 import { web3Default, networkDefault, getWeb3List } from 'utils/getWeb3List';
 import { useLocation } from 'react-router-dom';
@@ -13,7 +13,7 @@ const { useBreakpoint } = Grid;
 export default function LeftNar() {
   const dispatch = useDispatch();
   const [network, setNetwork] = useState(networkDefault);
-  const { chainId } = useSelector((state) => state);
+  const { chainId, web3 } = useSelector((state) => state);
   const location = useLocation();
 
   useEffect(() => {
@@ -21,8 +21,14 @@ export default function LeftNar() {
   }, [chainId]);
 
   useEffect(() => {
-    dispatch(setWeb3(getWeb3List(network).web3Default));
-  }, [network, dispatch]);
+    const setWeb3Default = async () => {
+      dispatch(setWeb3(getWeb3List(networkDefault).web3Default));
+      dispatch(setChainId(networkDefault));
+    };
+    if (!web3 || !chainId) {
+      setWeb3Default();
+    }
+  }, [web3, chainId, dispatch]);
 
   const { md } = useBreakpoint();
   const searchNFT = (text) => {

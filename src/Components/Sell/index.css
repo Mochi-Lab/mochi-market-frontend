@@ -28,3 +28,19 @@
   font-weight: 800;
   margin: 25px 0px 0px 0px;
 }
+
+.input-sell
+  .ant-input-group.ant-input-group-compact
+  > .ant-select:first-child
+  > .ant-select-selector {
+  border-top-left-radius: 0.75rem !important;
+  border-bottom-left-radius: 0.75rem !important;
+}
+
+.input-sell .ant-input-number-handler-wrap {
+  display: none;
+}
+.input-sell .ant-input-number {
+  border-top-right-radius: 0.75rem !important;
+  border-bottom-right-radius: 0.75rem !important;
+}

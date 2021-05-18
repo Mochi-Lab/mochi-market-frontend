@@ -24,3 +24,32 @@
 .card-token .ant-card-meta-description {
   color: var(--color) !important;
 }
+
+.content-list-nft .ant-card {
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.content-list-nft .ant-card .ant-card-cover {
+  padding: 0.6rem;
+}
+
+.content-list-nft .ant-card .ant-card-cover img {
+  height: 20vh;
+  margin: 0 auto;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+@media (max-width: 992px) {
+  .content-list-nft {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-list-nft .ant-card .ant-card-cover img {
+    height: 35vh;
+  }
+}

@@ -170,3 +170,41 @@ html[data-theme='dark'] {
 [data-theme='dark'] .sidenav-item h2 {
   color: white;
 }
+[data-theme='dark'] .barsMenu {
+  background: none !important;
+  color: white;
+}
+
+[data-theme='dark'] .footer-sidebar .actions-buy-bid {
+  background: rgb(51 51 51) !important;
+}
+
+[data-theme='dark'] .info-nft {
+  background: rgb(0 0 0 / 33%) !important;
+}
+
+[data-theme='dark'] .ant-drawer-content {
+  background: #464646 0% 0% no-repeat padding-box;
+  border: 1px solid #4c4c4c;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .ant-menu {
+  background: #464646 0% 0% no-repeat padding-box;
+  border: 1px solid #4c4c4c;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .ant-menu-item a {
+  color: #fff;
+}
+
+[data-theme='dark'] .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
+  background: rgb(61, 61, 61) !important;
+}
+[data-theme='dark'] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: rgb(61, 61, 61) !important;
+}
+[data-theme='dark'] .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: rgb(83, 83, 83) !important;
+}

@@ -25,7 +25,8 @@
 
 .create-box {
   min-height: 80vh;
-  width: 30vw;
+  width: 85%;
+  max-width: 700px;
 }
 
 .create-box > div {
@@ -85,6 +86,10 @@
   border-radius: 1rem;
 }
 
+.dropzone .textmode {
+  margin: 0 10px;
+}
+
 .input-area {
   width: 30vw;
 }
@@ -118,7 +123,7 @@
   border: 1px solid rgba(4, 4, 5, 0.1);
   margin: 0px 15px 0px 0px;
   height: 14vh;
-  width: 6.5vw;
+  width: 100px;
   flex-shrink: 0;
   -webkit-box-align: center;
   align-items: center;
@@ -136,6 +141,10 @@
   width: 100%;
 }
 
+.drag-box-search .dropzone {
+  margin-bottom: 24px;
+}
+
 @media (max-width: 1200px) {
   .my-collection {
     width: 70vw;
@@ -151,7 +160,6 @@
 
   .my-collection div.input-area {
     width: 100%;
-    text-align: center;
     margin-left: 1rem;
   }
 }
@@ -161,6 +169,10 @@
     width: 100%;
     text-align: center;
     margin-left: 1rem;
+  }
+
+  .choose {
+    justify-content: center;
   }
 
   .drag-box-search .dropzone {
@@ -202,7 +214,7 @@
     width: 200px;
     height: 200px;
     margin: 0 auto;
-    margin-bottom: 2rem;
+    margin-bottom: 24px;
   }
 
   .my-collection .input-name-nft {
@@ -215,5 +227,9 @@
 
   .my-collection h3.text-upload-image {
     margin-bottom: 0.15rem;
+  }
+
+  .ant-radio-group {
+    margin-bottom: 24px;
   }
 }

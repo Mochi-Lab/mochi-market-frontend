@@ -17,27 +17,9 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "seller",
-          "type": "address"
-        },
-        {
           "indexed": false,
           "internalType": "uint256",
           "name": "sellId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "nftAddress",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "tokenId",
           "type": "uint256"
         },
         {
@@ -98,33 +80,15 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "address",
-          "name": "seller",
-          "type": "address"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
           "name": "sellId",
           "type": "uint256"
         },
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
-          "name": "nftAddress",
+          "name": "seller",
           "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
         },
         {
           "indexed": false,
@@ -147,33 +111,15 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "address",
-          "name": "seller",
-          "type": "address"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
           "name": "sellId",
           "type": "uint256"
         },
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
-          "name": "nftAddress",
+          "name": "seller",
           "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
         }
       ],
       "name": "SellOrderDeactive",
@@ -222,7 +168,7 @@
       "name": "addressesProvider",
       "outputs": [
         {
-          "internalType": "contract IAddressesProvider",
+          "internalType": "contract MiniIAddressesProvider",
           "name": "",
           "type": "address"
         }
@@ -248,7 +194,7 @@
           "type": "address"
         }
       ],
-      "name": "checkDuplicate_ERC1155",
+      "name": "checkDuplicateERC1155",
       "outputs": [
         {
           "internalType": "bool",
@@ -277,7 +223,7 @@
           "type": "address"
         }
       ],
-      "name": "checkDuplicate_ERC721",
+      "name": "checkDuplicateERC721",
       "outputs": [
         {
           "internalType": "bool",
@@ -325,81 +271,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "getAllSellOrder",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -407,173 +278,11 @@
           "type": "address"
         }
       ],
-      "name": "getAllSellOrderByNftAddress",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        }
-      ],
-      "name": "getAllSellOrderByUser",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "nftAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getAllSellOrderIdListByNftAddress",
+      "name": "getAllSellOrdersIdListByNftAddress",
       "outputs": [
         {
           "internalType": "uint256[]",
-          "name": "",
+          "name": "result",
           "type": "uint256[]"
         }
       ],
@@ -588,11 +297,11 @@
           "type": "address"
         }
       ],
-      "name": "getAllSellOrderIdListByUser",
+      "name": "getAllSellOrdersIdListByUser",
       "outputs": [
         {
           "internalType": "uint256[]",
-          "name": "",
+          "name": "result",
           "type": "uint256[]"
         }
       ],
@@ -601,387 +310,16 @@
     },
     {
       "inputs": [],
-      "name": "getAvailableSellOrder",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "erc721",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "erc1155",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "nftAddress",
-          "type": "address"
-        }
-      ],
-      "name": "getAvailableSellOrderByNftAddress",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        }
-      ],
-      "name": "getAvailableSellOrderByUser",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "erc721",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "erc1155",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getAvailableSellOrderIdList",
+      "name": "getAvailableSellOrdersIdList",
       "outputs": [
         {
           "internalType": "uint256[]",
-          "name": "erc721",
+          "name": "resultERC721",
           "type": "uint256[]"
         },
         {
           "internalType": "uint256[]",
-          "name": "erc1155",
+          "name": "resultERC1155",
           "type": "uint256[]"
         }
       ],
@@ -996,11 +334,11 @@
           "type": "address"
         }
       ],
-      "name": "getAvailableSellOrderIdListByNftAddress",
+      "name": "getAvailableSellOrdersIdListByNftAddress",
       "outputs": [
         {
           "internalType": "uint256[]",
-          "name": "",
+          "name": "result",
           "type": "uint256[]"
         }
       ],
@@ -1015,116 +353,16 @@
           "type": "address"
         }
       ],
-      "name": "getAvailableSellOrderIdListByUser",
+      "name": "getAvailableSellOrdersIdListByUser",
       "outputs": [
         {
           "internalType": "uint256[]",
-          "name": "erc721",
+          "name": "resultERC721",
           "type": "uint256[]"
         },
         {
           "internalType": "uint256[]",
-          "name": "erc1155",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        }
-      ],
-      "name": "getBoughtByUser",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        }
-      ],
-      "name": "getBoughtIdListByUser",
-      "outputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "",
+          "name": "resultERC1155",
           "type": "uint256[]"
         }
       ],
@@ -1149,7 +387,7 @@
           "type": "uint256"
         }
       ],
-      "name": "getLatestSellId_ERC1155",
+      "name": "getLatestSellIdERC1155",
       "outputs": [
         {
           "internalType": "bool",
@@ -1178,7 +416,7 @@
           "type": "uint256"
         }
       ],
-      "name": "getLatestSellId_ERC721",
+      "name": "getLatestSellIdERC721",
       "outputs": [
         {
           "internalType": "bool",
@@ -1188,19 +426,6 @@
         {
           "internalType": "uint256",
           "name": "id",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getNumberOfSellOrder",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
           "type": "uint256"
         }
       ],
@@ -1271,18 +496,50 @@
             },
             {
               "internalType": "address[]",
-              "name": "buyer",
+              "name": "buyers",
               "type": "address[]"
             },
             {
               "internalType": "uint256[]",
-              "name": "buyTime",
+              "name": "buyTimes",
               "type": "uint256[]"
             }
           ],
-          "internalType": "struct DataTypes.SellOrder",
+          "internalType": "struct SellOrderType.SellOrder",
           "name": "",
           "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSellOrderCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "getSellOrdersBoughtIdListByUser",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
         }
       ],
       "stateMutability": "view",
@@ -1296,7 +553,7 @@
           "type": "uint256[]"
         }
       ],
-      "name": "getSellOrderByIdList",
+      "name": "getSellOrdersByIdList",
       "outputs": [
         {
           "components": [
@@ -1352,103 +609,17 @@
             },
             {
               "internalType": "address[]",
-              "name": "buyer",
+              "name": "buyers",
               "type": "address[]"
             },
             {
               "internalType": "uint256[]",
-              "name": "buyTime",
+              "name": "buyTimes",
               "type": "uint256[]"
             }
           ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "fromId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "toId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getSellOrderByRange",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "sellId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "nftAddress",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "soldAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address payable",
-              "name": "seller",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "isActive",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "sellTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "buyer",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "buyTime",
-              "type": "uint256[]"
-            }
-          ],
-          "internalType": "struct DataTypes.SellOrder[]",
-          "name": "",
+          "internalType": "struct SellOrderType.SellOrder[]",
+          "name": "result",
           "type": "tuple[]"
         }
       ],
@@ -1473,7 +644,7 @@
       "name": "nftList",
       "outputs": [
         {
-          "internalType": "contract INFTList",
+          "internalType": "contract MiniINFTList",
           "name": "",
           "type": "address"
         }

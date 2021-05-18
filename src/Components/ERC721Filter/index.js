@@ -10,7 +10,7 @@ import './index.css';
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
-export default function ERC721Filter({ erc721Tokens, isLoadingErc721 }) {
+export default function ERC721Filter({ erc721Tokens, isLoadingErc721, type }) {
   const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState(null);
   const [filterCollections, setfilterCollections] = useState([]);
@@ -97,19 +97,22 @@ export default function ERC721Filter({ erc721Tokens, isLoadingErc721 }) {
               </Menu.Item>
               {filterCollections.length === 0 ? (
                 erc721Tokens ? (
-                  erc721Tokens.map((erc721Token, index) => (
-                    <Menu.Item key={index + 2} onClick={() => selectToken(erc721Token, index)}>
-                      <div className={`sidenav-item ${tokenActive === index ? 'is-active' : ''}`}>
-                        <div
-                          className='avatar-token'
-                          dangerouslySetInnerHTML={{ __html: erc721Token.avatarToken }}
-                        />
-                        <div className='name-token'>
-                          <h2>{erc721Token.name}</h2>
+                  erc721Tokens.map((erc721Token, index) =>
+                    (type === 'onSale' && erc721Token.onSale.length > 0) ||
+                    (!type && erc721Token.tokens.length > 0) ? (
+                      <Menu.Item key={index + 2} onClick={() => selectToken(erc721Token, index)}>
+                        <div className={`sidenav-item ${tokenActive === index ? 'is-active' : ''}`}>
+                          <div
+                            className='avatar-token'
+                            dangerouslySetInnerHTML={{ __html: erc721Token.avatarToken }}
+                          />
+                          <div className='name-token'>
+                            <h2>{erc721Token.name}</h2>
+                          </div>
                         </div>
-                      </div>
-                    </Menu.Item>
-                  ))
+                      </Menu.Item>
+                    ) : null
+                  )
                 ) : (
                   <></>
                 )
@@ -146,8 +149,24 @@ export default function ERC721Filter({ erc721Tokens, isLoadingErc721 }) {
               <div className='center' style={{ width: '100%', height: '100%' }}>
                 <IconLoading />
               </div>
-            ) : !!selectedTokens && !!selectedTokens.tokens ? (
-              <ERC721 tokens={selectedTokens.tokens} />
+            ) : !!selectedTokens && (!!selectedTokens.tokens || !!selectedTokens.onSale) ? (
+              type === 'onSale' ? (
+                <ERC721 tokens={selectedTokens.onSale} />
+              ) : (
+                <ERC721 tokens={selectedTokens.tokens} />
+              )
+            ) : type === 'onSale' ? (
+              <ERC721
+                tokens={
+                  erc721Tokens
+                    ? [].concat(
+                        ...erc721Tokens.map((collections) =>
+                          collections.onSale.map((token) => token)
+                        )
+                      )
+                    : []
+                }
+              />
             ) : (
               <ERC721
                 tokens={

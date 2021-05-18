@@ -1,8 +1,10 @@
-import { parseBalance } from 'utils/helper';
-// import ERC1155 from 'Contracts/ERC1155.json';
+import { parseBalance, listTokensOfOwner } from 'utils/helper';
+import ERC1155 from 'Contracts/ERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
 import SampleERC721 from 'Contracts/SampleERC721.json';
-import Mochi from 'Contracts/Mochi.json';
+import SampleERC1155 from 'Contracts/SampleERC1155.json';
+import MochiERC721NFT from 'Contracts/MochiERC721NFT.json';
+import MochiERC1155NFT from 'Contracts/MochiERC1155NFT.json';
 import AddressesProvider from 'Contracts/AddressesProvider.json';
 import Market from 'Contracts/Market.json';
 import NFTList from 'Contracts/NFTList.json';
@@ -13,12 +15,13 @@ import NFTCampaign from 'Contracts/NFTCampaign.json';
 import ERC20 from 'Contracts/ERC20.json';
 import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
-import { message } from 'antd';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
 import { getWeb3List } from 'utils/getWeb3List';
 import { uploadToIpfs } from 'utils/ipfs';
 
 var contractAddress;
+const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+const VALUE_MAX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
 ////////////////////
 // Common
@@ -44,6 +47,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setAddressesProvider(addressesProvider));
   dispatch(setMarket(market));
   dispatch(setNftList(nftList));
+  dispatch(setAcceptedNftsUser());
   dispatch(setSellOrderList(sellOrderList));
   dispatch(setVault(vault));
   dispatch(setCreativeStudio(creativeStudio));
@@ -51,6 +55,11 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setAdminAddress(addressesProvider));
 
   dispatch(setAvailableSellOrder());
+};
+
+export const LOGOUT = 'LOGOUT';
+export const logout = () => (dispatch) => {
+  dispatch({ type: LOGOUT });
 };
 
 export const SET_CHAINID = 'SET_CHAINID';
@@ -107,12 +116,22 @@ export const setStrSearch = (strSearch) => (dispatch) => {
 // ERC721
 ////////////////////
 export const INIT_ERC721 = 'INIT_ERC721';
-export const initERC721 = (nftList) => async (dispatch, getState) => {
-  let { web3 } = getState();
+export const INIT_ERC1155 = 'INIT_ERC1155';
+export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {
+  let { web3, nftList } = getState();
   let erc721Instances = [];
-  if (!!nftList) {
-    erc721Instances = await nftList.map((contract) => new web3.eth.Contract(ERC721.abi, contract));
+  let erc1155Instances = [];
+  if (!!acceptedNftsAddress) {
+    for (let i = 0; i < acceptedNftsAddress.length; i++) {
+      let is1155 = await nftList.methods.isERC1155(acceptedNftsAddress[i]).call();
+      if (is1155) {
+        erc1155Instances.push(new web3.eth.Contract(ERC1155.abi, acceptedNftsAddress[i]));
+      } else {
+        erc721Instances.push(new web3.eth.Contract(ERC721.abi, acceptedNftsAddress[i]));
+      }
+    }
     dispatch({ type: INIT_ERC721, erc721Instances });
+    dispatch({ type: INIT_ERC1155, erc1155Instances });
     dispatch(getOwnedERC721(erc721Instances));
   }
 };
@@ -120,22 +139,32 @@ export const initERC721 = (nftList) => async (dispatch, getState) => {
 export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
 export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) => {
   let { walletAddress } = getState();
+
+  if (!walletAddress) return;
+
   // Start loading
   dispatch(setLoadingErc721(true));
 
   var getERC721 = (instance) => {
     return new Promise(async (resolve) => {
       let ERC721token = {};
-      let balance = await instance.methods.balanceOf(walletAddress).call();
-      if (balance > 0) {
-        ERC721token.balanceOf = await instance.methods.balanceOf(walletAddress).call();
+      const listIdToken = await listTokensOfOwner(instance, walletAddress, contractAddress.Market);
+      let tokenIdOwner = listIdToken.owned;
+      let tokenIdOnSale = listIdToken.onSale;
+
+      let balanceOfOwner = tokenIdOwner.length;
+      let balanceOfOnSale = tokenIdOnSale.length;
+
+      if (balanceOfOwner > 0 || balanceOfOnSale > 0) {
+        ERC721token.tokenIdOwner = tokenIdOwner;
         ERC721token.name = await instance.methods.name().call();
         ERC721token.symbol = await instance.methods.symbol().call();
         ERC721token.tokens = [];
+        ERC721token.onSale = [];
 
-        for (let i = 0; i < ERC721token.balanceOf; i++) {
+        for (let i = 0; i < balanceOfOwner; i++) {
           let token = {};
-          token.index = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+          token.index = tokenIdOwner[i];
           token.tokenURI = await instance.methods.tokenURI(token.index).call();
           token.addressToken = instance._address;
           try {
@@ -145,6 +174,20 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
           } catch (error) {
             token.detail = { name: 'Unnamed', description: '' };
             ERC721token.tokens.push(token);
+          }
+        }
+        for (let i = 0; i < balanceOfOnSale; i++) {
+          let token = {};
+          token.index = tokenIdOnSale[i];
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.onSale.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.onSale.push(token);
           }
         }
         resolve(ERC721token);
@@ -170,6 +213,91 @@ export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) =>
   dispatch(setLoadingErc721(false));
 };
 
+export const setAcceptedNftsUser = () => async (dispatch, getState) => {
+  const { nftList } = getState();
+  try {
+    let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
+    dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
+    dispatch(initERC721(acceptedNftsAddress));
+  } catch (e) {
+    console.log(e);
+    return e;
+  }
+};
+
+export const GET_ERC721_OF_USER = 'GET_ERC721_OF_USER';
+export const getERC721OfUser = (erc721Instances, user) => async (dispatch, getState) => {
+  // Start loading
+  dispatch(setLoadingErc721(true));
+
+  var getERC721 = (instance) => {
+    return new Promise(async (resolve) => {
+      let ERC721token = {};
+      const listIdToken = await listTokensOfOwner(instance, user, contractAddress.Market);
+      let tokenIdOwner = listIdToken.owned;
+      let tokenIdOnSale = listIdToken.onSale;
+
+      let balanceOfOwner = tokenIdOwner.length;
+      let balanceOfOnSale = tokenIdOnSale.length;
+
+      if (balanceOfOwner > 0 || balanceOfOnSale > 0) {
+        ERC721token.tokenIdOwner = tokenIdOwner;
+        ERC721token.name = await instance.methods.name().call();
+        ERC721token.symbol = await instance.methods.symbol().call();
+        ERC721token.tokens = [];
+        ERC721token.onSale = [];
+
+        for (let i = 0; i < balanceOfOwner; i++) {
+          let token = {};
+          token.index = tokenIdOwner[i];
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.tokens.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.tokens.push(token);
+          }
+        }
+        for (let i = 0; i < balanceOfOnSale; i++) {
+          let token = {};
+          token.index = tokenIdOnSale[i];
+          token.tokenURI = await instance.methods.tokenURI(token.index).call();
+          token.addressToken = instance._address;
+          try {
+            let req = await axios.get(token.tokenURI);
+            token.detail = req.data;
+            ERC721token.onSale.push(token);
+          } catch (error) {
+            token.detail = { name: 'Unnamed', description: '' };
+            ERC721token.onSale.push(token);
+          }
+        }
+        resolve(ERC721token);
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  let erc721Tokens = await Promise.all(
+    erc721Instances.map(async (instance) => {
+      return await getERC721(instance);
+    })
+  );
+
+  erc721Tokens = erc721Tokens.filter(function (el) {
+    return el != null;
+  });
+
+  dispatch({ type: GET_ERC721_OF_USER, erc721Tokens });
+
+  // Loading done
+  dispatch(setLoadingErc721(false));
+};
+
 export const IS_LOADING_ERC721 = 'IS_LOADING_ERC721';
 export const setLoadingErc721 = (isLoadingErc721) => async (dispatch) => {
   dispatch({
@@ -187,28 +315,20 @@ export const transferNft = (contractAddress, to, tokenId) => async (dispatch, ge
       .safeTransferFrom(walletAddress, to, tokenId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Transfer Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Transfer Successfully';
+        dispatch(showNotification(noti));
       });
+
     await dispatch(setLoadingTx(false));
   } catch (error) {
     await dispatch(setLoadingTx(false));
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
-};
-
-export const getERC721Info = () => async (dispatch, getState) => {
-  let { web3, userCollections } = getState();
-  let instance = new web3.eth.Contract(ERC721.abi, userCollections[0].contractAddress);
-  let ERC721token = {};
-  ERC721token.name = await instance.methods.name().call();
-  ERC721token.symbol = await instance.methods.symbol().call();
-  return ERC721token;
 };
 
 ////////////////////
@@ -277,15 +397,15 @@ export const registerNft = (contractAddress) => async (dispatch, getState) => {
       .registerNFT(contractAddress)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Register Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Register Successfully';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log(error);
-    message.error('Sorry, but this is not contract address');
+    error.message = 'Sorry, but this is not contract address or this address has been accepted';
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -300,15 +420,15 @@ export const acceptNft = (contractAddress) => async (dispatch, getState) => {
       .acceptNFT(contractAddress)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Accept Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Accept Successfully';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log(error);
-    message.error('Sorry, but this is not contract address');
+    error.message = 'Sorry, but this is not contract address or this address has been accepted';
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -319,19 +439,10 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
     let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
     dispatch(initERC721(acceptedNftsAddress));
-  } catch (e) {
-    console.log(e);
-    return e;
-  }
-};
-
-export const getNftInfo = async (nftAddress, nftList) => {
-  try {
-    let nftInfo = await nftList.methods.getNFTInfor(nftAddress).call();
-    return nftInfo;
-  } catch (e) {
-    console.log(e);
-    return null;
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification(error));
+    return error;
   }
 };
 
@@ -341,7 +452,7 @@ export const getNftInfo = async (nftAddress, nftList) => {
 
 export const SET_AVAILABLE_SELL_ORDER = 'SET_AVAILABLE_SELL_ORDER';
 export const setAvailableSellOrder = () => async (dispatch, getState) => {
-  const { sellOrderList, web3 } = getState();
+  const { sellOrderList, web3, nftList } = getState();
   const pushErc721 = async (listNftContract) => {
     let ERC721token = { name: '', symbol: '', avatarToken: '', tokens: [] };
     ERC721token.name = await listNftContract.instance.methods.name().call();
@@ -359,6 +470,7 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
         token.collections = ERC721token.name;
         token.symbolCollections = ERC721token.symbol;
         token.sortIndex = order.sortIndex;
+        token.tokenPayment = listNftContract.tokenPayment[index];
         return token;
       })
     );
@@ -368,25 +480,50 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
   // Loading done
   if (sellOrderList) {
     try {
-      let availableSellOrder = await sellOrderList.methods.getAvailableSellOrder().call();
+      let availableSellOrderIdList = await sellOrderList.methods
+        .getAvailableSellOrdersIdList()
+        .call();
+      let availableSellOrder = await sellOrderList.methods
+        .getSellOrdersByIdList(availableSellOrderIdList.resultERC721)
+        .call();
+
+      let availableSellOrderERC721 = [];
+      let availableSellOrderERC1155 = [];
+
+      if (!!availableSellOrder && availableSellOrder.length > 0) {
+        for (let i = 0; i < availableSellOrder.length; i++) {
+          let is1155 = await nftList.methods.isERC1155(availableSellOrder[i].nftAddress).call();
+          if (is1155) {
+            availableSellOrderERC1155.push(availableSellOrder[i]);
+          } else {
+            availableSellOrderERC721.push(availableSellOrder[i]);
+          }
+        }
+      }
 
       var convertErc721Tokens = [];
       var listNftContracts = [];
 
-      availableSellOrder.erc721.map(async (sellOrder, i) => {
-        let token = { tokenId: [], price: [] };
-        let nftindex = listNftContracts.findIndex((nft) => nft.nftAddress === sellOrder.nftAddress);
-        if (nftindex === -1) {
-          token.nftAddress = sellOrder.nftAddress;
-          token.instance = new web3.eth.Contract(ERC721.abi, sellOrder.nftAddress);
-          token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
-          token.price.push(sellOrder.price);
-          listNftContracts.push(token);
-        } else {
-          listNftContracts[nftindex].tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
-          listNftContracts[nftindex].price.push(sellOrder.price);
-        }
-      });
+      if (!!availableSellOrderERC721) {
+        availableSellOrderERC721.map(async (sellOrder, i) => {
+          let token = { tokenId: [], price: [], tokenPayment: [] };
+          let nftindex = listNftContracts.findIndex(
+            (nft) => nft.nftAddress === sellOrder.nftAddress
+          );
+          if (nftindex === -1) {
+            token.nftAddress = sellOrder.nftAddress;
+            token.instance = new web3.eth.Contract(ERC721.abi, sellOrder.nftAddress);
+            token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
+            token.price.push(sellOrder.price);
+            token.tokenPayment.push(sellOrder.token);
+            listNftContracts.push(token);
+          } else {
+            listNftContracts[nftindex].tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
+            listNftContracts[nftindex].price.push(sellOrder.price);
+            listNftContracts[nftindex].tokenPayment.push(sellOrder.token);
+          }
+        });
+      }
 
       convertErc721Tokens = await Promise.all(
         listNftContracts.map(async (listNftcontract) => {
@@ -395,8 +532,8 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
       );
       dispatch({
         type: SET_AVAILABLE_SELL_ORDER,
-        availableSellOrder721: availableSellOrder.erc721,
-        availableSellOrder1155: availableSellOrder.erc1155,
+        availableSellOrder721: availableSellOrderERC721,
+        availableSellOrder1155: availableSellOrderERC1155,
         convertErc721Tokens,
       });
       dispatch(setLoadingErc721(false));
@@ -424,52 +561,83 @@ export const setMySellOrder = () => async (dispatch, getState) => {
   }
 };
 
-export const createSellOrder = (nftAddress, tokenId, price) => async (dispatch, getState) => {
-  const { market, walletAddress, web3 } = getState();
+export const createSellOrder = (nftAddress, tokenId, price, token) => async (
+  dispatch,
+  getState
+) => {
+  const { market, walletAddress, web3, erc721Instances } = getState();
   try {
-    const erc721Instances = await new web3.eth.Contract(ERC721.abi, nftAddress);
+    const erc721Instance = await new web3.eth.Contract(ERC721.abi, nftAddress);
 
     // Check to see if nft have accepted
-    let addressApproved = await erc721Instances.methods.getApproved(tokenId).call();
+    let addressApproved = await erc721Instance.methods.getApproved(tokenId).call();
 
     if (addressApproved !== market._address)
       // Approve ERC721
-      await erc721Instances.methods.approve(market._address, tokenId).send({ from: walletAddress });
+      await erc721Instance.methods.approve(market._address, tokenId).send({ from: walletAddress });
 
     // Create Sell Order
     await market.methods
       // TODO : can sale with other token
-      .createSellOrder(nftAddress, tokenId, 1, price, '0x0000000000000000000000000000000000000000')
+      .createSellOrder(nftAddress, tokenId, 1, price, token)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Create Sell Order Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Create Sell Order Successfully !';
+        dispatch(showNotification(noti));
       });
+    // Fetch new availableOrderList
+    dispatch(setAvailableSellOrder());
+    // get own nft
+    dispatch(getOwnedERC721(erc721Instances));
+    return true;
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    console.log({ error });
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
-
-  // Fetch new availableOrderList
-  dispatch(setAvailableSellOrder());
 };
 
 export const buyNft = (orderDetail) => async (dispatch, getState) => {
-  const { market, walletAddress, erc721Instances, chainId } = getState();
+  const { market, walletAddress, erc721Instances, chainId, web3 } = getState();
   let link = null;
+  let value = 0;
+
+  if (orderDetail.token !== NULL_ADDRESS) {
+    const instaneErc20 = new web3.eth.Contract(ERC20.abi, orderDetail.token);
+    const allowance = await instaneErc20.methods.allowance(walletAddress, market._address).call();
+    if (parseInt(allowance) <= 0) {
+      await instaneErc20.methods
+        .approve(market._address, VALUE_MAX)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Approve Successfully !';
+          dispatch(showNotification(noti));
+          return true;
+        })
+        .on('error', (error, receipt) => {
+          console.log('approveERC20: ', error);
+          // message.error('Oh no! Something went wrong !');
+          return false;
+        });
+    }
+  } else {
+    value = orderDetail.price;
+  }
+
   try {
     await market.methods
-      .buy(orderDetail.sellId, 1, '0x')
-      .send({ from: walletAddress, value: orderDetail.price })
+      .buy(orderDetail.sellId, 1, walletAddress, '0x')
+      .send({ from: walletAddress, value: value })
       .on('receipt', (receipt) => {
         link = getWeb3List(chainId).explorer + receipt.transactionHash;
       });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 
   // Fetch new availableOrderList
@@ -480,27 +648,29 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
 };
 
 export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
-  const { market, walletAddress } = getState();
+  const { market, walletAddress, erc721Instances } = getState();
   try {
     await dispatch(setLoadingTx(true));
     await market.methods
       .cancleSellOrder(orderDetail.sellId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Cancel Successfully');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Cancel Successfully !';
+        dispatch(showNotification(noti));
       });
-    await dispatch(setLoadingTx(false));
   } catch (error) {
-    await dispatch(setLoadingTx(false));
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
+
+  await dispatch(setLoadingTx(false));
 
   // Fetch new availableOrderList
   dispatch(setAvailableSellOrder());
+  // get own nft
+  dispatch(getOwnedERC721(erc721Instances));
 };
 
 export const IS_LOADING_TX = 'IS_LOADING_TX';
@@ -515,30 +685,107 @@ export const setLoadingTx = (isLoadingTx) => async (dispatch) => {
 // Create New NFT
 ////////////////////
 
-export const generateNFT = (isUserCollection, tokenUri) => async (dispatch, getState) => {
+// TODO
+export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, getState) => {
   let { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
   contractAddress = getContractAddress(chainId);
   let erc721Instance;
-  if (isUserCollection) {
+  if (collectionId !== -1) {
     erc721Instance = await new web3.eth.Contract(
       SampleERC721.abi,
-      userCollections[0].contractAddress
+      userCollections[collectionId].contractAddress
     );
+
+    try {
+      await erc721Instance.methods
+        .mint(walletAddress, tokenUri, NULL_ADDRESS)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
+        });
+    } catch (error) {
+      error.type = 'error';
+      dispatch(showNotification(error));
+    }
   } else {
-    erc721Instance = await new web3.eth.Contract(Mochi.abi, contractAddress.Mochi);
+    erc721Instance = await new web3.eth.Contract(
+      MochiERC721NFT.abi,
+      contractAddress.MochiERC721NFT
+    );
+
+    try {
+      await erc721Instance.methods
+        .mint(tokenUri)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
+        });
+    } catch (error) {
+      error.type = 'error';
+      dispatch(showNotification(error));
+    }
   }
 
-  try {
-    await erc721Instance.methods
-      .mint(walletAddress, tokenUri)
-      .send({ from: walletAddress })
-      .on('receipt', (receipt) => {
-        message.success('Create Successfully !');
-      });
-  } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+  // get own nft
+  dispatch(getOwnedERC721(erc721Instances));
+};
+
+// TODO
+export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async (
+  dispatch,
+  getState
+) => {
+  let { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
+  contractAddress = getContractAddress(chainId);
+  let erc1155Instance;
+  if (collectionId !== -1) {
+    erc1155Instance = await new web3.eth.Contract(
+      SampleERC1155.abi,
+      userCollections[collectionId].contractAddress
+    );
+
+    try {
+      await erc1155Instance.methods
+        .mint(walletAddress, id, amount, tokenUri, NULL_ADDRESS)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
+        });
+    } catch (error) {
+      error.type = 'error';
+      dispatch(showNotification(error));
+    }
+  } else {
+    erc1155Instance = await new web3.eth.Contract(
+      MochiERC1155NFT.abi,
+      contractAddress.MochiERC1155NFT
+    );
+
+    try {
+      await erc1155Instance.methods
+        .mint(amount, tokenUri, NULL_ADDRESS)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Successfully !';
+          dispatch(showNotification(noti));
+        });
+    } catch (error) {
+      error.type = 'error';
+      dispatch(showNotification(error));
+    }
   }
+
   // get own nft
   dispatch(getOwnedERC721(erc721Instances));
 };
@@ -551,32 +798,66 @@ export const SET_USER_COLLECTIONS = 'SET_USER_COLLECTIONS';
 export const setCollectionByUser = () => async (dispatch, getState) => {
   let { walletAddress, creativeStudio } = getState();
   try {
-    let userCollections = await creativeStudio.methods.getCollectionByUser(walletAddress).call();
-    dispatch({ type: SET_USER_COLLECTIONS, userCollections });
+    let userCollections = await creativeStudio.methods.getCollectionsByUser(walletAddress).call();
+    userCollections = JSON.stringify(userCollections);
+    userCollections = JSON.parse(userCollections);
+
+    // add index in array usercollection
+    let formatUserCollections = userCollections.map((userCollection, index) => {
+      userCollection.index = index;
+      userCollection.id = userCollection[0];
+      userCollection.contractAddress = userCollection[1];
+      userCollection.isERC1155 = userCollection[2];
+      userCollection.creator = userCollection[3];
+
+      return userCollection;
+    });
+
+    dispatch({ type: SET_USER_COLLECTIONS, userCollections: formatUserCollections });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
-export const createCollection = ({ name, symbol }) => async (dispatch, getState) => {
+export const createERC1155Collection = ({ name, symbol }) => async (dispatch, getState) => {
   let { walletAddress, creativeStudio } = getState();
 
+  try {
+    await creativeStudio.methods
+      .createERC1155Collection(name, symbol)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        dispatch(setCollectionByUser());
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Create Successfully !';
+        dispatch(showNotification(noti));
+      });
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification(error));
+  }
+  // get own nft
+  dispatch(setAcceptedNfts());
+};
+
+export const createERC721Collection = ({ name, symbol }) => async (dispatch, getState) => {
+  let { walletAddress, creativeStudio } = getState();
   try {
     await creativeStudio.methods
       .createERC721Collection(name, symbol)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         dispatch(setCollectionByUser());
-        message.success('Create Successfully !');
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Create Successfully !';
+        dispatch(showNotification(noti));
       });
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
   // get own nft
   dispatch(setAcceptedNfts());
@@ -638,12 +919,13 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
           let allNFTsOfOwner = [];
           if (!!walletAddress) {
             let instanceNFT = new web3.eth.Contract(ERC721.abi, instance.nftAddress);
-            balanceNFT = await instanceNFT.methods.balanceOf(walletAddress).call();
+            let tokenIds = (
+              await listTokensOfOwner(instanceNFT, walletAddress, contractAddress.Market)
+            ).owned;
+            balanceNFT = tokenIds.length;
             if (balanceNFT > 0) {
               for (let i = 0; i < balanceNFT; i++) {
-                let tokenId = await instanceNFT.methods
-                  .tokenOfOwnerByIndex(walletAddress, i)
-                  .call();
+                let tokenId = tokenIds[i];
                 let claimStatus = await nftCampaign.methods
                   .getClaimStatus(instance.campaignId, tokenId)
                   .call();
@@ -697,8 +979,8 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
       dispatch(setLoadingCampaign(false));
     }
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -778,18 +1060,17 @@ export const addCampaign = (
         )
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
-          message.success('Create Campaign Successfully');
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Create Campaign Successfully';
+          dispatch(showNotification(noti));
           return true;
-        })
-        .on('error', (error, receipt) => {
-          console.log(error);
-          message.error('Oh no! Something went wrong !');
-          return false;
         });
     }
     return resultAdd;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -804,12 +1085,12 @@ export const checkWhiteListNft = (addressNft) => async (dispatch, getState) => {
     const result = await nftList.methods.isAcceptedNFT(addressNft).call();
     return result;
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
-export const checkAllowance = (addressToken, amount) => async (dispatch, getState) => {
+export const checkAllowanceCampaign = (addressToken, amount) => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
     const instaneErc20 = new web3.eth.Contract(ERC20.abi, addressToken);
@@ -818,8 +1099,8 @@ export const checkAllowance = (addressToken, amount) => async (dispatch, getStat
       .call();
     return allowance;
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -831,8 +1112,8 @@ export const checkBalance = (addressToken) => async (dispatch, getState) => {
     let symbol = await instaneErc20.methods.symbol().call();
     return { weiBalance, symbol };
   } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
@@ -841,22 +1122,19 @@ export const approveERC20 = (addressToken, amount) => async (dispatch, getState)
   try {
     const instaneErc20 = new web3.eth.Contract(ERC20.abi, addressToken);
     await instaneErc20.methods
-      .approve(
-        contractAddress.NFTCampaign,
-        '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      )
+      .approve(contractAddress.NFTCampaign, VALUE_MAX)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Approve Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Approve Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
   } catch (error) {
-    console.log(error);
+    console.log('approveERC20: ', error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -868,17 +1146,16 @@ export const forceEndCampaign = (campaignId) => async (dispatch, getState) => {
       .forceEnd(campaignId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Cancel Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Cancel Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -890,17 +1167,17 @@ export const claimTokenByNFT = (campaignId, tokenIds) => async (dispatch, getSta
       .claim(campaignId, tokenIds, walletAddress)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Claim Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Claim Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -912,17 +1189,17 @@ export const acceptCampaign = (campaignId) => async (dispatch, getState) => {
       .acceptCampaign(campaignId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Accept Campaign Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Accept Campaign Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -942,17 +1219,17 @@ export const addMoreSlots = (campaignId, slots) => async (dispatch, getState) =>
       .addMoreSlots(campaignId, slots)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Add More Slots Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Add More Slots Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -967,17 +1244,17 @@ export const rescheduleCampaign = (campaignId, startTime, endTime) => async (
       .rescheduleCampaign(campaignId, startTime, endTime)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Change Time Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Change Time Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
+
     return result;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
 };
@@ -989,17 +1266,21 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
       .extendCampaign(campaignId, endTime)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Extend Time Successfully !');
+        let noti = {};
+        noti.type = 'success';
+        noti.message = 'Extend Time Successfully !';
+        dispatch(showNotification(noti));
         return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        message.error('Oh no! Something went wrong !');
-        return false;
       });
     return result;
   } catch (error) {
-    console.log(error);
+    error.type = 'error';
+    dispatch(showNotification(error));
     return false;
   }
+};
+
+export const NOTI = 'NOTI';
+export const showNotification = (noti) => (dispatch) => {
+  dispatch({ type: NOTI, noti });
 };

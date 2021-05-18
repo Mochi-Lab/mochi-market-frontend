@@ -1,3 +1,6 @@
+import bnb from 'Assets/binance-coin.svg';
+import moma from 'Assets/logo-mochi.png';
+
 const contractAddress = {
   //BSC Mainnet
   56: {
@@ -8,24 +11,57 @@ const contractAddress = {
     Market: '0xc6A8101003d7d2ce14BD344e3df23E4AAfd77899',
     CreativeStudio: '0xa5dD241c1A9A9826fB8E78c7db4dc8fdD3043b66',
     ExchangeOrderList: '0x37ca1D6c7479F3Eb9d6d10309e6f0C611E6bE48F',
-    Mochi: '0x3bF0FD7176204A80021C1BD17807144714E31148',
+    Mochi: '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E',
     NFTCampaign: '0x823437B58dB6390AE6F9bCee696788F854618c40',
   },
   //BSC Testnet
   97: {
-    AddressesProvider: '0x78de5478Eb3649C6894ce545A11c84e56077c26f',
-    CreativeStudio: '0xc42e002888d55002982F9a902b3d1517f528FB4B',
-    ExchangeOrderList: '0x371Ac863d7af19dE85a521d10aB5eAa90718D261',
-    Market: '0x2184994315dF10eeBD938CfaE7289eD30C8bAdE8',
-    NftList: '0xE203287a41B56845652e6607A947e913ADd01E69',
-    SellOrderList: '0x7E6A22965E26E9A5C9CEd3FDb7df8B7325848802',
-    Vault: '0x2361A85d39686A27689051624e7Dd5a0DF1A0693',
+    AddressesProvider: '0x3B03c145dB30abe7205f6bBd8828Bf5efedCd7f7',
+    CreativeStudio: '0x4b24D2F9d19DF53Ee8261cdD46ED3Ac9650077dc',
+    ExchangeOrderList: '0x3abb7Aa54197bb0D59c9991f8ca0C71c80C79121',
+    Market: '0xDD1158EAfE57e2da9F4bfB8aa0996e2Fb1bEa252',
+    NftList: '0x25C2113484DD7b0BEa5ea92419C42aba18773604',
+    SellOrderList: '0x1274d949d83282E3BE4b7255521Ae970d636E85f',
+    Vault: '0x0CC109D580EC9b77138d60f13c84757c44cE6b5E',
     SeedifyNFT: '0xfA66C3001E0B3f9c6c203f5bBE483D121B28Ae6D',
     NFTCampaign: '0x23442A5094aC64f1B54D07a199e79738f56bdbfE',
-    Mochi: '0x254d7BEc0dc2644B58Ddb4f04Bd6C0144ea32E19',
+    MochiERC721NFT: '0xE81eB5f4BA1355F6B57Ac7dF4F7d1f669946fA73',
+    MochiERC1155NFT: '0x42Baf95B6F88be9a3825978Ac5E12af362A7e252',
+  },
+};
+
+const tokensPayment = {
+  //BSC Mainnet
+  56: [
+    { address: '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E', icon: moma, symbol: 'MOMA' },
+    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
+  ],
+  //BSC Testnet
+  97: [
+    { address: '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C', icon: moma, symbol: 'MOMA' },
+    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
+  ],
+};
+
+const symbolToken = {
+  //BSC Mainnet
+  56: {
+    '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E': 'MOMA',
+    '0x0000000000000000000000000000000000000000': 'BNB',
+  },
+  //BSC Testnet
+  97: {
+    '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C': 'MOMA',
+    '0x0000000000000000000000000000000000000000': 'BNB',
   },
 };
 
 export const getContractAddress = (_chainId) => {
   return contractAddress[_chainId];
+};
+export const getTokensPayment = (_chainId) => {
+  return tokensPayment[_chainId];
+};
+export const getSymbol = (_chainId) => {
+  return symbolToken[_chainId];
 };

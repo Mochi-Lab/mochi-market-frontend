@@ -11,7 +11,7 @@
 }
 
 .ant-select-selector {
-  background-color: var(--input-background) !important;
+  background-color: var(--input-background-white) !important;
 }
 
 .menu-bar {
@@ -68,6 +68,10 @@
 
 .ant-tag {
   margin-left: 8px !important;
+}
+
+.address p {
+  color: rgba(0, 0, 0, 18);
 }
 
 @media (max-width: 1437px) {

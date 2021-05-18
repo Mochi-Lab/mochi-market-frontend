@@ -1,24 +1,24 @@
-import { Form, Input, Button, Row, message, Radio } from 'antd';
+import { Form, Input, Button, Row, message } from 'antd';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import LoadingModal from 'Components/LoadingModal';
-import Collections from './Collections';
+import ERC721Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
 import BackButton from 'Components/BackButton';
-import { uploadSia } from './UploadSia';
-import { uploadIPFS } from './UploadIpfs';
-import './index.css';
+import { uploadIPFS } from '../UploadIpfs';
+import '../index.css';
+import { generateERC721NFT } from 'store/actions';
 
 const { TextArea } = Input;
 
 export default function CreateERC721() {
   const { walletAddress } = useSelector((state) => state);
   const [visible, setVisible] = useState(false);
-  const [storage, setStorage] = useState(0);
-  const [isCreateNew, setIsCreateNew] = useState(false);
+  const [collectionId, setCollectionId] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
+  const dispatch = useDispatch();
 
   const [form] = Form.useForm();
 
@@ -35,15 +35,22 @@ export default function CreateERC721() {
     },
   });
 
-  const handleStorageChange = (e) => {
-    setStorage(e.target.value);
-  };
-
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     if (files.length > 0) {
-      if (storage === 0)
-        uploadIPFS(values, form, files, setFiles, setIsLoading, isCreateNew, setVisible);
-      else uploadSia(values, form, files, setFiles, setIsLoading, isCreateNew);
+      setVisible();
+      // upload image
+      setIsLoading(true);
+      let tokenUri = await uploadIPFS(values, files);
+      setIsLoading(false);
+
+      // mint token
+      setVisible(true);
+      await dispatch(generateERC721NFT(collectionId, tokenUri));
+      setVisible(false);
+
+      // reset form and file
+      setFiles([]);
+      form.resetFields();
     } else message.warn('Did you forget upload an Image ?');
   };
 
@@ -53,7 +60,7 @@ export default function CreateERC721() {
       <div className='my-collection'>
         <LoadingModal title={'Create NFT'} visible={visible} />
         <BackButton />
-        <h2 className='textmode'>You can create NFT for your own !!!</h2>
+        <h2 className='textmode'>Creating single NFT</h2>
 
         <div>
           <div>
@@ -72,20 +79,15 @@ export default function CreateERC721() {
                 )}
               </div>
             </div>
-            <h3 className='text-upload-image textmode'>Select Storage</h3>
-            <Radio.Group value={storage} onChange={handleStorageChange}>
-              <Radio.Button value={0}>IPFS</Radio.Button>
-              <Radio.Button value={1}>Sia</Radio.Button>
-            </Radio.Group>
           </div>
           <div className='input-area'>
             <div>
               <h3 className='text-upload-image textmode'>Choose collection</h3>
-              <Collections isCreateNew={isCreateNew} setIsCreateNew={setIsCreateNew} />
+              <ERC721Collections collectionId={collectionId} setCollectionId={setCollectionId} />
             </div>
             <Form onFinish={onFinish} form={form} layout='vertical'>
               <Form.Item
-                label='Name'
+                label={<h3 className='text-upload-image textmode'>Name</h3>}
                 name='name'
                 rules={[
                   {
@@ -96,15 +98,19 @@ export default function CreateERC721() {
               >
                 <Input
                   className='input-name-nft input-mode-bc'
-                  placeholder='Name of Nft'
+                  placeholder='Name of NFT'
                   size='large'
                 />
               </Form.Item>
-              <Form.Item label='Description' name='description'>
+              <Form.Item
+                name='description'
+                label={<h3 className='text-upload-image textmode'>Description</h3>}
+              >
                 <TextArea
                   className='input-name-nft input-mode-bc'
                   autoSize={{ minRows: 6 }}
                   placeholder='Description'
+                  size='large'
                 />
               </Form.Item>
               <Form.Item>

@@ -1,29 +1,32 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Tabs } from 'antd';
 import { WalletOutlined, HistoryOutlined, ShopOutlined } from '@ant-design/icons';
 import ERC721Filter from 'Components/ERC721Filter';
-import Edit from './Edit';
-import { useHistory } from 'react-router-dom';
 import avatarDefault from 'Assets/avatar-default.svg';
+import { getERC721OfUser } from '../../store/actions';
 
 import './index.css';
 import TransactionTable from 'Components/TransactionTable';
 
 const { TabPane } = Tabs;
 
-export default function Profile() {
-  const { walletAddress, erc721Tokens, isLoadingErc721 } = useSelector((state) => state);
+export default function PublicProfile() {
+  const { address } = useParams();
+  const dispatch = useDispatch();
+  const { erc721Instances, isLoadingErc721, erc721OfUser } = useSelector((state) => state);
 
   const [isCopied, setIsCopied] = useState(false);
-  const history = useHistory();
 
   useEffect(() => {
-    if (!walletAddress) history.push('/');
-  });
+    if (erc721Instances) {
+      dispatch(getERC721OfUser(erc721Instances, address));
+    }
+  }, [erc721Instances, dispatch, address, erc721OfUser]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(walletAddress);
+    navigator.clipboard.writeText(address);
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);
@@ -41,7 +44,6 @@ export default function Profile() {
               }
               alt='banner'
             />
-            <Edit />
           </div>
 
           <div className='avatar center'>
@@ -52,7 +54,7 @@ export default function Profile() {
           </div>
           <div className='address' onClick={() => copyToClipboard()}>
             <p>
-              {walletAddress}
+              {address}
               <span className='icon-coppy'>
                 {isCopied ? (
                   <svg
@@ -90,7 +92,7 @@ export default function Profile() {
             </p>
           </div>
         </div>
-        <Tabs defaultActiveKey='2' type='card' size={'large'} className='tabs-actions-profile'>
+        <Tabs defaultActiveKey='1' type='card' size={'large'} className='tabs-actions-profile'>
           <TabPane
             tab={
               <div className='action-profile'>
@@ -101,7 +103,7 @@ export default function Profile() {
             key='1'
           >
             <ERC721Filter
-              erc721Tokens={erc721Tokens}
+              erc721Tokens={erc721OfUser}
               isLoadingErc721={isLoadingErc721}
               type={'onSale'}
             />
@@ -110,12 +112,12 @@ export default function Profile() {
             tab={
               <div className='action-profile'>
                 <WalletOutlined />
-                <strong>My Wallet</strong>
+                <strong>Wallet</strong>
               </div>
             }
             key='2'
           >
-            <ERC721Filter erc721Tokens={erc721Tokens} isLoadingErc721={isLoadingErc721} />
+            <ERC721Filter erc721Tokens={erc721OfUser} isLoadingErc721={isLoadingErc721} />
           </TabPane>
           <TabPane
             tab={

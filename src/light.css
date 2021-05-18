@@ -3,6 +3,7 @@ html[data-theme='light'] {
   --background-color: rgb(255, 255, 255);
   --nft-background: #fafafa;
   --input-background: #ededed;
+  --input-background-white: white;
 }
 
 [data-theme='light'] .ant-card-bordered {
@@ -40,5 +41,9 @@ html[data-theme='light'] {
 
 [data-theme='light'] .ant-menu-submenu-popup > .ant-menu,
 .ant-radio-button-wrapper {
+  background-color: #fff !important;
+}
+
+[data-theme='light'] .footer-sidebar .actions-buy-bid {
   background-color: #fff !important;
 }

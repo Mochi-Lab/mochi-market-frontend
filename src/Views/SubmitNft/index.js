@@ -44,8 +44,8 @@ export default function SubmitNFT() {
       <LoadingModal title={content} visible={visible} />
       <div className='steps-content'>
         <div>
-          <p className='get-listed'>Enter your contract address</p>
-          <p className='select-network'>What is the address of your ERC721 Or ERC1155 ?</p>
+          <p className='get-listed'>List your NFT on Mochi Marketplace</p>
+          <p className='select-network'>Enter the contract address and type of your NFT below.</p>
           <div>
             <Select
               className='input-mode-bc'

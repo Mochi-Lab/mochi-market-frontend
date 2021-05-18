@@ -14,6 +14,10 @@ const initialState = {
   erc721Instances: null,
   erc721Tokens: null,
   isLoadingErc721: null,
+  erc721OfUser: null,
+
+  //Erc1155
+  erc1155Instances: null,
 
   // Main contracts
   addressesProvider: null,
@@ -40,6 +44,9 @@ const initialState = {
   nftCampaign: null,
   listCampaign: [],
   loadingCampaign: false,
+
+  // Notification
+  noti: null, // notification = {type:"success/error",message="......"}
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -79,6 +86,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         erc721Instances: action.erc721Instances,
+      };
+    case actions.INIT_ERC1155:
+      return {
+        ...state,
+        erc1155Instances: action.erc1155Instances,
       };
     case actions.GET_OWNED_ERC721:
       return {
@@ -161,6 +173,24 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingCampaign: action.loadingCampaign,
+      };
+    case actions.LOGOUT:
+      return {
+        ...state,
+        walletAddress: null,
+        shortAddress: null,
+        adminAddress: null,
+        balance: 0,
+      };
+    case actions.GET_ERC721_OF_USER:
+      return {
+        ...state,
+        erc721OfUser: action.erc721Tokens,
+      };
+    case actions.NOTI:
+      return {
+        ...state,
+        noti: action.noti,
       };
     default:
       return state;

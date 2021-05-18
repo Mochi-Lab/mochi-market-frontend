@@ -4,17 +4,17 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "owner_",
+          "name": "owner",
           "type": "address"
         },
         {
           "internalType": "string",
-          "name": "name_",
+          "name": "name",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "symbol_",
+          "name": "symbol",
           "type": "string"
         }
       ],
@@ -153,16 +153,16 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "baseURI",
-      "outputs": [
+      "inputs": [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "name": "burn",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -225,13 +225,18 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "_to",
+          "name": "to",
           "type": "address"
         },
         {
           "internalType": "string",
-          "name": "_tokenURI",
+          "name": "tokenUri",
           "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
         }
       ],
       "name": "mint",
@@ -369,12 +374,17 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
           "internalType": "string",
-          "name": "_baseURI",
+          "name": "tokenUri",
           "type": "string"
         }
       ],
-      "name": "setBaseURI",
+      "name": "setTokenURI",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

@@ -15,7 +15,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import {
   fetchListCampaign,
   addCampaign,
-  checkAllowance,
+  checkAllowanceCampaign,
   approveERC20,
   checkBalance,
 } from 'store/actions';
@@ -121,7 +121,7 @@ export default function FormCreateCampaign({ disabledDate }) {
         if ((await web3.eth.getCode(value)) === '0x') {
           return Promise.reject(new Error('Contract not exist'));
         }
-        let allow = await store.dispatch(checkAllowance(value));
+        let allow = await store.dispatch(checkAllowanceCampaign(value));
         if (allow > 0) {
           return Promise.resolve();
         } else {
