@@ -28,12 +28,12 @@ export default function Faucet() {
 
   return (
     <div className='page-faucet'>
-      <h1 className='title-page'>
+      <h1 className='title-page textmode'>
         Faucet <b>MOMA</b> Testnet
       </h1>
       {!!walletAddress ? (
         <>
-          <i>(Don't be too greedy! Please try again in at least 5 minutes!)</i>
+          <i className='textmode'>(Don't be too greedy! Please try again in at least 5 minutes!)</i>
           <Button
             className='btn-faucet'
             onClick={async () => handleFaucetMOMA()}
