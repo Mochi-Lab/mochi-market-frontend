@@ -19,6 +19,7 @@ const CreateERC721 = lazy(() => import('Views/Create/ERC721'));
 const CreateERC1155 = lazy(() => import('Views/Create/ERC1155'));
 const Browse = lazy(() => import('Views/Browse'));
 const PublicProfile = lazy(() => import('Views/PublicProfile'));
+const Faucet = lazy(() => import('Views/Faucet'));
 
 function App() {
   useEffect(() => {
@@ -56,6 +57,7 @@ function App() {
               <Route exact path='/token/:addressToken/:id' component={DetailNFT} />
               {/* <Route exact path='/airdrops' component={Airdrops} /> */}
               <Route exact path='/profile/:address' component={PublicProfile} />
+              <Route exact path='/faucet' component={Faucet} />
             </Switch>
           </Suspense>
         </div>
