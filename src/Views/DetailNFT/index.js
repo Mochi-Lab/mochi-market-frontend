@@ -261,7 +261,6 @@ export default function DetailNFT() {
               <div className='footer-sidebar'>
                 <div className='actions-buy-bid'>
                   <div className='PE'>
-                    {console.log(status)}
                     {walletAddress ? (
                       <RenderSwitch status={status} token={token} orderDetail={orderDetail} />
                     ) : (
