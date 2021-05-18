@@ -13,6 +13,7 @@ import Vault from 'Contracts/Vault.json';
 import CreativeStudio from 'Contracts/CreativeStudio.json';
 import NFTCampaign from 'Contracts/NFTCampaign.json';
 import ERC20 from 'Contracts/ERC20.json';
+import MOMATestnet from 'Contracts/MOMATestnet.json';
 import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
@@ -1305,6 +1306,54 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
     error.type = 'error';
     dispatch(showNotification(error));
     return false;
+  }
+};
+
+export const faucetMOMA = () => async (dispatch, getState) => {
+  const { walletAddress, web3 } = getState();
+  try {
+    if (!!contractAddress.MOMATestnet && !!walletAddress) {
+      const instaneMOMATestnet = new web3.eth.Contract(
+        MOMATestnet.abi,
+        contractAddress.MOMATestnet
+      );
+      let result = await instaneMOMATestnet.methods
+        .faucet()
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Faucet Successfully !';
+          dispatch(showNotification(noti));
+          return true;
+        });
+      return result;
+    }
+    return false;
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification(error));
+    return false;
+  }
+};
+
+export const checkFaucet = (addressToken) => async (dispatch, getState) => {
+  const { walletAddress, web3 } = getState();
+  try {
+    if (!!contractAddress.MOMATestnet && !!walletAddress) {
+      const instaneMOMATestnet = new web3.eth.Contract(
+        MOMATestnet.abi,
+        contractAddress.MOMATestnet
+      );
+      const lastTimeFaucet = await instaneMOMATestnet.methods.userToTimestamp(walletAddress).call();
+      const blockNumberLatest = await web3.eth.getBlockNumber();
+      const blockLatest = await web3.eth.getBlock(blockNumberLatest);
+      return blockLatest.timestamp - lastTimeFaucet >= 300;
+    }
+    return false;
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification(error));
   }
 };
 
