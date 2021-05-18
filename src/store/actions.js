@@ -1332,7 +1332,7 @@ export const faucetMOMA = () => async (dispatch, getState) => {
     return false;
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    dispatch(showNotification('Please try again in 5 minutes'));
     return false;
   }
 };
@@ -1353,7 +1353,7 @@ export const checkFaucet = (addressToken) => async (dispatch, getState) => {
     return false;
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    dispatch(showNotification('Something went wrong! please try again later'));
   }
 };
 
