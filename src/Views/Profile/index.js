@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
 import { WalletOutlined, HistoryOutlined, ShopOutlined } from '@ant-design/icons';
-import ERC721Filter from 'Components/ERC721Filter';
+import NFTsFilter from 'Components/NFTsFilter';
 import Edit from './Edit';
 import { useHistory } from 'react-router-dom';
 import avatarDefault from 'Assets/avatar-default.svg';
@@ -100,7 +100,7 @@ export default function Profile() {
             }
             key='1'
           >
-            <ERC721Filter
+            <NFTsFilter
               erc721Tokens={erc721Tokens}
               isLoadingErc721={isLoadingErc721}
               type={'onSale'}
@@ -115,7 +115,7 @@ export default function Profile() {
             }
             key='2'
           >
-            <ERC721Filter erc721Tokens={erc721Tokens} isLoadingErc721={isLoadingErc721} />
+            <NFTsFilter erc721Tokens={erc721Tokens} isLoadingErc721={isLoadingErc721} />
           </TabPane>
           <TabPane
             tab={

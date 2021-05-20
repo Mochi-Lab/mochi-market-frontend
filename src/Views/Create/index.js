@@ -27,7 +27,7 @@ export default function Create() {
             <p>Single</p>
           </div>
 
-          <div className='box input-mode-bc slt center'>
+          <div className='box input-mode-bc slt center' onClick={() => push('/create/erc1155/')}>
             <img src={create1155Icon} alt='multiple' />
             <p>Multiple</p>
           </div>

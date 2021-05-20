@@ -107,7 +107,7 @@ const RightMenu = () => {
             </div>
           </Menu.Item>
           <Menu.Item key='setting:3'>
-            <Link to='/profile'>
+            <Link to={`/profile/${walletAddress}`}>
               <strong className='nav-textmode'>Profile</strong>
             </Link>
           </Menu.Item>
