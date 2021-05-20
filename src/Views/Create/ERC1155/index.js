@@ -89,6 +89,7 @@ export default function CreateERC1155() {
             </div>
             <Form onFinish={onFinish} form={form} layout='vertical'>
               <Form.Item
+                label={<h3 className='text-upload-image textmode'>Name</h3>}
                 name='name'
                 rules={[
                   {
@@ -97,7 +98,6 @@ export default function CreateERC1155() {
                   },
                 ]}
               >
-                <h3 className='text-upload-image textmode'>Name</h3>
                 <Input
                   className='input-name-nft input-mode-bc'
                   placeholder='Name of NFT'
@@ -121,6 +121,7 @@ export default function CreateERC1155() {
                 <></>
               )}
               <Form.Item
+                label={<h3 className='text-upload-image textmode'>Amount</h3>}
                 name='amount'
                 rules={[
                   {
@@ -129,15 +130,16 @@ export default function CreateERC1155() {
                   },
                 ]}
               >
-                <h3 className='text-upload-image textmode'>Amount</h3>
                 <Input
                   className='input-name-nft input-mode-bc'
                   placeholder='Number of NFT'
                   size='large'
                 />
               </Form.Item>
-              <Form.Item name='description'>
-                <h3 className='text-upload-image textmode'>Description</h3>
+              <Form.Item
+                name='description'
+                label={<h3 className='text-upload-image textmode'>Description</h3>}
+              >
                 <TextArea
                   className='input-name-nft input-mode-bc'
                   autoSize={{ minRows: 6 }}
