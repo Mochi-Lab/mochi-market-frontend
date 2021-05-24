@@ -18,7 +18,7 @@ const Create = lazy(() => import('Views/Create'));
 const CreateERC721 = lazy(() => import('Views/Create/ERC721'));
 const CreateERC1155 = lazy(() => import('Views/Create/ERC1155'));
 const Browse = lazy(() => import('Views/Browse'));
-const PublicProfile = lazy(() => import('Views/PublicProfile'));
+const Faucet = lazy(() => import('Views/Faucet'));
 
 function App() {
   useEffect(() => {
@@ -35,7 +35,7 @@ function App() {
       <BrowserRouter>
         <FormFeedback />
         <div className='page content'>
-          <div className='bg-header'></div>
+          {/* <div className='bg-header'></div> */}
           <Notification />
           <NavBar />
           <Suspense
@@ -47,7 +47,7 @@ function App() {
           >
             <Switch>
               <Route exact path='/' component={Home} />
-              <Route exact path='/profile' component={Profile} />
+              <Route exact path='/profile/:address' component={Profile} />
               <Route exact path='/submit-Nfts' component={SubmitNFT} />
               <Route exact path='/create' component={Create} />
               <Route exact path='/browse' component={Browse} />
@@ -55,7 +55,7 @@ function App() {
               <Route exact path='/create/erc1155' component={CreateERC1155} />
               <Route exact path='/token/:addressToken/:id' component={DetailNFT} />
               {/* <Route exact path='/airdrops' component={Airdrops} /> */}
-              <Route exact path='/profile/:address' component={PublicProfile} />
+              <Route exact path='/faucet' component={Faucet} />
             </Switch>
           </Suspense>
         </div>

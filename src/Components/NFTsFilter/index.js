@@ -1,7 +1,7 @@
 import { Layout, Menu, Input } from 'antd';
 import { ShopOutlined, SearchOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import ERC721 from 'Components/ERC721Card';
+import NFTsCard from 'Components/NFTsCard';
 import IconLoading from 'Components/IconLoading';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
@@ -10,7 +10,7 @@ import './index.css';
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
-export default function ERC721Filter({ erc721Tokens, isLoadingErc721, type }) {
+export default function NFTsFilter({ erc721Tokens, isLoadingErc721, type }) {
   const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState(null);
   const [filterCollections, setfilterCollections] = useState([]);
@@ -151,12 +151,12 @@ export default function ERC721Filter({ erc721Tokens, isLoadingErc721, type }) {
               </div>
             ) : !!selectedTokens && (!!selectedTokens.tokens || !!selectedTokens.onSale) ? (
               type === 'onSale' ? (
-                <ERC721 tokens={selectedTokens.onSale} />
+                <NFTsCard tokens={selectedTokens.onSale} />
               ) : (
-                <ERC721 tokens={selectedTokens.tokens} />
+                <NFTsCard tokens={selectedTokens.tokens} />
               )
             ) : type === 'onSale' ? (
-              <ERC721
+              <NFTsCard
                 tokens={
                   erc721Tokens
                     ? [].concat(
@@ -168,7 +168,7 @@ export default function ERC721Filter({ erc721Tokens, isLoadingErc721, type }) {
                 }
               />
             ) : (
-              <ERC721
+              <NFTsCard
                 tokens={
                   erc721Tokens
                     ? [].concat(

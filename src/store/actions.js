@@ -13,6 +13,7 @@ import Vault from 'Contracts/Vault.json';
 import CreativeStudio from 'Contracts/CreativeStudio.json';
 import NFTCampaign from 'Contracts/NFTCampaign.json';
 import ERC20 from 'Contracts/ERC20.json';
+import MOMATestnet from 'Contracts/MOMATestnet.json';
 import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
@@ -118,7 +119,7 @@ export const setStrSearch = (strSearch) => (dispatch) => {
 export const INIT_ERC721 = 'INIT_ERC721';
 export const INIT_ERC1155 = 'INIT_ERC1155';
 export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {
-  let { web3, nftList } = getState();
+  const { web3, nftList, walletAddress } = getState();
   let erc721Instances = [];
   let erc1155Instances = [];
   if (!!acceptedNftsAddress) {
@@ -132,14 +133,12 @@ export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) =>
     }
     dispatch({ type: INIT_ERC721, erc721Instances });
     dispatch({ type: INIT_ERC1155, erc1155Instances });
-    dispatch(getOwnedERC721(erc721Instances));
+    dispatch(getOwnedERC721(erc721Instances, walletAddress));
   }
 };
 
 export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
-export const getOwnedERC721 = (erc721Instances) => async (dispatch, getState) => {
-  let { walletAddress } = getState();
-
+export const getOwnedERC721 = (erc721Instances, walletAddress) => async (dispatch, getState) => {
   if (!walletAddress) return;
 
   // Start loading
@@ -225,79 +224,6 @@ export const setAcceptedNftsUser = () => async (dispatch, getState) => {
   }
 };
 
-export const GET_ERC721_OF_USER = 'GET_ERC721_OF_USER';
-export const getERC721OfUser = (erc721Instances, user) => async (dispatch, getState) => {
-  // Start loading
-  dispatch(setLoadingErc721(true));
-
-  var getERC721 = (instance) => {
-    return new Promise(async (resolve) => {
-      let ERC721token = {};
-      const listIdToken = await listTokensOfOwner(instance, user, contractAddress.Market);
-      let tokenIdOwner = listIdToken.owned;
-      let tokenIdOnSale = listIdToken.onSale;
-
-      let balanceOfOwner = tokenIdOwner.length;
-      let balanceOfOnSale = tokenIdOnSale.length;
-
-      if (balanceOfOwner > 0 || balanceOfOnSale > 0) {
-        ERC721token.tokenIdOwner = tokenIdOwner;
-        ERC721token.name = await instance.methods.name().call();
-        ERC721token.symbol = await instance.methods.symbol().call();
-        ERC721token.tokens = [];
-        ERC721token.onSale = [];
-
-        for (let i = 0; i < balanceOfOwner; i++) {
-          let token = {};
-          token.index = tokenIdOwner[i];
-          token.tokenURI = await instance.methods.tokenURI(token.index).call();
-          token.addressToken = instance._address;
-          try {
-            let req = await axios.get(token.tokenURI);
-            token.detail = req.data;
-            ERC721token.tokens.push(token);
-          } catch (error) {
-            token.detail = { name: 'Unnamed', description: '' };
-            ERC721token.tokens.push(token);
-          }
-        }
-        for (let i = 0; i < balanceOfOnSale; i++) {
-          let token = {};
-          token.index = tokenIdOnSale[i];
-          token.tokenURI = await instance.methods.tokenURI(token.index).call();
-          token.addressToken = instance._address;
-          try {
-            let req = await axios.get(token.tokenURI);
-            token.detail = req.data;
-            ERC721token.onSale.push(token);
-          } catch (error) {
-            token.detail = { name: 'Unnamed', description: '' };
-            ERC721token.onSale.push(token);
-          }
-        }
-        resolve(ERC721token);
-      } else {
-        resolve();
-      }
-    });
-  };
-
-  let erc721Tokens = await Promise.all(
-    erc721Instances.map(async (instance) => {
-      return await getERC721(instance);
-    })
-  );
-
-  erc721Tokens = erc721Tokens.filter(function (el) {
-    return el != null;
-  });
-
-  dispatch({ type: GET_ERC721_OF_USER, erc721Tokens });
-
-  // Loading done
-  dispatch(setLoadingErc721(false));
-};
-
 export const IS_LOADING_ERC721 = 'IS_LOADING_ERC721';
 export const setLoadingErc721 = (isLoadingErc721) => async (dispatch) => {
   dispatch({
@@ -328,7 +254,7 @@ export const transferNft = (contractAddress, to, tokenId) => async (dispatch, ge
     dispatch(showNotification(error));
   }
   // get own nft
-  dispatch(getOwnedERC721(erc721Instances));
+  dispatch(getOwnedERC721(erc721Instances, walletAddress));
 };
 
 ////////////////////
@@ -590,12 +516,40 @@ export const createSellOrder = (nftAddress, tokenId, price, token) => async (
     // Fetch new availableOrderList
     dispatch(setAvailableSellOrder());
     // get own nft
-    dispatch(getOwnedERC721(erc721Instances));
+    dispatch(getOwnedERC721(erc721Instances, walletAddress));
     return true;
   } catch (error) {
     console.log({ error });
     error.type = 'error';
     dispatch(showNotification(error));
+  }
+};
+
+export const SET_ALLOWANCE = 'SET_ALLOWANCE';
+export const approveToken = (orderDetail) => async (dispatch, getState) => {
+  const { market, walletAddress, web3 } = getState();
+
+  if (orderDetail.token !== NULL_ADDRESS) {
+    const instaneErc20 = new web3.eth.Contract(ERC20.abi, orderDetail.token);
+    const allowance = await instaneErc20.methods.allowance(walletAddress, market._address).call();
+    if (parseInt(allowance) <= 0) {
+      await instaneErc20.methods
+        .approve(market._address, VALUE_MAX)
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Approve Successfully !';
+          dispatch(showNotification(noti));
+          dispatch({ type: SET_ALLOWANCE, allowanceToken: VALUE_MAX });
+          return true;
+        })
+        .on('error', (error, receipt) => {
+          console.log('approveERC20: ', error);
+          // message.error('Oh no! Something went wrong !');
+          return false;
+        });
+    }
   }
 };
 
@@ -643,7 +597,7 @@ export const buyNft = (orderDetail) => async (dispatch, getState) => {
   // Fetch new availableOrderList
   dispatch(setAvailableSellOrder());
   // get own nft
-  dispatch(getOwnedERC721(erc721Instances));
+  dispatch(getOwnedERC721(erc721Instances, walletAddress));
   return link;
 };
 
@@ -652,7 +606,7 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
   try {
     await dispatch(setLoadingTx(true));
     await market.methods
-      .cancleSellOrder(orderDetail.sellId)
+      .cancelSellOrder(orderDetail.sellId)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         let noti = {};
@@ -670,7 +624,7 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
   // Fetch new availableOrderList
   dispatch(setAvailableSellOrder());
   // get own nft
-  dispatch(getOwnedERC721(erc721Instances));
+  dispatch(getOwnedERC721(erc721Instances, walletAddress));
 };
 
 export const IS_LOADING_TX = 'IS_LOADING_TX';
@@ -687,7 +641,7 @@ export const setLoadingTx = (isLoadingTx) => async (dispatch) => {
 
 // TODO
 export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, getState) => {
-  let { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
+  const { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
   contractAddress = getContractAddress(chainId);
   let erc721Instance;
   if (collectionId !== -1) {
@@ -733,7 +687,7 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
   }
 
   // get own nft
-  dispatch(getOwnedERC721(erc721Instances));
+  dispatch(getOwnedERC721(erc721Instances, walletAddress));
 };
 
 // TODO
@@ -741,7 +695,7 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
   dispatch,
   getState
 ) => {
-  let { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
+  const { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
   contractAddress = getContractAddress(chainId);
   let erc1155Instance;
   if (collectionId !== -1) {
@@ -787,7 +741,7 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
   }
 
   // get own nft
-  dispatch(getOwnedERC721(erc721Instances));
+  dispatch(getOwnedERC721(erc721Instances, walletAddress));
 };
 
 ////////////////////
@@ -1277,6 +1231,54 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
     error.type = 'error';
     dispatch(showNotification(error));
     return false;
+  }
+};
+
+export const faucetMOMA = () => async (dispatch, getState) => {
+  const { walletAddress, web3 } = getState();
+  try {
+    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
+      const instaneMOMATestnet = new web3.eth.Contract(
+        MOMATestnet.abi,
+        contractAddress.MOMATestnet
+      );
+      let result = await instaneMOMATestnet.methods
+        .faucet()
+        .send({ from: walletAddress })
+        .on('receipt', (receipt) => {
+          let noti = {};
+          noti.type = 'success';
+          noti.message = 'Faucet Successfully !';
+          dispatch(showNotification(noti));
+          return true;
+        });
+      return result;
+    }
+    return false;
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification('Please try again in 5 minutes'));
+    return false;
+  }
+};
+
+export const checkFaucet = (addressToken) => async (dispatch, getState) => {
+  const { walletAddress, web3 } = getState();
+  try {
+    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
+      const instaneMOMATestnet = new web3.eth.Contract(
+        MOMATestnet.abi,
+        contractAddress.MOMATestnet
+      );
+      const lastTimeFaucet = await instaneMOMATestnet.methods.userToTimestamp(walletAddress).call();
+      const blockNumberLatest = await web3.eth.getBlockNumber();
+      const blockLatest = await web3.eth.getBlock(blockNumberLatest);
+      return blockLatest.timestamp - lastTimeFaucet >= 300;
+    }
+    return false;
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification('Something went wrong! please try again later'));
   }
 };
 

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import imgNotFound from 'Assets/notfound.png';
 
-function ERC721Card({ token, strSearch }) {
+function NFTsCard({ token, strSearch }) {
   const { web3 } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
@@ -64,10 +64,10 @@ export default function ERC721({ tokens }) {
 
   return (
     <div className='explore-nft content-list-nft'>
-      <Row justify='start'>
+      <Row justify='start' gutter={[0, 10]}>
         {!!afterFilter ? (
           afterFilter.map((token, index) => (
-            <ERC721Card key={index} token={token} strSearch={strSearch} />
+            <NFTsCard key={index} token={token} strSearch={strSearch} />
           ))
         ) : (
           <></>

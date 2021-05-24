@@ -8,13 +8,13 @@ const initialState = {
   shortAddress: null,
   adminAddress: null,
   balance: 0,
+  allowanceToken: 0,
   strSearch: '',
 
   // Erc721
   erc721Instances: null,
   erc721Tokens: null,
   isLoadingErc721: null,
-  erc721OfUser: null,
 
   //Erc1155
   erc1155Instances: null,
@@ -76,6 +76,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         balance: action.balance,
+      };
+    case actions.SET_ALLOWANCE:
+      return {
+        ...state,
+        allowanceToken: action.allowanceToken,
       };
     case actions.SET_STR_SEARCH:
       return {
@@ -181,11 +186,6 @@ const rootReducer = (state = initialState, action) => {
         shortAddress: null,
         adminAddress: null,
         balance: 0,
-      };
-    case actions.GET_ERC721_OF_USER:
-      return {
-        ...state,
-        erc721OfUser: action.erc721Tokens,
       };
     case actions.NOTI:
       return {

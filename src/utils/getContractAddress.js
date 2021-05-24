@@ -27,6 +27,7 @@ const contractAddress = {
     NFTCampaign: '0x23442A5094aC64f1B54D07a199e79738f56bdbfE',
     MochiERC721NFT: '0xE81eB5f4BA1355F6B57Ac7dF4F7d1f669946fA73',
     MochiERC1155NFT: '0x42Baf95B6F88be9a3825978Ac5E12af362A7e252',
+    MOMATestnet: '0x9980a36dFdcE320E24e2CAcB2Ac3e91022A91A2f',
   },
 };
 
@@ -38,7 +39,7 @@ const tokensPayment = {
   ],
   //BSC Testnet
   97: [
-    { address: '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C', icon: moma, symbol: 'MOMA' },
+    { address: '0x9980a36dFdcE320E24e2CAcB2Ac3e91022A91A2f', icon: moma, symbol: 'MOMA' },
     { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
   ],
 };
@@ -51,7 +52,7 @@ const symbolToken = {
   },
   //BSC Testnet
   97: {
-    '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C': 'MOMA',
+    '0x9980a36dFdcE320E24e2CAcB2Ac3e91022A91A2f': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
   },
 };

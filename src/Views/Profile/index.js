@@ -1,29 +1,32 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Tabs } from 'antd';
 import { WalletOutlined, HistoryOutlined, ShopOutlined } from '@ant-design/icons';
-import ERC721Filter from 'Components/ERC721Filter';
+import NFTsFilter from 'Components/NFTsFilter';
 import Edit from './Edit';
-import { useHistory } from 'react-router-dom';
 import avatarDefault from 'Assets/avatar-default.svg';
-
+import { getOwnedERC721 } from 'store/actions';
 import './index.css';
 import TransactionTable from 'Components/TransactionTable';
+import { useParams } from 'react-router';
 
 const { TabPane } = Tabs;
 
 export default function Profile() {
-  const { walletAddress, erc721Tokens, isLoadingErc721 } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const { erc721Tokens, isLoadingErc721, erc721Instances } = useSelector((state) => state);
+  const { address } = useParams();
 
   const [isCopied, setIsCopied] = useState(false);
-  const history = useHistory();
 
   useEffect(() => {
-    if (!walletAddress) history.push('/');
-  });
+    if (!!erc721Instances && !!address) {
+      dispatch(getOwnedERC721(erc721Instances, address));
+    }
+  }, [erc721Instances, address, dispatch]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(walletAddress);
+    navigator.clipboard.writeText(address);
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);
@@ -52,7 +55,7 @@ export default function Profile() {
           </div>
           <div className='address' onClick={() => copyToClipboard()}>
             <p>
-              {walletAddress}
+              {address}
               <span className='icon-coppy'>
                 {isCopied ? (
                   <svg
@@ -100,7 +103,7 @@ export default function Profile() {
             }
             key='1'
           >
-            <ERC721Filter
+            <NFTsFilter
               erc721Tokens={erc721Tokens}
               isLoadingErc721={isLoadingErc721}
               type={'onSale'}
@@ -115,7 +118,7 @@ export default function Profile() {
             }
             key='2'
           >
-            <ERC721Filter erc721Tokens={erc721Tokens} isLoadingErc721={isLoadingErc721} />
+            <NFTsFilter erc721Tokens={erc721Tokens} isLoadingErc721={isLoadingErc721} />
           </TabPane>
           <TabPane
             tab={

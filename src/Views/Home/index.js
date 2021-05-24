@@ -33,11 +33,9 @@ export default function Home() {
 
   const newListing = () => {
     let listNFT = mergeAllCollections();
-    listNFT = listNFT.sort((a, b) => {
-      if (a.sortIndex < b.sortIndex) return -1;
-      if (a.sortIndex > b.sortIndex) return 1;
-      return 0;
-    });
+    listNFT = listNFT.sort((a, b) =>
+      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
+    );
     return listNFT.slice(0, 10);
   };
   return (

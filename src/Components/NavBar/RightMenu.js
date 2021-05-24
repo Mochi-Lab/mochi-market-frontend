@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import avatarDefault from 'Assets/avatar-default.svg';
 import ToggleDarkMode from 'Components/ToggleDarkMode';
 import LogoutWallet from 'Components/Logout';
+import { getContractAddress } from 'utils/getContractAddress';
 
 const SubMenu = Menu.SubMenu;
 
@@ -13,7 +14,7 @@ const { useBreakpoint } = Grid;
 
 const RightMenu = () => {
   const screen = useBreakpoint();
-  const { shortAddress, walletAddress } = useSelector((state) => state);
+  const { shortAddress, walletAddress, chainId } = useSelector((state) => state);
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -35,8 +36,17 @@ const RightMenu = () => {
       {/* <Menu.Item key='/airdrops'>
         <Link to='/airdrops'>Airdrops</Link>
       </Menu.Item> */}
+      {!!getContractAddress(chainId) && !!getContractAddress(chainId).MOMATestnet ? (
+        <Menu.Item key='/faucet'>
+          <Link to='/faucet'>Faucet</Link>
+        </Menu.Item>
+      ) : null}
       <Menu.Item key='/create'>
-        <Link to='/create'>Create</Link>
+        <div className='btn-create center'>
+          <Link to='/create'>
+            <p style={{ margin: '0px', color: '#ffffff' }}>Create</p>
+          </Link>
+        </div>
       </Menu.Item>
       <Menu.Item key='connect-wallet'>
         <ConnectWallet />
@@ -101,7 +111,7 @@ const RightMenu = () => {
             </div>
           </Menu.Item>
           <Menu.Item key='setting:3'>
-            <Link to='/profile'>
+            <Link to={`/profile/${walletAddress}`}>
               <strong className='nav-textmode'>Profile</strong>
             </Link>
           </Menu.Item>
