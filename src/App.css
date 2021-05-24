@@ -4,9 +4,22 @@
 
 .menu-bar {
   padding: 0 20px;
-  border-bottom: solid 1px #e8e8e8;
+  border-bottom: solid 1px #ff0086;
   overflow: hidden;
   box-shadow: 0 0 3px #f3f1f1;
+  position: relative;
+}
+
+.error-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #eb5086;
+  border-radius: 50%;
+  margin-left: 12px;
+}
+
+.pink-font {
+  color: #c64488 !important;
 }
 
 .ant-select-selector {
@@ -43,7 +56,7 @@
 }
 
 .logo {
-  width: 75px;
+  width: 85px;
   height: 75px;
   float: left;
 }
@@ -83,6 +96,8 @@
 }
 
 .menuCon .ant-menu-horizontal {
+  display: flex;
+  align-items: center;
   border-bottom: none;
 }
 
@@ -270,10 +285,6 @@ div.line-loading {
 
 .mr-1d5rem {
   margin-right: 1.5rem;
-}
-
-.pink-font {
-  color: #973b5e !important;
 }
 
 .bt-cnlo:hover {

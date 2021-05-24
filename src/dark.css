@@ -40,7 +40,7 @@ html[data-theme='dark'] {
   background-color: var(--background-color) !important;
   /* border-bottom: solid 1px rgb(38 38 38) !important; */
 }
-[data-theme='dark'] .menu-bar{
+[data-theme='dark'] .menu-bar {
   border: none !important;
 }
 
@@ -49,7 +49,8 @@ html[data-theme='dark'] {
   background-color: #3a3a3a !important;
 }
 
-[data-theme='dark'] .ant-radio-button-wrapper {
+[data-theme='dark'] .ant-radio-button-wrapper,
+.bt-cnlo {
   background-color: var(--background-color) !important;
 }
 
@@ -198,7 +199,7 @@ html[data-theme='dark'] {
   color: #fff !important;
 }
 [data-theme='dark'] .rightMenu .ant-menu {
-  border: none !important
+  border: none !important;
 }
 
 [data-theme='dark'] .ant-menu-item a {

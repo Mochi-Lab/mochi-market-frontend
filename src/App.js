@@ -35,7 +35,7 @@ function App() {
       <BrowserRouter>
         <FormFeedback />
         <div className='page content'>
-          <div className='bg-header'></div>
+          {/* <div className='bg-header'></div> */}
           <Notification />
           <NavBar />
           <Suspense

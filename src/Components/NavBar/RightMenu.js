@@ -36,14 +36,18 @@ const RightMenu = () => {
       {/* <Menu.Item key='/airdrops'>
         <Link to='/airdrops'>Airdrops</Link>
       </Menu.Item> */}
-      <Menu.Item key='/create'>
-        <Link to='/create'>Create</Link>
-      </Menu.Item>
       {!!getContractAddress(chainId) && !!getContractAddress(chainId).MOMATestnet ? (
         <Menu.Item key='/faucet'>
           <Link to='/faucet'>Faucet</Link>
         </Menu.Item>
       ) : null}
+      <Menu.Item key='/create'>
+        <div className='btn-create center'>
+          <Link to='/create'>
+            <p style={{ margin: '0px', color: '#ffffff' }}>Create</p>
+          </Link>
+        </div>
+      </Menu.Item>
       <Menu.Item key='connect-wallet'>
         <ConnectWallet />
       </Menu.Item>
