@@ -50,20 +50,31 @@
 }
 
 .rightMenu .ant-menu {
-  background: var(--background-color) !important;
+  background: transparent !important;
 }
 
 .rightMenu .ant-menu-horizontal .ant-menu-item a {
-  color: var(--color) !important;
+  color: #c64488 !important;
 }
 
-.rightMenu .ant-menu-horizontal {
-  color: var(--color) !important;
+.narbar-image {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: -1;
+  width: 368.17px;
+  height: 470.3px;
 }
 
 .ant-menu-submenu-expand-icon,
 .ant-menu-submenu-arrow {
   right: 50px !important;
+}
+
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-active,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected {
+  color: transparent !important;
+  border: transparent !important;
 }
 
 .ant-tag {
@@ -72,6 +83,17 @@
 
 .address p {
   color: rgba(0, 0, 0, 18);
+}
+
+.btn-create {
+  width: 80px;
+  height: 28px;
+  background: linear-gradient(125.02deg, #ff0086 7.52%, rgba(255, 0, 134, 0) 118.17%);
+  border-radius: 30px;
+}
+
+.ant-tag-success {
+  background: transparent !important;
 }
 
 @media (max-width: 1437px) {
