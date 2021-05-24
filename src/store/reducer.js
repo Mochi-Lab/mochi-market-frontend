@@ -137,12 +137,20 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         acceptedNftsAddress: action.acceptedNftsAddress,
       };
-    case actions.SET_AVAILABLE_SELL_ORDER:
+    case actions.SET_CONVERT_ERC721:
+      return {
+        ...state,
+        convertErc721Tokens: action.convertErc721Tokens,
+      };
+    case actions.SET_AVAILABLE_SELL_ORDER_721:
       return {
         ...state,
         availableSellOrder721: action.availableSellOrder721,
+      };
+    case actions.SET_AVAILABLE_SELL_ORDER_1155:
+      return {
+        ...state,
         availableSellOrder1155: action.availableSellOrder1155,
-        convertErc721Tokens: action.convertErc721Tokens,
       };
     case actions.SET_MY_SELL_ORDER:
       return {

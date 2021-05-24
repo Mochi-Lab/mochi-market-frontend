@@ -59,6 +59,7 @@ export default function DetailNFT() {
     availableSellOrder721,
     market,
     chainId,
+    noti,
   } = useSelector((state) => state);
   const { addressToken, id } = useParams();
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function DetailNFT() {
       }
     };
     if (web3 && sellOrderList && availableSellOrder721) getNFTDetails();
-  }, [web3, addressToken, id, walletAddress, sellOrderList, availableSellOrder721, market]);
+  }, [web3, addressToken, id, walletAddress, sellOrderList, availableSellOrder721, market, noti]);
 
   return (
     <>
