@@ -20,7 +20,7 @@ export default function LogoutWallet() {
 
   return (
     <div className='logoutModal'>
-      <div className='pink-font bt-cnlo' onClick={() => setIsModalVisible(true)}>
+      <div className='pink-font btn-nl' onClick={() => setIsModalVisible(true)}>
         Logout
       </div>
 

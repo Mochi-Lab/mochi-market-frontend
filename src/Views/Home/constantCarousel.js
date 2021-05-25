@@ -12,15 +12,15 @@ export const carouselCard = {
   infinite: false,
   speed: 500,
   initialSlide: 0,
-  slidesToShow: 6,
-  slidesToScroll: 6,
+  slidesToShow: 5,
+  slidesToScroll: 5,
   arrows: true,
   responsive: [
     {
       breakpoint: 1300,
       settings: {
-        slidesToShow: 6,
-        slidesToScroll: 6,
+        slidesToShow: 5,
+        slidesToScroll: 5,
       },
     },
     {

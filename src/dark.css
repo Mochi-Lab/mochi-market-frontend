@@ -240,7 +240,14 @@ html[data-theme='dark'] {
 [data-theme='dark'] .create-page .ant-select-single.ant-select-open .ant-select-selection-item {
   color: white;
 }
+
 [data-theme='dark'] .create-page .ant-input:focus,
 .create-page .ant-input-focused {
   border: 1px solid #4c4c4c !important;
+}
+
+[data-theme='dark'] .search-input {
+  box-shadow: 4px 4px 4px #9d3659;
+  background-color: var(--input-background) !important;
+  color: white;
 }

@@ -28,7 +28,10 @@ export default function CardNFTHome({ token }) {
 
   return !!detailNFT ? (
     <Link to={`/token/${token.addressToken}/${token.index}`}>
-      <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
+      <Card
+        className='home-card'
+        cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}
+      >
         <div className='ant-card-meta-title'>{detailNFT.name}</div>
         <div className='ant-card-meta-description textmode'>
           {!!token.price ? (
