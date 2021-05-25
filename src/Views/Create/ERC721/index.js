@@ -9,6 +9,7 @@ import BackButton from 'Components/BackButton';
 import { uploadIPFS } from '../UploadIpfs';
 import '../index.css';
 import { generateERC721NFT } from 'store/actions';
+import { Link } from 'react-router-dom';
 
 const { TextArea } = Input;
 
@@ -17,6 +18,7 @@ export default function CreateERC721() {
   const [visible, setVisible] = useState(false);
   const [collectionId, setCollectionId] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
+  const [toInventory, setToInventory] = useState(false);
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
 
@@ -47,6 +49,7 @@ export default function CreateERC721() {
       setVisible(true);
       await dispatch(generateERC721NFT(collectionId, tokenUri));
       setVisible(false);
+      setToInventory(true);
 
       // reset form and file
       setFiles([]);
@@ -78,6 +81,9 @@ export default function CreateERC721() {
                   <p className='textmode'>{'Drag and Drop your image here'}</p>
                 )}
               </div>
+              <Link to={`/profile/${walletAddress}`} hidden={!toInventory}>
+                <strong className='nav-textmode'>Go to inventory</strong>
+              </Link>
             </div>
           </div>
           <div className='input-area'>
