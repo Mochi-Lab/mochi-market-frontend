@@ -376,7 +376,9 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
 // SellOrders List
 ////////////////////
 
-export const SET_AVAILABLE_SELL_ORDER = 'SET_AVAILABLE_SELL_ORDER';
+export const SET_CONVERT_ERC721 = 'SET_CONVERT_ERC721';
+export const SET_AVAILABLE_SELL_ORDER_1155 = 'SET_AVAILABLE_SELL_ORDER_1155';
+export const SET_AVAILABLE_SELL_ORDER_721 = 'SET_AVAILABLE_SELL_ORDER_721';
 export const setAvailableSellOrder = () => async (dispatch, getState) => {
   const { sellOrderList, web3, nftList } = getState();
   const pushErc721 = async (listNftContract) => {
@@ -457,18 +459,30 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
         })
       );
       dispatch({
-        type: SET_AVAILABLE_SELL_ORDER,
+        type: SET_AVAILABLE_SELL_ORDER_721,
         availableSellOrder721: availableSellOrderERC721,
+      });
+      dispatch({
+        type: SET_AVAILABLE_SELL_ORDER_1155,
         availableSellOrder1155: availableSellOrderERC1155,
+      });
+      dispatch({
+        type: SET_CONVERT_ERC721,
         convertErc721Tokens,
       });
       dispatch(setLoadingErc721(false));
     } catch (e) {
       console.log(e);
       dispatch({
-        type: SET_AVAILABLE_SELL_ORDER,
+        type: SET_AVAILABLE_SELL_ORDER_721,
         availableSellOrder721: [],
+      });
+      dispatch({
+        type: SET_AVAILABLE_SELL_ORDER_1155,
         availableSellOrder1155: [],
+      });
+      dispatch({
+        type: SET_CONVERT_ERC721,
         convertErc721Tokens: [],
       });
       return null;
@@ -1284,5 +1298,6 @@ export const checkFaucet = (addressToken) => async (dispatch, getState) => {
 
 export const NOTI = 'NOTI';
 export const showNotification = (noti) => (dispatch) => {
+  console.log('nooooo');
   dispatch({ type: NOTI, noti });
 };
