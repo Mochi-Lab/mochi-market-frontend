@@ -223,3 +223,24 @@ html[data-theme='dark'] {
 [data-theme='dark'] .pink-font {
   color: #fd5e9b !important;
 }
+[data-theme='dark'] .create-page .ant-select-selector {
+  border: 1px solid #4c4c4c !important;
+  color: white !important;
+}
+[data-theme='dark']
+  .create-page
+  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border: 1px solid #4c4c4c !important;
+  border-right-width: 1px !important;
+  outline: 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+[data-theme='dark'] .create-page .ant-select-single.ant-select-open .ant-select-selection-item {
+  color: white;
+}
+[data-theme='dark'] .create-page .ant-input:focus,
+.create-page .ant-input-focused {
+  border: 1px solid #4c4c4c !important;
+}

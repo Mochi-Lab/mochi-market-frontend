@@ -220,6 +220,10 @@
   flex-direction: column;
   z-index: 0;
   -webkit-box-flex: 1;
+  background-image: url('Assets/backgrounds/bg-submit-nft.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .bg-header {
