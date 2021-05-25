@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { registerNft, acceptNft } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
 import { useSelector } from 'react-redux';
+import imgBanner from 'Assets/images/img-banner-submit-nft.png';
 import './index.css';
 
 const { Option } = Select;
@@ -42,13 +43,15 @@ export default function SubmitNFT() {
   return (
     <div className='create-page'>
       <LoadingModal title={content} visible={visible} />
+
       <div className='steps-content'>
-        <div>
-          <p className='get-listed'>List your NFT on Mochi Marketplace</p>
+        <div className='area-submit-nft-user'>
+          <h1 className='get-listed'>List your NFT on Mochi Marketplace</h1>
           <p className='select-network'>Enter the contract address and type of your NFT below.</p>
-          <div>
+          <div className='wrap-input-submit'>
             <Select
-              className='input-mode-bc'
+              size='large'
+              className='input-mode-bc select-type-nft-submit'
               defaultValue={false}
               style={{ width: 120 }}
               onChange={handleChange}
@@ -63,30 +66,45 @@ export default function SubmitNFT() {
               onChange={(event) => setContractAddress(event.target.value)}
             />
           </div>
-
-          <Button type='primary' onClick={() => register()} shape='round' size='large'>
+          <Button
+            type='primary'
+            onClick={() => register()}
+            shape='round'
+            size='large'
+            className='btn-submit-nft'
+          >
             Submit
           </Button>
         </div>
         {!!adminAddress && walletAddress === adminAddress ? (
-          <div>
+          <div className='area-accpet'>
             <p className='get-listed'>Accept NFT Address</p>
             <div>
               <Input
-                className='input-address input-mode-bc'
+                className='input-address input-mode-bc input-accept'
                 size='large'
                 placeholder='Enter contract address'
                 onChange={(event) => setAcceptContractAddress(event.target.value)}
               />
             </div>
 
-            <Button type='primary' onClick={() => accept()} shape='round' size='large'>
+            <Button
+              type='primary'
+              onClick={() => accept()}
+              shape='round'
+              size='large'
+              className='btn-submit-nft'
+            >
               Accept
             </Button>
           </div>
         ) : (
           <></>
         )}
+      </div>
+
+      <div className='img-banner-submit-nft'>
+        <img src={imgBanner} alt='banner-submit' />
       </div>
     </div>
   );

@@ -1,9 +1,16 @@
 .steps-content {
-  min-height: 70vh;
-  margin-top: 16px;
-  padding-top: 10px;
   text-align: center;
   border-radius: 2px;
+  width: 50%;
+}
+
+.img-banner-submit-nft {
+  width: 40%;
+}
+
+.img-banner-submit-nft img {
+  width: 100%;
+  border-radius: 1rem;
 }
 
 .create-step {
@@ -12,14 +19,13 @@
 }
 
 .select-network {
-  font-weight: 600;
   color: gray;
-  font-size: 0.5cm;
+  font-size: 0.6cm;
 }
 
 .get-listed {
-  font-weight: 800;
-  font-size: 0.7cm;
+  font-weight: bold;
+  font-size: 1cm;
 }
 
 .steps-action {
@@ -28,8 +34,11 @@
 
 .input-address {
   width: 70% !important;
-  margin: 15px !important;
-  border-radius: 1rem !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-right-radius: 1rem !important;
+  border-top-right-radius: 1rem !important;
+  border-color: #ff0086 !important;
 }
 
 .select-box {
@@ -51,32 +60,121 @@
 }
 
 .create-page {
-  width: 80%;
-  margin: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+  min-height: 90vh;
 }
 
 .create-page .ant-select-selector {
- border-radius: 1rem !important;
+  border-bottom-left-radius: 1rem !important;
+  border-top-left-radius: 1rem !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-color: #ff0086 !important;
 }
 
-@media (max-width: 1024px) {
-  .select-box {
-    width: 35vw;
+.create-page .ant-select-single.ant-select-open .ant-select-selection-item {
+  color: black;
+}
+
+.create-page
+  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border-color: #ff0086 !important;
+  border-right-width: 1px !important;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgb(248 15 134 / 23%);
+}
+
+.create-page .ant-input:focus,
+.create-page .ant-input-focused {
+  border-color: #ff0086 !important;
+  outline: 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.wrap-input-submit {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+}
+
+.btn-submit-nft {
+  margin-top: 1.5rem;
+  font-size: 16px;
+  background-color: #ff0086;
+  border-color: #ff0086;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+.create-page .btn-submit-nft:hover,
+.create-page .btn-submit-nft:focus {
+  background-color: #ff0086;
+  border-color: #ff0086;
+}
+
+.area-submit-nft-user {
+  text-align: start;
+  padding: 0 5rem;
+}
+
+.ant-btn.btn-submit-nft {
+  height: auto;
+  padding: 0.3rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.select-type-nft-submit {
+  height: auto;
+}
+
+.input-address.input-accept {
+  border-radius: 1rem !important;
+}
+
+.area-accpet {
+  text-align: start;
+  padding: 0 5rem;
+  margin-top: 2rem;
+}
+.area-accpet .get-listed {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 990px) {
+  .create-page {
+    flex-direction: column;
+  }
+  .steps-content {
+    margin-top: 5rem;
+    width: 100%;
+  }
+
+  .img-banner-submit-nft {
+    width: 100%;
   }
 }
-@media (max-width: 768px) {
-  .select-box {
-    width: 45vw;
-  }
-}
+
 @media (max-width: 576px) {
-  .select-box {
-    width: 75vw;
-  }
   .get-listed {
-    font-size: 1.3rem;
+    font-size: 2rem;
   }
+
   .select-network {
-    font-size: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .area-submit-nft-user {
+    text-align: start;
+    padding: 0 2rem;
   }
 }

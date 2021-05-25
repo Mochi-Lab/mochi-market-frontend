@@ -46,7 +46,7 @@
 }
 
 .leftMenu .ant-col {
-  background: var(--background-color);
+  /* background: var(--background-color); */
 }
 
 .rightMenu .ant-menu {
