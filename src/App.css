@@ -1,6 +1,16 @@
 @import './dark.css';
 
 @import './light.css';
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.fontRubik {
+  font-family: 'Rubik Mono One', sans-serif;
+}
+
+.fontRoboto {
+  font-family: 'Roboto', sans-serif;
+}
 
 .menu-bar {
   padding: 0 20px;
@@ -263,22 +273,6 @@
   z-index: 2 !important;
 }
 
-.box-loading {
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
-}
-
-div.line-loading {
-  border-radius: 50%;
-  padding: 4px;
-  border: 2px solid transparent;
-  box-sizing: border-box;
-  height: 100%;
-  border-top-color: #1890ff;
-  animation: rotateLoading 4s infinite linear;
-}
-
 .mgb-0 {
   margin-bottom: 0px;
 }
@@ -293,18 +287,6 @@ div.line-loading {
 
 .bt-cnlo:hover {
   color: #e35188 !important;
-}
-
-@keyframes rotateLoading {
-  0% {
-    transform: rotate(0);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .border-none {
