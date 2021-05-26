@@ -4,34 +4,36 @@ import { Button, notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { buyNft, approveToken } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
-import { balanceOf, allowance } from 'utils/helper';
+import { usePaymentAllowance } from 'hooks/usePaymentAllowance';
+import { usePaymentBalance } from 'hooks/usePaymentBalance';
+import { NATIVE_TOKEN } from 'utils/helper';
+import { getTokensPayment } from 'utils/getContractAddress';
 
 export default function Buy({ orderDetail }) {
   const [visibleBuy, setVisibleBuy] = useState(false);
   const [visibleApprove, setVisibleApprove] = useState(false);
   const [insufficient, setInsufficient] = useState(false);
-  const { balance, chainId, walletAddress, allowanceToken } = useSelector((state) => state);
   const [approvedToken, setApprovedToken] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { chainId } = useSelector((state) => state);
+  const allowances = usePaymentAllowance();
+  const balances = usePaymentBalance();
   const dispatch = useDispatch();
   useEffect(() => {
     async function fetchBalance() {
-      if (!orderDetail) return;
-      if (orderDetail.token === '0x0000000000000000000000000000000000000000') {
-        setApprovedToken(true);
-        if (parseInt(orderDetail.price) > parseInt(balance * 1e18)) {
-          setInsufficient(true);
-        } else {
-          setInsufficient(false);
-        }
+      if (balances && balances.size === getTokensPayment(chainId).length) {
+        setLoading(false);
+      }
+      if (!orderDetail || !allowances || !balances) return;
+      if (parseInt(orderDetail.price) > balances.get(orderDetail.token)) {
+        setInsufficient(true);
       } else {
-        let allowanceToken = await allowance(orderDetail.token, walletAddress, chainId);
-        let _tokenBal = await balanceOf(orderDetail.token, walletAddress);
-        if (parseInt(orderDetail.price) > parseInt(_tokenBal)) {
-          setInsufficient(true);
-        } else {
-          setInsufficient(false);
-        }
-        if (parseInt(orderDetail.price) <= parseInt(allowanceToken)) {
+        setInsufficient(false);
+      }
+      if (orderDetail.token === NATIVE_TOKEN) {
+        setApprovedToken(true);
+      } else {
+        if (parseInt(orderDetail.price) <= allowances.get(orderDetail.token)) {
           setApprovedToken(true);
         } else {
           setApprovedToken(false);
@@ -39,7 +41,7 @@ export default function Buy({ orderDetail }) {
       }
     }
     fetchBalance();
-  }, [orderDetail, balance, allowanceToken, walletAddress, chainId]);
+  }, [allowances, balances, orderDetail, chainId]);
 
   const buy = async () => {
     if (!orderDetail) return;
@@ -83,16 +85,16 @@ export default function Buy({ orderDetail }) {
         <LoadingModal title='Approve' visible={visibleApprove} />
         {approvedToken ? (
           insufficient ? (
-            <Button type='primary' disabled shape='round' size='large'>
+            <Button type='primary' disabled shape='round' size='large' loading={loading}>
               Insufficient Balance
             </Button>
           ) : (
-            <Button type='primary' shape='round' size='large' onClick={buy}>
+            <Button type='primary' shape='round' size='large' onClick={buy} loading={loading}>
               Buy now
             </Button>
           )
         ) : (
-          <Button type='primary' shape='round' size='large' onClick={approve}>
+          <Button type='primary' shape='round' size='large' onClick={approve} loading={loading}>
             Approve
           </Button>
         )}
