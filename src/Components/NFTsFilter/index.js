@@ -1,5 +1,4 @@
-import { Layout, Menu, Input } from 'antd';
-import { ShopOutlined, SearchOutlined } from '@ant-design/icons';
+import { Layout } from 'antd';
 import { useState } from 'react';
 import NFTsCard from 'Components/NFTsCard';
 import IconLoading from 'Components/IconLoading';
@@ -7,13 +6,11 @@ import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import './index.css';
 
-const { SubMenu } = Menu;
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 
 export default function NFTsFilter({ erc721Tokens, isLoadingErc721, type }) {
   const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState(null);
-  const [filterCollections, setfilterCollections] = useState([]);
 
   const selectToken = (token, index) => {
     if (index === tokenActive) {
@@ -22,17 +19,6 @@ export default function NFTsFilter({ erc721Tokens, isLoadingErc721, type }) {
     } else {
       setSelectedTokens(token);
       setTokenActive(index);
-    }
-  };
-
-  const searchCollections = (value) => {
-    if (value.length > 0) {
-      let filterCollections = erc721Tokens.filter((collection) =>
-        collection.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setfilterCollections(filterCollections);
-    } else {
-      setfilterCollections([]);
     }
   };
 
@@ -71,69 +57,6 @@ export default function NFTsFilter({ erc721Tokens, isLoadingErc721, type }) {
         />
       </div>
       <Layout style={{ minHeight: '100%' }}>
-        <Sider className='site-layout-background style-sider-left'>
-          <Menu
-            mode='inline'
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{ minHeight: '100%', borderRight: 0 }}
-          >
-            <SubMenu
-              key='sub1'
-              icon={<ShopOutlined />}
-              title='Collections'
-              className='collections-sidebar-left'
-            >
-              <Menu.Item key='1' onClick={() => selectToken(null, null)}>
-                <Input
-                  size='large'
-                  className='input-search-collections input-search-nft'
-                  allowClear
-                  style={{ width: '100%' }}
-                  placeholder='Search Collections'
-                  prefix={<SearchOutlined />}
-                  onChange={(e) => searchCollections(e.target.value)}
-                />
-              </Menu.Item>
-              {filterCollections.length === 0 ? (
-                erc721Tokens ? (
-                  erc721Tokens.map((erc721Token, index) =>
-                    (type === 'onSale' && erc721Token.onSale.length > 0) ||
-                    (!type && erc721Token.tokens.length > 0) ? (
-                      <Menu.Item key={index + 2} onClick={() => selectToken(erc721Token, index)}>
-                        <div className={`sidenav-item ${tokenActive === index ? 'is-active' : ''}`}>
-                          <div
-                            className='avatar-token'
-                            dangerouslySetInnerHTML={{ __html: erc721Token.avatarToken }}
-                          />
-                          <div className='name-token'>
-                            <h2>{erc721Token.name}</h2>
-                          </div>
-                        </div>
-                      </Menu.Item>
-                    ) : null
-                  )
-                ) : (
-                  <></>
-                )
-              ) : (
-                filterCollections.map((erc721Token, index) => (
-                  <Menu.Item key={index + 2} onClick={() => selectToken(erc721Token, index)}>
-                    <div className={`sidenav-item ${tokenActive === index ? 'is-active' : ''}`}>
-                      <div
-                        className='avatar-token'
-                        dangerouslySetInnerHTML={{ __html: erc721Token.avatarToken }}
-                      />
-                      <div className='name-token'>
-                        <h2>{erc721Token.name}</h2>
-                      </div>
-                    </div>
-                  </Menu.Item>
-                ))
-              )}
-            </SubMenu>
-          </Menu>
-        </Sider>
         <Layout style={{ padding: '1rem' }} className='background-mode'>
           <Content
             className='site-layout-background'

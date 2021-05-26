@@ -13,11 +13,14 @@ const initialState = {
 
   // Erc721
   erc721Instances: null,
+  listErc721Address: null,
   erc721Tokens: null,
   isLoadingErc721: null,
 
   //Erc1155
   erc1155Instances: null,
+  listErc1155Address: null,
+  erc1155Tokens: null,
 
   // Main contracts
   addressesProvider: null,
@@ -92,15 +95,30 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         erc721Instances: action.erc721Instances,
       };
+    case actions.SET_LIST_ERC_721_ADDRESS:
+      return {
+        ...state,
+        listErc721Address: action.listErc721Address,
+      };
     case actions.INIT_ERC1155:
       return {
         ...state,
         erc1155Instances: action.erc1155Instances,
       };
+    case actions.SET_LIST_ERC_1155_ADDRESS:
+      return {
+        ...state,
+        listErc1155Address: action.listErc1155Address,
+      };
     case actions.GET_OWNED_ERC721:
       return {
         ...state,
         erc721Tokens: action.erc721Tokens,
+      };
+    case actions.GET_OWNED_ERC1155:
+      return {
+        ...state,
+        erc1155Tokens: action.erc1155Tokens,
       };
     case actions.IS_LOADING_ERC721:
       return {

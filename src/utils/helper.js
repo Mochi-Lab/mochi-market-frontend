@@ -1,4 +1,5 @@
 import { getContractAddress } from 'utils/getContractAddress';
+import axios from 'axios';
 const Web3 = require('web3');
 const ERC20 = require('Contracts/ERC20.json');
 
@@ -61,36 +62,44 @@ export function convertTimestampToDate(timestamp) {
   return convdataTime;
 }
 
-export async function listTokensOfOwner(token, walletAddress, addressMarket) {
-  const logs = await token
-    .getPastEvents('Transfer', { fromBlock: 1000000 })
-    .then((events) => events);
-
-  const owned = new Set();
-  const onSale = new Set();
-  for (const log of logs) {
-    const { from, to, tokenId } = log.returnValues;
-    if (to.toLowerCase() === walletAddress.toLowerCase()) {
-      owned.add(tokenId.toString());
-    } else if (from.toLowerCase() === walletAddress.toLowerCase()) {
-      owned.delete(tokenId.toString());
-      if (
-        from.toLowerCase() === walletAddress.toLowerCase() &&
-        to.toLowerCase() === addressMarket.toLowerCase()
-      ) {
-        onSale.add(tokenId.toString());
-      }
+export async function listTokensERC721OfOwner(addressToken, walletAddress) {
+  const result = await axios.post(
+    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
+    {
+      query: `{
+        owner(
+          id:"${walletAddress}"
+        ){
+            tokens(where:{contract :"${addressToken}"}){
+              tokenID
+              tokenURI
+            }
+          }
+        }`,
     }
+  );
 
-    if (
-      (owned.has(tokenId.toString()) && onSale.has(tokenId.toString())) ||
-      (from.toLowerCase() === addressMarket.toLowerCase() &&
-        to.toLowerCase() !== walletAddress.toLowerCase())
-    ) {
-      onSale.delete(tokenId.toString());
+  return result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
+}
+
+export async function listTokensERC115OfOwner(addressToken, walletAddress) {
+  const result = await axios.post(
+    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
+    {
+      query: `{
+        owner(
+          id:"${walletAddress}"
+        ){
+            tokens(where:{contract :"${addressToken}"}){
+              tokenID
+              tokenURI
+            }
+          }
+        }`,
     }
-  }
-  return { owned: [...owned], onSale: [...onSale] };
+  );
+
+  return result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
 }
 
 export const balanceOf = async (tokenAddress, walletAddress) => {
