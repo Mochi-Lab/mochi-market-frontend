@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConnectWallet from 'Components/ConnectWallet';
 import SampleERC721 from 'Contracts/SampleERC721.json';
 import LoadingModal from 'Components/LoadingModal';
+import add from '../../../Assets/images/add.jpg';
 
 import '../index.css';
 
@@ -76,11 +77,6 @@ export default function ERC721Collections({ collectionId, setCollectionId }) {
     <>
       <LoadingModal title={'Deploying Collection'} visible={isDeploying} />
       <div className='choose'>
-        <div className={'box input-mode-bc'} onClick={showModal}>
-          <strong className='textmode'>Create</strong>
-          <p className='textmode'>ERC-721</p>
-        </div>
-
         {!!userCollections ? (
           userCollections.map((userCollection) =>
             userCollection.isERC1155 ? (
@@ -100,12 +96,17 @@ export default function ERC721Collections({ collectionId, setCollectionId }) {
         ) : (
           <></>
         )}
+
         <div
           className={`${collectionId === -1 ? 'active' : ''} box input-mode-bc`}
           onClick={() => setCollectionId(-1)}
         >
           <strong className='textmode'>Mochi</strong>
           <p className='textmode'>MOC</p>
+        </div>
+
+        <div className='box input-mode-bc create-erc721' onClick={showModal}>
+          <img src={add} alt='create ERC-721' />
         </div>
       </div>
 

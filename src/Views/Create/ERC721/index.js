@@ -63,37 +63,15 @@ export default function CreateERC721() {
       <div className='my-collection'>
         <LoadingModal title={'Create NFT'} visible={visible} />
         <BackButton />
-        <h2 className='textmode'>Creating single NFT</h2>
+
+        <h2 className='textmode'>Create single collectibe</h2>
+        <p className='title-function'>Item Details</p>
+        <p className='title-note'>Drag of chose your file to upload</p>
 
         <div>
-          <div>
-            <h3 className='text-upload-image textmode'>Upload Image</h3>
-            <div className='drag-box-search'>
-              <div className='drag-box' {...getRootProps({ className: 'dropzone' })}>
-                <input {...getInputProps()} />
-                {!!files[0] ? (
-                  <img
-                    src={files[0].preview}
-                    alt='priview'
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  />
-                ) : (
-                  <p className='textmode'>{'Drag and Drop your image here'}</p>
-                )}
-              </div>
-              <Link to={`/profile/${walletAddress}`} hidden={!toInventory}>
-                <strong className='nav-textmode'>Go to inventory</strong>
-              </Link>
-            </div>
-          </div>
           <div className='input-area'>
-            <div>
-              <h3 className='text-upload-image textmode'>Choose collection</h3>
-              <ERC721Collections collectionId={collectionId} setCollectionId={setCollectionId} />
-            </div>
             <Form onFinish={onFinish} form={form} layout='vertical'>
               <Form.Item
-                label={<h3 className='text-upload-image textmode'>Name</h3>}
                 name='name'
                 rules={[
                   {
@@ -103,34 +81,56 @@ export default function CreateERC721() {
                 ]}
               >
                 <Input
+                  addonBefore='Item Name : '
                   className='input-name-nft input-mode-bc'
                   placeholder='Name of NFT'
                   size='large'
                 />
               </Form.Item>
-              <Form.Item
-                name='description'
-                label={<h3 className='text-upload-image textmode'>Description</h3>}
-              >
+              <Form.Item className='description' name='description' label='Description : '>
                 <TextArea
-                  className='input-name-nft input-mode-bc'
+                  className='input-name-nft input-mode-bc content-description'
                   autoSize={{ minRows: 6 }}
                   placeholder='Description'
                   size='large'
                 />
               </Form.Item>
-              <Form.Item>
-                <Row justify='end'>
-                  {walletAddress ? (
-                    <Button type='primary' htmlType='submit' shape='round' size='large'>
-                      Create Item
-                    </Button>
-                  ) : (
-                    <ConnectWallet />
-                  )}
-                </Row>
-              </Form.Item>
             </Form>
+            <div>
+              <h3 className='text-upload-image textmode'>Choose collection</h3>
+              <ERC721Collections collectionId={collectionId} setCollectionId={setCollectionId} />
+            </div>
+          </div>
+          <div className='area-upload'>
+            <div className='drag-box-search'>
+              <div className='drag-box' {...getRootProps({ className: 'dropzone' })}>
+                <input {...getInputProps()} />
+                {!!files[0] ? (
+                  <div className='preview'>
+                    <p className='preview-title'>Preview</p>
+                    <img
+                      src={files[0].preview}
+                      alt='priview'
+                      style={{ width: '90%', height: '100%', objectFit: 'contain' }}
+                    />
+                  </div>
+                ) : (
+                  <p className='textmode'>{'Drag and Drop your image here'}</p>
+                )}
+              </div>
+              <div className='btn-721'>
+                {walletAddress ? (
+                  <button type='submit' className='btn-create-item' onClick={onFinish}>
+                    Create Item
+                  </button>
+                ) : (
+                  <ConnectWallet />
+                )}
+              </div>
+              {/* <Link to={`/profile/${walletAddress}`} hidden={!toInventory}>
+                <strong className='nav-textmode'>Go to inventory</strong>
+              </Link> */}
+            </div>
           </div>
         </div>
       </div>
