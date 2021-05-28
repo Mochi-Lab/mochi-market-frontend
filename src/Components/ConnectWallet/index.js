@@ -13,7 +13,7 @@ export default function ConnectWallet() {
     <>
       {!walletAddress ? (
         <Button className='pink-font bt-cnlo' shape='round' onClick={() => connect()}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className='center'>
             Connect Wallet
             <div className='error-dot' />
           </div>

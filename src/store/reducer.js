@@ -8,6 +8,7 @@ const initialState = {
   shortAddress: null,
   adminAddress: null,
   balance: 0,
+  moma: 0,
   allowanceToken: 0,
   strSearch: '',
 
@@ -76,6 +77,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         balance: action.balance,
+      };
+    case actions.SET_MOMA_BALANCE:
+      return {
+        ...state,
+        moma: action.moma,
       };
     case actions.SET_ALLOWANCE:
       return {

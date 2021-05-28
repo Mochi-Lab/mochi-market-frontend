@@ -2,12 +2,13 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
 import IconLoading from 'Components/IconLoading';
 import FormFeedback from 'Components/FormFeedback';
-import { setAvailableSellOrder } from 'store/actions';
+import { setAvailableSellOrder, setBalance, setMomaBalance } from 'store/actions';
 import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
 import './App.css';
 import Notification from 'Components/Notification';
+import useInterval from 'utils/useInterval';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -30,12 +31,17 @@ function App() {
     }
     fetchDataInit();
   }, []);
+
+  useInterval(() => {
+    store.dispatch(setBalance());
+    store.dispatch(setMomaBalance());
+  }, 3000);
+
   return (
     <div style={{ height: '100vh', position: 'relative' }}>
       <BrowserRouter>
         <FormFeedback />
         <div className='page content'>
-          {/* <div className='bg-header'></div> */}
           <Notification />
           <NavBar />
           <Suspense
