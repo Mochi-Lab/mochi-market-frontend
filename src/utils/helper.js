@@ -110,3 +110,5 @@ export const allowance = async (tokenAddress, walletAddress, chainId) => {
     .call();
   return allowance;
 };
+
+export const NATIVE_TOKEN = '0x0000000000000000000000000000000000000000';
