@@ -1,6 +1,5 @@
-import { Table, Layout, Menu, Input, Checkbox, Divider } from 'antd';
+import { Table, Layout, Checkbox, Divider } from 'antd';
 import {
-  SearchOutlined,
   FileDoneOutlined,
   ShopOutlined,
   ExclamationCircleOutlined,
@@ -11,8 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 import { getWeb3List } from 'utils/getWeb3List';
 
-const { SubMenu } = Menu;
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -22,15 +20,9 @@ const NullAddress = '0x0000000000000000000000000000000000000000';
 
 export default function TransactionTable() {
   const dispatch = useDispatch();
-  const {
-    web3,
-    sellOrderList,
-    erc721Instances,
-    erc721Tokens,
-    walletAddress,
-    chainId,
-    market,
-  } = useSelector((state) => state);
+  const { web3, sellOrderList, erc721Instances, walletAddress, chainId, market } = useSelector(
+    (state) => state
+  );
   const [txns, setTxns] = useState([]);
   const [filterTxns, setFilterTxns] = useState([]);
 
@@ -229,75 +221,30 @@ export default function TransactionTable() {
   }
 
   return (
-    <Layout>
-      <Sider className='site-layout-background style-sider-left'>
-        <Menu
-          mode='inline'
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          style={{ minHeight: '100%', borderRight: 0 }}
-        >
-          <SubMenu
-            key='sub1'
-            icon={<ShopOutlined />}
-            title='Collections'
-            className='collections-sidebar-left'
-          >
-            <Menu.Item key='1' onClick={() => selectToken(null, null)}>
-              <Input
-                size='large'
-                className='input-search-collections'
-                allowClear
-                style={{ width: '100%' }}
-                placeholder='Search Collections'
-                prefix={<SearchOutlined />}
-              />
-            </Menu.Item>
-            {erc721Tokens ? (
-              erc721Tokens.map((erc721Token, index) => (
-                <Menu.Item key={index + 2} onClick={() => selectToken(erc721Token, index)}>
-                  <div className={`sidenav-item ${tokenActive === index ? 'is-active' : ''}`}>
-                    <div
-                      className='avatar-token'
-                      dangerouslySetInnerHTML={{ __html: erc721Token.avatarToken }}
-                    />
-                    <div className='name-token'>
-                      <h2>{erc721Token.name}</h2>
-                    </div>
-                  </div>
-                </Menu.Item>
-              ))
-            ) : (
-              <></>
-            )}
-          </SubMenu>
-        </Menu>
-      </Sider>
-      <Layout style={{ padding: '0 24px 24px', minHeight: '100vh' }} className='background-mode'>
-        <Content
-          className='site-layout-background'
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}
-        >
-          <>
-            <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-              Check all
-            </Checkbox>
+    <Layout style={{ padding: '0 24px 24px', minHeight: '100vh' }} className='background-mode'>
+      <Content
+        className='site-layout-background'
+        style={{
+          padding: 24,
+          margin: 0,
+          minHeight: 280,
+        }}
+      >
+        <>
+          <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+            Check all
+          </Checkbox>
 
-            <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
-            <Divider />
-          </>
-          <Table
-            columns={columns}
-            dataSource={isChecked ? filterTxns : txns}
-            pagination={{ size: 'small' }}
-            scroll={{ x: '100%' }}
-          />
-        </Content>
-      </Layout>
+          <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
+          <Divider />
+        </>
+        <Table
+          columns={columns}
+          dataSource={isChecked ? filterTxns : txns}
+          pagination={{ size: 'small' }}
+          scroll={{ x: '100%' }}
+        />
+      </Content>
     </Layout>
   );
 }
