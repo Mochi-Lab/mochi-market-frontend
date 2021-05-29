@@ -14,10 +14,10 @@ export default function Footer() {
             <img className='footer-logo' src={logo} alt='logo' />
           </div>
           <div>
-            <h4>MochiLab Foundation Ltd</h4>
+            <h4 className='textmode'>MochiLab Foundation Ltd</h4>
           </div>
           <div>
-            <p className='address'>3 Fraser Street #5-25 Duo Tower, Singapore</p>
+            <p className='address textmode'>3 Fraser Street #5-25 Duo Tower, Singapore</p>
           </div>
           <div>
             <a href='mailto:contact@mochilab.org'>
@@ -26,12 +26,7 @@ export default function Footer() {
           </div>
         </div>
         <div className='flc'>
-          <p
-            className='fontRoboto'
-            style={{ color: '#7B3D6A', fontSize: '22px', fontWeight: '500', marginBottom: '44px' }}
-          >
-            Follow us in social media
-          </p>
+          <p className='fontRoboto follow'>Follow us in social media</p>
 
           <div className='footer-community-icon'>
             <div className='icon-item'>

@@ -114,18 +114,19 @@ export const setMomaBalance = () => async (dispatch, getState) => {
   let { web3, walletAddress } = getState();
   let balance;
   let ctAddress;
+  if (!!contractAddress) {
+    if (!!contractAddress.MOMATestnet) ctAddress = contractAddress.MOMATestnet;
+    else ctAddress = contractAddress.MOMA;
 
-  if (contractAddress.MOMATestnet) ctAddress = contractAddress.MOMATestnet;
-  else ctAddress = contractAddress.MOMA;
-
-  const Moma = new web3.eth.Contract(ERC20.abi, ctAddress);
-  if (walletAddress !== null)
-    balance = parseBalance((await Moma.methods.balanceOf(walletAddress).call()).toString(), 18);
-  else balance = 0;
-  dispatch({
-    type: SET_MOMA_BALANCE,
-    moma: balance,
-  });
+    const Moma = new web3.eth.Contract(ERC20.abi, ctAddress);
+    if (walletAddress !== null)
+      balance = parseBalance((await Moma.methods.balanceOf(walletAddress).call()).toString(), 18);
+    else balance = 0;
+    dispatch({
+      type: SET_MOMA_BALANCE,
+      moma: balance,
+    });
+  }
 };
 
 export const SET_STR_SEARCH = 'SET_STR_SEARCH';

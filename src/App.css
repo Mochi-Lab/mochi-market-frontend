@@ -201,21 +201,6 @@
   opacity: 0 !important;
 }
 
-.PE {
-  margin: 0px;
-  padding: 0px;
-  -webkit-box-align: stretch;
-  align-items: stretch;
-  border-width: 0px;
-  border-style: solid;
-  border-color: rgb(4, 4, 5);
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  z-index: 0;
-}
-
 .content {
   position: relative;
   margin: 0px;
@@ -251,10 +236,6 @@
   flex-shrink: 0;
   z-index: 0;
   height: 75px;
-}
-
-.PE.is-expand-img {
-  z-index: 2 !important;
 }
 
 .ant-card-bordered {
