@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const { convertErc721Tokens, isLoadingErc721 } = useSelector((state) => state);
 
-  const tags = ['Artwork', '3D', 'Character', 'Art', 'Music', 'Trading Cards'];
+  const tags = ['Artwork', '3D', 'Character', 'Art'];
 
   const mergeAllCollections = () => {
     return [].concat(
@@ -40,27 +40,8 @@ export default function Home() {
             <img src={cover} alt='cover' />
             <div className='banner-content center'>
               <div>
-                <p
-                  className='fontRubik'
-                  style={{
-                    fontSize: '64px',
-                    marginBottom: '10px',
-                    textAlign: 'center',
-                    color: '#BD6484',
-                  }}
-                >
-                  MOCHI MARKET
-                </p>
-                <p
-                  className='fontRoboto'
-                  style={{
-                    fontSize: '23px',
-                    textAlign: 'center',
-                    color: '#ffffff',
-                  }}
-                >
-                  THE NEW CREATIVE ECONOMY
-                </p>
+                <p className='fontRubik mc-mk'>MOCHI MARKET</p>
+                <p className='fontRoboto new-eco'>THE NEW CREATIVE ECONOMY</p>
               </div>
             </div>
           </div>
@@ -70,31 +51,22 @@ export default function Home() {
       {/* Search box */}
       <div style={{ position: 'relative' }}>
         <div className='center' style={{ width: '100%', position: 'absolute', top: '-2rem' }}>
-          <div
-            className='search-icon center search-input'
-            style={{
-              height: '3rem',
-              width: '3rem',
-              borderRadius: '16px 0px 0px 16px',
-              background: '#ffffff',
-            }}
-          >
-            <SearchOutlined />
-          </div>
-          <Link to='/browse'>
-            <input
-              className='search-input'
+          <div className='hs'>
+            <div
+              className='search-icon center search-input'
               style={{
                 height: '3rem',
-                width: '32vw',
-                border: 0,
-                borderRadius: '0px 16px 16px 0px',
-                fontSize: '1.15rem',
-                outline: 'none',
+                width: '3rem',
+                borderRadius: '16px 0px 0px 16px',
+                background: '#ffffff',
               }}
-              placeholder='Search'
-            />
-          </Link>
+            >
+              <SearchOutlined />
+            </div>
+            <Link to='/browse'>
+              <input className='search-input home-search' placeholder='Search' />
+            </Link>
+          </div>
         </div>
       </div>
 

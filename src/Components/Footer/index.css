@@ -10,7 +10,7 @@
 }
 
 .fla {
-  width: 15vw;
+  width: 20vw;
 }
 
 .fld {
@@ -47,4 +47,30 @@
   font-size: 14px;
   line-height: 16px;
   margin: 0;
+}
+
+.follow {
+  color: #7b3d6a;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 44px;
+}
+
+@media (max-width: 770px) {
+  .footer-logo {
+    width: 100px;
+    height: 34px;
+    margin-bottom: 22px;
+  }
+
+  .fla {
+    width: 40vw;
+    font-size: 12px;
+  }
+
+  .follow {
+    color: #7b3d6a;
+    margin-bottom: 22px;
+    font-size: 15px;
+  }
 }

@@ -2,12 +2,13 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
 import IconLoading from 'Components/IconLoading';
 import FormFeedback from 'Components/FormFeedback';
-import { setAvailableSellOrder } from 'store/actions';
+import { setAvailableSellOrder, setBalance, setMomaBalance } from 'store/actions';
 import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
 import './App.css';
 import Notification from 'Components/Notification';
+import useInterval from 'utils/useInterval';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -30,33 +31,40 @@ function App() {
     }
     fetchDataInit();
   }, []);
+
+  useInterval(() => {
+    store.dispatch(setBalance());
+    store.dispatch(setMomaBalance());
+  }, 3000);
+
   return (
     <div style={{ height: '100vh', position: 'relative' }}>
       <BrowserRouter>
         <FormFeedback />
         <div className='page content'>
-          {/* <div className='bg-header'></div> */}
           <Notification />
           <NavBar />
           <Suspense
             fallback={
-              <div className='center background-mode' style={{ height: '100%' }}>
+              <div className='center background-mode' style={{ height: '90vh' }}>
                 <IconLoading />
               </div>
             }
           >
-            <Switch>
-              <Route exact path='/' component={Home} />
-              <Route exact path='/profile/:address' component={Profile} />
-              <Route exact path='/submit-Nfts' component={SubmitNFT} />
-              <Route exact path='/create' component={Create} />
-              <Route exact path='/browse' component={Browse} />
-              <Route exact path='/create/erc721' component={CreateERC721} />
-              <Route exact path='/create/erc1155' component={CreateERC1155} />
-              <Route exact path='/token/:addressToken/:id' component={DetailNFT} />
-              {/* <Route exact path='/airdrops' component={Airdrops} /> */}
-              <Route exact path='/faucet' component={Faucet} />
-            </Switch>
+            <div style={{ height: '100%' }}>
+              <Switch>
+                <Route exact path='/' component={Home} />
+                <Route exact path='/profile/:address' component={Profile} />
+                <Route exact path='/submit-Nfts' component={SubmitNFT} />
+                <Route exact path='/create' component={Create} />
+                <Route exact path='/browse' component={Browse} />
+                <Route exact path='/create/erc721' component={CreateERC721} />
+                <Route exact path='/create/erc1155' component={CreateERC1155} />
+                <Route exact path='/token/:addressToken/:id' component={DetailNFT} />
+                {/* <Route exact path='/airdrops' component={Airdrops} /> */}
+                <Route exact path='/faucet' component={Faucet} />
+              </Switch>
+            </div>
           </Suspense>
         </div>
       </BrowserRouter>

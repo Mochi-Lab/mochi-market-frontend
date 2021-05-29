@@ -1,4 +1,4 @@
-import { Tabs, Button, message } from 'antd';
+import { Button, message } from 'antd';
 import {
   ExpandAltOutlined,
   LeftOutlined,
@@ -17,11 +17,10 @@ import Cancel from 'Components/Cancel';
 import Transfer from 'Components/Transfer';
 import ConnectWallet from 'Components/ConnectWallet';
 import Share from 'Components/Share';
-import './style.css';
 import BackButton from 'Components/BackButton';
 import { getSymbol } from 'utils/getContractAddress';
 
-const { TabPane } = Tabs;
+import './style.css';
 
 const RenderSwitch = ({ status, token, orderDetail }) => {
   switch (status) {
@@ -130,8 +129,154 @@ export default function DetailNFT() {
   }, [web3, addressToken, id, walletAddress, sellOrderList, availableSellOrder721, market, noti]);
 
   return (
-    <>
+    <div className='detail-page center'>
       {!!token ? (
+        expandImgDetail ? (
+          <div className='zoom'>
+            <div className='btn-zoomin'>
+              <div className='btns'>
+                <Button
+                  shape='circle'
+                  icon={<FullscreenExitOutlined />}
+                  size='large'
+                  onClick={() => setExpandImgDetail(false)}
+                />
+              </div>
+            </div>
+            <div className='zimage center'>
+              <div className='inimage'>
+                <img alt='img-nft' src={token.image} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className='detail-main'>
+            <div className='expand-img-nft'>
+              <div className='top-btns'>
+                <BackButton />
+
+                <Button
+                  shape='circle'
+                  icon={<ExpandAltOutlined />}
+                  size='large'
+                  onClick={() => setExpandImgDetail(true)}
+                />
+              </div>
+
+              {indexAvailable - 1 > 0 ? (
+                <div className='btL'>
+                  <Link
+                    to={`/token/${availableSellOrder721[indexAvailable - 1].nftAddress}/${
+                      availableSellOrder721[indexAvailable - 1].tokenId
+                    }`}
+                  >
+                    <Button shape='circle' icon={<LeftOutlined />} size='large' />
+                  </Link>
+                </div>
+              ) : (
+                <></>
+              )}
+
+              <div className='image-label center'>
+                <div className='imgl'>
+                  <img alt='img-nft' src={token.image} />
+                </div>
+              </div>
+
+              {!!availableSellOrder721 && indexAvailable + 1 < availableSellOrder721.length ? (
+                <div className='btR'>
+                  <Link
+                    to={`/token/${availableSellOrder721[indexAvailable + 1].nftAddress}/${
+                      availableSellOrder721[indexAvailable + 1].tokenId
+                    }`}
+                  >
+                    <Button shape='circle' icon={<RightOutlined />} size='large' />
+                  </Link>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+
+            <div className='side-bar'>
+              <div className='detail-content'>
+                <div className='detail-title'>
+                  <h1 className='text-title textmode'>{token.name}</h1>
+                  <Share token={token} />
+                </div>
+                {orderDetail ? (
+                  <div className='price-nft'>
+                    <div className='price-eth pink-font'>
+                      {web3.utils.fromWei(orderDetail.price, 'ether')}{' '}
+                      {getSymbol(chainId)[orderDetail.token]}
+                    </div>
+                    <div className='textmode price-eth'>1 of 1</div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+
+                <div className='detail-des'>
+                  <div className='description-nft textmode'>{token.description}</div>
+                </div>
+                <div className='detail-owner'>
+                  <p
+                    className='textmode'
+                    style={{ fontSize: '15px', fontWeight: '900', margin: '0px' }}
+                  >
+                    Owners
+                  </p>
+                  <p className='owner textmode'>
+                    <strong>{owner}</strong>
+                  </p>
+                </div>
+              </div>
+              {window.innerWidth > 770 ? (
+                <div className='footer-sidebar'>
+                  <div className='actions-buy-bid'>
+                    {walletAddress ? (
+                      <RenderSwitch status={status} token={token} orderDetail={orderDetail} />
+                    ) : (
+                      <ConnectWallet />
+                    )}
+
+                    <div className='feeService textmode'>
+                      Service fee
+                      <span className='pt textmode'> 2.5% </span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            {window.innerWidth < 770 ? (
+              <div className='footer-sidebar'>
+                <div className='actions-buy-bid'>
+                  {walletAddress ? (
+                    <RenderSwitch status={status} token={token} orderDetail={orderDetail} />
+                  ) : (
+                    <ConnectWallet />
+                  )}
+
+                  <div className='feeService textmode'>
+                    Service fee
+                    <span className='pt textmode'> 2.5% </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        )
+      ) : (
+        <div className='center' style={{ width: '100%', minHeight: '200px' }}>
+          <IconLoading />
+        </div>
+      )}
+
+      {/* {!!token ? (
         expandImgDetail ? (
           <div className={`expand-img-nft PE ${expandImgDetail ? 'is-expand-img' : null}`}>
             <div className='btn-zoomin'>
@@ -284,7 +429,7 @@ export default function DetailNFT() {
         <div className='center' style={{ width: '100%', minHeight: '200px' }}>
           <IconLoading />
         </div>
-      )}
-    </>
+      )} */}
+    </div>
   );
 }

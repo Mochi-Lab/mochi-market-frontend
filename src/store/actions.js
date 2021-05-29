@@ -45,6 +45,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   const vault = new web3.eth.Contract(Vault.abi, contractAddress.Vault);
   const creativeStudio = new web3.eth.Contract(CreativeStudio.abi, contractAddress.CreativeStudio);
   const nftCampaign = new web3.eth.Contract(NFTCampaign.abi, contractAddress.NFTCampaign);
+
   dispatch(setAddressesProvider(addressesProvider));
   dispatch(setMarket(market));
   dispatch(setNftList(nftList));
@@ -106,6 +107,26 @@ export const setBalance = () => async (dispatch, getState) => {
     type: SET_BALANCE,
     balance,
   });
+};
+
+export const SET_MOMA_BALANCE = 'SET_MOMA_BALANCE';
+export const setMomaBalance = () => async (dispatch, getState) => {
+  let { web3, walletAddress } = getState();
+  let balance;
+  let ctAddress;
+  if (!!contractAddress) {
+    if (!!contractAddress.MOMATestnet) ctAddress = contractAddress.MOMATestnet;
+    else ctAddress = contractAddress.MOMA;
+
+    const Moma = new web3.eth.Contract(ERC20.abi, ctAddress);
+    if (walletAddress !== null)
+      balance = parseBalance((await Moma.methods.balanceOf(walletAddress).call()).toString(), 18);
+    else balance = 0;
+    dispatch({
+      type: SET_MOMA_BALANCE,
+      moma: balance,
+    });
+  }
 };
 
 export const SET_STR_SEARCH = 'SET_STR_SEARCH';
@@ -1252,11 +1273,8 @@ export const faucetMOMA = () => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
     if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
-      const instaneMOMATestnet = new web3.eth.Contract(
-        MOMATestnet.abi,
-        contractAddress.MOMATestnet
-      );
-      let result = await instaneMOMATestnet.methods
+      const instaneFaucet = new web3.eth.Contract(MOMATestnet.abi, contractAddress.MOMATestnet);
+      let result = await instaneFaucet.methods
         .faucet()
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
@@ -1280,11 +1298,8 @@ export const checkFaucet = (addressToken) => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
     if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
-      const instaneMOMATestnet = new web3.eth.Contract(
-        MOMATestnet.abi,
-        contractAddress.MOMATestnet
-      );
-      const lastTimeFaucet = await instaneMOMATestnet.methods.userToTimestamp(walletAddress).call();
+      const instaneFaucet = new web3.eth.Contract(MOMATestnet.abi, contractAddress.MOMATestnet);
+      const lastTimeFaucet = await instaneFaucet.methods.userToTimestamp(walletAddress).call();
       const blockNumberLatest = await web3.eth.getBlockNumber();
       const blockLatest = await web3.eth.getBlock(blockNumberLatest);
       return blockLatest.timestamp - lastTimeFaucet >= 300;
@@ -1298,6 +1313,5 @@ export const checkFaucet = (addressToken) => async (dispatch, getState) => {
 
 export const NOTI = 'NOTI';
 export const showNotification = (noti) => (dispatch) => {
-  console.log('nooooo');
   dispatch({ type: NOTI, noti });
 };
