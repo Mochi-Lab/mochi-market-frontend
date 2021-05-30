@@ -1,32 +1,31 @@
-import { uploadToIpfs } from 'utils/ipfs';
+import { uploadJsonToIpfs, uploadFileToIpfs } from 'utils/ipfs';
 
-const generateURI = async ({ name, description }, image, setFiles) => {
-  let draw = {
-    name,
-    image,
-    description,
-  };
-  draw = JSON.stringify(draw);
-  try {
-    const ipfsHash = await uploadToIpfs(draw);
+const generateURI = async ({ name, description }, image) => {
+  return new Promise(async function (resolve, reject) {
+    let draw = {
+      name,
+      image,
+      description,
+    };
+    try {
+      const ipfsHash = await uploadJsonToIpfs(draw);
 
-    return 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
-  } catch (error) {
-    console.log(error);
-  }
+      resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 };
 
-export const uploadIPFS = async (values, files, setFiles) => {
+export const uploadIPFS = async (values, files) => {
   // post file to IPFS, get the IPFS hash and store it in contract
-  return new Promise(function (resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     try {
-      const reader = new window.FileReader();
-      reader.readAsArrayBuffer(files[0]); // convert file to array for buffer
-      reader.onloadend = async () => {
-        const ipfsHash = await uploadToIpfs(reader.result);
-        let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
-        resolve(await generateURI(values, image, setFiles));
-      };
+      let formData = new FormData();
+      formData.append('file', files[0]);
+      const ipfsHash = await uploadFileToIpfs(formData);
+      let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+      resolve(await generateURI(values, image));
     } catch (error) {
       console.error(error);
       reject(error);

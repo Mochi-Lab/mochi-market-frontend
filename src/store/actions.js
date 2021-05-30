@@ -18,7 +18,7 @@ import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
 import { getWeb3List } from 'utils/getWeb3List';
-import { uploadToIpfs } from 'utils/ipfs';
+import { uploadJsonToIpfs, uploadFileToIpfs } from 'utils/ipfs';
 
 var contractAddress;
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -999,27 +999,25 @@ export const addCampaign = (
         urlBanner: '',
       };
 
-      const promiseIcon = new Promise((resolve, reject) => {
+      const promiseIcon = new Promise(async (resolve, reject) => {
         if (!!iconToken) {
-          const readerIcon = new window.FileReader();
-          readerIcon.readAsArrayBuffer(iconToken); // convert file to array for buffer
-          readerIcon.onloadend = async () => {
-            let ipfsHash = await uploadToIpfs(readerIcon.result);
-            resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
-          };
+          let formData = new FormData();
+          formData.append('file', iconToken);
+
+          let ipfsHash = await uploadFileToIpfs(formData);
+          resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
         } else {
           resolve();
         }
       });
 
-      const promiseBanner = new Promise((resolve, reject) => {
+      const promiseBanner = new Promise(async (resolve, reject) => {
         if (!!bannerImg) {
-          const readerBanner = new window.FileReader();
-          readerBanner.readAsArrayBuffer(bannerImg);
-          readerBanner.onloadend = async () => {
-            let ipfsHash = await uploadToIpfs(readerBanner.result);
-            resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
-          };
+          let formData = new FormData();
+          formData.append('file', iconToken);
+
+          let ipfsHash = await uploadFileToIpfs(formData);
+          resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
         } else {
           resolve();
         }
@@ -1032,8 +1030,8 @@ export const addCampaign = (
       contentCampaign.description = description ? description : '';
       contentCampaign.urlIcon = result[0] ? result[0] : '';
       contentCampaign.urlBanner = result[1] ? result[1] : '';
-      contentCampaign = JSON.stringify(contentCampaign);
-      let ipfsHash = await uploadToIpfs(contentCampaign);
+
+      let ipfsHash = await uploadJsonToIpfs(contentCampaign);
       let infoURL = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
 
       amountPerSlot = web3.utils.toWei(amountPerSlot.toString(), 'ether');

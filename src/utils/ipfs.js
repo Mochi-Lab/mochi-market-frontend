@@ -1,9 +1,31 @@
-const IPFS = require('ipfs-http-client');
+import axios from 'axios';
 
-const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+export const uploadFileToIpfs = async (data) => {
+  try {
+    const uploadedData = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', data, {
+      maxBodyLength: 'Infinity',
+      headers: {
+        'Content-Type': `multipart/form-data`,
+        pinata_api_key: process.env.REACT_APP_API_KEY,
+        pinata_secret_api_key: process.env.REACT_APP_API_SECRET,
+      },
+    });
+    return uploadedData.data.IpfsHash;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const uploadToIpfs = async (data) => {
-  for await (const results of ipfs.add(data)) {
-    return results.path;
+export const uploadJsonToIpfs = async (data) => {
+  try {
+    const uploadedData = await axios.post('https://api.pinata.cloud/pinning/pinJSONToIPFS', data, {
+      headers: {
+        pinata_api_key: process.env.REACT_APP_API_KEY,
+        pinata_secret_api_key: process.env.REACT_APP_API_SECRET,
+      },
+    });
+    return uploadedData.data.IpfsHash;
+  } catch (error) {
+    console.log(error);
   }
 };
