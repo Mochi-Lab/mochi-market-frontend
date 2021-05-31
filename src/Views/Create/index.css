@@ -51,6 +51,12 @@
   justify-content: space-around;
 }
 
+.my-collection .ant-breadcrumb {
+  justify-content: left !important;
+  padding-left: 15px;
+  font-size: 19px;
+}
+
 .my-collection > h2 {
   text-align: center;
   margin-bottom: 30px;
@@ -101,7 +107,7 @@
 
 .dropzone .preview-title {
   padding-left: 22px;
-  padding-top: 17px;
+  padding-top: 15%;
 }
 
 .dropzone .textmode {
@@ -110,7 +116,10 @@
 
 .dropzone img {
   border-radius: 31px;
-  padding-left: 22px;
+  text-align: center;
+  max-height: 90%;
+  margin-left: 5%;
+  margin-bottom: 15%;
 }
 
 .dropzone:active,

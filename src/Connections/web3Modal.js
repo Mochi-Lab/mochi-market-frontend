@@ -73,9 +73,9 @@ export const connectWeb3Modal = async () => {
 
     if (accounts.length > 0) {
       try {
-        // await axios.post(`${serverUrl}/user/checkin`, {
-        //   address: accounts[0],
-        // });
+        await axios.post(`${serverUrl}/user/checkin`, {
+          address: accounts[0],
+        });
       } catch (err) {
       } finally {
         store.dispatch(setAddress(accounts[0]));
@@ -89,9 +89,9 @@ export const connectWeb3Modal = async () => {
   // Subscribe to accounts change
   provider.on('accountsChanged', async (accounts) => {
     try {
-      // await axios.post(`${serverUrl}/user/checkin`, {
-      //   address: accounts[0],
-      // });
+      await axios.post(`${serverUrl}/user/checkin`, {
+        address: accounts[0],
+      });
     } catch (err) {
     } finally {
       store.dispatch(setAddress(accounts[0]));
