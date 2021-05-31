@@ -118,7 +118,7 @@ export default function CreateERC721() {
                     <img
                       src={files[0].preview}
                       alt='priview'
-                      style={{ width: '90%', height: '100%', objectFit: 'contain' }}
+                      style={{ width: '90%', height: 'auto', objectFit: 'contain' }}
                     />
                   </div>
                 ) : (
