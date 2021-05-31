@@ -38,7 +38,7 @@ function App() {
   }, 3000);
 
   return (
-    <div style={{ height: '100vh', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', position: 'relative' }}>
       <BrowserRouter>
         <FormFeedback />
         <div className='page content'>
