@@ -1,11 +1,10 @@
-import { Form, Input, Button, Row, message } from 'antd';
+import { Form, Input, message, Breadcrumb } from 'antd';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSelector, useDispatch } from 'react-redux';
 import LoadingModal from 'Components/LoadingModal';
 import ERC721Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
-import BackButton from 'Components/BackButton';
 import { uploadIPFS } from '../UploadIpfs';
 import '../index.css';
 import { generateERC721NFT } from 'store/actions';
@@ -18,7 +17,6 @@ export default function CreateERC721() {
   const [visible, setVisible] = useState(false);
   const [collectionId, setCollectionId] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
-  const [toInventory, setToInventory] = useState(false);
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
 
@@ -49,7 +47,6 @@ export default function CreateERC721() {
       setVisible(true);
       await dispatch(generateERC721NFT(collectionId, tokenUri));
       setVisible(false);
-      setToInventory(true);
 
       // reset form and file
       setFiles([]);
@@ -62,7 +59,17 @@ export default function CreateERC721() {
       {isLoading ? <LoadingModal title={'Upload Image'} visible={true} /> : <></>}
       <div className='my-collection'>
         <LoadingModal title={'Create NFT'} visible={visible} />
-        <BackButton />
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to='/'>Home</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to='/create'>Create</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to='/create/erc721'>Single</Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>
 
         <h2 className='textmode'>Create single collectibe</h2>
         <p className='title-function'>Item Details</p>
@@ -127,9 +134,6 @@ export default function CreateERC721() {
                   <ConnectWallet />
                 )}
               </div>
-              {/* <Link to={`/profile/${walletAddress}`} hidden={!toInventory}>
-                <strong className='nav-textmode'>Go to inventory</strong>
-              </Link> */}
             </div>
           </div>
         </div>
