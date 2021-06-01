@@ -37,20 +37,23 @@ export default function CreateERC721() {
 
   const onFinish = async (values) => {
     if (files.length > 0) {
-      setVisible();
-      // upload image
-      setIsLoading(true);
-      let tokenUri = await uploadIPFS(values, files);
-      setIsLoading(false);
+      // only upload max size 4 MB
+      if (files[0].size <= 4000000) {
+        setVisible();
+        // upload image
+        setIsLoading(true);
+        let tokenUri = await uploadIPFS(values, files);
+        setIsLoading(false);
 
-      // mint token
-      setVisible(true);
-      await dispatch(generateERC721NFT(collectionId, tokenUri));
-      setVisible(false);
+        // mint token
+        setVisible(true);
+        await dispatch(generateERC721NFT(collectionId, tokenUri));
+        setVisible(false);
 
-      // reset form and file
-      setFiles([]);
-      form.resetFields();
+        // reset form and file
+        setFiles([]);
+        form.resetFields();
+      } else message.warn('You can only upload up to 4MB');
     } else message.warn('Did you forget upload an Image ?');
   };
 
@@ -122,7 +125,9 @@ export default function CreateERC721() {
                     />
                   </div>
                 ) : (
-                  <p className='textmode'>{'Drag and Drop your image here'}</p>
+                  <p className='textmode' style={{ textAlign: 'center' }}>
+                    {'Drag and Drop your image here. Max size 4MB'}
+                  </p>
                 )}
               </div>
               <div className='btn-721'>

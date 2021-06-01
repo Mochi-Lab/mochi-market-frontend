@@ -77,7 +77,9 @@ export default function CreateERC1155() {
                     style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                   />
                 ) : (
-                  <p className='textmode'>{'Drag and Drop your image here'}</p>
+                  <p className='textmode' style={{ textAlign: 'center' }}>
+                    {'Drag and Drop your image here. Max size 4MB'}
+                  </p>
                 )}
               </div>
             </div>
