@@ -1,0 +1,59 @@
+.carousel-banner-home {
+  width: 100%;
+}
+
+.home-banner {
+  width: 100%;
+  position: relative;
+}
+
+.home-banner > img {
+  object-fit: cover;
+  width: 100%;
+}
+
+.home-banner > .banner-content {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+}
+
+.search-icon {
+  font-size: 1.15rem;
+}
+
+.home-search {
+  height: 3rem;
+  width: 32vw;
+  border: 0;
+  border-radius: 0px 16px 16px 0px;
+  font-size: 1.15rem;
+  outline: none;
+}
+
+@media (max-width: 992px) {
+  .carousel-banner-home .item-carousel {
+    height: 35vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-banner-home .item-carousel {
+    height: 30vh;
+  }
+  .home-banner > img {
+    height: 350px;
+  }
+  .home-search {
+    width: 60vw;
+  }
+}
+@media (max-width: 568px) {
+  .carousel-banner-home .item-carousel {
+    height: 25vh;
+  }
+  .home-banner > img {
+    height: 250px;
+  }
+}
