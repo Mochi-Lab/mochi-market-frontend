@@ -32,6 +32,33 @@
   outline: none;
 }
 
+.hs {
+  display: flex;
+  border: 1px solid #d9d9d987;
+  border-radius: 17px;
+}
+
+.mc-mk {
+  font-size: 64px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #bd6484;
+}
+
+.new-eco {
+  font-size: 23px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.box-search {
+  position: relative;
+}
+
+.banner-search-home {
+  margin-bottom: 2rem;
+}
+
 @media (max-width: 992px) {
   .carousel-banner-home .item-carousel {
     height: 35vh;
@@ -55,5 +82,11 @@
   }
   .home-banner > img {
     height: 250px;
+  }
+  .mc-mk {
+    font-size: 32px;
+  }
+  .new-eco {
+    font-size: 18px;
   }
 }

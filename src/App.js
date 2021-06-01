@@ -34,10 +34,10 @@ function App() {
     fetchDataInit();
   }, []);
 
-  // useInterval(() => {
-  //   store.dispatch(setBalance());
-  //   store.dispatch(setMomaBalance());
-  // }, 3000);
+  useInterval(() => {
+    store.dispatch(setBalance());
+    store.dispatch(setMomaBalance());
+  }, 3000);
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import IconLoading from 'Components/IconLoading';
 import BannerSearchHome from 'Components/BannerSearchHome';
-import { carouselBanner, carouselCard } from './constantCarousel';
+import { carouselBanner, carouselCard } from 'Constants/constantCarousel';
 import Footer from 'Components/Footer';
 import CardNFTNotSearch from './CardNFTNotSearch.js';
 
@@ -34,7 +34,7 @@ export default function Home() {
       <BannerSearchHome carouselBanner={carouselBanner} />
 
       {/* Suggest */}
-      <div className='center' style={{ marginTop: '2rem' }}>
+      <div className='center'>
         <p style={{ color: '#A3A3A3' }}>Suggested:</p>
         {tags.map((tag, index) => (
           <div key={index} style={{ margin: '0px 10px', cursor: 'pointer' }}>

@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { Button, message, Tabs } from 'antd';
 import {
   ExpandAltOutlined,
   LeftOutlined,
@@ -19,8 +19,11 @@ import ConnectWallet from 'Components/ConnectWallet';
 import Share from 'Components/Share';
 import BackButton from 'Components/BackButton';
 import { getSymbol } from 'utils/getContractAddress';
+import avatarDefault from 'Assets/avatar-profile.png';
 
 import './style.css';
+
+const { TabPane } = Tabs;
 
 const RenderSwitch = ({ status, token, orderDetail }) => {
   switch (status) {
@@ -220,15 +223,14 @@ export default function DetailNFT() {
                   <div className='description-nft textmode'>{token.description}</div>
                 </div>
                 <div className='detail-owner'>
-                  <p
-                    className='textmode'
-                    style={{ fontSize: '15px', fontWeight: '900', margin: '0px' }}
-                  >
-                    Owners
-                  </p>
-                  <p className='owner textmode'>
-                    <strong>{owner}</strong>
-                  </p>
+                  <Tabs defaultActiveKey='1'>
+                    <TabPane tab='Owners' key='1'>
+                      <Link to={`/profile/${owner}`} className='owner'>
+                        <img src={avatarDefault} alt='avatar-default' /> {'  '}
+                        <strong>{owner}</strong>
+                      </Link>
+                    </TabPane>
+                  </Tabs>
                 </div>
               </div>
               {window.innerWidth > 770 ? (

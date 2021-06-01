@@ -31,7 +31,7 @@
 
 .detail-des {
   width: 100%;
-  min-height: 30%;
+  margin: 1rem 0;
 }
 
 .price-eth {
@@ -222,6 +222,36 @@
   position: absolute;
   top: 0;
   bottom: 0;
+}
+
+.detail-owner .ant-tabs-top > .ant-tabs-nav::before {
+  border-bottom: 1px solid #f4b2db57;
+}
+
+.owner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: start;
+  align-items: center;
+  align-content: stretch;
+}
+
+.owner strong {
+  text-overflow: ellipsis;
+}
+
+.owner img {
+  margin-right: 0.5rem;
+  width: 36px;
+  height: 36px;
+}
+
+.detail-owner .ant-tabs-ink-bar {
+  background: #6d0b4e;
+}
+.detail-owner .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #c64488;
 }
 
 @media (max-width: 770px) {

@@ -270,3 +270,30 @@ html[data-theme='dark'] {
   background-color: var(--input-background) !important;
   color: white;
 }
+
+[data-theme='dark'] .right-profile .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab {
+  box-shadow: rgb(0 0 0 / 74%) 0px 5px 15px;
+}
+
+[data-theme='dark'] .detail-owner .ant-tabs-ink-bar {
+  background: #e6f7ff;
+}
+[data-theme='dark'] .detail-owner .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #e6f7ff;
+}
+[data-theme='dark'] a.owner {
+  color: deepskyblue;
+}
+[data-theme='dark'] .left-profile .info-user .address-wallet {
+  box-shadow: rgb(0 0 0) 0px 10px 20px;
+}
+
+[data-theme='dark'] .left-profile .info-user {
+  background: linear-gradient(180deg, #ffb3db 0%, #000000 100%);
+}
+
+@media (max-width: 767px) {
+  [data-theme='dark'] .left-profile .info-user {
+    background: none;
+  }
+}
