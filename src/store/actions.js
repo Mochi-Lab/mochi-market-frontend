@@ -1011,7 +1011,7 @@ export const addCampaign = (
           formData.append('file', iconToken);
 
           let ipfsHash = await uploadFileToIpfs(formData);
-          resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
+          resolve('https://storage.mochi.market/ipfs/' + ipfsHash);
         } else {
           resolve();
         }
@@ -1023,7 +1023,7 @@ export const addCampaign = (
           formData.append('file', iconToken);
 
           let ipfsHash = await uploadFileToIpfs(formData);
-          resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
+          resolve('https://storage.mochi.market/ipfs/' + ipfsHash);
         } else {
           resolve();
         }
@@ -1038,7 +1038,7 @@ export const addCampaign = (
       contentCampaign.urlBanner = result[1] ? result[1] : '';
 
       let ipfsHash = await uploadJsonToIpfs(contentCampaign);
-      let infoURL = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+      let infoURL = 'https://storage.mochi.market/ipfs/' + ipfsHash;
 
       amountPerSlot = web3.utils.toWei(amountPerSlot.toString(), 'ether');
       resultAdd = await nftCampaign.methods

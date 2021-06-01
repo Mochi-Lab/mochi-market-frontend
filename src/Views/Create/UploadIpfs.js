@@ -10,7 +10,7 @@ const generateURI = async ({ name, description }, image) => {
     try {
       const ipfsHash = await uploadJsonToIpfs(draw);
 
-      resolve('https://gateway.ipfs.io/ipfs/' + ipfsHash);
+      resolve('https://storage.mochi.market/ipfs/' + ipfsHash);
     } catch (error) {
       console.log(error);
     }
@@ -24,7 +24,7 @@ export const uploadIPFS = async (values, files) => {
       let formData = new FormData();
       formData.append('file', files[0]);
       const ipfsHash = await uploadFileToIpfs(formData);
-      let image = 'https://gateway.ipfs.io/ipfs/' + ipfsHash;
+      let image = 'https://storage.mochi.market/ipfs/' + ipfsHash;
       resolve(await generateURI(values, image));
     } catch (error) {
       console.error(error);
