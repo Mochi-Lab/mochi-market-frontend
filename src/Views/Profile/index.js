@@ -18,18 +18,22 @@ const { TabPane } = Tabs;
 
 export default function Profile() {
   const dispatch = useDispatch();
-  const { erc721Tokens, erc1155Tokens, isLoadingErc721, acceptedNftsAddress } = useSelector(
-    (state) => state
-  );
+  const {
+    erc721TokensOwner,
+    erc721TokensOnsale,
+    erc1155Tokens,
+    isLoadingErc721,
+    erc721Instances,
+  } = useSelector((state) => state);
   const { address } = useParams();
 
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    if (!!acceptedNftsAddress && !!address) {
-      dispatch(getNFTsOfOwner(acceptedNftsAddress, address));
+    if (!!erc721Instances && !!address) {
+      dispatch(getNFTsOfOwner(erc721Instances, address));
     }
-  }, [acceptedNftsAddress, address, dispatch]);
+  }, [erc721Instances, address, dispatch]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(address);
@@ -130,7 +134,11 @@ export default function Profile() {
                   }
                   key='1'
                 >
-                  <NFTsProfile listNFTs={[]} isLoadingErc721={isLoadingErc721} type={'onSale'} />
+                  <NFTsProfile
+                    listNFTs={erc721TokensOnsale}
+                    isLoadingErc721={isLoadingErc721}
+                    type={'onSale'}
+                  />
                 </TabPane>
                 <TabPane
                   tab={
@@ -141,7 +149,7 @@ export default function Profile() {
                   }
                   key='2'
                 >
-                  <NFTsProfile listNFTs={erc721Tokens} isLoadingErc721={isLoadingErc721} />
+                  <NFTsProfile listNFTs={erc721TokensOwner} isLoadingErc721={isLoadingErc721} />
                 </TabPane>
                 <TabPane
                   tab={

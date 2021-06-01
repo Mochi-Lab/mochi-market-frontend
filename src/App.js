@@ -28,14 +28,16 @@ function App() {
         .getElementsByTagName('HTML')[0]
         .setAttribute('data-theme', localStorage.getItem('theme'));
       await store.dispatch(setAvailableSellOrder());
+      store.dispatch(setBalance());
+      store.dispatch(setMomaBalance());
     }
     fetchDataInit();
   }, []);
 
-  useInterval(() => {
-    store.dispatch(setBalance());
-    store.dispatch(setMomaBalance());
-  }, 3000);
+  // useInterval(() => {
+  //   store.dispatch(setBalance());
+  //   store.dispatch(setMomaBalance());
+  // }, 3000);
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>

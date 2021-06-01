@@ -63,107 +63,36 @@ export function convertTimestampToDate(timestamp) {
   return convdataTime;
 }
 
-export async function listTokensERC721OfOwner(listAddressAccept, walletAddress) {
-  let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
-  // const result = await axios.post(
-  //   'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
-  //   {
-  //     query: `{
-  //       owner(
-  //         id:"${walletAddress.toLowerCase()}"
-  //       ){
-  //           tokens (where:{contract_in : [${strListAddressAccept}]}){
-  //             tokenID
-  //             tokenURI
-  //             contract {
-  //               id
-  //               name
-  //               symbol
-  //             }
-  //           }
-  //         }
-  //       }`,
-  //   }
-  const result = await axios.post(
-    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
-    {
-      query: `{
-        owner(
-          id:"${walletAddress.toLowerCase()}"
-        ){
-            tokens{
-              tokenID
-              tokenURI
-              contract {
-                id
-                name
-                symbol
-              }
-            }
-          }
-        }`,
+export async function listERC721OfOwner(token, walletAddress, addressMarket) {
+  const logs = await token
+    .getPastEvents('Transfer', { fromBlock: 1000000 })
+    .then((events) => events);
+
+  const owned = new Set();
+  const onSale = new Set();
+  for (const log of logs) {
+    const { from, to, tokenId } = log.returnValues;
+    if (to.toLowerCase() === walletAddress.toLowerCase()) {
+      owned.add(tokenId.toString());
+    } else if (from.toLowerCase() === walletAddress.toLowerCase()) {
+      owned.delete(tokenId.toString());
+      if (
+        from.toLowerCase() === walletAddress.toLowerCase() &&
+        to.toLowerCase() === addressMarket.toLowerCase()
+      ) {
+        onSale.add(tokenId.toString());
+      }
     }
-  );
 
-  let list721Raw = result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
-  let list721 = list721Raw.map(function (nft) {
-    return {
-      addressToken: nft.contract.id,
-      symbol: nft.contract.symbol,
-      name: nft.contract.name,
-      index: nft.tokenID,
-      tokenURI: nft.tokenURI,
-    };
-  });
-  return list721;
-}
-
-export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, web3) {
-  const result = await axios.post(
-    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip1155-bsc',
-    {
-      query: `{
-        account(
-          id:"${walletAddress.toLowerCase()}"
-        ){
-          balances{
-            token{
-              id
-              registry {
-                id
-              }
-              identifier
-              totalSupply
-            }
-            value
-            }
-          }
-        }`,
+    if (
+      (owned.has(tokenId.toString()) && onSale.has(tokenId.toString())) ||
+      (from.toLowerCase() === addressMarket.toLowerCase() &&
+        to.toLowerCase() !== walletAddress.toLowerCase())
+    ) {
+      onSale.delete(tokenId.toString());
     }
-  );
-
-  let list1155Raw = (result.data && result.data.data.account
-    ? result.data.data.account.balances
-    : []
-  ).filter(function (e) {
-    return this.indexOf(e.token.registry.id) > 0;
-  }, listAddressAccept);
-
-  let list1155 = Promise.all(
-    list1155Raw.map(async (nft) => {
-      let instanceSimpleERC1155 = new web3.eth.Contract(SampleERC1155.abi, nft.token.registry.id);
-      let uri = await instanceSimpleERC1155.methods.uri(nft.token.identifier).call();
-      return {
-        addressToken: nft.token.registry.id,
-        index: nft.token.identifier,
-        value: nft.value,
-        totalSupply: nft.token.totalSupply,
-        tokenURI: uri,
-      };
-    })
-  );
-
-  return list1155;
+  }
+  return { owned: [...owned], onSale: [...onSale] };
 }
 
 export const balanceOf = async (tokenAddress, walletAddress) => {

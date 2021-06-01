@@ -112,7 +112,7 @@ export default function TransactionTable() {
           ),
         ]);
     };
-    if (walletAddress && erc721Instances && sellOrderList) fetchTxns();
+    // if (walletAddress && erc721Instances && sellOrderList) fetchTxns();
   }, [dispatch, walletAddress, erc721Instances, sellOrderList, market]);
 
   useEffect(() => {

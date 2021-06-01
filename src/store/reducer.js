@@ -16,6 +16,8 @@ const initialState = {
   erc721Instances: null,
   erc721Tokens: null,
   isLoadingErc721: null,
+  erc721TokensOwner: [],
+  erc721TokensOnsale: [],
 
   //Erc1155
   erc1155Instances: null,
@@ -108,6 +110,8 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         erc721Tokens: action.erc721Tokens,
+        erc721TokensOwner: action.erc721TokensOwner,
+        erc721TokensOnsale: action.erc721TokensOnsale,
       };
     case actions.GET_OWNED_ERC1155:
       return {

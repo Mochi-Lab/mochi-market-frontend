@@ -27,6 +27,7 @@ export default function CardNFTHome({ token, strSearch }) {
   }, [token, token.tokenURI]);
 
   return !!detailNFT &&
+    !!detailNFT.name &&
     (detailNFT.name.toLocaleLowerCase().includes(strSearch.toLowerCase()) ||
       token.collections.toLocaleLowerCase().includes(strSearch.toLowerCase())) ? (
     <Col

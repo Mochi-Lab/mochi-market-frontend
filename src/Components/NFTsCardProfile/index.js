@@ -27,6 +27,7 @@ function NFTsCardProfile({ token, strSearch }) {
   }, [token]);
 
   return !!detailNFT &&
+    !!detailNFT.name &&
     (detailNFT.name.toLocaleLowerCase().includes(strSearch.toLowerCase()) ||
       token.collections.toLocaleLowerCase().includes(strSearch.toLowerCase())) ? (
     <Col
