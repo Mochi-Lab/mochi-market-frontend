@@ -140,7 +140,6 @@ export default function ERC721Collections({ collectionId, setCollectionId }) {
         {walletAddress ? (
           <Form onFinish={onSubmit} form={form} layout='vertical'>
             <Form.Item
-              label='Display name'
               name='name'
               rules={[
                 {
@@ -156,7 +155,6 @@ export default function ERC721Collections({ collectionId, setCollectionId }) {
               />
             </Form.Item>
             <Form.Item
-              label='Symbol'
               name='symbol'
               rules={[
                 {

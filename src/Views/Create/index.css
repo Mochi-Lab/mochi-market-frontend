@@ -41,6 +41,10 @@
   margin: 40px 0px;
 }
 
+.input-name-nft {
+  border-radius: 11px !important;
+}
+
 .my-collection {
   min-height: 80vh;
   width: 60vw;
@@ -91,6 +95,7 @@
   border-radius: 31px;
   cursor: pointer;
   vertical-align: top;
+  overflow: hidden !important;
 }
 
 .dropzone:hover {
@@ -117,7 +122,6 @@
 .dropzone img {
   border-radius: 31px;
   text-align: center;
-  max-height: 90%;
   margin-left: 5%;
   margin-bottom: 15%;
 }
@@ -159,8 +163,9 @@ h2.textmode {
 }
 
 .ant-input-group-addon {
-  border-radius: 11px !important;
   border: none !important;
+  border-top-left-radius: 11px !important;
+  border-bottom-left-radius: 11px !important;
 }
 
 .ant-input-wrapper .ant-input {
