@@ -1,6 +1,4 @@
 import { getContractAddress } from 'utils/getContractAddress';
-import SampleERC1155 from 'Contracts/SampleERC1155.json';
-import axios from 'axios';
 const Web3 = require('web3');
 const ERC20 = require('Contracts/ERC20.json');
 

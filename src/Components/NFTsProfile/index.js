@@ -1,5 +1,4 @@
 import { Layout } from 'antd';
-import { useState } from 'react';
 import NFTsCardProfile from 'Components/NFTsCardProfile';
 import IconLoading from 'Components/IconLoading';
 import 'react-alice-carousel/lib/alice-carousel.css';
