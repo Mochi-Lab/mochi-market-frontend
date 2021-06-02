@@ -291,6 +291,28 @@ html[data-theme='dark'] {
 [data-theme='dark'] .left-profile .info-user {
   background: linear-gradient(180deg, #ffb3db 0%, #000000 100%);
 }
+[data-theme='dark'] .input-address {
+  border-color: #807c7182 !important;
+}
+
+[data-theme='dark'] .input-search-collections .ant-input-affix-wrapper {
+  background: #585858;
+}
+
+[data-theme='dark'] .input-search-collections .ant-input-affix-wrapper .ant-input {
+  background-color: rgb(88 88 88) !important;
+}
+
+[data-theme='dark']
+  .style-search-input.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: rgb(0 0 0 / 66%);
+}
+
+[data-theme='dark'] .style-search-input.ant-input-affix-wrapper:focus,
+[data-theme='dark'] .ant-input-affix-wrapper-focused {
+  border-color: rgb(0 0 0 / 66%);
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 25%);
+}
 
 @media (max-width: 767px) {
   [data-theme='dark'] .left-profile .info-user {

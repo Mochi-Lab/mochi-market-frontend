@@ -62,35 +62,39 @@ export function convertTimestampToDate(timestamp) {
 }
 
 export async function listERC721OfOwner(token, walletAddress, addressMarket) {
-  const logs = await token
-    .getPastEvents('Transfer', { fromBlock: 1000000 })
-    .then((events) => events);
+  try {
+    const logs = await token
+      .getPastEvents('Transfer', { fromBlock: 1000000 })
+      .then((events) => events);
 
-  const owned = new Set();
-  const onSale = new Set();
-  for (const log of logs) {
-    const { from, to, tokenId } = log.returnValues;
-    if (to.toLowerCase() === walletAddress.toLowerCase()) {
-      owned.add(tokenId.toString());
-    } else if (from.toLowerCase() === walletAddress.toLowerCase()) {
-      owned.delete(tokenId.toString());
+    const owned = new Set();
+    const onSale = new Set();
+    for (const log of logs) {
+      const { from, to, tokenId } = log.returnValues;
+      if (to.toLowerCase() === walletAddress.toLowerCase()) {
+        owned.add(tokenId.toString());
+      } else if (from.toLowerCase() === walletAddress.toLowerCase()) {
+        owned.delete(tokenId.toString());
+        if (
+          from.toLowerCase() === walletAddress.toLowerCase() &&
+          to.toLowerCase() === addressMarket.toLowerCase()
+        ) {
+          onSale.add(tokenId.toString());
+        }
+      }
+
       if (
-        from.toLowerCase() === walletAddress.toLowerCase() &&
-        to.toLowerCase() === addressMarket.toLowerCase()
+        (owned.has(tokenId.toString()) && onSale.has(tokenId.toString())) ||
+        (from.toLowerCase() === addressMarket.toLowerCase() &&
+          to.toLowerCase() !== walletAddress.toLowerCase())
       ) {
-        onSale.add(tokenId.toString());
+        onSale.delete(tokenId.toString());
       }
     }
-
-    if (
-      (owned.has(tokenId.toString()) && onSale.has(tokenId.toString())) ||
-      (from.toLowerCase() === addressMarket.toLowerCase() &&
-        to.toLowerCase() !== walletAddress.toLowerCase())
-    ) {
-      onSale.delete(tokenId.toString());
-    }
+    return { owned: [...owned], onSale: [...onSale] };
+  } catch (error) {
+    return { owned: [], onSale: [] };
   }
-  return { owned: [...owned], onSale: [...onSale] };
 }
 
 export const balanceOf = async (tokenAddress, walletAddress) => {

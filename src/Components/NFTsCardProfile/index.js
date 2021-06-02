@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import imgNotFound from 'Assets/notfound.png';
-import '../NFTsCard/index.css';
+import '../NFTsCardBrowse/index.css';
 
 function NFTsCardProfile({ token, strSearch }) {
   const { web3 } = useSelector((state) => state);

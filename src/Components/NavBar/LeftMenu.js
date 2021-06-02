@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Grid, Col, Tag } from 'antd';
 import { setWeb3, setChainId } from 'store/actions';
+import store from 'store/index';
 import { web3Default, networkDefault, getWeb3List } from 'utils/getWeb3List';
 
 import './index.css';
@@ -9,7 +10,6 @@ import './index.css';
 const { useBreakpoint } = Grid;
 
 export default function LeftNar() {
-  const dispatch = useDispatch();
   const [network, setNetwork] = useState(networkDefault);
   const { chainId, web3 } = useSelector((state) => state);
 
@@ -19,13 +19,13 @@ export default function LeftNar() {
 
   useEffect(() => {
     const setWeb3Default = async () => {
-      dispatch(setWeb3(getWeb3List(networkDefault).web3Default));
-      dispatch(setChainId(networkDefault));
+      await store.dispatch(setWeb3(getWeb3List(networkDefault).web3Default));
+      await store.dispatch(setChainId(networkDefault));
     };
     if (!web3 || !chainId) {
       setWeb3Default();
     }
-  }, [web3, chainId, dispatch]);
+  }, [web3, chainId]);
 
   const { md } = useBreakpoint();
   return (

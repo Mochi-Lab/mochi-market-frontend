@@ -55,7 +55,7 @@ function NFTsCard({ token, strSearch }) {
   ) : null;
 }
 
-export default function ERC721({ tokens }) {
+export default function NFTsCardBrowse({ tokens }) {
   const [afterFilter, setafterFilter] = useState(!!tokens ? tokens : []);
   const { strSearch } = useSelector((state) => state);
 
