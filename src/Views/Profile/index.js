@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row, Tabs } from 'antd';
 import { WalletOutlined, HistoryOutlined, ShopOutlined } from '@ant-design/icons';
 import NFTsProfile from 'Components/NFTsProfile';
-import Edit from './Edit';
+// import Edit from './Edit';
 import backgroundDefault from 'Assets/backgrounds/background-profile.png';
 import avatarDefault from 'Assets/avatar-profile.png';
 import iconFacebook from 'Assets/icons/facebook.svg';
@@ -21,7 +21,7 @@ export default function Profile() {
   const {
     erc721TokensOwner,
     erc721TokensOnsale,
-    erc1155Tokens,
+    /* erc1155Tokens, */
     isLoadingErc721,
     erc721Instances,
   } = useSelector((state) => state);

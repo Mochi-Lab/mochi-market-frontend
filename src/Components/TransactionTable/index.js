@@ -16,14 +16,14 @@ const CheckboxGroup = Checkbox.Group;
 
 const plainOptions = ['Created', 'List', 'Sale', 'Cancel', 'Transfer'];
 const defaultCheckedList = ['Created', 'List', 'Sale', 'Cancel', 'Transfer'];
-const NullAddress = '0x0000000000000000000000000000000000000000';
+// const NullAddress = '0x0000000000000000000000000000000000000000';
 
 export default function TransactionTable() {
   const dispatch = useDispatch();
   const { web3, sellOrderList, erc721Instances, walletAddress, chainId, market } = useSelector(
     (state) => state
   );
-  const [txns, setTxns] = useState([]);
+  const [txns /* , setTxns */] = useState([]);
   const [filterTxns, setFilterTxns] = useState([]);
 
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
@@ -31,87 +31,84 @@ export default function TransactionTable() {
   const [checkAll, setCheckAll] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const firstUpdate = useRef(true);
-  const [tokenActive, setTokenActive] = useState(null);
   useEffect(() => {
-    const fetchTxns = async () => {
-      var getERC721Txn = (instance) => {
-        return new Promise(async (resolve) => {
-          let txn = [];
-
-          await instance.events.Transfer(
-            {
-              filter: { to: walletAddress },
-              fromBlock: 0,
-            },
-            function (error, event) {
-              event.key = event.id;
-              event.event = event.returnValues.from === NullAddress ? 'Created' : 'Transfer';
-              if (event.returnValues.from !== market._address) {
-                setTxns((txns) => [...txns, event]);
-              }
-            }
-          );
-          // Transfer sent
-          await instance.events.Transfer(
-            {
-              filter: { from: walletAddress },
-              fromBlock: 0,
-            },
-            function (error, event) {
-              event.key = event.id;
-              event.event = 'Transfer';
-              if (event.returnValues.to !== market._address) {
-                setTxns((txns) => [...txns, event]);
-              }
-            }
-          );
-          resolve(txn);
-        });
-      };
-
-      if (!!erc721Instances)
-        await Promise.all([
-          erc721Instances.map(async (instance) => {
-            return await getERC721Txn(instance);
-          }),
-          // List to market
-          await sellOrderList.events.SellOrderAdded(
-            {
-              filter: { seller: walletAddress },
-              fromBlock: 0,
-            },
-            function (error, event) {
-              event.key = event.id;
-              event.event = 'List';
-              setTxns((txns) => [...txns, event]);
-            }
-          ),
-          // Cancel order
-          await sellOrderList.events.SellOrderDeactive(
-            {
-              filter: { seller: walletAddress },
-              fromBlock: 0,
-            },
-            function (error, event) {
-              event.key = event.id;
-              event.event = 'Cancel';
-              setTxns((txns) => [...txns, event]);
-            }
-          ),
-          // Order successfully
-          await sellOrderList.events.SellOrderCompleted(
-            {
-              filter: { seller: walletAddress },
-              fromBlock: 0,
-            },
-            function (error, event) {
-              event.key = event.id;
-              event.event = 'Sale';
-              setTxns((txns) => [...txns, event]);
-            }
-          ),
-        ]);
-    };
+    // const fetchTxns = async () => {
+    //   var getERC721Txn = (instance) => {
+    //     return new Promise(async (resolve) => {
+    //       let txn = [];
+    //       await instance.events.Transfer(
+    //         {
+    //           filter: { to: walletAddress },
+    //           fromBlock: 0,
+    //         },
+    //         function (error, event) {
+    //           event.key = event.id;
+    //           event.event = event.returnValues.from === NullAddress ? 'Created' : 'Transfer';
+    //           if (event.returnValues.from !== market._address) {
+    //             setTxns((txns) => [...txns, event]);
+    //           }
+    //         }
+    //       );
+    //       // Transfer sent
+    //       await instance.events.Transfer(
+    //         {
+    //           filter: { from: walletAddress },
+    //           fromBlock: 0,
+    //         },
+    //         function (error, event) {
+    //           event.key = event.id;
+    //           event.event = 'Transfer';
+    //           if (event.returnValues.to !== market._address) {
+    //             setTxns((txns) => [...txns, event]);
+    //           }
+    //         }
+    //       );
+    //       resolve(txn);
+    //     });
+    //   };
+    //   if (!!erc721Instances)
+    //     await Promise.all([
+    //       erc721Instances.map(async (instance) => {
+    //         return await getERC721Txn(instance);
+    //       }),
+    //       // List to market
+    //       await sellOrderList.events.SellOrderAdded(
+    //         {
+    //           filter: { seller: walletAddress },
+    //           fromBlock: 0,
+    //         },
+    //         function (error, event) {
+    //           event.key = event.id;
+    //           event.event = 'List';
+    //           setTxns((txns) => [...txns, event]);
+    //         }
+    //       ),
+    //       // Cancel order
+    //       await sellOrderList.events.SellOrderDeactive(
+    //         {
+    //           filter: { seller: walletAddress },
+    //           fromBlock: 0,
+    //         },
+    //         function (error, event) {
+    //           event.key = event.id;
+    //           event.event = 'Cancel';
+    //           setTxns((txns) => [...txns, event]);
+    //         }
+    //       ),
+    //       // Order successfully
+    //       await sellOrderList.events.SellOrderCompleted(
+    //         {
+    //           filter: { seller: walletAddress },
+    //           fromBlock: 0,
+    //         },
+    //         function (error, event) {
+    //           event.key = event.id;
+    //           event.event = 'Sale';
+    //           setTxns((txns) => [...txns, event]);
+    //         }
+    //       ),
+    //     ]);
+    // };
     // if (walletAddress && erc721Instances && sellOrderList) fetchTxns();
   }, [dispatch, walletAddress, erc721Instances, sellOrderList, market]);
 
@@ -215,10 +212,6 @@ export default function TransactionTable() {
       ),
     },
   ];
-
-  function selectToken(token, index) {
-    setTokenActive(index);
-  }
 
   return (
     <Layout style={{ padding: '0 24px 24px', minHeight: '100vh' }} className='background-mode'>
