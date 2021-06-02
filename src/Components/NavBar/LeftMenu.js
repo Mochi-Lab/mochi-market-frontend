@@ -36,11 +36,7 @@ export default function LeftNar() {
   };
 
   return (
-    <Col
-      span={md ? 40 : 25}
-      className={location.pathname === '/browse' ? 'center' : 'alignItems'}
-      style={{ paddingLeft: md ? '0px' : '10px' }}
-    >
+    <Col span={md ? 40 : 25} className='alignItems' style={{ paddingLeft: md ? '0px' : '10px' }}>
       <Tag color='success' className='radius-1rem'>
         <div className='box-live-time'>
           <div className='icon-live successDot'></div>
@@ -50,18 +46,7 @@ export default function LeftNar() {
         </div>
       </Tag>
 
-      {location.pathname === '/browse' ? (
-        <Input
-          allowClear
-          style={{ width: '100%' }}
-          placeholder='Search by name, collection'
-          onChange={(e) => searchNFT(e.target.value)}
-          prefix={<SearchOutlined className='search-style' />}
-          className='input-search-nft'
-        />
-      ) : (
-        <></>
-      )}
+      <></>
     </Col>
   );
 }

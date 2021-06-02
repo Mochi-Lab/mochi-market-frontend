@@ -201,25 +201,6 @@
   margin-bottom: 0;
 }
 
-.mc-mk {
-  font-size: 64px;
-  margin-bottom: 10px;
-  text-align: center;
-  color: #bd6484;
-}
-
-.new-eco {
-  font-size: 23px;
-  text-align: center;
-  color: #ffffff;
-}
-
-.hs {
-  display: flex;
-  border: 1px solid #d9d9d987;
-  border-radius: 17px;
-}
-
 @media (max-width: 992px) {
   .content-home {
     display: block;
@@ -235,14 +216,6 @@
   }
 }
 @media (max-width: 568px) {
-  .mc-mk {
-    font-size: 32px;
-  }
-
-  .new-eco {
-    font-size: 18px;
-  }
-
   .carousel-banner-home .item-carousel {
     height: 25vh;
   }

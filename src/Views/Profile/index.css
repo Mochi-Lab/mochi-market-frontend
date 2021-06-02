@@ -63,14 +63,10 @@
 }
 
 .right-profile .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab {
-  margin: 0.65rem 0.25rem 1rem 0.25rem;
+  margin: 0.65rem 0.25rem 1rem 0.65rem;
   border-radius: 1rem;
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
     rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
-}
-
-.right-profile .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active {
-  border: 1px solid #f0f0f0;
 }
 
 .right-profile .ant-tabs-top > .ant-tabs-nav {
@@ -111,6 +107,20 @@
 }
 .right-profile .ant-table-tbody > tr > td {
   border-radius: 1rem;
+}
+
+.right-profile .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white;
+}
+
+.right-profile .ant-tabs-tab:hover {
+  color: black;
+}
+
+.right-profile .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active {
+  background: linear-gradient(125.02deg, #eb2f96c7 7.52%, #3c0029 118.17%);
+  border: none;
+  color: white;
 }
 
 @media (max-width: 1200px) {
