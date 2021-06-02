@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { setStrSearch } from 'store/actions';
 import { useDispatch } from 'react-redux';
+import { useRef } from 'react';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -11,8 +12,15 @@ import './index.css';
 
 export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   const dispatch = useDispatch();
+  const browse = useRef(null);
   const searchNFT = (text) => {
     dispatch(setStrSearch(text));
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      browse.current.click();
+    }
   };
 
   return (
@@ -43,14 +51,14 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
             >
               <SearchOutlined />
             </div>
-            <Link to='/browse'>
-              <input
-                className='search-input home-search'
-                placeholder='Search'
-                ref={inputSearch}
-                onChange={(e) => searchNFT(e.target.value)}
-              />
-            </Link>
+            <Link to='/browse' ref={browse} />
+            <input
+              className='search-input home-search'
+              placeholder='Search'
+              ref={inputSearch}
+              onChange={(e) => searchNFT(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
           </div>
         </div>
       </div>
