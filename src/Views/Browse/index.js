@@ -6,7 +6,6 @@ import { useEffect, useRef } from 'react';
 
 export default function Browse() {
   const { convertErc721Tokens, isLoadingErc721 } = useSelector((state) => state);
-
   const inputSearch = useRef(null);
   useEffect(() => {
     if (!!inputSearch) {
