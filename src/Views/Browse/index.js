@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import NFTsFilter from 'Components/NFTsFilter';
+import NFTsFilterBrowse from 'Components/NFTsFilterBrowse';
 import BannerSearchHome from 'Components/BannerSearchHome';
 import { carouselBanner } from 'Constants/constantCarousel';
 import { useEffect, useRef } from 'react';
@@ -16,7 +16,7 @@ export default function Browse() {
     <>
       <BannerSearchHome carouselBanner={carouselBanner} inputSearch={inputSearch} />
       <div className='container' style={{ width: '100%', height: '100%' }}>
-        <NFTsFilter erc721Tokens={convertErc721Tokens} isLoadingErc721={isLoadingErc721} />
+        <NFTsFilterBrowse erc721Tokens={convertErc721Tokens} isLoadingErc721={isLoadingErc721} />
       </div>
     </>
   );

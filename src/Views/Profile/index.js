@@ -146,7 +146,7 @@ export default function Profile() {
                   tab={
                     <div className='action-profile'>
                       <WalletOutlined />
-                      <strong>My Wallet</strong>
+                      <strong>Collected</strong>
                     </div>
                   }
                   key='2'
