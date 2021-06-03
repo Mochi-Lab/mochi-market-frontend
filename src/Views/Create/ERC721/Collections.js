@@ -106,7 +106,7 @@ export default function ERC721Collections({ collectionId, setCollectionId }) {
         </div>
 
         <div className='box input-mode-bc create-erc721' onClick={showModal}>
-          <img src={add} alt='create ERC-721' />
+          <span className='add'>+</span>
         </div>
       </div>
 
