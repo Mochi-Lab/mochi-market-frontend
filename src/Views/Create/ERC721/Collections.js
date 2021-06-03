@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConnectWallet from 'Components/ConnectWallet';
 import SampleERC721 from 'Contracts/SampleERC721.json';
 import LoadingModal from 'Components/LoadingModal';
-import add from '../../../Assets/images/add.jpg';
 
 import '../index.css';
 

@@ -9,7 +9,7 @@ import avatarDefault from 'Assets/avatar-profile.png';
 import iconFacebook from 'Assets/icons/facebook.svg';
 import iconLinkedIn from 'Assets/icons/invision.svg';
 import iconTwitter from 'Assets/icons/twitter-profile.svg';
-import { getNFTsOfOwner } from 'store/actions';
+import { getNFTsOfOwner, setAvailableSellOrder } from 'store/actions';
 import './index.css';
 import TransactionTable from 'Components/TransactionTable';
 import { useParams } from 'react-router';
@@ -32,6 +32,7 @@ export default function Profile() {
   useEffect(() => {
     if (!!erc721Instances && !!address) {
       dispatch(getNFTsOfOwner(erc721Instances, address));
+      dispatch(setAvailableSellOrder(address));
     }
   }, [erc721Instances, address, dispatch]);
 

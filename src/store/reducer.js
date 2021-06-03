@@ -111,6 +111,10 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         erc721Tokens: action.erc721Tokens,
         erc721TokensOwner: action.erc721TokensOwner,
+      };
+    case actions.GET_ONSALE_ERC721:
+      return {
+        ...state,
         erc721TokensOnsale: action.erc721TokensOnsale,
       };
     case actions.GET_OWNED_ERC1155:
