@@ -240,6 +240,10 @@ h2.textmode {
   text-align: center;
 }
 
+/* .ant-row.ant-row-end {
+  margin-left: calc(100% + 330px);
+} */
+
 .btn-create-item {
   background: linear-gradient(136.19deg, #d9368b 24.48%, rgba(217, 54, 139, 0) 221.51%);
   border: 1px solid #c64488;
@@ -247,6 +251,8 @@ h2.textmode {
   color: #fff;
   padding: 10px 30px;
   text-transform: uppercase;
+  transition: none !important;
+  margin-left: 100px;
 }
 
 .btn-create-item:hover,
@@ -302,7 +308,12 @@ h2.textmode {
 }
 
 .create-erc721 {
-  border: 1px solid #ff0086 !important;
+  border: 2px solid #ff0086 !important;
+}
+
+.create-erc721 .add {
+  color: #ff0086;
+  font-size: 24px;
 }
 
 .drag-box-search .dropzone {
