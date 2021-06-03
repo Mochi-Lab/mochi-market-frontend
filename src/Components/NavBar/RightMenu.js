@@ -36,7 +36,7 @@ const RightMenu = () => {
       {/* <Menu.Item key='/airdrops'>
         <Link to='/airdrops'>Airdrops</Link>
       </Menu.Item> */}
-      {!!getContractAddress(chainId) && !!getContractAddress(chainId).MOMATestnet ? (
+      {!!getContractAddress(chainId) && chainId === 97 ? (
         <Menu.Item key='/faucet'>
           <Link to='/faucet'>Faucet</Link>
         </Menu.Item>

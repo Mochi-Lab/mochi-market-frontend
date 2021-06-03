@@ -13,7 +13,7 @@ import Vault from 'Contracts/Vault.json';
 import CreativeStudio from 'Contracts/CreativeStudio.json';
 import NFTCampaign from 'Contracts/NFTCampaign.json';
 import ERC20 from 'Contracts/ERC20.json';
-import MOMATestnet from 'Contracts/MOMATestnet.json';
+import MOMAabi from 'Contracts/MOMAabi.json';
 import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
 import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
@@ -115,7 +115,7 @@ export const setMomaBalance = () => async (dispatch, getState) => {
   let balance;
   let ctAddress;
   if (!!contractAddress) {
-    if (!!contractAddress.MOMATestnet) ctAddress = contractAddress.MOMATestnet;
+    if (!!contractAddress.MOMA) ctAddress = contractAddress.MOMA;
     else ctAddress = contractAddress.MOMA;
 
     const Moma = new web3.eth.Contract(ERC20.abi, ctAddress);
@@ -1276,8 +1276,8 @@ export const extendCampaign = (campaignId, endTime) => async (dispatch, getState
 export const faucetMOMA = () => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
-    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
-      const instaneFaucet = new web3.eth.Contract(MOMATestnet.abi, contractAddress.MOMATestnet);
+    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMA) {
+      const instaneFaucet = new web3.eth.Contract(MOMAabi.abi, contractAddress.MOMA);
       let result = await instaneFaucet.methods
         .faucet()
         .send({ from: walletAddress })
@@ -1301,8 +1301,8 @@ export const faucetMOMA = () => async (dispatch, getState) => {
 export const checkFaucet = (addressToken) => async (dispatch, getState) => {
   const { walletAddress, web3 } = getState();
   try {
-    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMATestnet) {
-      const instaneFaucet = new web3.eth.Contract(MOMATestnet.abi, contractAddress.MOMATestnet);
+    if (!!walletAddress && !!contractAddress && !!contractAddress.MOMA) {
+      const instaneFaucet = new web3.eth.Contract(MOMAabi.abi, contractAddress.MOMA);
       const lastTimeFaucet = await instaneFaucet.methods.userToTimestamp(walletAddress).call();
       const blockNumberLatest = await web3.eth.getBlockNumber();
       const blockLatest = await web3.eth.getBlock(blockNumberLatest);
