@@ -1,4 +1,4 @@
-import { Form, Input, message, Breadcrumb } from 'antd';
+import { Form, Input, message, Breadcrumb, Row, Button } from 'antd';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSelector, useDispatch } from 'react-redux';
@@ -105,6 +105,22 @@ export default function CreateERC721() {
                   size='large'
                 />
               </Form.Item>
+              <Form.Item>
+                <Row justify='end'>
+                  {walletAddress ? (
+                    <Button
+                      className='btn-create-item'
+                      htmlType='submit'
+                      shape='round'
+                      size='large'
+                    >
+                      Create Item
+                    </Button>
+                  ) : (
+                    <ConnectWallet />
+                  )}
+                </Row>
+              </Form.Item>
             </Form>
             <div>
               <h3 className='text-upload-image textmode'>Choose collection</h3>
@@ -128,15 +144,6 @@ export default function CreateERC721() {
                   <p className='textmode' style={{ textAlign: 'center' }}>
                     {'Drag and Drop your image here. Max size 4MB'}
                   </p>
-                )}
-              </div>
-              <div className='btn-721'>
-                {walletAddress ? (
-                  <button type='submit' className='btn-create-item' onClick={onFinish}>
-                    Create Item
-                  </button>
-                ) : (
-                  <ConnectWallet />
                 )}
               </div>
             </div>

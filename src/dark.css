@@ -105,6 +105,10 @@ html[data-theme='dark'] {
   border: 1px solid #ff0086 !important;
 }
 
+[date-theme='dark'] .create-erc721 {
+  border: 2px solid #ff0086 !important;
+}
+
 [data-theme='dark'] .input-name-nft,
 [data-theme='dark'] .active.box.input-mode-bc {
   border: 1px solid #ff0086 !important;
