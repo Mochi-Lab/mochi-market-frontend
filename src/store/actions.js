@@ -168,47 +168,28 @@ export const getNFTsOfOwner = (erc721Instances, walletAddress) => async (dispatc
   dispatch(setLoadingErc721(true));
 
   let erc721TokensOwner = [];
-  let erc721TokensOnsale = [];
 
   var getERC721 = (instance) => {
     return new Promise(async (resolve) => {
+      let ERC721token = {};
       const balanceOwner = await instance.methods.balanceOf(walletAddress).call();
-      const balanceMakert = await instance.methods.balanceOf(contractAddress.Market).call();
-      if (balanceOwner > 0 || balanceMakert > 0) {
-        const listIdToken = await listERC721OfOwner(
-          instance,
-          walletAddress,
-          contractAddress.Market
-        );
-        let ERC721token = {};
-        let tokenIdOwner = listIdToken.owned;
-        let tokenIdOnSale = listIdToken.onSale;
-
-        let balanceOfOwner = tokenIdOwner.length;
-        let balanceOfOnSale = tokenIdOnSale.length;
-
-        if (balanceOfOwner > 0 || balanceOfOnSale > 0) {
-          ERC721token.tokenIdOwner = tokenIdOwner;
+      if (balanceOwner > 0) {
+        ERC721token.balanceOf = balanceOwner;
+        ERC721token.name = await instance.methods.name().call();
+        ERC721token.symbol = await instance.methods.symbol().call();
+        ERC721token.tokens = [];
+        if (balanceOwner > 0) {
           ERC721token.name = await instance.methods.name().call();
           ERC721token.symbol = await instance.methods.symbol().call();
           ERC721token.tokens = [];
-          ERC721token.onSale = [];
 
-          for (let i = 0; i < balanceOfOwner; i++) {
+          for (let i = 0; i < balanceOwner; i++) {
             let token = {};
-            token.index = tokenIdOwner[i];
+            token.index = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
             token.tokenURI = await instance.methods.tokenURI(token.index).call();
             token.addressToken = instance._address;
             ERC721token.tokens.push(token);
             erc721TokensOwner.push(token);
-          }
-          for (let i = 0; i < balanceOfOnSale; i++) {
-            let token = {};
-            token.index = tokenIdOnSale[i];
-            token.tokenURI = await instance.methods.tokenURI(token.index).call();
-            token.addressToken = instance._address;
-            ERC721token.onSale.push(token);
-            erc721TokensOnsale.push(token);
           }
           resolve(ERC721token);
         } else {
@@ -230,7 +211,7 @@ export const getNFTsOfOwner = (erc721Instances, walletAddress) => async (dispatc
     return el != null;
   });
 
-  await dispatch({ type: GET_OWNED_ERC721, erc721Tokens, erc721TokensOwner, erc721TokensOnsale });
+  await dispatch({ type: GET_OWNED_ERC721, erc721Tokens, erc721TokensOwner });
   // await dispatch({ type: GET_OWNED_ERC1155, erc1155Tokens });
 
   // Loading done
@@ -406,8 +387,11 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
 export const SET_CONVERT_ERC721 = 'SET_CONVERT_ERC721';
 export const SET_AVAILABLE_SELL_ORDER_1155 = 'SET_AVAILABLE_SELL_ORDER_1155';
 export const SET_AVAILABLE_SELL_ORDER_721 = 'SET_AVAILABLE_SELL_ORDER_721';
-export const setAvailableSellOrder = () => async (dispatch, getState) => {
+export const GET_ONSALE_ERC721 = 'GET_ONSALE_ERC721';
+export const setAvailableSellOrder = (walletAddress) => async (dispatch, getState) => {
   const { sellOrderList, web3, nftList } = getState();
+  let erc721TokensOnsale = [];
+
   const pushErc721 = async (listNftContract) => {
     let ERC721token = { name: '', symbol: '', avatarToken: '', tokens: [] };
     ERC721token.name = await listNftContract.instance.methods.name().call();
@@ -426,6 +410,14 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
         token.symbolCollections = ERC721token.symbol;
         token.sortIndex = order.sortIndex;
         token.tokenPayment = listNftContract.tokenPayment[index];
+        token.seller = listNftContract.seller[index];
+        if (
+          !!walletAddress &&
+          listNftContract.seller[index].toLowerCase() === walletAddress.toLowerCase()
+        ) {
+          erc721TokensOnsale.push(token);
+        }
+
         return token;
       })
     );
@@ -461,7 +453,7 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
 
       if (!!availableSellOrderERC721) {
         availableSellOrderERC721.map(async (sellOrder, i) => {
-          let token = { tokenId: [], price: [], tokenPayment: [] };
+          let token = { tokenId: [], price: [], tokenPayment: [], seller: [] };
           let nftindex = listNftContracts.findIndex(
             (nft) => nft.nftAddress === sellOrder.nftAddress
           );
@@ -471,11 +463,13 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
             token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             token.price.push(sellOrder.price);
             token.tokenPayment.push(sellOrder.token);
+            token.seller.push(sellOrder.seller);
             listNftContracts.push(token);
           } else {
             listNftContracts[nftindex].tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             listNftContracts[nftindex].price.push(sellOrder.price);
             listNftContracts[nftindex].tokenPayment.push(sellOrder.token);
+            listNftContracts[nftindex].seller.push(sellOrder.seller);
           }
         });
       }
@@ -485,6 +479,12 @@ export const setAvailableSellOrder = () => async (dispatch, getState) => {
           return await pushErc721(listNftcontract);
         })
       );
+
+      dispatch({
+        type: GET_ONSALE_ERC721,
+        erc721TokensOnsale,
+      });
+
       dispatch({
         type: SET_AVAILABLE_SELL_ORDER_721,
         availableSellOrder721: availableSellOrderERC721,
