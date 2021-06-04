@@ -59,7 +59,7 @@ export default function CreateERC721() {
         setFiles([]);
         form.resetFields();
       } else message.warn('You can only upload up to 4MB');
-    } else message.warn('Did you forget upload an Image ?');
+    } else message.warn('Did you forget to upload an Image ?');
   };
 
   return (
@@ -79,10 +79,10 @@ export default function CreateERC721() {
           </Breadcrumb.Item>
         </Breadcrumb>
 
-        <h2 className='textmode'>Create single collectibe</h2>
+        <h2 className='textmode'>Create single collectible</h2>
         <p className='title-function'>Item Details</p>
-        <p className='title-note'>Drag of chose your file to upload</p>
-        <Link hidden={true} to={`/profile/${walletAddress}`} ref={profile} />
+        <p className='title-note'>Drag or chose your file to upload</p>
+        <Link to={`/profile/${walletAddress}`} ref={profile} />
         <div>
           <div className='input-area'>
             <Form onFinish={onFinish} form={form} layout='vertical'>
