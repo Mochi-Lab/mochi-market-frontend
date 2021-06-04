@@ -73,8 +73,13 @@ export default function DetailNFT() {
         // check if user is owner of token
         if (!!sellId.found) {
           const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
-          tokenOwner = order.seller;
-          setOwner(tokenOwner);
+          if (order.isActive) {
+            tokenOwner = order.seller;
+            setOwner(tokenOwner);
+          } else {
+            tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+            setOwner(tokenOwner);
+          }
         } else {
           tokenOwner = await erc721Instances.methods.ownerOf(id).call();
           setOwner(tokenOwner);
