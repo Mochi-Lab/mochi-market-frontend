@@ -47,7 +47,9 @@ export default function SubmitNFT() {
       <div className='steps-content'>
         <div className='area-submit-nft-user'>
           <h1 className='get-listed'>List your NFT on Mochi Marketplace</h1>
-          <p className='select-network'>Enter the contract address and type of your NFT below.</p>
+          <p className='select-network'>
+            Select the NFT type and input the contract address bellow.
+          </p>
           <div className='wrap-input-submit'>
             <Select
               size='large'
