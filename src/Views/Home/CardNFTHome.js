@@ -15,7 +15,12 @@ export default function CardNFTHome({ token, strSearch }) {
       if (!!token && !!token.tokenURI) {
         try {
           let req = await axios.get(token.tokenURI);
-          setDetailNFT(req.data);
+          const data = req.data;
+          setDetailNFT({
+            name: !!data.name ? data.name : 'Unnamed',
+            description: !!data.description ? data.description : '',
+            image: !!data.image ? data.image : imgNotFound,
+          });
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }

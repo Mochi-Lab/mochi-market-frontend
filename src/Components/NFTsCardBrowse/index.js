@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
 
 function NFTsCard({ token, strSearch }) {
-  const { web3 } = useSelector((state) => state);
+  const { web3, chainId } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
   useEffect(() => {
@@ -49,7 +50,13 @@ function NFTsCard({ token, strSearch }) {
           <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
             <div className='ant-card-meta-title'>{detailNFT.name}</div>
             <div className='ant-card-meta-description textmode'>
-              {!!token.price ? `${web3.utils.fromWei(token.price, 'ether')} BNB` : <></>}
+              {!!token.price ? (
+                `${web3.utils.fromWei(token.price, 'ether')} ${
+                  getSymbol(chainId)[token.tokenPayment]
+                }`
+              ) : (
+                <></>
+              )}
             </div>
           </Card>
         </Link>
