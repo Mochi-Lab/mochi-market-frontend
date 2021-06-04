@@ -26,7 +26,7 @@ export default function Footer() {
           </div>
         </div>
         <div className='flc'>
-          <p className='fontRoboto follow'>Follow us in social media</p>
+          <p className='fontRoboto follow'>Follow us on social media</p>
 
           <div className='footer-community-icon'>
             <div className='icon-item'>
