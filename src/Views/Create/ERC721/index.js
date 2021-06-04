@@ -1,5 +1,5 @@
 import { Form, Input, message, Breadcrumb, Row, Button } from 'antd';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSelector, useDispatch } from 'react-redux';
 import LoadingModal from 'Components/LoadingModal';
@@ -19,6 +19,7 @@ export default function CreateERC721() {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
+  const profile = useRef(null);
 
   const [form] = Form.useForm();
 
@@ -35,6 +36,10 @@ export default function CreateERC721() {
     },
   });
 
+  const routeProfile = () => {
+    profile.current.click();
+  };
+
   const onFinish = async (values) => {
     if (files.length > 0) {
       // only upload max size 4 MB
@@ -47,7 +52,7 @@ export default function CreateERC721() {
 
         // mint token
         setVisible(true);
-        await dispatch(generateERC721NFT(collectionId, tokenUri));
+        await dispatch(generateERC721NFT(collectionId, tokenUri, routeProfile));
         setVisible(false);
 
         // reset form and file
@@ -77,7 +82,7 @@ export default function CreateERC721() {
         <h2 className='textmode'>Create single collectibe</h2>
         <p className='title-function'>Item Details</p>
         <p className='title-note'>Drag of chose your file to upload</p>
-
+        <Link hidden={true} to={`/profile/${walletAddress}`} ref={profile} />
         <div>
           <div className='input-area'>
             <Form onFinish={onFinish} form={form} layout='vertical'>

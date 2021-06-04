@@ -681,7 +681,10 @@ export const setLoadingTx = (isLoadingTx) => async (dispatch) => {
 ////////////////////
 
 // TODO
-export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, getState) => {
+export const generateERC721NFT = (collectionId, tokenUri, routeFunc) => async (
+  dispatch,
+  getState
+) => {
   const { web3, chainId, walletAddress, erc721Instances, userCollections } = getState();
   contractAddress = getContractAddress(chainId);
   let erc721Instance;
@@ -697,8 +700,9 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
-          noti.type = 'success';
+          noti.type = 'redirect-profile';
           noti.message = 'Create Successfully !';
+          noti.fn = routeFunc;
           dispatch(showNotification(noti));
         });
     } catch (error) {
@@ -717,8 +721,9 @@ export const generateERC721NFT = (collectionId, tokenUri) => async (dispatch, ge
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
-          noti.type = 'success';
+          noti.type = 'redirect-profile';
           noti.message = 'Create Successfully !';
+          noti.fn = routeFunc;
           dispatch(showNotification(noti));
         });
     } catch (error) {
