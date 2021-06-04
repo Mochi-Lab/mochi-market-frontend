@@ -52,7 +52,7 @@ export default function CreateERC1155() {
       // reset form and file
       setFiles([]);
       form.resetFields();
-    } else message.warn('Did you forget upload an Image ?');
+    } else message.warn('Did you forget to upload an Image ?');
   };
 
   return (
