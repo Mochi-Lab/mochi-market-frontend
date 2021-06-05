@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row, Tabs } from 'antd';
-import { WalletOutlined, HistoryOutlined, ShopOutlined } from '@ant-design/icons';
+import { WalletOutlined, ShopOutlined } from '@ant-design/icons';
 import NFTsProfile from 'Components/NFTsProfile';
 // import Edit from './Edit';
 import backgroundDefault from 'Assets/backgrounds/background-profile.png';
 import avatarDefault from 'Assets/avatar-profile.png';
-import iconFacebook from 'Assets/icons/facebook.svg';
-import iconLinkedIn from 'Assets/icons/invision.svg';
-import iconTwitter from 'Assets/icons/twitter-profile.svg';
+// import iconFacebook from 'Assets/icons/facebook.svg';
+// import iconLinkedIn from 'Assets/icons/invision.svg';
+// import iconTwitter from 'Assets/icons/twitter-profile.svg';
+// import TransactionTable from 'Components/TransactionTable';
 import { getNFTsOfOwner, setAvailableSellOrder } from 'store/actions';
 import './index.css';
-import TransactionTable from 'Components/TransactionTable';
 import { useParams } from 'react-router';
 
 const { TabPane } = Tabs;
@@ -55,7 +55,8 @@ export default function Profile() {
                     <img src={avatarDefault} alt='avatar-profile' className='avatar-profile' />
                   </div>
                   <div className='name-user'>
-                    <h2 className='textmode'>MOCHIS</h2>
+                    {/* <h2 className='textmode'>MOCHIS</h2> */}
+                    <h2> </h2>
                   </div>
                   <div className='address-wallet' onClick={() => copyToClipboard()}>
                     <p className='textmode'>
@@ -99,7 +100,7 @@ export default function Profile() {
                     </p>
                   </div>
 
-                  <div className='social-profile'>
+                  {/* <div className='social-profile'>
                     <a href='https://www.facebook.com/' target='_blank' rel='noreferrer'>
                       <img src={iconFacebook} alt='Facebook' />
                     </a>
@@ -109,7 +110,7 @@ export default function Profile() {
                     <a href='https://www.facebook.com/' target='_blank' rel='noreferrer'>
                       <img src={iconTwitter} alt='Twitter' />
                     </a>
-                  </div>
+                  </div> */}
                   <div className='following'></div>
                   <div className='follower'></div>
                 </div>
@@ -150,7 +151,7 @@ export default function Profile() {
                 >
                   <NFTsProfile listNFTs={listNFTsOwner} isLoadingErc721={isLoadingErc721} />
                 </TabPane>
-                <TabPane
+                {/* <TabPane
                   tab={
                     <div className='action-profile'>
                       <HistoryOutlined />
@@ -160,7 +161,7 @@ export default function Profile() {
                   key='3'
                 >
                   <TransactionTable />
-                </TabPane>
+                </TabPane> */}
               </Tabs>
             </div>
           </Col>

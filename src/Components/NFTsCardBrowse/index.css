@@ -43,7 +43,7 @@
   height: 20vh;
   margin: 0 auto;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 @media (max-width: 992px) {
