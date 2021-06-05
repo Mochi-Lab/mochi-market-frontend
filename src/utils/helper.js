@@ -1,6 +1,7 @@
 import { getContractAddress } from 'utils/getContractAddress';
 const Web3 = require('web3');
 const ERC20 = require('Contracts/ERC20.json');
+const axios = require('axios');
 
 export function parseBalance(_balanceWei, _decimals) {
   if (!_balanceWei) {
@@ -61,6 +62,24 @@ export function convertTimestampToDate(timestamp) {
   return convdataTime;
 }
 
+export const balanceOf = async (tokenAddress, walletAddress) => {
+  const web3 = new Web3(window.ethereum);
+  let balance;
+  const erc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
+  balance = await erc20.methods.balanceOf(walletAddress).call();
+  return balance;
+};
+
+export const allowance = async (tokenAddress, walletAddress, chainId) => {
+  const web3 = new Web3(window.ethereum);
+  const instaneErc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
+  const contractAddress = getContractAddress(chainId);
+  let allowance = await instaneErc20.methods
+    .allowance(walletAddress, contractAddress.Market)
+    .call();
+  return allowance;
+};
+
 export async function listERC721OfOwner(token, walletAddress, addressMarket) {
   try {
     const logs = await token
@@ -97,20 +116,104 @@ export async function listERC721OfOwner(token, walletAddress, addressMarket) {
   }
 }
 
-export const balanceOf = async (tokenAddress, walletAddress) => {
-  const web3 = new Web3(window.ethereum);
-  let balance;
-  const erc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
-  balance = await erc20.methods.balanceOf(walletAddress).call();
-  return balance;
-};
+export async function listTokensERC721OfOwner(listAddressAccept, walletAddress) {
+  let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
+  // const result = await axios.post(
+  //   'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
+  //   {
+  //     query: `{
+  //       owner(
+  //         id:"${walletAddress.toLowerCase()}"
+  //       ){
+  //           tokens (where:{contract_in : [${strListAddressAccept}]}){
+  //             tokenID
+  //             tokenURI
+  //             contract {
+  //               id
+  //               name
+  //               symbol
+  //             }
+  //           }
+  //         }
+  //       }`,
+  //   }
+  const result = await axios.post(
+    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
+    {
+      query: `{
+        owner(
+          id:"${walletAddress.toLowerCase()}"
+        ){
+            tokens{
+              tokenID
+              tokenURI
+              contract {
+                id
+                name
+                symbol
+              }
+            }
+          }
+        }`,
+    }
+  );
 
-export const allowance = async (tokenAddress, walletAddress, chainId) => {
-  const web3 = new Web3(window.ethereum);
-  const instaneErc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
-  const contractAddress = getContractAddress(chainId);
-  let allowance = await instaneErc20.methods
-    .allowance(walletAddress, contractAddress.Market)
-    .call();
-  return allowance;
-};
+  let list721Raw = result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
+  let list721 = list721Raw.map(function (nft) {
+    return {
+      addressToken: nft.contract.id,
+      symbol: nft.contract.symbol,
+      name: nft.contract.name,
+      index: nft.tokenID,
+      tokenURI: nft.tokenURI,
+      is1155: false,
+    };
+  });
+  return list721;
+}
+
+export async function listTokensERC115OfOwner(listAddressAccept, walletAddress) {
+  const result = await axios.post(
+    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip1155-bsc-main',
+    {
+      query: `{
+        account(
+          id:"${walletAddress.toLowerCase()}"
+        ){
+          balances{
+            token{
+              id
+              registry {
+                id
+              }
+              identifier
+              totalSupply
+            }
+            value
+            }
+          }
+        }`,
+    }
+  );
+
+  let list1155Raw = (result.data && result.data.data.account
+    ? result.data.data.account.balances
+    : []
+  ).filter(function (e) {
+    return this.indexOf(e.token.registry.id) > 0;
+  }, listAddressAccept);
+
+  let list1155 = Promise.all(
+    list1155Raw.map(async (nft) => {
+      return {
+        addressToken: nft.token.registry.id,
+        index: nft.token.identifier,
+        value: nft.value,
+        totalSupply: nft.token.totalSupply,
+        is1155: true,
+      };
+    })
+  );
+
+  return list1155;
+}

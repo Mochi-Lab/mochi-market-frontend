@@ -11,13 +11,13 @@ const initialState = {
   moma: 0,
   allowanceToken: 0,
   strSearch: '',
+  listNFTsOwner: [],
+  listNFTsOnsale: [],
 
   // Erc721
   erc721Instances: null,
   erc721Tokens: null,
   isLoadingErc721: null,
-  erc721TokensOwner: [],
-  erc721TokensOnsale: [],
 
   //Erc1155
   erc1155Instances: null,
@@ -96,6 +96,17 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         strSearch: action.strSearch,
       };
+    case actions.SET_LIST_NTTS_OWNER:
+      return {
+        ...state,
+        listNFTsOwner: action.listNFTsOwner,
+      };
+    case actions.SET_LIST_NTTS_ONSALE:
+      return {
+        ...state,
+        listNFTsOnsale: action.listNFTsOnsale,
+      };
+
     case actions.INIT_ERC721:
       return {
         ...state,
@@ -110,12 +121,6 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         erc721Tokens: action.erc721Tokens,
-        erc721TokensOwner: action.erc721TokensOwner,
-      };
-    case actions.GET_ONSALE_ERC721:
-      return {
-        ...state,
-        erc721TokensOnsale: action.erc721TokensOnsale,
       };
     case actions.GET_OWNED_ERC1155:
       return {

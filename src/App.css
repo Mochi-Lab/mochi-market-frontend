@@ -169,6 +169,14 @@
   border-bottom-color: transparent;
 }
 
+.text-blur {
+  opacity: 0.45;
+}
+
+.height-line {
+  height: 1rem;
+}
+
 @media (max-width: 767px) {
   .barsMenu {
     display: inline-block;

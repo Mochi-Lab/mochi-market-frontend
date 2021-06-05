@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
+import abiERC1155 from 'Contracts/ERC1155.json';
+import abiERC721 from 'Contracts/ERC721.json';
 import '../NFTsCardBrowse/index.css';
 
 function NFTsCardProfile({ token, strSearch }) {
@@ -13,9 +15,17 @@ function NFTsCardProfile({ token, strSearch }) {
 
   useEffect(() => {
     async function fetchDetail() {
-      if (!!token && !!token.tokenURI) {
+      if (!!token) {
         try {
-          let req = await axios.get(token.tokenURI);
+          let tokenURI;
+          if (token.is1155) {
+            const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
+            tokenURI = await nft.methods.uri(token.index).call();
+          } else {
+            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
+            tokenURI = await nft.methods.tokenURI(token.index).call();
+          }
+          let req = await axios.get(tokenURI);
           const data = req.data;
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
@@ -30,7 +40,7 @@ function NFTsCardProfile({ token, strSearch }) {
       }
     }
     fetchDetail();
-  }, [token]);
+  }, [token, web3]);
 
   return !!detailNFT &&
     !!detailNFT.name &&
@@ -46,6 +56,14 @@ function NFTsCardProfile({ token, strSearch }) {
       {!!detailNFT ? (
         <Link to={`/token/${token.addressToken}/${token.index}`}>
           <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
+            {token.is1155 ? (
+              <p className='textmode'>
+                {token.value} <span className='text-blur'>of</span> {token.totalSupply}{' '}
+                <span className='text-blur'>available</span>
+              </p>
+            ) : (
+              <p className='height-line'></p>
+            )}
             <div className='ant-card-meta-title'>{detailNFT.name}</div>
             <div className='ant-card-meta-description textmode'>
               {!!token.price ? (
