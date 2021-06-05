@@ -106,7 +106,7 @@
   height: 20vh;
   margin: 0 auto;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: fit;
 }
 
 .icon-new {

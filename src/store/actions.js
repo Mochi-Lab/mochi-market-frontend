@@ -397,7 +397,7 @@ export const SET_AVAILABLE_SELL_ORDER_1155 = 'SET_AVAILABLE_SELL_ORDER_1155';
 export const SET_AVAILABLE_SELL_ORDER_721 = 'SET_AVAILABLE_SELL_ORDER_721';
 export const SET_LIST_NTTS_ONSALE = 'SET_LIST_NTTS_ONSALE';
 export const setAvailableSellOrder = (walletAddress) => async (dispatch, getState) => {
-  const { sellOrderList, web3, nftList } = getState();
+  const { sellOrderList, web3 } = getState();
   let listNFTsOnsale = [];
 
   const pushErc721 = async (listNftContract) => {
