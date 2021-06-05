@@ -5,9 +5,10 @@ import {
   RightOutlined,
   FullscreenExitOutlined,
 } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ERC721 from 'Contracts/ERC721.json';
+import ERC1155 from 'Contracts/ERC1155.json';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import IconLoading from 'Components/IconLoading';
@@ -19,13 +20,15 @@ import ConnectWallet from 'Components/ConnectWallet';
 import Share from 'Components/Share';
 import BackButton from 'Components/BackButton';
 import { getSymbol } from 'utils/getContractAddress';
+import { getAllOwnersOf1155 } from 'utils/helper';
 import avatarDefault from 'Assets/avatar-profile.png';
+import imgNotFound from 'Assets/notfound.png';
 
 import './style.css';
 
 const { TabPane } = Tabs;
 
-const RenderSwitch = ({ status, token, orderDetail }) => {
+const RenderSwitch = ({ status, token, orderDetail, is1155 }) => {
   switch (status) {
     case 3:
       return <Cancel orderDetail={orderDetail} />;
@@ -33,7 +36,7 @@ const RenderSwitch = ({ status, token, orderDetail }) => {
       return (
         <div className='PE'>
           <div className='actions-btn'>
-            <Sell token={token} />
+            <Sell token={token} is1155={is1155} />
             <div className='cAFwWB' />
             <Transfer token={token} />
           </div>
@@ -48,9 +51,10 @@ const RenderSwitch = ({ status, token, orderDetail }) => {
 
 export default function DetailNFT() {
   const [token, setToken] = useState(null);
+  const [is1155, setIs1155] = useState(false);
   const [orderDetail, setOrderDetail] = useState();
   const [status, setStatus] = useState(0);
-  const [owner, setOwner] = useState('');
+  const [owners, setOwners] = useState([]);
   const [indexAvailable, setIndexAvailable] = useState(null);
   const [expandImgDetail, setExpandImgDetail] = useState(false);
   // get details nft
@@ -61,79 +65,164 @@ export default function DetailNFT() {
     availableSellOrder721,
     market,
     chainId,
-    noti,
+    nftList,
+    convertErc1155Tokens,
   } = useSelector((state) => state);
-  const { addressToken, id } = useParams();
-  useEffect(() => {
-    const getNFTDetails = async () => {
-      try {
+  const { addressToken, id, sellID } = useParams();
+
+  const getNFTDetails = useCallback(async () => {
+    if (web3 && nftList) {
+      let is1155 = await nftList.methods.isERC1155(addressToken).call();
+      let tokenURI;
+      if (is1155) {
+        const erc1155Instances = await new web3.eth.Contract(ERC1155.abi, addressToken);
+        tokenURI = await erc1155Instances.methods.uri(id).call();
+      } else {
         const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
-        const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
-        let tokenOwner;
-        // check if user is owner of token
-        if (!!sellId.found) {
-          const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
-          if (order.isActive) {
-            tokenOwner = order.seller;
-            setOwner(tokenOwner);
+        tokenURI = await erc721Instances.methods.tokenURI(id).call();
+      }
+      // get token info
+      try {
+        let req = await axios.get(tokenURI);
+        const data = req.data;
+        setToken({
+          name: !!data.name ? data.name : 'Unnamed',
+          description: !!data.description ? data.description : '',
+          image: !!data.image ? data.image : imgNotFound,
+        });
+      } catch (error) {
+        setToken({ name: 'Unnamed', description: '', image: imgNotFound });
+      }
+    }
+  }, [addressToken, id, nftList, web3]);
+
+  useEffect(() => {
+    getNFTDetails();
+  }, [getNFTDetails]);
+
+  const setStatuActionsNFT = useCallback(async () => {
+    if (web3 && sellOrderList && availableSellOrder721 && nftList) {
+      try {
+        let is1155 = await nftList.methods.isERC1155(addressToken).call();
+        //==========================================================================================
+        //----------------------------Process ERC1155-----------------------------------------------
+        //==========================================================================================
+        if (is1155) {
+          setIs1155(true);
+          let onSaleOfAddressToken;
+          let listOwners;
+
+          for (let i = 0; i < convertErc1155Tokens.length; i++) {
+            const collection = convertErc1155Tokens[i];
+            if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
+              onSaleOfAddressToken = collection;
+              break;
+            }
+          }
+          if (!!onSaleOfAddressToken) {
+            // onSaleOfAddressToken;
           } else {
-            tokenOwner = await erc721Instances.methods.ownerOf(id).call();
-            setOwner(tokenOwner);
+            listOwners = await getAllOwnersOf1155(addressToken, id, chainId);
+            setOwners(listOwners);
+          }
+
+          if (!!walletAddress && Number.isInteger(sellID) && sellID !== 'null') {
+            const sellOrder = await sellOrderList.methods.getSellOrderById(sellID).call();
+            if (sellOrder.seller.toLowerCase() === walletAddress.toLowerCase()) {
+              setStatus(3);
+            } else {
+              setStatus(1);
+            }
+          } else if (!!walletAddress && sellID === 'null') {
+            for (let i = 0; i < listOwners.length; i++) {
+              const owner = listOwners[i];
+              if (owner.owner.toLowerCase() === walletAddress.toLowerCase()) {
+                setStatus(2);
+                break;
+              } else {
+                setStatus(0);
+              }
+            }
+          } else {
+            Number.isInteger(sellID) && sellID !== 'null' ? setStatus(1) : setStatus(0);
           }
         } else {
-          tokenOwner = await erc721Instances.methods.ownerOf(id).call();
-          setOwner(tokenOwner);
+          //========================================================================================
+          //----------------------------Process ERC721----------------------------------------------
+          //========================================================================================
+          const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
+          const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
+          let tokenOwner;
+          // check if user is owner of token
+          if (!!sellId.found) {
+            const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
+            if (order.isActive) {
+              tokenOwner = order.seller;
+              setOwners([{ owner: tokenOwner }]);
+            } else {
+              tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+              setOwners([{ owner: tokenOwner }]);
+            }
+          } else {
+            tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+            setOwners([{ owner: tokenOwner }]);
+          }
+
+          let isSelling;
+
+          if (!!walletAddress) {
+            isSelling = await sellOrderList.methods
+              .checkDuplicateERC721(addressToken, id, walletAddress)
+              .call();
+          }
+
+          if (walletAddress && isSelling) {
+            setStatus(3);
+          } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
+            // Check if the token is in the order list?
+            let isOnList = await sellOrderList.methods
+              .checkDuplicateERC721(addressToken, id, tokenOwner)
+              .call();
+            isOnList ? setStatus(3) : setStatus(2);
+          } else {
+            let isOnList = await sellOrderList.methods
+              .checkDuplicateERC721(addressToken, id, tokenOwner)
+              .call();
+
+            isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
+          }
+          let fil = availableSellOrder721.filter(
+            (token) => token.nftAddress === addressToken && token.tokenId === id
+          );
+          setOrderDetail(fil[0]);
+
+          let indexInAvalableSell = availableSellOrder721.findIndex(
+            (token) => token.nftAddress === addressToken && token.tokenId === id
+          );
+          setIndexAvailable(indexInAvalableSell);
         }
-
-        let isSelling;
-
-        if (!!walletAddress) {
-          isSelling = await sellOrderList.methods
-            .checkDuplicateERC721(addressToken, id, walletAddress)
-            .call();
-        }
-
-        if (walletAddress && isSelling) {
-          setStatus(3);
-        } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
-          // Check if the token is in the order list?
-          let isOnList = await sellOrderList.methods
-            .checkDuplicateERC721(addressToken, id, tokenOwner)
-            .call();
-          isOnList ? setStatus(3) : setStatus(2);
-        } else {
-          let isOnList = await sellOrderList.methods
-            .checkDuplicateERC721(addressToken, id, tokenOwner)
-            .call();
-
-          isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
-        }
-        let fil = availableSellOrder721.filter(
-          (token) => token.nftAddress === addressToken && token.tokenId === id
-        );
-        setOrderDetail(fil[0]);
-
-        let indexInAvalableSell = availableSellOrder721.findIndex(
-          (token) => token.nftAddress === addressToken && token.tokenId === id
-        );
-        setIndexAvailable(indexInAvalableSell);
-        // get token info
-        const token = await erc721Instances.methods.tokenURI(id).call();
-        let detail;
-        try {
-          let req = await axios.get(token);
-          detail = req.data;
-        } catch (error) {
-          detail = { name: 'Unnamed', description: '' };
-        }
-        setToken(detail);
       } catch (error) {
         console.log(error);
         message.error("NFT doesn't exist!");
       }
-    };
-    if (web3 && sellOrderList && availableSellOrder721) getNFTDetails();
-  }, [web3, addressToken, id, walletAddress, sellOrderList, availableSellOrder721, market, noti]);
+    }
+  }, [
+    addressToken,
+    availableSellOrder721,
+    chainId,
+    convertErc1155Tokens,
+    id,
+    market,
+    nftList,
+    sellOrderList,
+    walletAddress,
+    web3,
+    sellID,
+  ]);
+
+  useEffect(() => {
+    setStatuActionsNFT();
+  }, [setStatuActionsNFT]);
 
   return (
     <div className='detail-page center'>
@@ -229,10 +318,12 @@ export default function DetailNFT() {
                 <div className='detail-owner'>
                   <Tabs defaultActiveKey='1'>
                     <TabPane tab='Owners' key='1'>
-                      <Link to={`/profile/${owner}`} className='owner'>
-                        <img src={avatarDefault} alt='avatar-default' /> {'  '}
-                        <strong>{owner}</strong>
-                      </Link>
+                      {owners.map((owner, index) => (
+                        <Link to={`/profile/${owner.owner}`} className='owner' key={index}>
+                          <img src={avatarDefault} alt='avatar-default' /> {'  '}
+                          <strong>{owner.owner}</strong>
+                        </Link>
+                      ))}
                     </TabPane>
                   </Tabs>
                 </div>
@@ -240,12 +331,12 @@ export default function DetailNFT() {
               {window.innerWidth > 770 ? (
                 <div className='footer-sidebar'>
                   <div className='actions-buy-bid'>
-                    {walletAddress ? (
-                      <RenderSwitch status={status} token={token} orderDetail={orderDetail} />
-                    ) : (
-                      <ConnectWallet />
-                    )}
-
+                    <RenderSwitch
+                      status={status}
+                      token={token}
+                      orderDetail={orderDetail}
+                      is1155={is1155}
+                    />
                     <div className='feeService textmode'>
                       Service fee
                       <span className='pt textmode'> 2.5% </span>
@@ -281,161 +372,6 @@ export default function DetailNFT() {
           <IconLoading />
         </div>
       )}
-
-      {/* {!!token ? (
-        expandImgDetail ? (
-          <div className={`expand-img-nft PE ${expandImgDetail ? 'is-expand-img' : null}`}>
-            <div className='btn-zoomin'>
-              <div className='btns'>
-                <Button
-                  shape='circle'
-                  icon={<FullscreenExitOutlined />}
-                  size='large'
-                  onClick={() => setExpandImgDetail(false)}
-                />
-              </div>
-            </div>
-            <div className='content-img'>
-              <div className='eWiAaw'>
-                <div className='img-content'>
-                  <div className='css-1dbjc4n img-token width-100 hieght-100'>
-                    <div className='token-img css-1dbjc4n box-img-expand'>
-                      <div
-                        className='img-bg css-1dbjc4n'
-                        style={{ backgroundImage: `url(${token.image})` }}
-                      ></div>
-                      <img alt='img-nft' src={token.image} className='img-nft-expand' />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className='detail-nft'>
-            <div className='content-nft'>
-              <div className='btns-actions'>
-                <div className='btns justifyContent'>
-                  <BackButton />
-
-                  <Button
-                    shape='circle'
-                    icon={<ExpandAltOutlined />}
-                    size='large'
-                    onClick={() => setExpandImgDetail(true)}
-                  />
-                </div>
-              </div>
-              <div className='nft-content content'>
-                {indexAvailable - 1 > 0 ? (
-                  <div className='btns btL'>
-                    <Link
-                      to={`/token/${availableSellOrder721[indexAvailable - 1].nftAddress}/${
-                        availableSellOrder721[indexAvailable - 1].tokenId
-                      }`}
-                    >
-                      <Button shape='circle' icon={<LeftOutlined />} size='large' />
-                    </Link>
-                  </div>
-                ) : (
-                  <></>
-                )}
-
-                <div className='content-nft-img PE'>
-                  <div className='img-nft PE'>
-                    <div className='img-token css-1dbjc4n'>
-                      <div className='css-1dbjc4n img'>
-                        <div className='img-bg css-1dbjc4n'></div>
-                        <img alt='img-nft' src={token.image} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {!!availableSellOrder721 && indexAvailable + 1 < availableSellOrder721.length ? (
-                  <div className='btns btR'>
-                    <Link
-                      to={`/token/${availableSellOrder721[indexAvailable + 1].nftAddress}/${
-                        availableSellOrder721[indexAvailable + 1].tokenId
-                      }`}
-                    >
-                      <Button shape='circle' icon={<RightOutlined />} size='large' />
-                    </Link>
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-            </div>
-            <div className='info-nft PE sideBar-bg'>
-              <div className='sidebar-info'>
-                <div className='nft-info'>
-                  <div className='PE'>
-                    <div className='box-title'>
-                      <div>
-                        <h1 title='Name' className='text-title textmode'>
-                          {token.name}
-                        </h1>
-                      </div>
-                      <Share token={token} />
-                    </div>
-                    {orderDetail ? (
-                      <div className='price-nft'>
-                        <div className='doaTrL'>
-                          <div className='lapozE'>
-                            <div className='price-eth'>
-                              {web3.utils.fromWei(orderDetail.price, 'ether')}{' '}
-                              {getSymbol(chainId)[orderDetail.token]}
-                            </div>
-                            <div className='amount-nft textmode'>1 of 1</div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </div>
-                <div className='nft-info'>
-                  <div className='description-nft textmode'>{token.description}</div>
-                </div>
-                <div className='nft-info'>
-                  <div className='tabs-info'>
-                    <Tabs defaultActiveKey='1'>
-                      <TabPane tab='Owners' key='1'>
-                        <p className='owner textmode'>
-                          <strong>{owner}</strong>
-                        </p>
-                      </TabPane>
-                    </Tabs>
-                  </div>
-                </div>
-              </div>
-              <div className='footer-sidebar'>
-                <div className='actions-buy-bid'>
-                  <div className='PE'>
-                    {walletAddress ? (
-                      <RenderSwitch status={status} token={token} orderDetail={orderDetail} />
-                    ) : (
-                      <ConnectWallet />
-                    )}
-
-                    <div className='calc-fee'>
-                      <div className='feeService textmode'>
-                        Service fee
-                        <span className='pt textmode'> 2.5% </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      ) : (
-        <div className='center' style={{ width: '100%', minHeight: '200px' }}>
-          <IconLoading />
-        </div>
-      )} */}
     </div>
   );
 }

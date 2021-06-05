@@ -56,7 +56,7 @@ function NFTsCard({ token, strSearch }) {
       xxl={{ span: 4 }}
     >
       {!!detailNFT ? (
-        <Link to={`/token/${token.addressToken}/${token.index}`}>
+        <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
           <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
             <div className='ant-card-meta-title'>{detailNFT.name}</div>
             <div className='ant-card-meta-description textmode'>

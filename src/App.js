@@ -60,7 +60,7 @@ function App() {
                 <Route exact path='/browse' component={Browse} />
                 <Route exact path='/create/erc721' component={CreateERC721} />
                 <Route exact path='/create/erc1155' component={CreateERC1155} />
-                <Route exact path='/token/:addressToken/:id' component={DetailNFT} />
+                <Route exact path='/token/:addressToken/:id/:sellID' component={DetailNFT} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
                 <Route exact path='/faucet' component={Faucet} />
               </Switch>

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { buyNft, approveToken } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
 import { balanceOf, allowance } from 'utils/helper';
+import { connectWeb3Modal } from 'Connections/web3Modal';
 
 export default function Buy({ orderDetail }) {
   const [visibleBuy, setVisibleBuy] = useState(false);
@@ -38,7 +39,7 @@ export default function Buy({ orderDetail }) {
         }
       }
     }
-    fetchBalance();
+    if (!!walletAddress) fetchBalance();
   }, [orderDetail, balance, allowanceToken, walletAddress, chainId]);
 
   const buy = async () => {
@@ -78,25 +79,33 @@ export default function Buy({ orderDetail }) {
 
   return (
     <div className='actions-btn'>
-      <div className='gSzfBw'>
-        <LoadingModal title='Buy' visible={visibleBuy} />
-        <LoadingModal title='Approve' visible={visibleApprove} />
-        {approvedToken ? (
-          insufficient ? (
-            <Button type='primary' disabled shape='round' size='large'>
-              Insufficient Balance
-            </Button>
+      {!!walletAddress ? (
+        <div className='gSzfBw'>
+          <LoadingModal title='Buy' visible={visibleBuy} />
+          <LoadingModal title='Approve' visible={visibleApprove} />
+          {approvedToken ? (
+            insufficient ? (
+              <Button type='primary' disabled shape='round' size='large'>
+                Insufficient Balance
+              </Button>
+            ) : (
+              <Button type='primary' shape='round' size='large' onClick={buy}>
+                Buy now
+              </Button>
+            )
           ) : (
-            <Button type='primary' shape='round' size='large' onClick={buy}>
-              Buy now
+            <Button type='primary' shape='round' size='large' onClick={approve}>
+              Approve
             </Button>
-          )
-        ) : (
-          <Button type='primary' shape='round' size='large' onClick={approve}>
-            Approve
+          )}
+        </div>
+      ) : (
+        <div className='gSzfBw'>
+          <Button type='primary' shape='round' size='large' onClick={connectWeb3Modal}>
+            Buy now
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
