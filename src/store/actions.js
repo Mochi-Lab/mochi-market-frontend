@@ -438,23 +438,13 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
       let availableSellOrderIdList = await sellOrderList.methods
         .getAvailableSellOrdersIdList()
         .call();
-      let availableSellOrder = await sellOrderList.methods
+      let availableSellOrderERC721 = await sellOrderList.methods
         .getSellOrdersByIdList(availableSellOrderIdList.resultERC721)
         .call();
 
-      let availableSellOrderERC721 = [];
-      let availableSellOrderERC1155 = [];
-
-      if (!!availableSellOrder && availableSellOrder.length > 0) {
-        for (let i = 0; i < availableSellOrder.length; i++) {
-          let is1155 = await nftList.methods.isERC1155(availableSellOrder[i].nftAddress).call();
-          if (is1155) {
-            availableSellOrderERC1155.push(availableSellOrder[i]);
-          } else {
-            availableSellOrderERC721.push(availableSellOrder[i]);
-          }
-        }
-      }
+      let availableSellOrderERC1155 = await sellOrderList.methods
+        .getSellOrdersByIdList(availableSellOrderIdList.resultERC1155)
+        .call();
 
       var convertErc721Tokens = [];
       var listNftContracts = [];
@@ -466,6 +456,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
             (nft) => nft.nftAddress === sellOrder.nftAddress
           );
           if (nftindex === -1) {
+            //cant fine nft in list
             token.nftAddress = sellOrder.nftAddress;
             token.instance = new web3.eth.Contract(ERC721.abi, sellOrder.nftAddress);
             token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
