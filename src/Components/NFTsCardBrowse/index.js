@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
+import abiERC1155 from 'Contracts/ERC1155.json';
+import abiERC721 from 'Contracts/ERC721.json';
 
 function NFTsCard({ token, strSearch }) {
   const { web3, chainId } = useSelector((state) => state);
@@ -13,9 +15,17 @@ function NFTsCard({ token, strSearch }) {
 
   useEffect(() => {
     async function fetchDetail() {
-      if (!!token && !!token.tokenURI) {
+      if (!!token) {
         try {
-          let req = await axios.get(token.tokenURI);
+          let tokenURI;
+          if (token.is1155) {
+            const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
+            tokenURI = await nft.methods.uri(token.index).call();
+          } else {
+            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
+            tokenURI = await nft.methods.tokenURI(token.index).call();
+          }
+          let req = await axios.get(tokenURI);
           const data = req.data;
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
@@ -30,7 +40,7 @@ function NFTsCard({ token, strSearch }) {
       }
     }
     fetchDetail();
-  }, [token]);
+  }, [token, web3]);
 
   return !!detailNFT &&
     !!detailNFT.name &&
