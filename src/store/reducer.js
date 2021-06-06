@@ -1,4 +1,3 @@
-import { act } from '@testing-library/react';
 import * as actions from 'store/actions';
 
 const initialState = {

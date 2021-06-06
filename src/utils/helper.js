@@ -1,4 +1,5 @@
 import { getContractAddress } from 'utils/getContractAddress';
+import { getUrlSubgraph } from 'utils/getUrlsSubgraph';
 const Web3 = require('web3');
 const ERC20 = require('Contracts/ERC20.json');
 const axios = require('axios');
@@ -116,10 +117,11 @@ export async function listERC721OfOwner(token, walletAddress, addressMarket) {
   }
 }
 
-export async function listTokensERC721OfOwner(listAddressAccept, walletAddress) {
+export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, chainId) {
   let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
+  const url = getUrlSubgraph(chainId);
   // const result = await axios.post(
-  //   'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
+  //   url.url721,
   //   {
   //     query: `{
   //       owner(
@@ -137,10 +139,8 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress) 
   //         }
   //       }`,
   //   }
-  const result = await axios.post(
-    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc',
-    {
-      query: `{
+  const result = await axios.post(url.url721, {
+    query: `{
         owner(
           id:"${walletAddress.toLowerCase()}"
         ){
@@ -155,8 +155,7 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress) 
             }
           }
         }`,
-    }
-  );
+  });
 
   let list721Raw = result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
   let list721 = list721Raw.map(function (nft) {
@@ -172,11 +171,10 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress) 
   return list721;
 }
 
-export async function listTokensERC115OfOwner(listAddressAccept, walletAddress) {
-  const result = await axios.post(
-    'https://api.thegraph.com/subgraphs/name/tranchien2002/eip1155-bsc-main',
-    {
-      query: `{
+export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, chainId) {
+  const url = getUrlSubgraph(chainId);
+  const result = await axios.post(url.url1155, {
+    query: `{
         account(
           id:"${walletAddress.toLowerCase()}"
         ){
@@ -193,8 +191,7 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress) 
             }
           }
         }`,
-    }
-  );
+  });
 
   let list1155Raw = (result.data && result.data.data.account
     ? result.data.data.account.balances
@@ -216,4 +213,38 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress) 
   );
 
   return list1155;
+}
+
+export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId) {
+  const url = getUrlSubgraph(chainId);
+  const result = await axios.post(url.url1155, {
+    query: `{
+        tokens(where: {registry : "${tokenAddress.toLowerCase()}", identifier: "${tokenId}"}) {
+          balances {
+            account {
+              id
+            }
+            value
+            }
+            totalSupply
+          }
+        }`,
+  });
+
+  let ownersOf1155Raw =
+    result.data && result.data.data.tokens ? result.data.data.tokens[0].balances : [];
+  const totalSupply =
+    result.data && result.data.data.tokens ? result.data.data.tokens[0].totalSupply : 0;
+
+  let ownersOf1155 = await Promise.all(
+    ownersOf1155Raw.map(async (nft) => {
+      return {
+        owner: nft.account.id,
+        value: nft.value,
+        totalSupply,
+      };
+    })
+  );
+
+  return ownersOf1155;
 }

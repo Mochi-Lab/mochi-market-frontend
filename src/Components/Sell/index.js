@@ -11,7 +11,7 @@ import './index.css';
 
 const { Option } = Select;
 
-export default function Sell({ token }) {
+export default function Sell({ token, is1155 }) {
   const dispatch = useDispatch();
 
   const { web3, chainId } = useSelector((state) => state);
@@ -42,7 +42,8 @@ export default function Sell({ token }) {
             addressToken,
             id,
             web3.utils.toWei(values.price.toString(), 'ether'),
-            tokenPayment
+            tokenPayment,
+            is1155
           )
         );
         if (!!result) {
@@ -51,7 +52,7 @@ export default function Sell({ token }) {
         setVisible(false);
       }
     },
-    [dispatch, addressToken, id, web3.utils, tokenPayment]
+    [dispatch, addressToken, id, web3.utils, tokenPayment, is1155]
   );
 
   const handleOk = async () => {
