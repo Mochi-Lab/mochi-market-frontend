@@ -36,6 +36,11 @@ const RightMenu = () => {
       {/* <Menu.Item key='/airdrops'>
         <Link to='/airdrops'>Airdrops</Link>
       </Menu.Item> */}
+      {!!walletAddress ? (
+        <Menu.Item key={`/profile/${walletAddress}`}>
+          <Link to={`/profile/${walletAddress}`}>Profile</Link>
+        </Menu.Item>
+      ) : null}
       {!!getContractAddress(chainId) && chainId === 97 ? (
         <Menu.Item key='/faucet'>
           <Link to='/faucet'>Faucet</Link>
