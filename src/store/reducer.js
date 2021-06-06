@@ -1,3 +1,4 @@
+import { act } from '@testing-library/react';
 import * as actions from 'store/actions';
 
 const initialState = {
@@ -38,6 +39,7 @@ const initialState = {
   availableSellOrder721: [],
   availableSellOrder1155: [],
   convertErc721Tokens: [],
+  convertErc1155Tokens: [],
   mySellOrder: [],
   isLoadingTx: false,
 
@@ -166,6 +168,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         convertErc721Tokens: action.convertErc721Tokens,
+      };
+    case action.SET_CONVERT_ERC1155:
+      return {
+        ...state,
+        convertErc1155Tokens: action.convertErc1155Tokens,
       };
     case actions.SET_AVAILABLE_SELL_ORDER_721:
       return {
