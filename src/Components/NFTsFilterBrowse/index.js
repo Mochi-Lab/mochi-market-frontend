@@ -8,7 +8,7 @@ import './index.css';
 
 const { Content } = Layout;
 
-export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721, type }) {
+export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
   const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState(null);
   const [strSearch, setStrSearch] = useState();
@@ -42,7 +42,6 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721, type }
           >
             {/* because isLoadingERC721 will false before start loading so isLoadingErc72 = null may be best option */}
             {isLoadingErc721 || isLoadingErc721 === null ? (
-              // Loading if done load the first type of token user have, if user select other load other
               <div className='center' style={{ width: '100%', height: '100%' }}>
                 <IconLoading />
               </div>
@@ -107,24 +106,8 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721, type }
                   </div>
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 19 }}>
-                  {!!selectedTokens && (!!selectedTokens.tokens || !!selectedTokens.onSale) ? (
-                    type === 'onSale' ? (
-                      <NFTsCardBrowse tokens={selectedTokens.onSale} />
-                    ) : (
-                      <NFTsCardBrowse tokens={selectedTokens.tokens} />
-                    )
-                  ) : type === 'onSale' ? (
-                    <NFTsCardBrowse
-                      tokens={
-                        erc721Tokens
-                          ? [].concat(
-                              ...erc721Tokens.map((collections) =>
-                                collections.onSale.map((token) => token)
-                              )
-                            )
-                          : []
-                      }
-                    />
+                  {!!selectedTokens && !!selectedTokens.tokens ? (
+                    <NFTsCardBrowse tokens={selectedTokens.tokens} />
                   ) : (
                     <NFTsCardBrowse
                       tokens={

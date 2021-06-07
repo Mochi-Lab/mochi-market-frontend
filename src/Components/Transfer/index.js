@@ -1,13 +1,14 @@
 import 'Views/DetailNFT/style.css';
 import { useState } from 'react';
-import { Modal, Button, Input } from 'antd';
+import { Modal, Button, Input, Form, InputNumber, Col, Row } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { transferNft } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
 
-export default function Transfer({ token }) {
+export default function Transfer({ token, is1155, available, web3, getOwners1155 }) {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [transferTo, setTransferTo] = useState('');
   const { addressToken, id } = useParams();
@@ -18,10 +19,14 @@ export default function Transfer({ token }) {
   };
 
   const handleOk = async () => {
-    setVisible(true);
-    await dispatch(transferNft(addressToken, transferTo, id));
-    setVisible(false);
-    setIsModalVisible(false);
+    const values = await form.validateFields();
+    if (!!values) {
+      setVisible(true);
+      await dispatch(transferNft(addressToken, transferTo, id, values.amount, is1155));
+      await getOwners1155();
+      setVisible(false);
+      setIsModalVisible(false);
+    }
   };
 
   const handleCancel = () => {
@@ -30,6 +35,25 @@ export default function Transfer({ token }) {
 
   const onChange = (e) => {
     setTransferTo(e.target.value);
+  };
+
+  const checkAmount = async (_, value) => {
+    if (!value) {
+      return Promise.reject(new Error('Enter amount'));
+    } else if (parseInt(value) > parseInt(available)) {
+      return Promise.reject(new Error('Not enough amount'));
+    } else {
+      return Promise.resolve();
+    }
+  };
+  const checkAddress = async (_, value) => {
+    if (!value) {
+      return Promise.reject(new Error('Enter address'));
+    } else if (!web3.utils.isAddress(value)) {
+      return Promise.reject(new Error('Address incorrect format'));
+    } else {
+      return Promise.resolve();
+    }
   };
 
   return (
@@ -58,13 +82,43 @@ export default function Transfer({ token }) {
           <p className='textmode'>{token.name}</p>
         </div>
         <div className='price-des'>
-          <Input
-            size='large'
-            className='search-style'
-            onChange={onChange}
-            style={{ width: '100%' }}
-            placeholder='Transfer to address'
-          />
+          <Form form={form} layout='vertical' className='input-transfer'>
+            <Row gutter={[5, 10]}>
+              <Col xs={{ span: 24 }} md={{ span: is1155 ? 17 : 24 }}>
+                <Form.Item
+                  name={['address']}
+                  rules={[{ validator: checkAddress }]}
+                  label='Address Transfer'
+                  required
+                >
+                  <Input
+                    size='large'
+                    className='search-style'
+                    onChange={onChange}
+                    placeholder='Transfer to address'
+                  />
+                </Form.Item>
+              </Col>
+              {is1155 ? (
+                <Col xs={{ span: 24 }} md={{ span: 7 }}>
+                  <Form.Item
+                    name={['amount']}
+                    rules={[{ validator: checkAmount }]}
+                    label='Amount'
+                    required
+                  >
+                    <InputNumber
+                      min='1'
+                      size='large'
+                      className='search-style input-amount-transfer input-sell'
+                      formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                      placeholder='Set amount'
+                    />
+                  </Form.Item>
+                </Col>
+              ) : null}
+            </Row>
+          </Form>
         </div>
       </Modal>
     </>

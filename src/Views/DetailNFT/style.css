@@ -127,7 +127,7 @@
 }
 
 .footer-sidebar {
-  position: absolute;
+  position: sticky;
   width: 100%;
   background: transparent;
   bottom: 0;
@@ -228,7 +228,7 @@
   border-bottom: 1px solid #f4b2db57;
 }
 
-.owner {
+.avatar-link-available {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -242,7 +242,7 @@
   text-overflow: ellipsis;
 }
 
-.owner img {
+.avatar-owner img {
   margin-right: 0.5rem;
   width: 36px;
   height: 36px;
@@ -254,12 +254,40 @@
 .detail-owner .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: #c64488;
 }
+.detail-owner .ant-tabs-tabpane {
+  overflow: auto;
+}
+
+.input-amount-transfer {
+  width: 100%;
+}
+
+.input-transfer input.ant-input,
+.input-transfer .ant-input-number {
+  border-radius: 1rem;
+}
+
+.input-transfer .ant-form-item-explain.ant-form-item-explain-error {
+  font-size: smaller;
+}
+.input-sell .ant-form-item-explain.ant-form-item-explain-error {
+  font-size: smaller;
+}
+
+@media (max-width: 1090px) {
+  .side-bar {
+    width: 42%;
+  }
+  .expand-img-nft {
+    width: 56%;
+  }
+}
 
 @media (max-width: 770px) {
   .detail-main {
     margin-top: 20px;
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
     flex-direction: column;
     justify-content: space-between;
   }
@@ -281,5 +309,9 @@
 
   .imgl {
     padding: 50px;
+  }
+
+  .footer-sidebar {
+    background-color: white;
   }
 }
