@@ -422,7 +422,6 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
         token.sortIndex = order.sortIndex;
         token.tokenPayment = listNftContract.tokenPayment[index];
         token.seller = listNftContract.seller[index];
-        token.sellId = listNftContract.sellId[index];
         if (
           !!walletAddress &&
           listNftContract.seller[index].toLowerCase() === walletAddress.toLowerCase()
@@ -489,25 +488,27 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
 
       if (!!availableSellOrderERC721) {
         availableSellOrderERC721.map(async (sellOrder, i) => {
-          let token = {
-            sellId: [],
-            tokenId: [],
-            price: [],
-            tokenPayment: [],
-            seller: [],
-            amount: [],
-          };
-          if (!!sellOrder.isActive) {
-            //cant fine nft in list
+          let token = { tokenId: [], price: [], tokenPayment: [], seller: [], amount: [] };
+          let nftindex = listNftContracts721.findIndex(
+            (nft) => nft.nftAddress === sellOrder.nftAddress
+          );
+          if (nftindex === -1) {
+            //cant fine nft in list => nft in a new collection
             token.nftAddress = sellOrder.nftAddress;
             token.instance = new web3.eth.Contract(ERC721.abi, sellOrder.nftAddress);
-            token.sellId.push(sellOrder.sellId);
             token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             token.price.push(sellOrder.price);
             token.tokenPayment.push(sellOrder.token);
             token.seller.push(sellOrder.seller);
             token.amount.push(sellOrder.amount);
             listNftContracts721.push(token);
+          } else {
+            // push nft to existing collection
+            listNftContracts721[nftindex].tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
+            listNftContracts721[nftindex].price.push(sellOrder.price);
+            listNftContracts721[nftindex].tokenPayment.push(sellOrder.token);
+            listNftContracts721[nftindex].seller.push(sellOrder.seller);
+            listNftContracts721[nftindex].amount.push(sellOrder.amount);
           }
         });
       }
@@ -521,26 +522,28 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
       var convertErc1155Tokens = [];
       var listNftContracts1155 = [];
       if (!!availableSellOrderERC1155 && availableSellOrderERC1155.length > 0) {
-        availableSellOrderERC721.map(async (sellOrder, i) => {
-          let token = {
-            sellId: [],
-            tokenId: [],
-            price: [],
-            tokenPayment: [],
-            seller: [],
-            amount: [],
-          };
-          if (!!sellOrder.isActive) {
-            //cant fine nft in list
+        availableSellOrderERC1155.map(async (sellOrder, i) => {
+          let token = { tokenId: [], price: [], tokenPayment: [], seller: [], amount: [] };
+          let nftindex = listNftContracts1155.findIndex(
+            (nft) => nft.nftAddress === sellOrder.nftAddress
+          );
+          if (nftindex === -1) {
+            //cant fine nft in list => nft in a new collection
             token.nftAddress = sellOrder.nftAddress;
-            token.instance = new web3.eth.Contract(ERC1155.abi, sellOrder.nftAddress);
-            token.sellId.push(sellOrder.sellId);
+            token.instance = new web3.eth.Contract(ERC721.abi, sellOrder.nftAddress);
             token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             token.price.push(sellOrder.price);
             token.tokenPayment.push(sellOrder.token);
             token.seller.push(sellOrder.seller);
             token.amount.push(sellOrder.amount);
             listNftContracts1155.push(token);
+          } else {
+            // push nft to existing collection
+            listNftContracts1155[nftindex].tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
+            listNftContracts1155[nftindex].price.push(sellOrder.price);
+            listNftContracts1155[nftindex].tokenPayment.push(sellOrder.token);
+            listNftContracts1155[nftindex].seller.push(sellOrder.seller);
+            listNftContracts1155[nftindex].amount.push(sellOrder.amount);
           }
         });
       }
