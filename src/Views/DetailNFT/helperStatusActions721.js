@@ -18,9 +18,11 @@ export default async function helperStatusActions721(
     try {
       const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
       const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
+
       let tokenOwner;
       // check if user is owner of token
       if (!!sellId.found) {
+        console.log('4');
         const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
         if (order.isActive) {
           tokenOwner = order.seller;

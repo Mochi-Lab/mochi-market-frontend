@@ -1,23 +1,15 @@
 import Web3 from 'web3';
 
 export const web3Default = {
-  //BSC Mainnet
-  56: {
-    web3Default: new Web3(new Web3.providers.HttpProvider('https://bsc-dataseed.binance.org/')),
-    name: 'BSC Mainnet',
-    explorer: 'https://bscscan.com/tx/',
-  },
-  //BSC Testnet
-  97: {
-    web3Default: new Web3(
-      new Web3.providers.HttpProvider('https://data-seed-prebsc-1-s3.binance.org:8545/')
-    ),
-    name: 'BSC Testnet',
-    explorer: 'https://testnet.bscscan.com/tx/',
+  //Polygon Mainnet
+  137: {
+    web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc-mainnet.maticvigil.com')),
+    name: 'Polygon Mainnet',
+    explorer: 'https://explorer-mainnet.maticvigil.com/',
   },
 };
 
-export const networkDefault = 97;
+export const networkDefault = 137;
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];
