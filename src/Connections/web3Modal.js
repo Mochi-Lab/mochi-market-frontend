@@ -12,8 +12,7 @@ const providerOptions = {
     package: WalletConnectProvider,
     options: {
       rpc: {
-        56: 'https://bsc-dataseed.binance.org/',
-        97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        137: 'https://rpc-mainnet.maticvigil.com/',
       },
       qrcodeModalOptions: {
         mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar'],
@@ -23,31 +22,20 @@ const providerOptions = {
   },
 };
 
-const autoAddNetworkBSC = async () => {
+const autoAddNetworkPolygon = async () => {
   await window.ethereum.request({
     method: 'wallet_addEthereumChain',
     params: [
-      // {
-      //   chainId: '0x38',
-      //   chainName: 'Binance Smart Chain',
-      //   nativeCurrency: {
-      //     name: 'BNB',
-      //     symbol: 'BNB',
-      //     decimals: 18,
-      //   },
-      //   rpcUrls: ['https://bsc-dataseed.binance.org/'],
-      //   blockExplorerUrls: ['https://bscscan.com/'],
-      // },
       {
-        chainId: '0x61',
-        chainName: 'BSC-Testnet',
+        chainId: '0x89',
+        chainName: 'Polygon Mainnet',
         nativeCurrency: {
-          name: 'BNB',
-          symbol: 'BNB',
+          name: 'MATIC',
+          symbol: 'MATIC',
           decimals: 18,
         },
-        rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-        blockExplorerUrls: ['https://testnet.bscscan.com/'],
+        rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
+        blockExplorerUrls: ['https://explorer-mainnet.maticvigil.com/'],
       },
     ],
   });
@@ -56,16 +44,16 @@ const autoAddNetworkBSC = async () => {
 export const connectWeb3Modal = async () => {
   const web3Modal = new Web3Modal({
     cacheProvider: false, // optional
-    network: 'binance',
     providerOptions, // required
   });
-  autoAddNetworkBSC();
+
+  autoAddNetworkPolygon();
   const provider = await web3Modal.connect();
   const web3 = new Web3(provider);
 
   let chainId = await web3.eth.net.getId();
 
-  if (chainId === 56 || chainId === 97) {
+  if (chainId === 137) {
     let accounts = await web3.eth.getAccounts();
 
     store.dispatch(setChainId(chainId));
@@ -103,12 +91,12 @@ export const connectWeb3Modal = async () => {
   // Subscribe to chainId change
   provider.on('chainChanged', (chainId) => {
     chainId = parseInt(web3.utils.hexToNumber(chainId));
-    if (chainId === 56 || chainId === 97) {
+    if (chainId === 137) {
       store.dispatch(setChainId(chainId));
       store.dispatch(setAcceptedNfts());
       store.dispatch(setWeb3(web3));
     } else {
-      alert('Please change to Binance Smart Chain Mainnet or Testnet');
+      alert('Please change to Polygon Mainnet');
     }
   });
 

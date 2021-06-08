@@ -131,7 +131,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                   className='input-price'
                 >
                   <InputNumber
-                    min='1'
+                    min='0.1'
                     size='large'
                     className='search-style'
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
