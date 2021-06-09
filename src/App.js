@@ -8,6 +8,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import './App.css';
 import Notification from 'Components/Notification';
 import useInterval from 'utils/useInterval';
+import { useSelector } from 'react-redux';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -21,6 +22,8 @@ const Browse = lazy(() => import('Views/Browse'));
 const Faucet = lazy(() => import('Views/Faucet'));
 
 function App() {
+  const { walletAddress } = useSelector((state) => state);
+
   useEffect(() => {
     async function fetchDataInit() {
       document
@@ -34,8 +37,10 @@ function App() {
   }, []);
 
   useInterval(() => {
-    store.dispatch(setBalance());
-    store.dispatch(setMomaBalance());
+    if (!!walletAddress) {
+      store.dispatch(setBalance());
+      store.dispatch(setMomaBalance());
+    }
   }, 3000);
 
   return (

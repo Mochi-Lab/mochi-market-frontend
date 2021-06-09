@@ -61,7 +61,7 @@ function NFTsCardProfile({ token, strSearch }) {
             {token.is1155 ? (
               <p className='textmode'>
                 {token.value} <span className='text-blur'>of</span> {token.totalSupply}{' '}
-                <span className='text-blur'>available</span>
+                <span className='text-blur'>Available</span>
               </p>
             ) : (
               <p className='height-line'></p>

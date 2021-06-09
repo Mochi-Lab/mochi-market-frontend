@@ -178,7 +178,7 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
         account(
           id:"${walletAddress.toLowerCase()}"
         ){
-          balances{
+          balances(where: {value_gt: 0}){
             token{
               id
               registry {
@@ -215,36 +215,42 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
   return list1155;
 }
 
-export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId) {
-  const url = getUrlSubgraph(chainId);
-  const result = await axios.post(url.url1155, {
-    query: `{
-        tokens(where: {registry : "${tokenAddress.toLowerCase()}", identifier: "${tokenId}"}) {
-          balances {
-            account {
-              id
+export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, addressMarket) {
+  if (!!chainId) {
+    const url = getUrlSubgraph(chainId);
+    const result = await axios.post(url.url1155, {
+      query: `{
+          tokens(where: {registry : "${tokenAddress.toLowerCase()}", identifier: "${tokenId}"}) {
+            balances(where: {value_gt: 0, account_not: "${addressMarket.toLowerCase()}"}){
+              account {
+                id
+              }
+              value
+              }
+              totalSupply
             }
-            value
-            }
-            totalSupply
-          }
-        }`,
-  });
+          }`,
+    });
 
-  let ownersOf1155Raw =
-    result.data && result.data.data.tokens ? result.data.data.tokens[0].balances : [];
-  const totalSupply =
-    result.data && result.data.data.tokens ? result.data.data.tokens[0].totalSupply : 0;
+    let ownersOf1155Raw =
+      result.data && result.data.data.tokens ? result.data.data.tokens[0].balances : [];
+    const totalSupply =
+      result.data && result.data.data.tokens ? result.data.data.tokens[0].totalSupply : 0;
 
-  let ownersOf1155 = await Promise.all(
-    ownersOf1155Raw.map(async (nft) => {
-      return {
-        owner: nft.account.id,
-        value: nft.value,
-        totalSupply,
-      };
-    })
-  );
+    let ownersOf1155 = await Promise.all(
+      ownersOf1155Raw.map(async (nft) => {
+        return {
+          owner: nft.account.id,
+          value: nft.value,
+          totalSupply,
+        };
+      })
+    );
 
-  return ownersOf1155;
+    let addressOwnersOf1155 = {};
+    ownersOf1155Raw.forEach(async (nft) => (addressOwnersOf1155[nft.account.id] = nft.value));
+
+    return { ownersOf1155, addressOwnersOf1155, totalSupply };
+  }
+  return { ownersOf1155: [], addressOwnersOf1155: {}, totalSupply: 0 };
 }

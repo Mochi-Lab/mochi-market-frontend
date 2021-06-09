@@ -1,17 +1,22 @@
 import 'Views/DetailNFT/style.css';
 import { Button } from 'antd';
-import { useDispatch } from 'react-redux';
 import LoadingModal from 'Components/LoadingModal';
 import { cancelSellOrder } from 'store/actions';
+import store from 'store/index';
 import { useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
 export default function Cancel({ orderDetail }) {
-  const dispatch = useDispatch();
+  let history = useHistory();
   const [visible, setVisible] = useState(false);
 
   const cancel = async () => {
     setVisible(true);
-    await dispatch(cancelSellOrder(orderDetail));
+    let result = await store.dispatch(cancelSellOrder(orderDetail));
+    if (result) {
+      history.push({
+        pathname: `/token/${orderDetail.nftAddress}/${orderDetail.tokenId}/null`,
+      });
+    }
     setVisible(false);
   };
 

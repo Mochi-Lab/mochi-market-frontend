@@ -21,6 +21,7 @@ export default function Profile() {
   const { listNFTsOwner, listNFTsOnsale, isLoadingErc721, erc721Instances } = useSelector(
     (state) => state
   );
+
   const { address } = useParams();
 
   const [isCopied, setIsCopied] = useState(false);
@@ -134,11 +135,7 @@ export default function Profile() {
                   }
                   key='1'
                 >
-                  <NFTsProfile
-                    listNFTs={listNFTsOnsale}
-                    isLoadingErc721={isLoadingErc721}
-                    type={'onSale'}
-                  />
+                  <NFTsProfile listNFTs={listNFTsOnsale} isLoadingErc721={isLoadingErc721} />
                 </TabPane>
                 <TabPane
                   tab={
