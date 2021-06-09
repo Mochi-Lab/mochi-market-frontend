@@ -54,9 +54,7 @@ function NFTsCardProfile({ token, strSearch }) {
       lg={{ span: 8 }}
     >
       {!!detailNFT ? (
-        <Link
-          to={`/token/${token.addressToken}/${token.index}/${!!token.sellId ? token.sellId : null}`}
-        >
+        <Link to={`/token/${token.addressToken}/${token.index}`}>
           <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
             {token.is1155 ? (
               <p className='textmode'>

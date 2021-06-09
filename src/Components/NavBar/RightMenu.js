@@ -14,7 +14,7 @@ const { useBreakpoint } = Grid;
 
 const RightMenu = () => {
   const screen = useBreakpoint();
-  const { shortAddress, walletAddress, chainId, moma } = useSelector((state) => state);
+  const { shortAddress, walletAddress, chainId, balance } = useSelector((state) => state);
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -66,10 +66,10 @@ const RightMenu = () => {
                     className='textmode'
                     style={{ margin: '0px 10px 0px 10px', color: '#4F4F4F', fontWeight: 'normal' }}
                   >
-                    {moma.toString().slice(0, 5)}
+                    {balance.toString().slice(0, 5)}
                   </p>
                   <p className='pink-font' style={{ margin: '0px 5px' }}>
-                    MOMA
+                    ONE
                   </p>
                 </div>
               </div>

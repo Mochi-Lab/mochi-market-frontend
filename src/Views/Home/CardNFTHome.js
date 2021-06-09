@@ -53,7 +53,7 @@ export default function CardNFTHome({ token, strSearch }) {
       xl={{ span: 4 }}
       xxl={{ span: 4 }}
     >
-      <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
+      <Link to={`/token/${token.addressToken}/${token.index}`}>
         <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
           <div className='ant-card-meta-title'>{detailNFT.name}</div>
           <div className='ant-card-meta-description textmode'>

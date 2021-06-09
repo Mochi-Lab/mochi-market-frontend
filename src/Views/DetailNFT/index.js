@@ -102,6 +102,13 @@ export default function DetailNFT() {
 
   const setStatuActionsNFT = useCallback(async () => {
     if (web3 && sellOrderList && availableSellOrder721 && nftList) {
+      var sellId = {};
+      try {
+        sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
+      } catch (error) {
+        console.log(error);
+        sellId.found = false;
+      }
       try {
         let is1155 = await nftList.methods.isERC1155(addressToken).call();
         //==========================================================================================
@@ -151,7 +158,7 @@ export default function DetailNFT() {
           //----------------------------Process ERC721----------------------------------------------
           //========================================================================================
           const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
-          const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
+
           let tokenOwner;
           // check if user is owner of token
           if (!!sellId.found) {
@@ -202,7 +209,7 @@ export default function DetailNFT() {
           setIndexAvailable(indexInAvalableSell);
         }
       } catch (error) {
-        console.log(error);
+        console.log({ error });
         message.error("NFT doesn't exist!");
       }
     }

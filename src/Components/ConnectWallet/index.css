@@ -1,0 +1,47 @@
+.wallet {
+  transition: background-color 0.2s ease-in-out 0s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 12px;
+  padding: 24px 16px;
+  cursor: pointer;
+}
+
+.wallet:hover {
+  background-color: rgba(195, 195, 195, 0.14) !important;
+}
+
+.wallet-logo {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  overflow: visible;
+  box-shadow: none;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.wallet-name {
+  width: 100%;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: rgb(12, 12, 13);
+  text-align: center;
+}
+
+.wallet-description {
+  width: 100%;
+  font-size: 18px;
+  margin: 0.333em 0px;
+  color: rgb(169, 169, 188);
+  text-align: center;
+}

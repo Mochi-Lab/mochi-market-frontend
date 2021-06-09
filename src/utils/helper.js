@@ -1,5 +1,6 @@
 import { getContractAddress } from 'utils/getContractAddress';
 import { getUrlSubgraph } from 'utils/getUrlsSubgraph';
+import tick from 'Assets/icons/tick.png';
 const Web3 = require('web3');
 const ERC20 = require('Contracts/ERC20.json');
 const axios = require('axios');
@@ -118,7 +119,7 @@ export async function listERC721OfOwner(token, walletAddress, addressMarket) {
 }
 
 export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, chainId) {
-  let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
+  // let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
   const url = getUrlSubgraph(chainId);
   // const result = await axios.post(
   //   url.url721,
@@ -247,4 +248,13 @@ export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId) {
   );
 
   return ownersOf1155;
+}
+
+export function auditAddress(address) {
+  const checkedList = ['0x77d89332f7f4fc8d8fbc231c9292e970e8321637'];
+  if (checkedList.includes(address.toLowerCase())) {
+    return <img style={{ height: '1.5rem', width: '1.5rem' }} src={tick} alt={address}></img>;
+  } else {
+    return null;
+  }
 }

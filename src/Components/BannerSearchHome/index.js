@@ -31,7 +31,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
           <div className='banner-content center'>
             <div>
               <p className='fontRubik mc-mk'>MOCHI MARKET</p>
-              <p className='fontRoboto new-eco'>THE NEW CREATIVE ECONOMY</p>
+              <p className='fontRoboto new-eco'>Creativity is contagious. Pass it on.</p>
             </div>
           </div>
         </div>

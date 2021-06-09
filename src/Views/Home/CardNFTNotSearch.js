@@ -42,7 +42,7 @@ export default function CardNFTHome({ token }) {
   }, [token, web3]);
 
   return !!detailNFT ? (
-    <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
+    <Link to={`/token/${token.addressToken}/${token.index}`}>
       <Card
         className='home-card'
         cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}

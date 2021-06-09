@@ -1,7 +1,7 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
 import IconLoading from 'Components/IconLoading';
-import { setAvailableSellOrder, setBalance, setMomaBalance } from 'store/actions';
+import { setAvailableSellOrder, setBalance } from 'store/actions';
 import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
@@ -28,14 +28,14 @@ function App() {
         .setAttribute('data-theme', localStorage.getItem('theme'));
       await store.dispatch(setAvailableSellOrder());
       store.dispatch(setBalance());
-      store.dispatch(setMomaBalance());
+      // store.dispatch(setMomaBalance());
     }
     fetchDataInit();
   }, []);
 
   useInterval(() => {
     store.dispatch(setBalance());
-    store.dispatch(setMomaBalance());
+    // store.dispatch(setMomaBalance());
   }, 3000);
 
   return (
@@ -60,7 +60,7 @@ function App() {
                 <Route exact path='/browse' component={Browse} />
                 <Route exact path='/create/erc721' component={CreateERC721} />
                 <Route exact path='/create/erc1155' component={CreateERC1155} />
-                <Route exact path='/token/:addressToken/:id/:sellID' component={DetailNFT} />
+                <Route exact path='/token/:addressToken/:id/' component={DetailNFT} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
                 <Route exact path='/faucet' component={Faucet} />
               </Switch>

@@ -1,7 +1,6 @@
-import { parseBalance, listERC721OfOwner, listTokensERC115OfOwner } from 'utils/helper';
+import { parseBalance, listERC721OfOwner } from 'utils/helper';
 // import ERC1155 from 'Contracts/ERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
-import ERC1155 from 'Contracts/ERC1155.json';
 import SampleERC721 from 'Contracts/SampleERC721.json';
 import SampleERC1155 from 'Contracts/SampleERC1155.json';
 import MochiERC721NFT from 'Contracts/MochiERC721NFT.json';
@@ -101,9 +100,11 @@ export const SET_BALANCE = 'SET_BALANCE';
 export const setBalance = () => async (dispatch, getState) => {
   let { web3, walletAddress } = getState();
   let balance;
-  if (walletAddress !== null)
-    balance = parseBalance((await web3.eth.getBalance(walletAddress)).toString(), 18);
-  else balance = 0;
+  if (walletAddress !== null) {
+    balance = await web3.eth.getBalance(walletAddress);
+    if (!!balance) balance = parseBalance(balance.toString(), 18);
+    else balance = 0;
+  } else balance = 0;
   dispatch({
     type: SET_BALANCE,
     balance,
@@ -166,7 +167,7 @@ export const SET_LIST_NTTS_OWNER = 'SET_LIST_NTTS_OWNER';
 export const getNFTsOfOwner = (erc721Instances, walletAddress) => async (dispatch, getState) => {
   if (!walletAddress) return;
 
-  const { acceptedNftsAddress, chainId } = getState();
+  // const { acceptedNftsAddress, chainId } = getState();
 
   // Start loading
   dispatch(setLoadingErc721(true));
@@ -216,11 +217,11 @@ export const getNFTsOfOwner = (erc721Instances, walletAddress) => async (dispatc
     return el != null;
   });
 
-  let erc1155Tokens = await listTokensERC115OfOwner(acceptedNftsAddress, walletAddress, chainId);
-  listNFTsOwner = listNFTsOwner.concat(erc1155Tokens);
+  // let erc1155Tokens = await listTokensERC115OfOwner(acceptedNftsAddress, walletAddress, chainId);
+  // listNFTsOwner = listNFTsOwner.concat(erc1155Tokens);
 
   await dispatch({ type: GET_OWNED_ERC721, erc721Tokens });
-  await dispatch({ type: GET_OWNED_ERC1155, erc1155Tokens });
+  // await dispatch({ type: GET_OWNED_ERC1155, erc1155Tokens });
   await dispatch({ type: SET_LIST_NTTS_OWNER, listNFTsOwner });
 
   // Loading done
