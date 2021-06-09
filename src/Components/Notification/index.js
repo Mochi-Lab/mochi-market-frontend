@@ -20,14 +20,24 @@ export default function Notification() {
   };
 
   const openSuccessRedirect = (message, fn) => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button
+        type='primary'
+        size='small'
+        onClick={() => {
+          fn();
+          notification.close(key);
+        }}
+      >
+        Go to Inventory
+      </Button>
+    );
     notification.success({
       message: 'Message',
-      description: (
-        <div>
-          <p>{message}</p>
-          <Button onClick={fn}>Go to Inventory</Button>
-        </div>
-      ),
+      description: <div>{message}</div>,
+      btn,
+      key,
     });
   };
 
