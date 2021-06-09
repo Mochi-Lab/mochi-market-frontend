@@ -8,7 +8,7 @@ import { balanceOf, allowance } from 'utils/helper';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useHistory } from 'react-router';
 
-export default function Buy({ orderDetail, is1155, id, addressToken }) {
+export default function BuySmall({ orderDetail, is1155, id, addressToken }) {
   let history = useHistory();
   const [visibleBuy, setVisibleBuy] = useState(false);
   const [visibleApprove, setVisibleApprove] = useState(false);
@@ -89,34 +89,34 @@ export default function Buy({ orderDetail, is1155, id, addressToken }) {
   };
 
   return (
-    <div className='actions-btn'>
+    <>
       {!!walletAddress ? (
-        <div className='gSzfBw'>
+        <>
           <LoadingModal title='Buy' visible={visibleBuy} />
           <LoadingModal title='Approve' visible={visibleApprove} />
           {approvedToken ? (
             insufficient ? (
-              <Button type='primary' disabled shape='round' size='large'>
-                Insufficient Balance
+              <Button type='primary' disabled shape='round' size='small'>
+                Insufficient
               </Button>
             ) : (
-              <Button type='primary' shape='round' size='large' onClick={buy}>
-                Buy now
+              <Button type='primary' shape='round' size='small' onClick={buy}>
+                Buy
               </Button>
             )
           ) : (
-            <Button type='primary' shape='round' size='large' onClick={approve}>
+            <Button type='primary' shape='round' size='small' onClick={approve}>
               Approve
             </Button>
           )}
-        </div>
+        </>
       ) : (
-        <div className='gSzfBw'>
-          <Button type='primary' shape='round' size='large' onClick={connectWeb3Modal}>
-            Buy now
+        <>
+          <Button type='primary' shape='round' size='small' onClick={connectWeb3Modal}>
+            Buy
           </Button>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

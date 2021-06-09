@@ -44,3 +44,28 @@
   border-top-right-radius: 0.75rem !important;
   border-bottom-right-radius: 0.75rem !important;
 }
+.input-price {
+  width: calc(100% - 60px);
+}
+
+.input-sell .ant-input-number {
+  width: 100%;
+}
+
+.input-amount {
+  width: 250px;
+  margin-left: 60px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.amount-input .ant-form-item-explain.ant-form-item-explain-error {
+  margin-left: 60px;
+}
+
+.input-sell .input-amount-sell .ant-input-number {
+  width: 100%;
+  border-radius: 0.75rem;
+}

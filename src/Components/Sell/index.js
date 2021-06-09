@@ -1,7 +1,7 @@
 import 'Views/DetailNFT/style.css';
-import { Button, InputNumber, Modal, Form, Input, Select } from 'antd';
+import { Button, InputNumber, Modal, Form, Input, Select, Col, Row } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingModal from 'Components/LoadingModal';
@@ -11,8 +11,9 @@ import './index.css';
 
 const { Option } = Select;
 
-export default function Sell({ token, is1155 }) {
+export default function Sell({ token, is1155, available }) {
   const dispatch = useDispatch();
+  let history = useHistory();
 
   const { web3, chainId } = useSelector((state) => state);
 
@@ -33,34 +34,42 @@ export default function Sell({ token, is1155 }) {
     setIsModalVisible(true);
   };
 
-  const onSubmit = useCallback(
-    async (values) => {
-      if (parseFloat(values.price) > 0) {
-        setVisible(true);
-        const result = await dispatch(
-          createSellOrder(
-            addressToken,
-            id,
-            web3.utils.toWei(values.price.toString(), 'ether'),
-            tokenPayment,
-            is1155
-          )
-        );
-        if (!!result) {
-          setIsModalVisible(false);
-        }
-        setVisible(false);
+  const handleOk = useCallback(async () => {
+    const values = await form.validateFields();
+    if (!!values && parseFloat(values.price) > 0) {
+      setVisible(true);
+      const result = await dispatch(
+        createSellOrder(
+          addressToken,
+          id,
+          web3.utils.toWei(values.price.toString(), 'ether'),
+          tokenPayment,
+          !!values.amount ? values.amount : 1,
+          is1155
+        )
+      );
+      if (!!result.status) {
+        setIsModalVisible(false);
+        history.push({
+          pathname: `/token/${addressToken}/${id}/${result.sellId}`,
+        });
       }
-    },
-    [dispatch, addressToken, id, web3.utils, tokenPayment, is1155]
-  );
-
-  const handleOk = async () => {
-    form.submit();
-  };
+      setVisible(false);
+    }
+  }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form]);
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const checkAmount = async (_, value) => {
+    if (!value) {
+      return Promise.reject(new Error('Enter amount'));
+    } else if (parseInt(value) > parseInt(available)) {
+      return Promise.reject(new Error('Not enough amount'));
+    } else {
+      return Promise.resolve();
+    }
   };
 
   return (
@@ -94,31 +103,68 @@ export default function Sell({ token, is1155 }) {
 
           <p className='textmode'>Will be on sale until you transfer this item or cancel it.</p>
         </div>
-        <Form onFinish={onSubmit} form={form} className='input-sell'>
-          <Input.Group compact>
-            <Select size='large' value={tokenPayment} onChange={(value) => setTokenPayment(value)}>
-              {!!getTokensPayment(chainId)
-                ? getTokensPayment(chainId).map((token, i) => {
-                    return (
-                      <Option value={token.address} key={i}>
-                        <img className='bnb-coin' src={token.icon} alt={token.symbol} />
-                      </Option>
-                    );
-                  })
-                : null}
-            </Select>
-
-            <Form.Item name={['price']} rules={[{ required: true, message: 'Enter price' }]}>
-              <InputNumber
-                min='0'
-                size='large'
-                className='search-style'
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                style={{ width: 250 }}
-                placeholder='Set Price'
-              />
-            </Form.Item>
-          </Input.Group>
+        <Form form={form} className='input-sell' layout='vertical'>
+          <Row gutter={[5, 10]}>
+            <Col xs={{ span: 24 }} md={{ span: is1155 ? 17 : 24 }}>
+              <div className='ant-col ant-form-item-label'>
+                <label htmlFor='price' className='ant-form-item-required' title='Price'>
+                  Price
+                </label>
+              </div>
+              <Input.Group compact label='Price'>
+                <Select
+                  size='large'
+                  value={tokenPayment}
+                  onChange={(value) => setTokenPayment(value)}
+                >
+                  {!!getTokensPayment(chainId)
+                    ? getTokensPayment(chainId).map((token, i) => {
+                        return (
+                          <Option value={token.address} key={i}>
+                            <img className='bnb-coin' src={token.icon} alt={token.symbol} />
+                          </Option>
+                        );
+                      })
+                    : null}
+                </Select>
+                <Form.Item
+                  name={['price']}
+                  rules={[{ required: true, message: 'Enter price' }]}
+                  className='input-price'
+                >
+                  <InputNumber
+                    min='1'
+                    size='large'
+                    className='search-style'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    placeholder='Set Price'
+                  />
+                </Form.Item>
+              </Input.Group>
+            </Col>
+            {is1155 ? (
+              <Col xs={{ span: 24 }} md={{ span: 7 }}>
+                <Input.Group>
+                  <Form.Item
+                    required
+                    name={['amount']}
+                    rules={[{ validator: checkAmount }]}
+                    label='Amount'
+                    className='input-amount-sell'
+                  >
+                    <InputNumber
+                      min='1'
+                      size='large'
+                      formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                      placeholder='Amount'
+                    />
+                  </Form.Item>
+                </Input.Group>
+              </Col>
+            ) : (
+              <></>
+            )}
+          </Row>
         </Form>
       </Modal>
     </>

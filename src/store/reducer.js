@@ -168,7 +168,7 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         convertErc721Tokens: action.convertErc721Tokens,
       };
-    case action.SET_CONVERT_ERC1155:
+    case actions.SET_CONVERT_ERC1155:
       return {
         ...state,
         convertErc1155Tokens: action.convertErc1155Tokens,
