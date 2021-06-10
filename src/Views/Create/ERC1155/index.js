@@ -1,5 +1,5 @@
 import { Form, Input, Button, Row, message } from 'antd';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSelector, useDispatch } from 'react-redux';
 import ERC1155Collections from './Collections';
@@ -8,6 +8,7 @@ import { uploadIPFS } from '../UploadIpfs';
 import BackButton from 'Components/BackButton';
 import { generateERC1155NFT } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
+import { Link } from 'react-router-dom';
 
 import '../index.css';
 
@@ -20,6 +21,7 @@ export default function CreateERC1155() {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
+  const profile = useRef(null);
 
   const [form] = Form.useForm();
 
@@ -36,6 +38,10 @@ export default function CreateERC1155() {
     },
   });
 
+  const routeProfile = () => {
+    profile.current.click();
+  };
+
   const onFinish = async (values) => {
     if (files.length > 0) {
       setVisible();
@@ -46,7 +52,7 @@ export default function CreateERC1155() {
 
       // mint token
       setVisible(true);
-      await dispatch(generateERC1155NFT(collectionId, values.id, values.amount, tokenUri));
+      dispatch(generateERC1155NFT(collectionId, values.id, values.amount, tokenUri, routeProfile));
       setVisible(false);
 
       // reset form and file
@@ -66,6 +72,7 @@ export default function CreateERC1155() {
 
         <div>
           <div>
+            <Link to={`/profile/${walletAddress}`} ref={profile} />
             <h3 className='text-upload-image textmode'>Upload Image</h3>
             <div className='drag-box-search'>
               <div className='drag-box' {...getRootProps({ className: 'dropzone' })}>
