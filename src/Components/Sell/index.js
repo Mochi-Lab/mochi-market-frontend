@@ -11,7 +11,7 @@ import './index.css';
 
 const { Option } = Select;
 
-export default function Sell({ token, is1155, available }) {
+export default function Sell({ token, is1155, available, getOwners1155 }) {
   const dispatch = useDispatch();
   let history = useHistory();
 
@@ -49,6 +49,9 @@ export default function Sell({ token, is1155, available }) {
         )
       );
       if (!!result.status) {
+        if (!!is1155) {
+          await getOwners1155();
+        }
         setIsModalVisible(false);
         history.push({
           pathname: `/token/${addressToken}/${id}/${result.sellId}`,
@@ -56,7 +59,7 @@ export default function Sell({ token, is1155, available }) {
       }
       setVisible(false);
     }
-  }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form]);
+  }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form, getOwners1155]);
 
   const handleCancel = () => {
     setIsModalVisible(false);

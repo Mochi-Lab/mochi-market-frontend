@@ -318,6 +318,10 @@ html[data-theme='dark'] {
   box-shadow: 0 0 0 2px rgb(0 0 0 / 25%);
 }
 
+[data-theme='dark'] .input-checkout-1155 .ant-input-number-input {
+  color: white !important;
+}
+
 @media (max-width: 767px) {
   [data-theme='dark'] .left-profile .info-user {
     background: none;

@@ -16,12 +16,17 @@ export default function RenderSwitch({
 }) {
   switch (status) {
     case 3:
-      return <Cancel orderDetail={orderDetail} />;
+      return <Cancel orderDetail={orderDetail} getOwners1155={getOwners1155} />;
     case 2:
       return (
         <div className='PE'>
           <div className='actions-btn'>
-            <Sell token={token} is1155={is1155} available={available} />
+            <Sell
+              token={token}
+              is1155={is1155}
+              available={available}
+              getOwners1155={getOwners1155}
+            />
             <div className='cAFwWB' />
             <Transfer
               token={token}
@@ -34,7 +39,15 @@ export default function RenderSwitch({
         </div>
       );
     case 1:
-      return <Buy orderDetail={orderDetail} is1155={is1155} id={id} addressToken={addressToken} />;
+      return (
+        <Buy
+          orderDetail={orderDetail}
+          is1155={is1155}
+          id={id}
+          addressToken={addressToken}
+          getOwners1155={getOwners1155}
+        />
+      );
     default:
       return <div></div>;
   }

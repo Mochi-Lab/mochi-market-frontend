@@ -489,6 +489,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
         token.amount = listNftContract.amount[index];
         token.sellId = listNftContract.sellId[index];
         token.value = listNftContract.amount[index];
+        token.soldAmount = listNftContract.soldAmount[index];
         token.is1155 = true;
         token.totalSupply = (
           await getAllOwnersOf1155(listNftContract.nftAddress, order.id, chainId, '')
@@ -576,6 +577,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
             tokenPayment: [],
             seller: [],
             amount: [],
+            soldAmount: [],
           };
 
           let nftindex = listNftContracts1155.findIndex(
@@ -593,6 +595,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
             token.seller.push(sellOrder.seller);
             token.amount.push(sellOrder.amount);
             token.sellId.push(sellOrder.sellId);
+            token.soldAmount.push(sellOrder.soldAmount);
             listNftContracts1155.push(token);
           } else {
             // push nft to existing collection
@@ -602,6 +605,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
             listNftContracts1155[nftindex].seller.push(sellOrder.seller);
             listNftContracts1155[nftindex].amount.push(sellOrder.amount);
             listNftContracts1155[nftindex].sellId.push(sellOrder.sellId);
+            listNftContracts1155[nftindex].soldAmount.push(sellOrder.soldAmount);
           }
         });
       }
