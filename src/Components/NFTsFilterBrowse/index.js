@@ -67,11 +67,12 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                         {erc721Tokens
                           ? erc721Tokens.map((erc721Token, index) => {
                               if (
-                                (!!strSearch &&
+                                ((!!strSearch &&
                                   erc721Token.name
                                     .toLocaleLowerCase()
                                     .includes(strSearch.toLowerCase())) ||
-                                !strSearch
+                                  !strSearch) &&
+                                erc721Token.tokens.length > 0
                               )
                                 return (
                                   <div
