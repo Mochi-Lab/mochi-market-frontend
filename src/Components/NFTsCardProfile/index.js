@@ -60,7 +60,10 @@ function NFTsCardProfile({ token, strSearch }) {
           <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
             {token.is1155 ? (
               <p className='textmode'>
-                {token.value} <span className='text-blur'>of</span> {token.totalSupply}{' '}
+                {!!token.soldAmount
+                  ? parseInt(token.value) - parseInt(token.soldAmount)
+                  : token.value}{' '}
+                <span className='text-blur'>of</span> {token.totalSupply}{' '}
                 <span className='text-blur'>Available</span>
               </p>
             ) : (

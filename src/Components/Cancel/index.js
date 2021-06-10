@@ -5,7 +5,7 @@ import { cancelSellOrder } from 'store/actions';
 import store from 'store/index';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-export default function Cancel({ orderDetail }) {
+export default function Cancel({ orderDetail, is1155, getOwners1155 }) {
   let history = useHistory();
   const [visible, setVisible] = useState(false);
 
@@ -13,6 +13,9 @@ export default function Cancel({ orderDetail }) {
     setVisible(true);
     let result = await store.dispatch(cancelSellOrder(orderDetail));
     if (result) {
+      if (!!is1155) {
+        await getOwners1155();
+      }
       history.push({
         pathname: `/token/${orderDetail.nftAddress}/${orderDetail.tokenId}/null`,
       });

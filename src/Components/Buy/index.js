@@ -1,57 +1,63 @@
 import 'Views/DetailNFT/style.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button, notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { buyNft, approveToken } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
+import ModalBuy1155 from 'Components/ModalBuy1155';
 import { balanceOf, allowance } from 'utils/helper';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useHistory } from 'react-router';
 
-export default function Buy({ orderDetail, is1155, id, addressToken }) {
+export default function Buy({ orderDetail, is1155, id, addressToken, getOwners1155 }) {
   let history = useHistory();
   const [visibleBuy, setVisibleBuy] = useState(false);
   const [visibleApprove, setVisibleApprove] = useState(false);
   const [insufficient, setInsufficient] = useState(false);
   const { balance, chainId, walletAddress, allowanceToken } = useSelector((state) => state);
   const [approvedToken, setApprovedToken] = useState(false);
+  const [Checkout1155, setCheckout1155] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
-    async function fetchBalance() {
-      if (!orderDetail) return;
-      if (orderDetail.tokenPayment === '0x0000000000000000000000000000000000000000') {
+  const fetchBalance = useCallback(
+    async (order) => {
+      if (!order) return;
+      if (order.tokenPayment === '0x0000000000000000000000000000000000000000') {
         setApprovedToken(true);
-        if (parseInt(orderDetail.price) * parseInt(orderDetail.amount) > parseInt(balance * 1e18)) {
+        if (order.price > parseInt(balance * 1e18)) {
           setInsufficient(true);
         } else {
           setInsufficient(false);
         }
       } else {
-        let allowanceToken = await allowance(orderDetail.tokenPayment, walletAddress, chainId);
-        let _tokenBal = await balanceOf(orderDetail.tokenPayment, walletAddress);
-        if (parseInt(orderDetail.price) * parseInt(orderDetail.amount) > parseInt(_tokenBal)) {
+        let allowanceToken = await allowance(order.tokenPayment, walletAddress, chainId);
+        let _tokenBal = await balanceOf(order.tokenPayment, walletAddress);
+        if (order.price > parseInt(_tokenBal)) {
           setInsufficient(true);
         } else {
           setInsufficient(false);
         }
-        if (
-          parseInt(orderDetail.price) * parseInt(orderDetail.amount) <=
-          parseInt(allowanceToken)
-        ) {
+        if (order.price <= parseInt(allowanceToken)) {
           setApprovedToken(true);
         } else {
           setApprovedToken(false);
         }
       }
-    }
-    if (!!walletAddress) fetchBalance();
-  }, [orderDetail, balance, allowanceToken, walletAddress, chainId]);
+    },
+    [balance, walletAddress, chainId]
+  );
 
-  const buy = async () => {
-    if (!orderDetail) return;
+  useEffect(() => {
+    if (!!walletAddress) fetchBalance(orderDetail);
+  }, [fetchBalance, walletAddress, allowanceToken, orderDetail]);
+
+  const buy = async (order) => {
+    if (!order) return;
     setVisibleBuy(true);
-    let result = await dispatch(buyNft(orderDetail, is1155));
+    let result = await dispatch(buyNft(order, is1155));
     if (!!result.status && !!result.link) {
+      if (!!is1155) {
+        await getOwners1155();
+      }
       history.push({
         pathname: `/token/${addressToken}/${id}/null`,
       });
@@ -88,19 +94,35 @@ export default function Buy({ orderDetail, is1155, id, addressToken }) {
     });
   };
 
+  const checkout1155 = async () => {
+    setCheckout1155(true);
+  };
+
   return (
     <div className='actions-btn'>
       {!!walletAddress ? (
         <div className='gSzfBw'>
-          <LoadingModal title='Buy' visible={visibleBuy} />
+          <LoadingModal title='Paymet' visible={visibleBuy} />
           <LoadingModal title='Approve' visible={visibleApprove} />
+          <ModalBuy1155
+            visible={Checkout1155}
+            orderDetail={orderDetail}
+            buy={buy}
+            insufficient={insufficient}
+            setCheckout1155={setCheckout1155}
+          />
           {approvedToken ? (
             insufficient ? (
               <Button type='primary' disabled shape='round' size='large'>
                 Insufficient Balance
               </Button>
             ) : (
-              <Button type='primary' shape='round' size='large' onClick={buy}>
+              <Button
+                type='primary'
+                shape='round'
+                size='large'
+                onClick={() => (is1155 ? checkout1155() : buy(orderDetail))}
+              >
                 Buy now
               </Button>
             )
