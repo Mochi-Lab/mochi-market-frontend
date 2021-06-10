@@ -1,4 +1,4 @@
-import matic from 'Assets/matic-coin.png';
+import polygon from 'Assets/polygon.png';
 import moma from 'Assets/logo-mochi.png';
 
 const contractAddress = {
@@ -20,15 +20,11 @@ const contractAddress = {
 };
 
 const tokensPayment = {
-  137: [
-    { address: '0xd56217853008e37cf4Aa9Bf72C2ECd4eE7813910', icon: moma, symbol: 'MOMA' },
-    { address: '0x0000000000000000000000000000000000000000', icon: matic, symbol: 'MATIC' },
-  ],
+  137: [{ address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC' }],
 };
 
 const symbolToken = {
   137: {
-    '0xd56217853008e37cf4Aa9Bf72C2ECd4eE7813910': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'MATIC',
   },
 };
