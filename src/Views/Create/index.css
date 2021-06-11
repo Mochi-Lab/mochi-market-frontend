@@ -134,7 +134,7 @@
   box-shadow: none;
 }
 
-h2.textmode {
+.create-pt h2.textmode {
   width: 251px;
   text-align: left !important;
   font-family: Roboto;
