@@ -15,6 +15,8 @@ import RenderSwitch from '../RenderSwitch';
 import { getSymbol } from 'utils/getContractAddress';
 import avatarDefault from 'Assets/avatar-profile.png';
 import BuySmall from 'Components/BuySmall';
+import { setAvailableSellOrder } from 'store/actions';
+import store from 'store/index';
 import '../style.css';
 
 const { TabPane } = Tabs;
@@ -42,6 +44,13 @@ export default function DetailsNftProfile() {
     erc1155Tokens,
   } = useSelector((state) => state);
   const { addressToken, id, sellID } = useParams();
+
+  useEffect(() => {
+    const fetchSetAvailableOrdersNew = async () => {
+      await store.dispatch(setAvailableSellOrder());
+    };
+    fetchSetAvailableOrdersNew();
+  }, []);
 
   // Get detail nft by TokenURI for both 721 and 1155
   useEffect(() => {
@@ -190,11 +199,14 @@ export default function DetailsNftProfile() {
                               <strong>{owner.seller}</strong>
                             </Link>
                             <div>
-                              {owner.value} <span className='text-blur'>on sale of</span>{' '}
+                              {!!is1155
+                                ? parseInt(owner.value) - parseInt(owner.soldAmount)
+                                : owner.value}
+                              <span className='text-blur'>/</span>
                               {totalSupply} <span className='text-blur '>price</span>{' '}
                               {web3.utils.fromWei(owner.price, 'ether')}{' '}
                               {getSymbol(chainId)[owner.tokenPayment]}{' '}
-                              <span className='text-blur '>each</span>{' '}
+                              <span className='text-blur '>each</span> {''}
                               {!walletAddress ||
                               (!!walletAddress &&
                                 owner.seller.toLowerCase() !== walletAddress.toLowerCase()) ? (
@@ -203,6 +215,7 @@ export default function DetailsNftProfile() {
                                   is1155={is1155}
                                   id={id}
                                   addressToken={addressToken}
+                                  getOwners1155={getOwners1155}
                                 >
                                   buy
                                 </BuySmall>
