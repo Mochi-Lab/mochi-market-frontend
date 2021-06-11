@@ -4,7 +4,6 @@ import { Modal, Button, Input, Form, InputNumber, Col, Row } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { transferNft } from 'store/actions';
-import LoadingModal from 'Components/LoadingModal';
 
 export default function Transfer({ token, is1155, available, web3, getOwners1155 }) {
   const dispatch = useDispatch();
@@ -12,7 +11,6 @@ export default function Transfer({ token, is1155, available, web3, getOwners1155
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [transferTo, setTransferTo] = useState('');
   const { addressToken, id } = useParams();
-  const [visible, setVisible] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -21,10 +19,8 @@ export default function Transfer({ token, is1155, available, web3, getOwners1155
   const handleOk = async () => {
     const values = await form.validateFields();
     if (!!values) {
-      setVisible(true);
       await dispatch(transferNft(addressToken, transferTo, id, values.amount, is1155));
       await getOwners1155();
-      setVisible(false);
       setIsModalVisible(false);
     }
   };
@@ -59,7 +55,6 @@ export default function Transfer({ token, is1155, available, web3, getOwners1155
   return (
     <>
       <div className='gSzfBw'>
-        <LoadingModal title='Transfer' visible={visible} />
         <Button shape='round' size='large' onClick={showModal}>
           Transfer
         </Button>

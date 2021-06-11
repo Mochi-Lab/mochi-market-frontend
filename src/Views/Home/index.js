@@ -12,7 +12,9 @@ import 'slick-carousel/slick/slick-theme.css';
 import './index.css';
 
 export default function Home() {
-  const { convertErc721Tokens, isLoadingErc721 } = useSelector((state) => state);
+  const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721 } = useSelector(
+    (state) => state
+  );
 
   const tags = ['Artwork', '3D', 'Character', 'Art'];
 
@@ -21,9 +23,21 @@ export default function Home() {
       ...convertErc721Tokens.map((collections) => collections.tokens.map((token) => token))
     );
   };
+  const mergeAllCollections1155 = () => {
+    return [].concat(
+      ...convertErc1155Tokens.map((collections) => collections.tokens.map((token) => token))
+    );
+  };
 
   const newListing = () => {
     let listNFT = mergeAllCollections();
+    listNFT = listNFT.sort((a, b) =>
+      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
+    );
+    return listNFT.slice(0, 10);
+  };
+  const new1155 = () => {
+    let listNFT = mergeAllCollections1155();
     listNFT = listNFT.sort((a, b) =>
       a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
     );
@@ -78,10 +92,10 @@ export default function Home() {
 
           <div className='new-nfts'>
             <div className='title-new'>
-              <h2 className='textmode'>EXPLORE</h2>
+              <h2 className='textmode'>COLLECTIONS 1155</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              {newListing().map((nft, i) => (
+              {new1155().map((nft, i) => (
                 <div className='item-carousel' key={i}>
                   <CardNFTNotSearch token={nft} />
                 </div>

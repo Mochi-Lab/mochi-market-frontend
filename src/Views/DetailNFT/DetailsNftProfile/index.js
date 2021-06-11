@@ -50,6 +50,10 @@ export default function DetailsNftProfile() {
       await store.dispatch(setAvailableSellOrder());
     };
     fetchSetAvailableOrdersNew();
+    setTimeout(() => {
+      fetchSetAvailableOrdersNew();
+      fetchSetAvailableOrdersNew();
+    }, 500);
   }, []);
 
   // Get detail nft by TokenURI for both 721 and 1155

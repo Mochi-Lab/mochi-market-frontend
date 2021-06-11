@@ -1,9 +1,8 @@
 import 'Views/DetailNFT/style.css';
 import { useState, useEffect, useCallback } from 'react';
-import { Button, notification } from 'antd';
+import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { buyNft, approveToken } from 'store/actions';
-import LoadingModal from 'Components/LoadingModal';
 import ModalBuy1155 from 'Components/ModalBuy1155';
 import { balanceOf, allowance } from 'utils/helper';
 import { connectWeb3Modal } from 'Connections/web3Modal';
@@ -11,8 +10,6 @@ import { useHistory } from 'react-router';
 
 export default function Buy({ orderDetail, is1155, id, addressToken, getOwners1155 }) {
   let history = useHistory();
-  const [visibleBuy, setVisibleBuy] = useState(false);
-  const [visibleApprove, setVisibleApprove] = useState(false);
   const [insufficient, setInsufficient] = useState(false);
   const { balance, chainId, walletAddress, allowanceToken } = useSelector((state) => state);
   const [approvedToken, setApprovedToken] = useState(false);
@@ -52,7 +49,6 @@ export default function Buy({ orderDetail, is1155, id, addressToken, getOwners11
 
   const buy = async (order) => {
     if (!order) return;
-    setVisibleBuy(true);
     let result = await dispatch(buyNft(order, is1155));
     if (!!result.status && !!result.link) {
       if (!!is1155) {
@@ -61,37 +57,12 @@ export default function Buy({ orderDetail, is1155, id, addressToken, getOwners11
       history.push({
         pathname: `/token/${addressToken}/${id}/null`,
       });
-      openNotification(result.link);
     }
-
-    setVisibleBuy(false);
   };
 
   const approve = async () => {
     if (!orderDetail) return;
-    setVisibleApprove(true);
-    await dispatch(approveToken(orderDetail))
-      .then(() => {
-        setVisibleApprove(false);
-      })
-      .catch((e) => {
-        setVisibleApprove(false);
-      });
-  };
-
-  const openNotification = (link) => {
-    notification.open({
-      message: 'Successfully purchased',
-      description: (
-        <div>
-          Great !! This NFT is your now. Check transaction :
-          <a target='_blank' style={{ marginLeft: '5px' }} rel='noopener noreferrer' href={link}>
-            View
-          </a>
-        </div>
-      ),
-      duration: 6,
-    });
+    await dispatch(approveToken(orderDetail));
   };
 
   const checkout1155 = async () => {
@@ -102,8 +73,6 @@ export default function Buy({ orderDetail, is1155, id, addressToken, getOwners11
     <div className='actions-btn'>
       {!!walletAddress ? (
         <div className='gSzfBw'>
-          <LoadingModal title='Paymet' visible={visibleBuy} />
-          <LoadingModal title='Approve' visible={visibleApprove} />
           <ModalBuy1155
             visible={Checkout1155}
             orderDetail={orderDetail}

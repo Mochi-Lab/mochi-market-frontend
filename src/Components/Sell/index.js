@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import LoadingModal from 'Components/LoadingModal';
 import { getTokensPayment } from 'utils/getContractAddress';
 
 import './index.css';
@@ -19,7 +18,6 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
 
   const { addressToken, id } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [tokenPayment, setTokenPayment] = useState();
 
   const [form] = Form.useForm();
@@ -37,7 +35,6 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
   const handleOk = useCallback(async () => {
     const values = await form.validateFields();
     if (!!values && parseFloat(values.price) > 0) {
-      setVisible(true);
       const result = await dispatch(
         createSellOrder(
           addressToken,
@@ -57,7 +54,6 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
           pathname: `/token/${addressToken}/${id}/${result.sellId}`,
         });
       }
-      setVisible(false);
     }
   }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form, getOwners1155]);
 
@@ -78,7 +74,6 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
   return (
     <>
       <div className='gSzfBw'>
-        <LoadingModal title={'Sell'} visible={visible} />
         <Button type='primary' shape='round' size='large' onClick={showModal}>
           Sell
         </Button>
