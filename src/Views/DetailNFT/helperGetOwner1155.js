@@ -13,14 +13,14 @@ export default async function helperGetOwner1155(
   let onSaleOfAddressToken = [];
   for (let i = 0; i < convertErc1155Tokens.length; i++) {
     const collection = convertErc1155Tokens[i];
-    if (
-      collection.addressToken.toLowerCase() === addressToken.toLowerCase() &&
-      parseInt(collection.tokenId) === parseInt(id)
-    ) {
+    if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
       onSaleOfAddressToken = collection.tokens;
       break;
     }
   }
+  onSaleOfAddressToken = onSaleOfAddressToken.filter(
+    (order) => parseInt(order.index) === parseInt(id)
+  );
   const ownerNoMarket = await getAllOwnersOf1155(addressToken, id, chainId, market._address);
   const totalSupplyNFT = ownerNoMarket.totalSupply;
   setTotalSupply(totalSupplyNFT);

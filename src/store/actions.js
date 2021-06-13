@@ -4,7 +4,6 @@ import {
   listTokensERC115OfOwner,
   getAllOwnersOf1155,
 } from 'utils/helper';
-// import ERC1155 from 'Contracts/ERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
 import ERC1155 from 'Contracts/ERC1155.json';
 import SampleERC721 from 'Contracts/SampleERC721.json';
@@ -479,16 +478,20 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
 
   const pushErc1155 = async (listNftContract) => {
     let ERC1155token = { name: '', avatarToken: '', tokens: [] };
-    const tokenURI = await listNftContract.instance.methods
-      .uri(listNftContract.tokenId[0].id)
-      .call();
-    // get token info
     try {
-      let req = await axios.get(tokenURI);
-      const data = req.data;
-      ERC1155token.name = !!data.name ? data.name : 'Unnamed';
+      ERC1155token.name = await listNftContract.instance.methods.name().call();
     } catch (error) {
-      ERC1155token.name = 'Unnamed';
+      const tokenURI = await listNftContract.instance.methods
+        .uri(listNftContract.tokenId[0].id)
+        .call();
+      // get token info
+      try {
+        let req = await axios.get(tokenURI);
+        const data = req.data;
+        ERC1155token.name = !!data.name ? data.name : 'Unnamed';
+      } catch (error) {
+        ERC1155token.name = 'Unnamed';
+      }
     }
 
     ERC1155token.addressToken = listNftContract.nftAddress;
@@ -602,15 +605,13 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
           };
 
           let nftindex = listNftContracts1155.findIndex(
-            (nft) =>
-              nft.nftAddress.toLowerCase() === sellOrder.nftAddress.toLowerCase() &&
-              parseInt(nft.tokenId[0].id) === parseInt(sellOrder.tokenId)
+            (nft) => nft.nftAddress.toLowerCase() === sellOrder.nftAddress.toLowerCase()
           );
 
           if (nftindex === -1) {
             //cant fine nft in list => nft in a new collection
             token.nftAddress = sellOrder.nftAddress;
-            token.instance = new web3.eth.Contract(ERC1155.abi, sellOrder.nftAddress);
+            token.instance = new web3.eth.Contract(SampleERC1155.abi, sellOrder.nftAddress);
             token.tokenId.push({ sortIndex: i, id: sellOrder.tokenId });
             token.price.push(sellOrder.price);
             token.tokenPayment.push(sellOrder.token);
