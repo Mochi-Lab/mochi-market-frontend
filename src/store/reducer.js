@@ -40,7 +40,6 @@ const initialState = {
   convertErc721Tokens: [],
   convertErc1155Tokens: [],
   mySellOrder: [],
-  isLoadingTx: false,
 
   //CreativeStudio
   userCollections: [],
@@ -52,6 +51,8 @@ const initialState = {
 
   // Notification
   noti: null, // notification = {type:"success/error",message="......"}
+  // Status activitys
+  activity: null, // activity = { key, 'pending/success/error', 'title', duration(Number/null), 'description'}
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -198,11 +199,6 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         userCollections: action.userCollections,
       };
-    case actions.IS_LOADING_TX:
-      return {
-        ...state,
-        isLoadingTx: action.isLoadingTx,
-      };
     case actions.SET_NFT_CLAIM_TOKEN:
       return {
         ...state,
@@ -230,6 +226,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         noti: action.noti,
+      };
+    case actions.ACTIVITY:
+      return {
+        ...state,
+        activity: action.activity,
       };
     default:
       return state;
