@@ -3,7 +3,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { setStrSearch } from 'store/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
 
 import 'slick-carousel/slick/slick.css';
@@ -12,6 +12,8 @@ import './index.css';
 
 export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   const dispatch = useDispatch();
+  const { strSearch } = useSelector((state) => state);
+
   const browse = useRef(null);
   const searchNFT = (text) => {
     dispatch(setStrSearch(text));
@@ -31,7 +33,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
           <div className='banner-content center'>
             <div>
               <p className='fontRubik mc-mk'>MOCHI MARKET</p>
-              <p className='fontRoboto new-eco'>THE NEW CREATIVE ECONOMY</p>
+              <p className='fontRoboto new-eco'>Creativity is contagious. Pass it on.</p>
             </div>
           </div>
         </div>
@@ -58,6 +60,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
               ref={inputSearch}
               onChange={(e) => searchNFT(e.target.value)}
               onKeyDown={handleKeyDown}
+              value={strSearch}
             />
           </div>
         </div>

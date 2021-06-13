@@ -6,5 +6,9 @@ import './style.css';
 
 export default function DetailNFT() {
   const { sellID } = useParams();
-  return parseInt(sellID) && sellID !== 'null' ? <DetailsNftOrder /> : <DetailsNftProfile />;
+  return Number.isInteger(parseInt(sellID)) && sellID !== 'null' ? (
+    <DetailsNftOrder />
+  ) : (
+    <DetailsNftProfile />
+  );
 }

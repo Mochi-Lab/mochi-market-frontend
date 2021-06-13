@@ -233,9 +233,13 @@ export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, address
     });
 
     let ownersOf1155Raw =
-      result.data && result.data.data.tokens ? result.data.data.tokens[0].balances : [];
+      !!result.data && !!result.data.data.tokens && !!result.data.data.tokens[0]
+        ? result.data.data.tokens[0].balances
+        : [];
     const totalSupply =
-      result.data && result.data.data.tokens ? result.data.data.tokens[0].totalSupply : 0;
+      !!result.data && !!result.data.data.tokens && !!result.data.data.tokens[0]
+        ? result.data.data.tokens[0].totalSupply
+        : 0;
 
     let ownersOf1155 = await Promise.all(
       ownersOf1155Raw.map(async (nft) => {

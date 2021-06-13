@@ -7,6 +7,7 @@ import store from 'store/index';
 import { lazy, Suspense, useEffect } from 'react';
 import './App.css';
 import Notification from 'Components/Notification';
+import StatusActivity from 'Components/StatusActivity';
 import useInterval from 'utils/useInterval';
 import { useSelector } from 'react-redux';
 
@@ -48,6 +49,7 @@ function App() {
       <BrowserRouter>
         <div className='page content'>
           <Notification />
+          <StatusActivity />
           <NavBar />
           <Suspense
             fallback={

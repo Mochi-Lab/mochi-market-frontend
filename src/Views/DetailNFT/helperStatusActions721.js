@@ -22,7 +22,6 @@ export default async function helperStatusActions721(
       let tokenOwner;
       // check if user is owner of token
       if (!!sellId.found) {
-        console.log('4');
         const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
         if (order.isActive) {
           tokenOwner = order.seller;

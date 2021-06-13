@@ -14,7 +14,8 @@ import helperStatusActions721 from '../helperStatusActions721';
 import helperStatusActions1155 from './helperStatusActions1155';
 import RenderSwitch from '../RenderSwitch';
 import BuySmall from 'Components/BuySmall';
-
+import { setAvailableSellOrder } from 'store/actions';
+import store from 'store/index';
 import avatarDefault from 'Assets/avatar-profile.png';
 
 import '../style.css';
@@ -46,6 +47,17 @@ export default function DetailsNftOrder() {
     erc1155Tokens,
   } = useSelector((state) => state);
   const { addressToken, id, sellID } = useParams();
+
+  useEffect(() => {
+    const fetchSetAvailableOrdersNew = async () => {
+      await store.dispatch(setAvailableSellOrder());
+    };
+    fetchSetAvailableOrdersNew();
+    setTimeout(() => {
+      fetchSetAvailableOrdersNew();
+      fetchSetAvailableOrdersNew();
+    }, 500);
+  }, []);
 
   // Get detail nft by TokenURI for both 721 and 1155
   useEffect(() => {
@@ -174,7 +186,11 @@ export default function DetailsNftOrder() {
                 {!!orderDetail ? (
                   <div className='price-nft'>
                     <span className='textmode price-eth'>
-                      {`${orderDetail.amount} of ${totalSupply}`}
+                      {`${
+                        !!is1155
+                          ? parseInt(orderDetail.amount) - parseInt(orderDetail.soldAmount)
+                          : orderDetail.amount
+                      } of ${totalSupply}`}
                     </span>
                     <span className='price-eth pink-font'>
                       {web3.utils.fromWei(orderDetail.price, 'ether')}{' '}
@@ -190,7 +206,11 @@ export default function DetailsNftOrder() {
                   <div className='description-nft textmode'>{token.description}</div>
                 </div>
                 <div className='detail-owner'>
-                  <Tabs defaultActiveKey={parseInt(sellID) && sellID !== 'null' ? '2' : '1'}>
+                  <Tabs
+                    defaultActiveKey={
+                      Number.isInteger(parseInt(sellID)) && sellID !== 'null' ? '2' : '1'
+                    }
+                  >
                     <TabPane tab='Owners' key='1'>
                       {owners.map((owner, index) => (
                         <div key={index} className='avatar-link-available'>
@@ -220,7 +240,9 @@ export default function DetailsNftOrder() {
                               <strong>{owner.seller}</strong>
                             </Link>
                             <div>
-                              {owner.value}
+                              {!!is1155
+                                ? parseInt(owner.value) - parseInt(owner.soldAmount)
+                                : owner.value}
                               <span className='text-blur'>/</span>
                               {totalSupply} <span className='text-blur '>price</span>{' '}
                               {web3.utils.fromWei(owner.price, 'ether')}{' '}
@@ -234,6 +256,7 @@ export default function DetailsNftOrder() {
                                   is1155={is1155}
                                   id={id}
                                   addressToken={addressToken}
+                                  getOwners1155={getOwners1155}
                                 >
                                   buy
                                 </BuySmall>
