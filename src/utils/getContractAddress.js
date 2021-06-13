@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import polygon from 'Assets/polygon.png';
-=======
-import matic from 'Assets/matic-coin.png';
->>>>>>> polygon network
 import moma from 'Assets/logo-mochi.png';
 
 const contractAddress = {
