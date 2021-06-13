@@ -10,6 +10,10 @@ export const getAllOrderListFormat = () => {
   return `/sellOrder/formatByNft`;
 };
 
+export const getavailableSellOrderERC721 = () => {
+  return `/sellOrder/availableSellOrderERC721`;
+};
+
 export const getAllOrderListOfUser = (address) => {
   return `/sellOrder/user/${address}`;
 };

@@ -25,6 +25,7 @@ import {
   getAllUserErcFormat,
   getAllOrderListFormat,
   getAllOrderListOfUser,
+  getavailableSellOrderERC721,
 } from 'api/apiProvider';
 
 var contractAddress;
@@ -376,6 +377,8 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
 
       let Erc721Tokens = await axiosClient.get(getAllOrderListFormat());
 
+      let availableSellOrder721 = await axiosClient.get(getavailableSellOrderERC721());
+
       let convertErc721Tokens = await Promise.all(
         Erc721Tokens.map((token) => {
           let avatarData = randomAvatarGenerator.generateRandomAvatarData();
@@ -390,9 +393,15 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
       });
 
       dispatch({
+        type: SET_AVAILABLE_SELL_ORDER_721,
+        availableSellOrder721,
+      });
+
+      dispatch({
         type: SET_CONVERT_ERC721,
         convertErc721Tokens,
       });
+
       // dispatch({
       //   type: SET_CONVERT_ERC1155,
       //   convertErc1155Tokens,
