@@ -5,7 +5,7 @@ export const web3Default = {
   137: {
     web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc-mainnet.maticvigil.com')),
     name: 'Polygon Mainnet',
-    explorer: 'https://explorer-mainnet.maticvigil.com/',
+    explorer: 'https://polygonscan.com/',
   },
 };
 
