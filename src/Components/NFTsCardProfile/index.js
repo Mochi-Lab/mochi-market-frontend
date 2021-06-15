@@ -8,6 +8,8 @@ import imgNotFound from 'Assets/notfound.png';
 import abiERC1155 from 'Contracts/ERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
 import '../NFTsCardBrowse/index.css';
+import axiosClient from 'api';
+import { getDetailNft } from 'api/apiProvider';
 
 function NFTsCardProfile({ token, strSearch }) {
   const { web3, chainId } = useSelector((state) => state);
@@ -18,15 +20,24 @@ function NFTsCardProfile({ token, strSearch }) {
       if (!!token) {
         try {
           let tokenURI;
+          let req;
+          var data;
           if (token.is1155) {
             const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
             tokenURI = await nft.methods.uri(token.index).call();
+
+            req = await axios.get(tokenURI);
+            data = req.data;
           } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
+            data = await axiosClient.get(getDetailNft(token.addressToken, token.index));
+            if (!data) {
+              const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
+              tokenURI = await nft.methods.tokenURI(token.index).call();
+              req = await axios.get(tokenURI);
+              data = req.data;
+            }
           }
-          let req = await axios.get(tokenURI);
-          const data = req.data;
+
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
             description: !!data.description ? data.description : '',

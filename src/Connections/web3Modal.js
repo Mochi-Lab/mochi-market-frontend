@@ -1,6 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
-import { setChainId, setWeb3, setAddress, setAcceptedNfts } from 'store/actions';
+import { setChainId, setWeb3, setAddress } from 'store/actions';
 import store from 'store/index';
 
 const autoAddNetworkBSC = async () => {
@@ -50,8 +50,6 @@ export const connectWeb3Modal = async () => {
         store.dispatch(setWeb3(web3));
         if (accounts.length > 0) {
           store.dispatch(setAddress(accounts[0]));
-          // Init ERC721
-          store.dispatch(setAcceptedNfts());
         }
         connect();
       } else {
@@ -109,7 +107,6 @@ export const connectWeb3Modal = async () => {
     } else if (accounts[0] !== currentAccount) {
       currentAccount = accounts[0];
       store.dispatch(setAddress(accounts[0]));
-      store.dispatch(setAcceptedNfts());
     }
   }
 

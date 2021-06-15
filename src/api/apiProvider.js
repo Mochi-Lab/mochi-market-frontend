@@ -17,3 +17,7 @@ export const getavailableSellOrderERC721 = () => {
 export const getAllOrderListOfUser = (address) => {
   return `/sellOrder/user/${address}`;
 };
+
+export const getDetailNft = (address, tokenId) => {
+  return `/nft/${address}/${tokenId}`;
+};

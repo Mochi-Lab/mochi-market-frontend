@@ -5,8 +5,10 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import imgNotFound from 'Assets/notfound.png';
 import { getSymbol } from 'utils/getContractAddress';
+import { getDetailNft } from 'api/apiProvider';
 import abiERC1155 from 'Contracts/ERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
+import axiosClient from 'api';
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId } = useSelector((state) => state);
@@ -17,15 +19,24 @@ export default function CardNFTHome({ token }) {
       if (!!token) {
         try {
           let tokenURI;
+          let req;
+          var data;
           if (token.is1155) {
             const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
             tokenURI = await nft.methods.uri(token.index).call();
+
+            req = await axios.get(tokenURI);
+            data = req.data;
           } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
+            data = await axiosClient.get(getDetailNft(token.addressToken, token.index));
+            if (!data) {
+              const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
+              tokenURI = await nft.methods.tokenURI(token.index).call();
+              req = await axios.get(tokenURI);
+              data = req.data;
+            }
           }
-          let req = await axios.get(tokenURI);
-          const data = req.data;
+
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
             description: !!data.description ? data.description : '',

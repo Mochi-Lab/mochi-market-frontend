@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ERC721 from 'Contracts/ERC721.json';
 import ERC1155 from 'Contracts/ERC1155.json';
+import SellOrderList from 'Contracts/SellOrderList.json';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import IconLoading from 'Components/IconLoading';
@@ -19,7 +20,7 @@ import Transfer from 'Components/Transfer';
 import ConnectWallet from 'Components/ConnectWallet';
 import Share from 'Components/Share';
 import BackButton from 'Components/BackButton';
-import { getSymbol } from 'utils/getContractAddress';
+import { getSymbol, getContractAddress } from 'utils/getContractAddress';
 import { getAllOwnersOf1155 } from 'utils/helper';
 import avatarDefault from 'Assets/avatar-profile.png';
 import imgNotFound from 'Assets/notfound.png';
@@ -61,7 +62,6 @@ export default function DetailNFT() {
   const {
     web3,
     walletAddress,
-    sellOrderList,
     availableSellOrder721,
     market,
     chainId,
@@ -101,6 +101,9 @@ export default function DetailNFT() {
   }, [getNFTDetails]);
 
   const setStatuActionsNFT = useCallback(async () => {
+    var contractAddress = getContractAddress(chainId);
+    const sellOrderList = new web3.eth.Contract(SellOrderList.abi, contractAddress.SellOrderList);
+
     if (web3 && sellOrderList && availableSellOrder721 && nftList) {
       var sellId = {};
       try {
@@ -221,7 +224,6 @@ export default function DetailNFT() {
     id,
     market,
     nftList,
-    sellOrderList,
     walletAddress,
     web3,
     sellID,
