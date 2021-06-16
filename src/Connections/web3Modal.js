@@ -9,6 +9,7 @@ const rpcSupport = {
   97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
   56: 'https://bsc-dataseed.binance.org/',
   137: 'https://rpc-mainnet.maticvigil.com/',
+  1666600000: 'https://api.harmony.one',
 };
 
 const providerOptions = {
@@ -62,6 +63,19 @@ const paramsSwitchNetwork = {
       },
       rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
       blockExplorerUrls: ['https://testnet.bscscan.com/'],
+    },
+  ],
+  1666600000: [
+    {
+      chainId: '0x63564C40',
+      chainName: 'Harmony Mainnet',
+      nativeCurrency: {
+        name: 'ONE',
+        symbol: 'ONE',
+        decimals: 18,
+      },
+      rpcUrls: ['https://api.harmony.one'],
+      blockExplorerUrls: ['https://explorer.pops.one/#/'],
     },
   ],
 };

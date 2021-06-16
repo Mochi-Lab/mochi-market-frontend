@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import avatarDefault from 'Assets/avatar-default.svg';
 import ToggleDarkMode from 'Components/ToggleDarkMode';
 import LogoutWallet from 'Components/Logout';
-import { getContractAddress } from 'utils/getContractAddress';
+import { getContractAddress, getSymbol } from 'utils/getContractAddress';
 
 const SubMenu = Menu.SubMenu;
 
@@ -14,7 +14,7 @@ const { useBreakpoint } = Grid;
 
 const RightMenu = () => {
   const screen = useBreakpoint();
-  const { shortAddress, walletAddress, chainId, moma } = useSelector((state) => state);
+  const { shortAddress, walletAddress, chainId, moma, balance } = useSelector((state) => state);
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -66,10 +66,14 @@ const RightMenu = () => {
                     className='textmode'
                     style={{ margin: '0px 10px 0px 10px', color: '#4F4F4F', fontWeight: 'normal' }}
                   >
-                    {moma.toString().slice(0, 5)}
+                    {!!getContractAddress(chainId) && getContractAddress(chainId).MOMA.length > 0
+                      ? moma.toString().slice(0, 5)
+                      : balance.toString().slice(0, 5)}
                   </p>
                   <p className='pink-font' style={{ margin: '0px 5px' }}>
-                    MOMA
+                    {!!getContractAddress(chainId) && getContractAddress(chainId).MOMA.length > 0
+                      ? 'MOMA'
+                      : getSymbol(chainId)['0x0000000000000000000000000000000000000000']}
                   </p>
                 </div>
               </div>
