@@ -1,6 +1,7 @@
 import bnb from 'Assets/icons/binance-smart-chain-icon.png';
 import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
+import one from 'Assets/one-coin.png';
 
 const contractAddress = {
   //Polygon Mainnet
@@ -48,6 +49,20 @@ const contractAddress = {
     MochiERC1155NFT: '0x26Db9D95e8Be4Acaeee493448f28A9e7c62e7a0C',
     MOMA: '0x777d20e16C6Bc508d5989e81a6c9B5034a32C6DD',
   },
+  // Harmony mainet
+  1666600000: {
+    AddressesProvider: '0x2d8AC3A928C68376D2C410c1Bbfc274A7180B311',
+    NftList: '0xD54EB87F4f534FF72124E2745DD8eCce378639FE',
+    Vault: '0xafdA570145F70627391A0B3A7e0dC50ACD60B948',
+    SellOrderList: '0xA8981ace188C1ad21032CD4A1d582b561E307399',
+    ExchangeOrderList: '0xa700cb79Cf7498Aa50cD2fDDac8d9Ae36192F938',
+    CreativeStudio: '0x564662D0424bA2b47fbCF66375fEE5a3C27f2153',
+    Market: '0x82663917Eb05C25881a0871F6968c8F5C9F3Eb00',
+    MochiERC721NFT: '0x60D7257E61545137cd14EeDBE2C2Eb12Ee84AFdC',
+    MochiERC1155NFT: '0x09a076F607B03e42AF13fD7EfEfec2c765E4f711',
+    MarketAdmin: '0x6a24414449Bc450c8aC835A82615bD5c51C83110',
+    MOMA: '',
+  },
 };
 
 const tokensPayment = {
@@ -66,6 +81,7 @@ const tokensPayment = {
     { address: '0x777d20e16C6Bc508d5989e81a6c9B5034a32C6DD', icon: moma, symbol: 'MOMA' },
     { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
   ],
+  1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE' }],
 };
 
 const symbolToken = {
@@ -84,6 +100,9 @@ const symbolToken = {
     '0x777d20e16C6Bc508d5989e81a6c9B5034a32C6DD': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
   },
+  1666600000: {
+    '0x0000000000000000000000000000000000000000': 'ONE',
+  },
 };
 
 const infoChains = {
@@ -93,12 +112,15 @@ const infoChains = {
   56: { name: 'BSC', icon: bnb },
   //BSC Testnet
   97: { name: 'BSC-Testnet', icon: bnb },
+  // Harmony mainet
+  1666600000: { name: 'Harmony', icon: one },
 };
 
 export const listChainsSupport = [
   { chainId: 56, name: 'BSC', icon: bnb /*BSC Mainnet*/ },
   { chainId: 137, name: 'Polygon', icon: polygon /* Polygon Mainnet*/ },
   { chainId: 97, name: 'BSC-Testnet', icon: bnb /*BSC Testnet*/ },
+  { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
 ];
 
 export const getContractAddress = (_chainId) => {

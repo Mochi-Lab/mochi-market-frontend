@@ -173,8 +173,9 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
 
 export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, chainId) {
   const url = getUrlSubgraph(chainId);
-  const result = await axios.post(url.url1155, {
-    query: `{
+  if (url.url1155.length > 0) {
+    const result = await axios.post(url.url1155, {
+      query: `{
         account(
           id:"${walletAddress.toLowerCase()}"
         ){
@@ -191,35 +192,37 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
             }
           }
         }`,
-  });
+    });
 
-  let list1155Raw = (result.data && result.data.data.account
-    ? result.data.data.account.balances
-    : []
-  ).filter(function (e) {
-    return this.indexOf(e.token.registry.id) > 0;
-  }, listAddressAccept);
+    let list1155Raw = (result.data && result.data.data.account
+      ? result.data.data.account.balances
+      : []
+    ).filter(function (e) {
+      return this.indexOf(e.token.registry.id) > 0;
+    }, listAddressAccept);
 
-  let list1155 = Promise.all(
-    list1155Raw.map(async (nft) => {
-      return {
-        addressToken: nft.token.registry.id,
-        index: nft.token.identifier,
-        value: nft.value,
-        totalSupply: nft.token.totalSupply,
-        is1155: true,
-      };
-    })
-  );
+    let list1155 = Promise.all(
+      list1155Raw.map(async (nft) => {
+        return {
+          addressToken: nft.token.registry.id,
+          index: nft.token.identifier,
+          value: nft.value,
+          totalSupply: nft.token.totalSupply,
+          is1155: true,
+        };
+      })
+    );
 
-  return list1155;
+    return list1155;
+  } else return [];
 }
 
 export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, addressMarket) {
   if (!!chainId) {
     const url = getUrlSubgraph(chainId);
-    const result = await axios.post(url.url1155, {
-      query: `{
+    if (url.url1155.length > 0) {
+      const result = await axios.post(url.url1155, {
+        query: `{
           tokens(where: {registry : "${tokenAddress.toLowerCase()}", identifier: "${tokenId}"}) {
             balances(where: {value_gt: 0, account_not: "${addressMarket.toLowerCase()}"}){
               account {
@@ -230,31 +233,32 @@ export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, address
               totalSupply
             }
           }`,
-    });
+      });
 
-    let ownersOf1155Raw =
-      !!result.data && !!result.data.data.tokens && !!result.data.data.tokens[0]
-        ? result.data.data.tokens[0].balances
-        : [];
-    const totalSupply =
-      !!result.data && !!result.data.data.tokens && !!result.data.data.tokens[0]
-        ? result.data.data.tokens[0].totalSupply
-        : 0;
+      let ownersOf1155Raw =
+        !!result.data && !!result.data.data.tokens && !!result.data.data.tokens[0]
+          ? result.data.data.tokens[0].balances
+          : [];
+      const totalSupply =
+        !!result.data && !!result.data.data.tokens && !!result.data.data.tokens[0]
+          ? result.data.data.tokens[0].totalSupply
+          : 0;
 
-    let ownersOf1155 = await Promise.all(
-      ownersOf1155Raw.map(async (nft) => {
-        return {
-          owner: nft.account.id,
-          value: nft.value,
-          totalSupply,
-        };
-      })
-    );
+      let ownersOf1155 = await Promise.all(
+        ownersOf1155Raw.map(async (nft) => {
+          return {
+            owner: nft.account.id,
+            value: nft.value,
+            totalSupply,
+          };
+        })
+      );
 
-    let addressOwnersOf1155 = {};
-    ownersOf1155Raw.forEach(async (nft) => (addressOwnersOf1155[nft.account.id] = nft.value));
+      let addressOwnersOf1155 = {};
+      ownersOf1155Raw.forEach(async (nft) => (addressOwnersOf1155[nft.account.id] = nft.value));
 
-    return { ownersOf1155, addressOwnersOf1155, totalSupply };
+      return { ownersOf1155, addressOwnersOf1155, totalSupply };
+    }
   }
   return { ownersOf1155: [], addressOwnersOf1155: {}, totalSupply: 0 };
 }

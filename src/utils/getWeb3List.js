@@ -21,6 +21,12 @@ export const web3Default = {
     name: 'BSC Testnet',
     explorer: 'https://testnet.bscscan.com/tx/',
   },
+  //BSC Testnet
+  1666600000: {
+    web3Default: new Web3(new Web3.providers.HttpProvider('https://api.harmony.one')),
+    name: 'Harmony',
+    explorer: 'https://explorer.pops.one/#/tx/',
+  },
 };
 
 export const networkDefault = 137;
