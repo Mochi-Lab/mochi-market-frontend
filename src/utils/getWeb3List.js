@@ -29,7 +29,10 @@ export const web3Default = {
   },
 };
 
-export const networkDefault = 137;
+// export const networkDefault = 137;
+export const networkDefault = !!localStorage.getItem('chainId')
+  ? parseInt(localStorage.getItem('chainId'))
+  : 56;
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];

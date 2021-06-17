@@ -1,6 +1,6 @@
 import {
   parseBalance,
-  listERC721OfOwner,
+  listTokensERC721OfOwner,
   listTokensERC115OfOwner,
   getAllOwnersOf1155,
 } from 'utils/helper';
@@ -71,6 +71,7 @@ export const logout = () => (dispatch) => {
 
 export const SET_CHAINID = 'SET_CHAINID';
 export const setChainId = (chainId) => (dispatch) => {
+  localStorage.setItem('chainId', chainId);
   dispatch({ type: SET_CHAINID, chainId });
 };
 
@@ -180,51 +181,53 @@ export const getNFTsOfOwner = (erc721Instances, walletAddress) => async (dispatc
 
   let listNFTsOwner = [];
 
-  var getERC721 = (instance) => {
-    return new Promise(async (resolve) => {
-      let ERC721token = {};
-      const balanceOwner = await instance.methods.balanceOf(walletAddress).call();
-      if (balanceOwner > 0) {
-        ERC721token.balanceOf = balanceOwner;
-        ERC721token.name = await instance.methods.name().call();
-        ERC721token.symbol = await instance.methods.symbol().call();
-        ERC721token.tokens = [];
-        if (balanceOwner > 0) {
-          ERC721token.name = await instance.methods.name().call();
-          ERC721token.symbol = await instance.methods.symbol().call();
-          ERC721token.tokens = [];
+  // var getERC721 = (instance) => {
+  //   return new Promise(async (resolve) => {
+  //     let ERC721token = {};
+  //     const balanceOwner = await instance.methods.balanceOf(walletAddress).call();
+  //     if (balanceOwner > 0) {
+  //       ERC721token.balanceOf = balanceOwner;
+  //       ERC721token.name = await instance.methods.name().call();
+  //       ERC721token.symbol = await instance.methods.symbol().call();
+  //       ERC721token.tokens = [];
+  //       if (balanceOwner > 0) {
+  //         ERC721token.name = await instance.methods.name().call();
+  //         ERC721token.symbol = await instance.methods.symbol().call();
+  //         ERC721token.tokens = [];
 
-          for (let i = 0; i < balanceOwner; i++) {
-            let token = {};
-            token.index = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
-            token.tokenURI = await instance.methods.tokenURI(token.index).call();
-            token.addressToken = instance._address;
-            token.is1155 = false;
-            ERC721token.tokens.push(token);
-            listNFTsOwner.push(token);
-          }
-          resolve(ERC721token);
-        } else {
-          resolve();
-        }
-      } else {
-        resolve();
-      }
-    });
-  };
+  //         for (let i = 0; i < balanceOwner; i++) {
+  //           let token = {};
+  //           token.index = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+  //           token.tokenURI = await instance.methods.tokenURI(token.index).call();
+  //           token.addressToken = instance._address;
+  //           token.is1155 = false;
+  //           ERC721token.tokens.push(token);
+  //           listNFTsOwner.push(token);
+  //         }
+  //         resolve(ERC721token);
+  //       } else {
+  //         resolve();
+  //       }
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
+  // };
 
-  let erc721Tokens = await Promise.all(
-    erc721Instances.map(async (instance) => {
-      return await getERC721(instance);
-    })
-  );
+  // let erc721Tokens = await Promise.all(
+  //   erc721Instances.map(async (instance) => {
+  //     return await getERC721(instance);
+  //   })
+  // );
 
-  erc721Tokens = erc721Tokens.filter(function (el) {
-    return el != null;
-  });
+  // erc721Tokens = erc721Tokens.filter(function (el) {
+  //   return el != null;
+  // });
 
+  let erc721Tokens = await listTokensERC721OfOwner(acceptedNftsAddress, walletAddress, chainId);
   let erc1155Tokens = await listTokensERC115OfOwner(acceptedNftsAddress, walletAddress, chainId);
-  listNFTsOwner = listNFTsOwner.concat(erc1155Tokens);
+
+  listNFTsOwner = erc721Tokens.concat(erc1155Tokens);
 
   await dispatch({ type: GET_OWNED_ERC721, erc721Tokens });
   await dispatch({ type: GET_OWNED_ERC1155, erc1155Tokens });
@@ -735,15 +738,20 @@ export const createSellOrder = (
 
         dispatch(setStatusActivity(activity));
         // Approve ERC1155
-        await erc1155Instance.methods
-          .setApprovalForAll(market._address, true)
-          .send({ from: walletAddress })
-          .on('transactionHash', function (txHash) {
-            activity = { ...activity, txHash };
-            dispatch(setStatusActivity(activity));
-          });
-        activity = { ...activity, status: 'success', duration: 15000 };
-        dispatch(setStatusActivity(activity));
+        try {
+          await erc1155Instance.methods
+            .setApprovalForAll(market._address, true)
+            .send({ from: walletAddress })
+            .on('transactionHash', function (txHash) {
+              activity = { ...activity, txHash };
+              dispatch(setStatusActivity(activity));
+            });
+          activity = { ...activity, status: 'success', duration: 15000 };
+          dispatch(setStatusActivity(activity));
+        } catch (error) {
+          dispatch(setStatusActivity({ ...activity, status: 'close' }));
+          return false;
+        }
       }
     } else {
       const erc721Instance = await new web3.eth.Contract(ERC721.abi, nftAddress);
@@ -762,15 +770,20 @@ export const createSellOrder = (
         dispatch(setStatusActivity(activity));
 
         // Approve ERC721
-        await erc721Instance.methods
-          .approve(market._address, tokenId)
-          .send({ from: walletAddress })
-          .on('transactionHash', function (txHash) {
-            activity = { ...activity, txHash };
-            dispatch(setStatusActivity(activity));
-          });
-        activity = { ...activity, status: 'success', duration: 15000 };
-        dispatch(setStatusActivity(activity));
+        try {
+          await erc721Instance.methods
+            .approve(market._address, tokenId)
+            .send({ from: walletAddress })
+            .on('transactionHash', function (txHash) {
+              activity = { ...activity, txHash };
+              dispatch(setStatusActivity(activity));
+            });
+          activity = { ...activity, status: 'success', duration: 15000 };
+          dispatch(setStatusActivity(activity));
+        } catch (error) {
+          dispatch(setStatusActivity({ ...activity, status: 'close' }));
+          return false;
+        }
       }
     }
 
@@ -1218,9 +1231,11 @@ export const fetchListCampaign = () => async (dispatch, getState) => {
           let allNFTsOfOwner = [];
           if (!!walletAddress) {
             let instanceNFT = new web3.eth.Contract(ERC721.abi, instance.nftAddress);
-            let tokenIds = (
-              await listERC721OfOwner(instanceNFT, walletAddress, contractAddress.Market)
-            ).owned;
+            let tokenIds = await listTokensERC721OfOwner(
+              instanceNFT,
+              walletAddress,
+              contractAddress.Market
+            );
             balanceNFT = tokenIds.length;
             if (balanceNFT > 0) {
               for (let i = 0; i < balanceNFT; i++) {
