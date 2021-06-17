@@ -105,13 +105,16 @@ export const SET_BALANCE = 'SET_BALANCE';
 export const setBalance = () => async (dispatch, getState) => {
   let { web3, walletAddress } = getState();
   let balance;
-  if (walletAddress !== null)
-    balance = parseBalance((await web3.eth.getBalance(walletAddress)).toString(), 18);
-  else balance = 0;
-  dispatch({
-    type: SET_BALANCE,
-    balance,
-  });
+  if (walletAddress !== null) {
+    balance = await web3.eth.getBalance(walletAddress);
+    if (!!balance) {
+      balance = parseBalance(balance.toString(), 18);
+      dispatch({
+        type: SET_BALANCE,
+        balance,
+      });
+    }
+  }
 };
 
 export const SET_MOMA_BALANCE = 'SET_MOMA_BALANCE';
@@ -119,7 +122,7 @@ export const setMomaBalance = () => async (dispatch, getState) => {
   let { web3, walletAddress } = getState();
   let balance;
   let ctAddress;
-  if (!!contractAddress) {
+  if (!!contractAddress && contractAddress.MOMA.length > 0) {
     if (!!contractAddress.MOMA) ctAddress = contractAddress.MOMA;
     else ctAddress = contractAddress.MOMA;
 
@@ -423,7 +426,7 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
     dispatch(initERC721(acceptedNftsAddress));
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    // dispatch(showNotification(error));
     return error;
   }
 };
@@ -1031,7 +1034,7 @@ export const generateERC721NFT = (collectionId, tokenUri, routeFunc) => async (
 };
 
 // TODO
-export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async (
+export const generateERC1155NFT = (collectionId, id, amount, tokenUri, routeFunc) => async (
   dispatch,
   getState
 ) => {
@@ -1050,8 +1053,9 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
-          noti.type = 'success';
+          noti.type = 'redirect-profile';
           noti.message = 'Create Successfully !';
+          noti.fn = routeFunc;
           dispatch(showNotification(noti));
         });
     } catch (error) {
@@ -1070,8 +1074,9 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri) => async 
         .send({ from: walletAddress })
         .on('receipt', (receipt) => {
           let noti = {};
-          noti.type = 'success';
+          noti.type = 'redirect-profile';
           noti.message = 'Create Successfully !';
+          noti.fn = routeFunc;
           dispatch(showNotification(noti));
         });
     } catch (error) {

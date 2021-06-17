@@ -177,6 +177,15 @@
   height: 1.4rem;
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.flex-max {
+  flex: 1 1;
+}
+
 @media (max-width: 767px) {
   .barsMenu {
     display: inline-block;

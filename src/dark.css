@@ -217,7 +217,7 @@ html[data-theme='dark'] {
 }
 
 [data-theme='dark'] .ant-menu {
-  background: #b6b1b1 0% 0% no-repeat padding-box;
+  background: #464646 0% 0% no-repeat padding-box;
   border: 1px solid #4c4c4c;
   color: #fff !important;
 }
@@ -320,6 +320,28 @@ html[data-theme='dark'] {
 
 [data-theme='dark'] .input-checkout-1155 .ant-input-number-input {
   color: white !important;
+}
+
+[data-theme='dark'] .sidebar__menu__network__icon {
+  box-shadow: 0 0 0 2px #35444f;
+}
+
+[data-theme='dark'] .dropdown_network_header,
+.dropdown-select-chain {
+  background-color: #242f36 !important;
+}
+
+[data-theme='dark'] .dropdown-select-chain .ant-dropdown-menu-item-group-title {
+  color: rgb(250, 250, 250) !important;
+}
+
+[data-theme='dark'] .dropdown-select-chain img {
+  box-shadow: 0 0 0 2px #35444f;
+}
+
+[data-theme='dark'] .dropdown-select-chain .ant-dropdown-menu-item:hover,
+.dropdown-select-chain .ant-dropdown-menu-submenu-title:hover {
+  background-color: #35444f;
 }
 
 @media (max-width: 767px) {

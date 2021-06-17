@@ -107,6 +107,57 @@
   background: transparent !important;
 }
 
+.dropdown_network_header {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  transition: 0.3s;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sidebar__menu__network__icon {
+  width: 30px;
+  border-radius: 100%;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sidebar__menu__network__label {
+  margin: 0 8px;
+  flex: 1 1;
+}
+.dropdown-select-chain {
+  border-radius: 1rem !important;
+}
+
+.dropdown-select-chain .ant-dropdown-menu-item-group-title {
+  text-align: center;
+}
+
+.dropdown-select-chain .ant-dropdown-menu-item {
+  border-radius: 1rem !important;
+}
+
+.dropdown-select-chain img {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin-right: 12px;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.dropdown-select-chain .ant-dropdown-menu-item-group-list {
+  padding-bottom: 5px;
+}
+
 @media (max-width: 1437px) {
   .leftMenu {
     width: 48%;
