@@ -120,31 +120,12 @@ export async function listERC721OfOwner(token, walletAddress, addressMarket) {
 export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, chainId) {
   let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
   const url = getUrlSubgraph(chainId);
-  // const result = await axios.post(
-  //   url.url721,
-  //   {
-  //     query: `{
-  //       owner(
-  //         id:"${walletAddress.toLowerCase()}"
-  //       ){
-  //           tokens (where:{contract_in : [${strListAddressAccept}]}){
-  //             tokenID
-  //             tokenURI
-  //             contract {
-  //               id
-  //               name
-  //               symbol
-  //             }
-  //           }
-  //         }
-  //       }`,
-  //   }
   const result = await axios.post(url.url721, {
     query: `{
         owner(
           id:"${walletAddress.toLowerCase()}"
         ){
-            tokens{
+            tokens (where:{contract_in : [${strListAddressAccept}]}){
               tokenID
               tokenURI
               contract {

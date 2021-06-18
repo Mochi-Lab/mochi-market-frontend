@@ -32,11 +32,28 @@
 .detail-des {
   width: 100%;
   margin: 1rem 0;
+  max-height: 20%;
+  overflow: auto;
+}
+
+.detail-owner {
+  height: 60%;
+}
+.detail-owner .ant-tabs.ant-tabs-top {
+  height: 100%;
+}
+.detail-owner .ant-tabs.ant-tabs-top .ant-tabs-content {
+  height: 100%;
 }
 
 .price-eth {
   margin-right: 15px;
   font-size: 18px;
+}
+
+.detail-title {
+  max-height: 20%;
+  overflow: auto;
 }
 
 .detail-title > h1 {
