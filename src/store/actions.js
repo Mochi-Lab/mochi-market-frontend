@@ -350,8 +350,7 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
     dispatch(initERC721(acceptedNftsAddress));
   } catch (error) {
-    error.type = 'error';
-    dispatch(showNotification(error));
+    console.log(error);
     return error;
   }
 };

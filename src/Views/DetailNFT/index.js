@@ -102,118 +102,122 @@ export default function DetailNFT() {
 
   const setStatuActionsNFT = useCallback(async () => {
     var contractAddress = getContractAddress(chainId);
-    const sellOrderList = new web3.eth.Contract(SellOrderList.abi, contractAddress.SellOrderList);
+    if (!!contractAddress) {
+      const sellOrderList = new web3.eth.Contract(SellOrderList.abi, contractAddress.SellOrderList);
 
-    if (web3 && sellOrderList && availableSellOrder721 && nftList) {
-      var sellId = {};
-      try {
-        sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
-      } catch (error) {
-        console.log(error);
-        sellId.found = false;
-      }
-      try {
-        let is1155 = await nftList.methods.isERC1155(addressToken).call();
-        //==========================================================================================
-        //----------------------------Process ERC1155-----------------------------------------------
-        //==========================================================================================
-        if (is1155) {
-          setIs1155(true);
-          let onSaleOfAddressToken;
-          let listOwners;
+      if (web3 && sellOrderList && availableSellOrder721 && nftList) {
+        var sellId = {};
+        try {
+          sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
+        } catch (error) {
+          console.log(error);
+          sellId.found = false;
+        }
+        try {
+          let is1155 = await nftList.methods.isERC1155(addressToken).call();
+          //==========================================================================================
+          //----------------------------Process ERC1155-----------------------------------------------
+          //==========================================================================================
+          if (is1155) {
+            setIs1155(true);
+            let onSaleOfAddressToken;
+            let listOwners;
 
-          for (let i = 0; i < convertErc1155Tokens.length; i++) {
-            const collection = convertErc1155Tokens[i];
-            if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
-              onSaleOfAddressToken = collection;
-              break;
-            }
-          }
-          if (!!onSaleOfAddressToken) {
-            // onSaleOfAddressToken;
-          } else {
-            listOwners = await getAllOwnersOf1155(addressToken, id, chainId);
-            setOwners(listOwners);
-          }
-
-          if (!!walletAddress && Number.isInteger(sellID) && sellID !== 'null') {
-            const sellOrder = await sellOrderList.methods.getSellOrderById(sellID).call();
-            if (sellOrder.seller.toLowerCase() === walletAddress.toLowerCase()) {
-              setStatus(3);
-            } else {
-              setStatus(1);
-            }
-          } else if (!!walletAddress && sellID === 'null') {
-            for (let i = 0; i < listOwners.length; i++) {
-              const owner = listOwners[i];
-              if (owner.owner.toLowerCase() === walletAddress.toLowerCase()) {
-                setStatus(2);
+            for (let i = 0; i < convertErc1155Tokens.length; i++) {
+              const collection = convertErc1155Tokens[i];
+              if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
+                onSaleOfAddressToken = collection;
                 break;
-              } else {
-                setStatus(0);
               }
             }
-          } else {
-            Number.isInteger(sellID) && sellID !== 'null' ? setStatus(1) : setStatus(0);
-          }
-        } else {
-          //========================================================================================
-          //----------------------------Process ERC721----------------------------------------------
-          //========================================================================================
-          const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
+            if (!!onSaleOfAddressToken) {
+              // onSaleOfAddressToken;
+            } else {
+              listOwners = await getAllOwnersOf1155(addressToken, id, chainId);
+              setOwners(listOwners);
+            }
 
-          let tokenOwner;
-          // check if user is owner of token
-          if (!!sellId.found) {
-            const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
-            if (order.isActive) {
-              tokenOwner = order.seller;
-              setOwners([{ owner: tokenOwner }]);
+            if (!!walletAddress && Number.isInteger(sellID) && sellID !== 'null') {
+              const sellOrder = await sellOrderList.methods.getSellOrderById(sellID).call();
+              if (sellOrder.seller.toLowerCase() === walletAddress.toLowerCase()) {
+                setStatus(3);
+              } else {
+                setStatus(1);
+              }
+            } else if (!!walletAddress && sellID === 'null') {
+              for (let i = 0; i < listOwners.length; i++) {
+                const owner = listOwners[i];
+                if (owner.owner.toLowerCase() === walletAddress.toLowerCase()) {
+                  setStatus(2);
+                  break;
+                } else {
+                  setStatus(0);
+                }
+              }
+            } else {
+              Number.isInteger(sellID) && sellID !== 'null' ? setStatus(1) : setStatus(0);
+            }
+          } else {
+            //========================================================================================
+            //----------------------------Process ERC721----------------------------------------------
+            //========================================================================================
+            const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
+
+            let tokenOwner;
+            // check if user is owner of token
+            if (!!sellId.found) {
+              const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
+              if (order.isActive) {
+                tokenOwner = order.seller;
+                setOwners([{ owner: tokenOwner }]);
+              } else {
+                tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+                setOwners([{ owner: tokenOwner }]);
+              }
             } else {
               tokenOwner = await erc721Instances.methods.ownerOf(id).call();
               setOwners([{ owner: tokenOwner }]);
             }
-          } else {
-            tokenOwner = await erc721Instances.methods.ownerOf(id).call();
-            setOwners([{ owner: tokenOwner }]);
+
+            let isSelling;
+
+            if (!!walletAddress) {
+              isSelling = await sellOrderList.methods
+                .checkDuplicateERC721(addressToken, id, walletAddress)
+                .call();
+            }
+
+            if (walletAddress && isSelling) {
+              setStatus(3);
+            } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
+              // Check if the token is in the order list?
+              let isOnList = await sellOrderList.methods
+                .checkDuplicateERC721(addressToken, id, tokenOwner)
+                .call();
+              isOnList ? setStatus(3) : setStatus(2);
+            } else {
+              let isOnList = await sellOrderList.methods
+                .checkDuplicateERC721(addressToken, id, tokenOwner)
+                .call();
+
+              isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
+            }
+            let fil = availableSellOrder721.filter(
+              (token) => token.nftAddress === addressToken && token.tokenId === id
+            );
+            setOrderDetail(fil[0]);
+
+            let indexInAvalableSell = availableSellOrder721.findIndex(
+              (token) => token.nftAddress === addressToken && token.tokenId === id
+            );
+            setIndexAvailable(indexInAvalableSell);
           }
-
-          let isSelling;
-
-          if (!!walletAddress) {
-            isSelling = await sellOrderList.methods
-              .checkDuplicateERC721(addressToken, id, walletAddress)
-              .call();
+        } catch (error) {
+          if (!error.message.slice(0, 8) === 'Returned') {
+            console.log(error.message);
+            message.error("NFT doesn't exist!");
           }
-
-          if (walletAddress && isSelling) {
-            setStatus(3);
-          } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
-            // Check if the token is in the order list?
-            let isOnList = await sellOrderList.methods
-              .checkDuplicateERC721(addressToken, id, tokenOwner)
-              .call();
-            isOnList ? setStatus(3) : setStatus(2);
-          } else {
-            let isOnList = await sellOrderList.methods
-              .checkDuplicateERC721(addressToken, id, tokenOwner)
-              .call();
-
-            isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
-          }
-          let fil = availableSellOrder721.filter(
-            (token) => token.nftAddress === addressToken && token.tokenId === id
-          );
-          setOrderDetail(fil[0]);
-
-          let indexInAvalableSell = availableSellOrder721.findIndex(
-            (token) => token.nftAddress === addressToken && token.tokenId === id
-          );
-          setIndexAvailable(indexInAvalableSell);
         }
-      } catch (error) {
-        console.log({ error });
-        message.error("NFT doesn't exist!");
       }
     }
   }, [
