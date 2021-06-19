@@ -6,6 +6,10 @@ export const getAllUserErc = (address) => {
   return `/user/${address}/all`;
 };
 
+export const getAllSellOrderList = () => {
+  return `/sellOrder/all`;
+};
+
 export const getAllOrderListFormat = () => {
   return `/sellOrder/formatByNft`;
 };
