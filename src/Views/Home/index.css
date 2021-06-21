@@ -217,7 +217,13 @@
 }
 
 .card {
-  width: 220px;
+  width: 300px;
+}
+
+@media (max-width: 1440px) {
+  .card {
+    width: 220px;
+  }
 }
 
 @media (max-width: 992px) {
@@ -232,6 +238,9 @@
   }
   .content-home .ant-card .ant-card-cover img {
     height: 35vh;
+  }
+  .card {
+    width: 327px;
   }
 }
 @media (max-width: 568px) {
@@ -251,5 +260,8 @@
   }
   .amount-top {
     font-size: small;
+  }
+  .card {
+    width: 361px;
   }
 }
