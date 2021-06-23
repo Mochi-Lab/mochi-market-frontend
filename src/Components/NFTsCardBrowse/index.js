@@ -1,6 +1,6 @@
 import { Card, Row, Col, Skeleton } from 'antd';
 import './index.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -77,13 +77,47 @@ function NFTsCard({ token, strSearch }) {
   ) : null;
 }
 
-export default function NFTsCardBrowse({ tokens }) {
-  const [afterFilter, setafterFilter] = useState(!!tokens ? tokens : []);
-  const { strSearch } = useSelector((state) => state);
+export default function NFTsCardBrowse({ tokens, tokenPayment, typeSort }) {
+  const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
+  const { strSearch, web3 } = useSelector((state) => state);
+
+  const sortOrders = useCallback(async () => {
+    var BN = web3.utils.BN;
+    let filterByTokenPayment =
+      tokenPayment === '0' ? tokens : tokens.filter((order) => order.tokenPayment === tokenPayment);
+    switch (typeSort) {
+      case 'recentlyListed':
+        setAfterFilter(filterByTokenPayment);
+        break;
+      case 'latestCreated':
+        setAfterFilter(
+          filterByTokenPayment.sort((a, b) =>
+            a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
+          )
+        );
+        break;
+      case 'priceAsc':
+        setAfterFilter(
+          filterByTokenPayment.sort((a, b) =>
+            !new BN(a.price).gt(new BN(b.price)) ? 1 : new BN(a.price).gt(new BN(b.price)) ? -1 : 0
+          )
+        );
+        break;
+      case 'priceDesc':
+        setAfterFilter(
+          filterByTokenPayment.sort((a, b) =>
+            new BN(a.price).gt(new BN(b.price)) ? 1 : !new BN(a.price).gt(new BN(b.price)) ? -1 : 0
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  }, [tokens, tokenPayment, typeSort, web3]);
 
   useEffect(() => {
-    if (tokens) setafterFilter(() => tokens);
-  }, [tokens]);
+    if (tokens) sortOrders();
+  }, [tokens, sortOrders]);
 
   return (
     <div className='explore-nft content-list-nft'>

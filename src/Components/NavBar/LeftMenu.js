@@ -59,11 +59,11 @@ export default function LeftNar() {
         <div className='dropdown_network_header'>
           <div className='flex flex-max'>
             <img
-              className='sidebar__menu__network__icon'
+              className='sidebar-menu-network-icon'
               alt='icon-chain'
               src={!!infoChain ? infoChain.icon : imgNotFound}
             />
-            <div className='sidebar__menu__network__label textmode'>
+            <div className='sidebar-menu-network-label textmode'>
               {!!infoChain ? infoChain.name : 'Unnamed'}
             </div>
             <CaretDownOutlined className='textmode ml-5' />

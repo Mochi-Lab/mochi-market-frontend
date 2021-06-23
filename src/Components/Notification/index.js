@@ -27,7 +27,7 @@ export default function Notification() {
         size='small'
         onClick={() => {
           fn();
-          notification.close(key);
+          notification.destroy();
         }}
       >
         Go to Inventory

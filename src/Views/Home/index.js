@@ -36,6 +36,7 @@ export default function Home() {
     );
     return listNFT.slice(0, 10);
   };
+
   const new1155 = () => {
     let listNFT = mergeAllCollections1155();
     listNFT = listNFT.sort((a, b) =>

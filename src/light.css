@@ -55,10 +55,10 @@ html[data-theme='light'] {
   background-color: #ffffff !important;
 }
 
-[data-theme='light'] .sidebar__menu__network__icon {
+[data-theme='light'] .dropdown-select-chain img {
   box-shadow: 0 0 0 2px #dfe8f9;
 }
 
-[data-theme='light'] .dropdown-select-chain img {
+[data-theme='light'] .sidebar-menu-network-icon {
   box-shadow: 0 0 0 2px #dfe8f9;
 }

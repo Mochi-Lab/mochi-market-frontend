@@ -203,6 +203,47 @@
   box-shadow: 0 0 0 2px #eb2f961f;
 }
 
+.sort-results {
+  padding: 0 0.4rem;
+  margin: 1.5rem 0;
+}
+
+.left-sort-results {
+  text-align: start;
+  display: flex;
+  align-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.right-sort-results {
+  text-align: end;
+}
+.right-sort-results .ant-select-selector {
+  text-align: center;
+}
+
+.select-sort {
+  border-radius: 1rem;
+  width: 155px;
+  margin: 0.25rem;
+}
+.select-sort .ant-select-selector,
+.tokenpayment .ant-select-selector {
+  border-radius: 1rem !important;
+}
+
+.tokenpayment {
+  border-radius: 1rem !important;
+  width: 125px;
+  margin: 0.25rem;
+}
+.symbol-tokenpayment {
+  margin-left: 0.5rem;
+}
+.option-tokenpayment {
+  display: flex;
+}
+
 @media (max-width: 992px) {
   .site-layout-background.style-sider-left {
     display: none;
