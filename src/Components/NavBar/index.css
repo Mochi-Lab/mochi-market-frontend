@@ -121,7 +121,7 @@
   user-select: none;
 }
 
-.sidebar__menu__network__icon {
+.sidebar-menu-network-icon {
   width: 30px;
   border-radius: 100%;
   -webkit-user-select: none;
@@ -129,12 +129,14 @@
   user-select: none;
 }
 
-.sidebar__menu__network__label {
+.sidebar-menu-network-label {
   margin: 0 8px;
   flex: 1 1;
 }
+
 .dropdown-select-chain {
   border-radius: 1rem !important;
+  background-color: #ffffff;
 }
 
 .dropdown-select-chain .ant-dropdown-menu-item-group-title {
@@ -153,6 +155,7 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  box-shadow: 0 0 0 2px #dfe8f9;
 }
 .dropdown-select-chain .ant-dropdown-menu-item-group-list {
   padding-bottom: 5px;

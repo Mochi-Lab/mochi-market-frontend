@@ -119,7 +119,11 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                     ? getTokensPayment(chainId).map((token, i) => {
                         return (
                           <Option value={token.address} key={i}>
-                            <img className='bnb-coin' src={token.icon} alt={token.symbol} />
+                            <img
+                              className='icon-tokenpayment'
+                              src={token.icon}
+                              alt={token.symbol}
+                            />
                           </Option>
                         );
                       })

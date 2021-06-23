@@ -322,7 +322,7 @@ html[data-theme='dark'] {
   color: white !important;
 }
 
-[data-theme='dark'] .sidebar__menu__network__icon {
+[data-theme='dark'] .sidebar-menu-network-icon {
   box-shadow: 0 0 0 2px #35444f;
 }
 

@@ -1,17 +1,43 @@
-import { Col, Layout, Row, Input } from 'antd';
-import { useState } from 'react';
+import { Col, Layout, Row, Input, Select } from 'antd';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import NFTsCardBrowse from 'Components/NFTsCardBrowse';
 import IconLoading from 'Components/IconLoading';
 import { CheckCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { getTokensPayment } from 'utils/getContractAddress';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import './index.css';
 
 const { Content } = Layout;
+const { Option } = Select;
 
 export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
+  const { chainId } = useSelector((state) => state);
+
   const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState(null);
   const [strSearch, setStrSearch] = useState();
+  const [tokenPayment, setTokenPayment] = useState('0');
+  const [typeSort, setTypeSort] = useState('recentlyListed');
+  const [allOrders, setAllOrders] = useState([]);
+
+  useEffect(() => {
+    if (!!chainId) {
+      setTokenPayment('0');
+    }
+  }, [chainId]);
+
+  useEffect(() => {
+    if (!!erc721Tokens) {
+      setAllOrders(
+        erc721Tokens
+          ? [].concat(
+              ...erc721Tokens.map((collections) => collections.tokens.map((token) => token))
+            )
+          : []
+      );
+    }
+  }, [erc721Tokens]);
 
   const selectToken = (token, index) => {
     if (index === tokenActive) {
@@ -107,19 +133,65 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                   </div>
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 19 }}>
+                  <Row className='sort-results'>
+                    <Col span='12' className='left-sort-results'>
+                      <span className='textmode'>
+                        {`${allOrders.length}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
+                      </span>
+                    </Col>
+                    <Col span='12' className='right-sort-results'>
+                      <Select
+                        size='large'
+                        value={tokenPayment}
+                        onChange={(value) => setTokenPayment(value)}
+                        className='tokenpayment'
+                      >
+                        <Option value='0' key='-1' className='text-center'>
+                          All
+                        </Option>
+                        {!!getTokensPayment(chainId)
+                          ? getTokensPayment(chainId).map((token, i) => {
+                              return (
+                                <Option
+                                  value={token.address}
+                                  key={i}
+                                  className='option-tokenpayment'
+                                >
+                                  <img
+                                    className='icon-tokenpayment'
+                                    src={token.icon}
+                                    alt={token.symbol}
+                                  />
+                                  <span className='symbol-tokenpayment'>{token.symbol}</span>
+                                </Option>
+                              );
+                            })
+                          : null}
+                      </Select>
+                      <Select
+                        value={typeSort}
+                        className='textmode select-sort'
+                        size='large'
+                        onChange={(value) => setTypeSort(value)}
+                      >
+                        <Option value='recentlyListed'>Recently listed</Option>
+                        <Option value='latestCreated'>Latest created</Option>
+                        <Option value='priceAsc'>Price asc</Option>
+                        <Option value='priceDesc'>Price desc</Option>
+                      </Select>
+                    </Col>
+                  </Row>
                   {!!selectedTokens && !!selectedTokens.tokens ? (
-                    <NFTsCardBrowse tokens={selectedTokens.tokens} />
+                    <NFTsCardBrowse
+                      tokens={selectedTokens.tokens}
+                      tokenPayment={tokenPayment}
+                      typeSort={typeSort}
+                    />
                   ) : (
                     <NFTsCardBrowse
-                      tokens={
-                        erc721Tokens
-                          ? [].concat(
-                              ...erc721Tokens.map((collections) =>
-                                collections.tokens.map((token) => token)
-                              )
-                            )
-                          : []
-                      }
+                      tokens={allOrders}
+                      tokenPayment={tokenPayment}
+                      typeSort={typeSort}
                     />
                   )}
                 </Col>

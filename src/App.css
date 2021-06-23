@@ -186,6 +186,19 @@
   flex: 1 1;
 }
 
+.ant-select-dropdown {
+  border-radius: 0.75rem !important;
+}
+
+.icon-tokenpayment {
+  width: 18px;
+  height: 18px;
+}
+
+.text-center {
+  text-align: center;
+}
+
 @media (max-width: 767px) {
   .barsMenu {
     display: inline-block;

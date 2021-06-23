@@ -11,7 +11,7 @@ export default function StatusActivity() {
   const openNotification = useCallback(
     ({ key, status, title, duration, txHash }) => {
       if (status === 'close') {
-        notification.close(key);
+        notification.destroy();
       } else {
         notification.open({
           key,
@@ -33,7 +33,7 @@ export default function StatusActivity() {
         });
         if (!!duration && duration > 0) {
           setTimeout(() => {
-            notification.close(key);
+            notification.destroy();
           }, duration);
         }
       }
