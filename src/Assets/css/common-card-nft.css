@@ -1,0 +1,75 @@
+.footer-card-left {
+  width: 6rem;
+}
+.footer-card-left .name-collection {
+  white-space: nowrap;
+  color: rgb(153, 153, 153);
+  font-size: 0.81rem;
+}
+.footer-card-left .name-nft {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 0.31rem;
+  color: rgb(0, 0, 0);
+  font-size: 0.88rem;
+}
+
+.footer-card-right .title-price {
+  white-space: nowrap;
+  color: rgb(153, 153, 153);
+  font-size: 0.81rem;
+}
+
+.footer-card-right .price-nft {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 0.31rem;
+  font-size: 0.89rem;
+}
+.price-nft b {
+  font-size: 0.68rem;
+}
+
+.tick-and-available {
+  margin-top: 0.5rem;
+}
+
+.tick-and-available-left img {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.card-nft .ant-card-body {
+  padding: 1rem;
+}
+
+.wrap-cover {
+  background: rgb(248, 248, 248);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.NFTResource-Wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.display-resource-nft {
+  border-radius: 2px 2px 0 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.page-profile .footer-card-left {
+  width: 6.9rem;
+}
+
+.list-nft-owner .fill-width {
+  width: 100%;
+}

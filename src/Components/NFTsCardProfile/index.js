@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
-import abiERC1155 from 'Contracts/ERC1155.json';
+import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
+import tick from 'Assets/icons/tick-green.svg';
 import '../NFTsCardBrowse/index.css';
+import 'Assets/css/common-card-nft.css';
 
-function NFTsCardProfile({ token, strSearch }) {
+function NFTsCardProfile({ token, strSearch, onSale }) {
   const { web3, chainId } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
@@ -19,8 +21,13 @@ function NFTsCardProfile({ token, strSearch }) {
         try {
           let tokenURI;
           if (token.is1155) {
-            const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
+            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
             tokenURI = await nft.methods.uri(token.index).call();
+            try {
+              token.collections = await nft.methods.name().call();
+            } catch (error) {
+              token.collections = null;
+            }
           } else {
             const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
             tokenURI = await nft.methods.tokenURI(token.index).call();
@@ -32,8 +39,10 @@ function NFTsCardProfile({ token, strSearch }) {
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
+          if (!token.collections) token.collections = !!data.name ? data.name : 'Unnamed';
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
+          if (!token.collections) token.collections = 'Unnamed';
         }
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
@@ -57,28 +66,52 @@ function NFTsCardProfile({ token, strSearch }) {
         <Link
           to={`/token/${token.addressToken}/${token.index}/${!!token.sellId ? token.sellId : null}`}
         >
-          <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
-            {token.is1155 ? (
-              <p className='textmode'>
-                {!!token.soldAmount
-                  ? parseInt(token.value) - parseInt(token.soldAmount)
-                  : token.value}{' '}
-                <span className='text-blur'>of</span> {token.totalSupply}{' '}
-                <span className='text-blur'>Available</span>
-              </p>
-            ) : (
-              <p className='height-line'></p>
-            )}
-            <div className='ant-card-meta-title'>{detailNFT.name}</div>
-            <div className='ant-card-meta-description textmode'>
+          <Card
+            hoverable
+            cover={
+              <div className='wrap-cover'>
+                <div className='NFTResource-Wrapper'>
+                  <img
+                    alt={`img-nft-${token.index}`}
+                    src={detailNFT.image}
+                    className='display-resource-nft'
+                  />
+                </div>
+              </div>
+            }
+          >
+            <Row justify='space-between'>
+              <Col className={`footer-card-left ${!token.is1155 ? 'fill-width' : ''}`}>
+                <div className='name-collection'>
+                  <img src={tick} alt='icon-tick' className='icon-tick' /> {token.collections}
+                </div>
+                <div className='name-nft textmode'>{detailNFT.name}</div>
+              </Col>
               {!!token.price ? (
-                `${web3.utils.fromWei(token.price, 'ether')} ${
-                  getSymbol(chainId)[token.tokenPayment]
-                }`
+                <Col className='footer-card-right text-right'>
+                  <div className='title-price'>Price</div>
+                  <div className='price-nft textmode'>
+                    <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
+                    <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+                  </div>
+                </Col>
               ) : (
                 <></>
               )}
-            </div>
+              {!!token.is1155 && !onSale ? (
+                <Col className='footer-card-right text-right'>
+                  <div className='title-price'>Available</div>
+                  <div className='textmode'>
+                    {!!token.soldAmount
+                      ? parseInt(token.value) - parseInt(token.soldAmount)
+                      : token.value}{' '}
+                    <span className='text-blur'>of</span> {token.totalSupply}{' '}
+                  </div>
+                </Col>
+              ) : (
+                <></>
+              )}
+            </Row>
           </Card>
         </Link>
       ) : (
@@ -88,7 +121,7 @@ function NFTsCardProfile({ token, strSearch }) {
   ) : null;
 }
 
-export default function ERC721({ tokens }) {
+export default function ERC721({ tokens, onSale }) {
   const [afterFilter, setafterFilter] = useState(!!tokens ? tokens : []);
   const { strSearch } = useSelector((state) => state);
 
@@ -98,10 +131,10 @@ export default function ERC721({ tokens }) {
 
   return (
     <div className='explore-nft content-list-nft'>
-      <Row justify='start' gutter={[0, 10]}>
+      <Row justify='start' gutter={[20, 20]}>
         {!!afterFilter ? (
           afterFilter.map((token, index) => (
-            <NFTsCardProfile key={index} token={token} strSearch={strSearch} />
+            <NFTsCardProfile key={index} token={token} strSearch={strSearch} onSale={onSale} />
           ))
         ) : (
           <></>

@@ -135,7 +135,11 @@ export default function Profile() {
                   }
                   key='1'
                 >
-                  <NFTsProfile listNFTs={listNFTsOnsale} isLoadingErc721={isLoadingErc721} />
+                  <NFTsProfile
+                    listNFTs={listNFTsOnsale}
+                    isLoadingErc721={isLoadingErc721}
+                    onSale={true}
+                  />
                 </TabPane>
                 <TabPane
                   tab={
@@ -146,7 +150,13 @@ export default function Profile() {
                   }
                   key='2'
                 >
-                  <NFTsProfile listNFTs={listNFTsOwner} isLoadingErc721={isLoadingErc721} />
+                  <div className='list-nft-owner'>
+                    <NFTsProfile
+                      listNFTs={listNFTsOwner}
+                      isLoadingErc721={isLoadingErc721}
+                      onSale={false}
+                    />
+                  </div>
                 </TabPane>
                 {/* <TabPane
                   tab={

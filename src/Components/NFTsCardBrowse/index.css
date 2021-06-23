@@ -28,15 +28,16 @@
 .content-list-nft .ant-card {
   width: 95%;
   margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgb(235 80 134 / 40%);
+  border-radius: 8px;
+  /* box-shadow: 0px 4px 8px rgb(235 80 134 / 40%); */
 }
 .content-list-nft .ant-card:hover {
-  box-shadow: 0px 4px 8px rgb(235 80 134 / 80%);
+  /* box-shadow: 0px 4px 8px rgb(235 80 134 / 80%); */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .content-list-nft .ant-card .ant-card-cover {
-  padding: 0.6rem;
+  padding: 1rem;
 }
 
 .content-list-nft .ant-card .ant-card-cover img {

@@ -143,7 +143,7 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
     return {
       addressToken: nft.contract.id,
       symbol: nft.contract.symbol,
-      name: nft.contract.name,
+      collections: nft.contract.name,
       index: nft.tokenID,
       tokenURI: nft.tokenURI,
       is1155: false,

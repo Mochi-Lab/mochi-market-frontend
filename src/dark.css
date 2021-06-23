@@ -343,6 +343,9 @@ html[data-theme='dark'] {
 .dropdown-select-chain .ant-dropdown-menu-submenu-title:hover {
   background-color: #35444f;
 }
+[data-theme='dark'] .wrap-cover {
+  background: rgb(0 0 0 / 10%) !important;
+}
 
 @media (max-width: 767px) {
   [data-theme='dark'] .left-profile .info-user {
