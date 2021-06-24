@@ -19,7 +19,7 @@ export default function Home() {
   const [explore, setExplore] = useState([]);
   const [skip, setSkip] = useState(0);
   const [isEndOfOrderList, setIsEndOfOrderList] = useState(false);
-  const page = 10;
+  const page = 12;
 
   const tags = ['Artwork', '3D', 'Character', 'Art'];
 
@@ -87,7 +87,7 @@ export default function Home() {
             </Slider>
           </div>
 
-          <div className='new-nfts'>
+          {/* <div className='new-nfts'>
             <div className='title-new'>
               <h2 className='textmode'>Hot Collections</h2>
             </div>
@@ -98,7 +98,7 @@ export default function Home() {
                 </div>
               ))}
             </Slider>
-          </div>
+          </div> */}
 
           <div className='new-nfts'>
             <div className='title-new'>

@@ -212,17 +212,27 @@
 }
 
 .explore {
+  margin-top: 16px;
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .card {
   width: 300px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1440px) {
   .card {
-    width: 220px;
+    width: 243px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .card {
+    width: 216px;
   }
 }
 
@@ -240,7 +250,7 @@
     height: 35vh;
   }
   .card {
-    width: 327px;
+    width: 326px;
   }
 }
 @media (max-width: 568px) {
