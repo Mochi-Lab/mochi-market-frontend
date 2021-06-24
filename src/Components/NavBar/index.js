@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { Drawer, Button } from 'antd';
+import { Drawer } from 'antd';
 import LeftMenu from './LeftMenu';
 import RightMenu from './RightMenu';
 import { Link } from 'react-router-dom';
 import logoMochi from 'Assets/logo-mochi.png';
 import navbar from 'Assets/images/navbar.png';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 
 export default function NavBar() {
   const [visible, setVisible] = useState(false);
@@ -25,20 +25,18 @@ export default function NavBar() {
           <img src={logoMochi} alt='logo' />
         </Link>
       </div>
-      <Button className='barsMenu' style={{ display: 'none' }} onClick={showDrawer}>
-        {visible ? <UpOutlined /> : <DownOutlined />}
-      </Button>
       <div className='menuCon'>
         <div className='leftMenu'>
           <LeftMenu />
         </div>
+        <MenuOutlined className='barsMenu' style={{ display: 'none' }} onClick={showDrawer} />
         <div className='rightMenu'>
           <RightMenu />
         </div>
 
         <Drawer
           bodyStyle={{ padding: 0, width: '300px' }}
-          placement='left'
+          placement='right'
           closable={false}
           onClose={onClose}
           visible={visible}
