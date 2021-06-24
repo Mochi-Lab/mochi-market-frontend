@@ -6,7 +6,7 @@ import './index.css';
 
 const { Content } = Layout;
 
-export default function NFTsProfile({ listNFTs, isLoadingErc721 }) {
+export default function NFTsProfile({ listNFTs, isLoadingErc721, onSale }) {
   return (
     <>
       <Layout style={{ minHeight: '100%' }}>
@@ -24,7 +24,7 @@ export default function NFTsProfile({ listNFTs, isLoadingErc721 }) {
                 <IconLoading />
               </div>
             ) : (
-              <NFTsCardProfile tokens={listNFTs} />
+              <NFTsCardProfile tokens={listNFTs} onSale={onSale} />
             )}
           </Content>
         </Layout>

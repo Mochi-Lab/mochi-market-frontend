@@ -1,13 +1,15 @@
 import { Card, Row, Col, Skeleton } from 'antd';
-import './index.css';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
-import abiERC1155 from 'Contracts/ERC1155.json';
+import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
+import tick from 'Assets/icons/tick-green.svg';
+import './index.css';
+import 'Assets/css/common-card-nft.css';
 
 function NFTsCard({ token, strSearch }) {
   const { web3, chainId } = useSelector((state) => state);
@@ -19,8 +21,13 @@ function NFTsCard({ token, strSearch }) {
         try {
           let tokenURI;
           if (token.is1155) {
-            const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
+            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
             tokenURI = await nft.methods.uri(token.index).call();
+            try {
+              token.collections = await nft.methods.name().call();
+            } catch (error) {
+              token.collections = null;
+            }
           } else {
             const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
             tokenURI = await nft.methods.tokenURI(token.index).call();
@@ -32,8 +39,10 @@ function NFTsCard({ token, strSearch }) {
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
+          if (!token.collections) token.collections = !!data.name ? data.name : 'Unnamed';
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
+          if (!token.collections) token.collections = 'Unnamed';
         }
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
@@ -51,23 +60,46 @@ function NFTsCard({ token, strSearch }) {
       xs={{ span: 24 }}
       sm={{ span: 12 }}
       md={{ span: 8 }}
-      lg={{ span: 6 }}
-      xl={{ span: 4 }}
-      xxl={{ span: 4 }}
+      lg={{ span: 8 }}
+      xl={{ span: 6 }}
+      xxl={{ span: 6 }}
     >
       {!!detailNFT ? (
         <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
-          <Card hoverable cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}>
-            <div className='ant-card-meta-title'>{detailNFT.name}</div>
-            <div className='ant-card-meta-description textmode'>
+          <Card
+            hoverable
+            cover={
+              <div className='wrap-cover'>
+                <div className='NFTResource-Wrapper'>
+                  <img
+                    alt={`img-nft-${token.index}`}
+                    src={detailNFT.image}
+                    className='display-resource-nft'
+                  />
+                </div>
+              </div>
+            }
+            className='card-nft'
+          >
+            <Row justify='space-between'>
+              <Col className='footer-card-left'>
+                <div className='name-collection'>
+                  <img src={tick} alt='icon-tick' className='icon-tick' /> {token.collections}
+                </div>
+                <div className='name-nft textmode'>{detailNFT.name}</div>
+              </Col>
               {!!token.price ? (
-                `${web3.utils.fromWei(token.price, 'ether')} ${
-                  getSymbol(chainId)[token.tokenPayment]
-                }`
+                <Col className='footer-card-right text-right'>
+                  <div className='title-price'>Price</div>
+                  <div className='price-nft textmode'>
+                    <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
+                    <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+                  </div>
+                </Col>
               ) : (
                 <></>
               )}
-            </div>
+            </Row>
           </Card>
         </Link>
       ) : (
@@ -121,7 +153,7 @@ export default function NFTsCardBrowse({ tokens, tokenPayment, typeSort }) {
 
   return (
     <div className='explore-nft content-list-nft'>
-      <Row justify='start' gutter={[0, 10]}>
+      <Row justify='start' gutter={[15, 20]}>
         {!!afterFilter ? (
           afterFilter.map((token, index) => (
             <NFTsCard key={index} token={token} strSearch={strSearch} />
