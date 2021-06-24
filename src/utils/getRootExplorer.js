@@ -1,12 +1,12 @@
 const rootExplorer = {
   //BSC Mainnet
-  56: 'https://bscscan.com/tx/',
+  56: 'https://bscscan.com',
   //BSC Testnet
-  97: 'https://testnet.bscscan.com/tx/',
+  97: 'https://testnet.bscscan.com',
   //Polygon
-  137: 'https://polygonscan.com/tx/',
+  137: 'https://polygonscan.com',
   //Harmony
-  1666600000: 'https://explorer.pops.one/#/tx/',
+  1666600000: 'https://explorer.pops.one/#',
 };
 
 export const getRootExplorer = (_chainId) => {

@@ -9,7 +9,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
   const { web3, chainId, balance, walletAddress } = useSelector((state) => state);
   const [form] = Form.useForm();
   const [totalPayment, setTotalPayment] = useState(
-    parseFloat(web3.utils.fromWei(orderDetail.price, 'ether'))
+    !!orderDetail ? parseFloat(web3.utils.fromWei(orderDetail.price, 'ether')) : 0
   );
   const [amount, setAmount] = useState(1);
   const [insufficient, setInsufficient] = useState(false);
@@ -36,7 +36,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
   );
 
   useEffect(() => {
-    if (!!walletAddress)
+    if (!!walletAddress && !!orderDetail)
       fetchBalance({
         ...orderDetail,
         amount,
@@ -118,7 +118,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
             name={['amount']}
             rules={[{ validator: checkAmount }]}
             label={`Enter amount. ${
-              parseInt(orderDetail.amount) - parseInt(orderDetail.soldAmount)
+              !!orderDetail ? parseInt(orderDetail.amount) - parseInt(orderDetail.soldAmount) : 0
             } available`}
             className='input-amount-checkout1155'
           >
@@ -137,7 +137,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
               disabled
               size='large'
               value={`${totalPayment}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              suffix={getSymbol(chainId)[orderDetail.tokenPayment]}
+              suffix={!!orderDetail ? getSymbol(chainId)[orderDetail.tokenPayment] : 'MOMA'}
             />
           </Form.Item>
         </Input.Group>

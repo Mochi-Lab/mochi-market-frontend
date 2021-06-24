@@ -1,12 +1,14 @@
-import { Card } from 'antd';
+import { Card, Col, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import imgNotFound from 'Assets/notfound.png';
 import { getSymbol } from 'utils/getContractAddress';
-import abiERC1155 from 'Contracts/ERC1155.json';
+import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
+import tick from 'Assets/icons/tick-green.svg';
+import 'Assets/css/common-card-nft.css';
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId } = useSelector((state) => state);
@@ -18,8 +20,13 @@ export default function CardNFTHome({ token }) {
         try {
           let tokenURI;
           if (token.is1155) {
-            const nft = new web3.eth.Contract(abiERC1155.abi, token.addressToken);
+            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
             tokenURI = await nft.methods.uri(token.index).call();
+            try {
+              token.collections = await nft.methods.name().call();
+            } catch (error) {
+              token.collections = null;
+            }
           } else {
             const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
             tokenURI = await nft.methods.tokenURI(token.index).call();
@@ -31,8 +38,10 @@ export default function CardNFTHome({ token }) {
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
+          if (!token.collections) token.collections = !!data.name ? data.name : 'Unnamed';
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
+          if (!token.collections) token.collections = 'Unnamed';
         }
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
@@ -44,17 +53,38 @@ export default function CardNFTHome({ token }) {
   return !!detailNFT ? (
     <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
       <Card
-        className='home-card'
-        cover={<img alt={`img-nft-${token.index}`} src={detailNFT.image} />}
+        className='home-card card-nft'
+        cover={
+          <div className='wrap-cover'>
+            <div className='NFTResource-Wrapper'>
+              <img
+                alt={`img-nft-${token.index}`}
+                src={detailNFT.image}
+                className='display-resource-nft'
+              />
+            </div>
+          </div>
+        }
       >
-        <div className='ant-card-meta-title'>{detailNFT.name}</div>
-        <div className='ant-card-meta-description textmode'>
+        <Row justify='space-between'>
+          <Col className='footer-card-left'>
+            <div className='name-collection'>
+              <img src={tick} alt='icon-tick' className='icon-tick' /> {token.collections}
+            </div>
+            <div className='name-nft textmode'>{detailNFT.name}</div>
+          </Col>
           {!!token.price ? (
-            `${web3.utils.fromWei(token.price, 'ether')} ${getSymbol(chainId)[token.tokenPayment]}`
+            <Col className='footer-card-right text-right'>
+              <div className='title-price'>Price</div>
+              <div className='price-nft textmode'>
+                <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
+                <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+              </div>
+            </Col>
           ) : (
             <></>
           )}
-        </div>
+        </Row>
       </Card>
     </Link>
   ) : null;

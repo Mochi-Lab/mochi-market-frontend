@@ -1,5 +1,5 @@
 .footer-card-left {
-  width: 6rem;
+  width: 50%;
 }
 .footer-card-left .name-collection {
   white-space: nowrap;
@@ -64,6 +64,10 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+.display-resource-nft:hover {
+  transform: scale(1.1);
+  transition: all 0.3s ease-in-out 0s;
 }
 
 .page-profile .footer-card-left {

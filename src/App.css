@@ -347,6 +347,35 @@
   align-content: stretch;
 }
 
+.ant-popover-inner {
+  border-radius: 1rem !important;
+}
+
+.btn-coppy {
+  color: rgb(136, 141, 155);
+  flex-shrink: 0;
+  display: flex;
+  text-decoration: none;
+  font-size: 0.825rem;
+  border: none;
+  text-decoration: none;
+  background: none !important;
+  cursor: pointer;
+  color: rgb(33, 171, 114);
+  font-weight: 500;
+  padding-right: 0;
+}
+
+.icon-coppy {
+  margin-left: 0.25rem;
+  font-size: 0.825rem;
+  display: flex;
+  flex-flow: row nowrap;
+  -webkit-box-align: center;
+  align-items: center;
+  color: rgb(34, 34, 34);
+}
+
 @media (max-width: 992px) {
   .logo {
     width: 85px;

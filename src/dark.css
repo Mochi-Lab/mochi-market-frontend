@@ -282,8 +282,13 @@ html[data-theme='dark'] {
 [data-theme='dark'] .detail-owner .ant-tabs-ink-bar {
   background: #e6f7ff;
 }
-[data-theme='dark'] .detail-owner .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+
+[data-theme='dark'] .detail-owner .ant-tabs-tab .ant-tabs-tab-btn {
   color: #e6f7ff;
+}
+
+[data-theme='dark'] .detail-owner .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #eb2f96;
 }
 [data-theme='dark'] a.owner {
   color: deepskyblue;
@@ -345,6 +350,57 @@ html[data-theme='dark'] {
 }
 [data-theme='dark'] .wrap-cover {
   background: rgb(0 0 0 / 10%) !important;
+}
+
+[data-theme='dark'] .expand-img-nft {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 0.06rem solid rgb(0 0 0 / 15%) !important;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px !important;
+}
+
+[data-theme='dark'] .info-order-nft {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 0.06rem solid rgb(0 0 0 / 15%) !important;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px !important;
+}
+
+[data-theme='dark'] .list-owners-and-orders {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 0.06rem solid rgb(0 0 0 / 15%) !important;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px !important;
+}
+
+[data-theme='dark'] .properties-nft {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 0.06rem solid rgb(0 0 0 / 15%) !important;
+}
+
+[data-theme='dark'] .content-properties {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme='dark'] .title-tab-properties {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme='dark'] .info-contract-nft {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 0.06rem solid rgb(0 0 0 / 15%) !important;
+}
+
+[data-theme='dark'] .purchase-nft {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 0.06rem solid rgb(0 0 0 / 15%) !important;
+}
+
+[data-theme='dark'] .icon-coppy {
+  color: #bfbfbf;
+}
+[data-theme='dark'] .ant-tabs-top > .ant-tabs-nav::before,
+.ant-tabs-bottom > .ant-tabs-nav::before,
+.ant-tabs-top > div > .ant-tabs-nav::before,
+.ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border-bottom: 1px solid #f0f0f03b;
 }
 
 @media (max-width: 767px) {

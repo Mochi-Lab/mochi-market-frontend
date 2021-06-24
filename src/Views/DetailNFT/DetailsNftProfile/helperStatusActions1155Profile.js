@@ -1,6 +1,6 @@
 import { getAllOwnersOf1155 } from 'utils/helper';
 
-export default async function helperStatusActions1155(
+export default async function helperStatusActions1155Profile(
   walletAddress,
   setStatus,
   addressToken,
