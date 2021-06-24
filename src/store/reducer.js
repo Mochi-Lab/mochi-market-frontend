@@ -13,6 +13,7 @@ const initialState = {
   strSearch: '',
   listNFTsOwner: [],
   listNFTsOnsale: [],
+  verifiedContracts: [],
 
   // Erc721
   erc721Instances: null,
@@ -231,6 +232,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         activity: action.activity,
+      };
+    case actions.SET_VERIFIED_CONTRACTS:
+      return {
+        ...state,
+        verifiedContracts: action.verifiedContracts,
       };
     default:
       return state;
