@@ -82,7 +82,7 @@ export default function Buy({ orderDetail, is1155, id, addressToken, getOwners11
           />
           {approvedToken ? (
             insufficient ? (
-              <Button type='primary' disabled shape='round' size='large'>
+              <Button type='primary' disabled shape='round' size='large' className='btn-buy-sell'>
                 Insufficient Balance
               </Button>
             ) : (
@@ -91,19 +91,32 @@ export default function Buy({ orderDetail, is1155, id, addressToken, getOwners11
                 shape='round'
                 size='large'
                 onClick={() => (is1155 ? checkout1155() : buy(orderDetail))}
+                className='btn-buy-sell'
               >
                 Buy now
               </Button>
             )
           ) : (
-            <Button type='primary' shape='round' size='large' onClick={approve}>
+            <Button
+              type='primary'
+              shape='round'
+              size='large'
+              onClick={approve}
+              className='btn-buy-sell'
+            >
               Approve
             </Button>
           )}
         </div>
       ) : (
         <div className='gSzfBw'>
-          <Button type='primary' shape='round' size='large' onClick={connectWeb3Modal}>
+          <Button
+            type='primary'
+            shape='round'
+            size='large'
+            onClick={connectWeb3Modal}
+            className='btn-buy-sell'
+          >
             Buy now
           </Button>
         </div>

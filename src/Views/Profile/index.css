@@ -49,6 +49,9 @@
   padding: 0.5rem 0.25rem 0.25rem 0.25rem;
   max-width: 250px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .left-profile .info-user .address-wallet p {
   margin-bottom: 0;

@@ -11,7 +11,7 @@ export default function StatusActivity() {
   const openNotification = useCallback(
     ({ key, status, title, duration, txHash }) => {
       if (status === 'close') {
-        notification.destroy();
+        notification.close(key);
       } else {
         notification.open({
           key,
@@ -20,7 +20,7 @@ export default function StatusActivity() {
           description: !!txHash ? (
             <span>
               Details transaction{' '}
-              <a href={getRootExplorer(chainId) + txHash} target='_blank' rel='noreferrer'>
+              <a href={`${getRootExplorer(chainId)}/tx/${txHash}`} target='_blank' rel='noreferrer'>
                 here
               </a>
             </span>
@@ -33,7 +33,7 @@ export default function StatusActivity() {
         });
         if (!!duration && duration > 0) {
           setTimeout(() => {
-            notification.destroy();
+            notification.close(key);
           }, duration);
         }
       }

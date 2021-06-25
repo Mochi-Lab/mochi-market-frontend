@@ -20,7 +20,13 @@ export default function Cancel({ orderDetail, is1155, getOwners1155 }) {
   return (
     <div className='actions-btn'>
       <div className='gSzfBw'>
-        <Button type='primary' shape='round' size='large' onClick={cancel}>
+        <Button
+          type='primary'
+          shape='round'
+          size='large'
+          onClick={cancel}
+          className='btn-cancel-sell'
+        >
           Cancel
         </Button>
       </div>
