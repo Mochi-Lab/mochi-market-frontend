@@ -1,0 +1,137 @@
+.bridge-nft {
+  padding: 0 1rem;
+}
+
+.bridge-nft .title-page h1 {
+  text-align: center;
+  color: #ff3da3;
+  font-size: 55px;
+  margin-bottom: 0;
+  text-align: center;
+  font-family: 'Rubik Mono One', sans-serif;
+  font-weight: bold;
+  margin-top: 1.5rem;
+}
+.bridge-nft .desciption-page h3 {
+  font-size: 20px;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.74);
+}
+
+.content-bridge {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-between;
+  align-content: stretch;
+  .content-bridge-left {
+    width: 25%;
+    height: 100%;
+    border: 1px solid #ff0086;
+    border-radius: 1rem;
+    .header-tabs {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      .ntf-single {
+        width: 50%;
+        text-align: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #ff0086;
+        border-right: 1px solid #ff0086;
+      }
+      .ntf-multi {
+        width: 50%;
+        text-align: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #ff0086;
+        border-left: 1px solid #ff0086;
+      }
+    }
+    .list-nft-owner {
+      padding: 1rem;
+      .item-nft {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: flex-start;
+        align-items: center;
+        img {
+          width: 64px;
+          height: 64px;
+        }
+        .name-id {
+          margin-left: 1rem;
+        }
+      }
+    }
+    .search-nft {
+      padding: 1rem;
+      text-align: center;
+      .input-search-nfts {
+        border-radius: 0.75rem;
+      }
+    }
+  }
+  .content-bridge-right {
+    width: 70%;
+    .area-swap {
+      .area-swap-content {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        align-content: stretch;
+        .from-wallet-connect {
+          width: 40%;
+        }
+        .icon-arrow-right {
+          width: 15%;
+          text-align: center;
+        }
+        .to-wallet-connect {
+          width: 40%;
+        }
+      }
+      .title-are-swap {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        align-content: stretch;
+        .title-from {
+          width: 40%;
+        }
+        .title-to {
+          width: 40%;
+        }
+      }
+    }
+  }
+}
+
+.connection-wallet {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.68);
+  border-radius: 1rem;
+  img {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.5rem;
+  }
+}

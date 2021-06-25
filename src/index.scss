@@ -37,15 +37,58 @@ body > iframe {
   background-color: #a8bbbf;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 576px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .container-standard,
+  .container-standard-sm {
+    max-width: 540px;
+  }
+  .container-standard,
+  .container-standard-fluid,
+  .container-standard-lg,
+  .container-standard-md,
+  .container-standard-sm,
+  .container-standard-xl {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-standard,
+  .container-standard-md,
+  .container-standard-sm {
+    max-width: 720px;
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 }
-@media (max-width: 576px) {
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+
+@media (min-width: 992px) {
+  .container-standard,
+  .container-standard-lg,
+  .container-standard-md,
+  .container-standard-sm {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container-standard,
+  .container-standard-lg,
+  .container-standard-md,
+  .container-standard-sm,
+  .container-standard-xl {
+    max-width: 1140px;
   }
 }

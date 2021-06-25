@@ -20,6 +20,7 @@ const Browse = lazy(() => import('Views/Browse'));
 const Faucet = lazy(() => import('Views/Faucet'));
 const Collection = lazy(() => import('Views/Collection'));
 const NotFound = lazy(() => import('Views/NotFound'));
+const BridgeNFT = lazy(() => import('Views/BridgeNFT'));
 
 function App() {
   const { walletAddress } = useSelector((state) => state);
@@ -65,6 +66,7 @@ function App() {
                 <Route exact path='/browse' component={Browse} />
                 <Route exact path='/token/:addressToken/:id/:sellID' component={DetailNFT} />
                 <Route exact path='/collection/:addressToken' component={Collection} />
+                <Route exact path='/bridge' component={BridgeNFT} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
                 <Route exact path='/faucet' component={Faucet} />
                 <Route path='*' component={NotFound} />

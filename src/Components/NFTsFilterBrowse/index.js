@@ -156,10 +156,10 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                         size='large'
                         value={tokenPayment}
                         onChange={(value) => setTokenPayment(value)}
-                        className='tokenpayment textmode'
+                        className='textmode tokenpayment'
                       >
                         <Option value='0' key='-1' className='text-center'>
-                          All
+                          <span>All</span>
                         </Option>
                         {!!getTokensPayment(chainId)
                           ? getTokensPayment(chainId).map((token, i) => {

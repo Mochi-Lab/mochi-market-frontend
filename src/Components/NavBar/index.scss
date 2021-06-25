@@ -197,6 +197,13 @@
 @media (max-width: 992px) {
   div.menu-triggerer-container {
     display: block !important;
+    filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+    font-size: 2rem;
+  }
+
+  .barsMenu svg {
+    color: black;
+    font-size: x-large;
   }
 
   .balance-create {
