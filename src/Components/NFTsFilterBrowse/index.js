@@ -11,16 +11,28 @@ import './index.scss';
 const { Content } = Layout;
 const { Option } = Select;
 
-export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
+export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addressToken }) {
   const { chainId } = useSelector((state) => state);
 
   const [selectedTokens, setSelectedTokens] = useState({});
-  const [tokenActive, setTokenActive] = useState(null);
+  const [tokenActive, setTokenActive] = useState('');
   const [strSearch, setStrSearch] = useState();
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
   const [allOrders, setAllOrders] = useState([]);
   const [filterCount, setFilterCount] = useState(0);
+
+  useEffect(() => {
+    if (!!addressToken && tokenActive === '') {
+      for (let i = 0; i < collectionsNFT.length; i++) {
+        const collection = collectionsNFT[i];
+        if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
+          setSelectedTokens(collection);
+          setTokenActive(i);
+        }
+      }
+    }
+  }, [addressToken, collectionsNFT, tokenActive]);
 
   useEffect(() => {
     if (!!chainId) {
@@ -29,16 +41,16 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
   }, [chainId]);
 
   useEffect(() => {
-    if (!!erc721Tokens) {
+    if (!!collectionsNFT) {
       setAllOrders(
-        erc721Tokens
+        collectionsNFT
           ? [].concat(
-              ...erc721Tokens.map((collections) => collections.tokens.map((token) => token))
+              ...collectionsNFT.map((collections) => collections.tokens.map((token) => token))
             )
           : []
       );
     }
-  }, [erc721Tokens]);
+  }, [collectionsNFT]);
 
   const selectToken = (token, index) => {
     if (index === tokenActive) {
@@ -95,21 +107,21 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                         />
                       </div>
                       <div className='list-collections'>
-                        {erc721Tokens
-                          ? erc721Tokens.map((erc721Token, index) => {
+                        {collectionsNFT
+                          ? collectionsNFT.map((collection, index) => {
                               if (
                                 ((!!strSearch &&
-                                  erc721Token.name
+                                  collection.name
                                     .toLocaleLowerCase()
                                     .includes(strSearch.toLowerCase())) ||
                                   !strSearch) &&
-                                erc721Token.tokens.length > 0
+                                collection.tokens.length > 0
                               )
                                 return (
                                   <div
                                     className='collect-item'
                                     key={index}
-                                    onClick={() => selectToken(erc721Token, index)}
+                                    onClick={() => selectToken(collection, index)}
                                   >
                                     <div className='icon-collection'>
                                       {tokenActive === index ? (
@@ -117,16 +129,11 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                                           <CheckCircleOutlined />
                                         </div>
                                       ) : (
-                                        <div
-                                          className='avatar-token'
-                                          dangerouslySetInnerHTML={{
-                                            __html: erc721Token.avatarToken,
-                                          }}
-                                        />
+                                        <img src={collection.avatarToken} alt='logo-collection' />
                                       )}
                                     </div>
                                     <div className='name-collection textmode'>
-                                      {erc721Token.name}
+                                      {collection.name}
                                     </div>
                                   </div>
                                 );

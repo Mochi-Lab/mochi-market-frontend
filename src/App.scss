@@ -213,7 +213,6 @@ div.menu-triggerer-container > span.anticon.anticon-menu {
 }
 
 @media (max-width: 767px) {
-
   .rightMenu {
     display: none;
   }
@@ -303,6 +302,9 @@ div.menu-triggerer-container > span.anticon.anticon-menu {
 .mr-1d5rem {
   margin-right: 1.5rem;
 }
+.mr-0d5rem {
+  margin-right: 0.5rem;
+}
 
 .bt-cnlo:hover {
   color: #e35188 !important;
@@ -374,4 +376,51 @@ div.menu-triggerer-container > span.anticon.anticon-menu {
   -webkit-box-align: center;
   align-items: center;
   color: rgb(34, 34, 34);
+}
+
+.row-column {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+}
+
+.margin-0-auto {
+  margin: 0 auto;
+}
+
+.link-collection-name {
+  color: #ff008c8c;
+}
+
+.link-collection-name:hover,
+.link-collection-name:active,
+.link-collection-name:focus {
+  color: #ff008c;
+}
+
+@media (max-width: 992px) {
+  .logo {
+    width: 85px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo {
+    width: 75px;
+  }
+  .logo a img {
+    width: 50px;
+  }
+  .barsMenu {
+    padding-top: 0 !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .menuCon {
+    width: calc(100% - 90px);
+  }
 }

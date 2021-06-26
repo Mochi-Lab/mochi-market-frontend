@@ -1,0 +1,404 @@
+@import '../../dark.scss';
+@import '../../light.scss';
+.collection-detail {
+  position: relative;
+  inset: 0px;
+  margin: 0px;
+  padding: 0px;
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(4, 4, 5);
+  display: flex;
+  flex: 1 0 auto;
+  min-height: 0px;
+  min-width: 0px;
+  max-width: 100%;
+  z-index: 0;
+  -webkit-box-flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.collection-card {
+  /* box-shadow: 0px 4px 8px rgba(235, 80, 134, 0.8); */
+  border-radius: 8px;
+  margin: 15px;
+}
+
+.search-icon {
+  font-size: 1.15rem;
+}
+
+.container .item-carousel {
+  padding: 1rem 0;
+}
+
+.collection-detail .new-nfts,
+.create-nft {
+  margin: 2rem auto;
+}
+
+.collection-detail .slick-arrow::before {
+  opacity: 0.75;
+  color: black;
+  font-size: 30px;
+  font-family: 'Circular Std', Helvetica, Arial, sans-serif !important;
+}
+
+.slick-arrow.slick-next::before {
+  content: '›';
+}
+.slick-arrow.slick-prev::before {
+  content: '‹';
+}
+
+.slick-prev,
+.slick-next {
+  z-index: 3;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: white;
+  border-radius: 50%;
+  border: 1px solid rgba(4, 4, 5, 0.1);
+}
+
+.slick-prev:hover,
+.slick-prev:active,
+.slick-prev:focus,
+.slick-next:hover,
+.slick-next:focus,
+.slick-next:active {
+  background: white;
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+  border: 1px solid rgba(4, 4, 5, 0.2);
+}
+
+.slick-next {
+  right: -20px;
+}
+.slick-prev {
+  left: -20px;
+}
+
+.collection-detail .title-new h2,
+.title-create h2 {
+  margin-bottom: 0 !important;
+  color: rgba(0, 0, 0, 0.75);
+  margin-bottom: 0.75rem;
+  font-family: 'Circular Std', Helvetica, Arial, sans-serif !important;
+}
+
+.collection-detail .ant-card {
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 8px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.collection-detail .ant-card .ant-card-cover {
+  padding: 0;
+}
+
+.collection-detail .ant-card .ant-card-cover img {
+  height: 20vh;
+  margin: 0 auto;
+  border-radius: 5px 5px 0 0;
+  object-fit: contain;
+}
+
+.icon-new {
+  width: 64px;
+}
+
+.slick-arrow.slick-disabled {
+  opacity: 0;
+}
+
+.top-sell-buy {
+  margin-top: 2rem;
+}
+
+.title-top-sell-buy .ant-dropdown-link {
+  color: #1890ff;
+  text-decoration: none;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+.user-top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+}
+
+.num-order,
+.avatar-top,
+.info-top {
+  margin-left: 0.3rem;
+}
+
+.avatar-top {
+  width: 48px;
+  height: 48px;
+}
+
+.avatar-top img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.info-top p {
+  margin: 0;
+}
+
+.num-order,
+.amount-top {
+  text-decoration: none;
+  color: rgba(4, 4, 5, 0.5);
+}
+
+.name-user-top {
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: bold;
+  color: rgb(4, 4, 5);
+  font-size: medium;
+}
+
+.item-top {
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.item-carousel .ant-card-meta-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.num-order {
+  width: 12px;
+  margin-right: 0.5rem;
+}
+
+.explore-nft {
+  margin: 2rem auto;
+}
+
+.explore-nft .ant-card {
+  margin-top: 1rem;
+}
+
+.title-explore h2 {
+  margin-bottom: 0;
+}
+
+.collection-detail .icon-tick {
+  display: inline;
+  margin-left: 0.5rem;
+}
+
+.collection-detail .collection-info {
+  min-height: 21.31rem;
+  display: flex;
+  justify-content: center;
+}
+
+.collection-detail .collection-info .collection-info-content {
+  margin-top: 3.13rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 84.38rem;
+  max-width: calc(100vw - 3rem);
+}
+
+.collection-detail .collection-info .collection-info-content .logo-collection img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.wrap-img-logo {
+  width: 100%;
+  height: 100%;
+}
+
+.collection-detail .collection-info .collection-info-content .info-grid .collection-name {
+  color: #000;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.list-tags {
+  height: 2rem;
+  display: flex;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.item-tag {
+  background-color: rgb(243, 244, 245);
+  height: 2rem;
+  padding: 0px 0.75rem;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 0.88rem;
+  color: rgb(34, 34, 34);
+  margin-right: 1.25rem;
+  border-radius: 1rem;
+}
+
+.item-tag img {
+  height: 1.2rem;
+  margin-right: 0.62rem;
+}
+
+.description-colletion {
+  line-height: 1.88rem;
+  margin-top: 1rem;
+  color: #000;
+  font-size: 0.88rem;
+}
+
+.contact-colletion {
+  margin-top: 1rem;
+}
+
+.contact-colletion .link-contact {
+  margin-left: -1px;
+  display: inline-block;
+  width: 4rem;
+  height: 3.13rem;
+  border: 1px solid rgb(238, 238, 238);
+  border-collapse: collapse;
+  border-radius: 0.6rem;
+  margin: 0 0.15rem;
+}
+
+.contact-colletion .link-contact:first-child {
+  margin-left: 0;
+}
+
+.icon-contact {
+  display: block;
+  margin: 0.19rem auto 0px;
+  height: 1.63rem;
+  width: 1.63rem;
+  object-fit: cover;
+}
+
+.name-contact {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgb(151, 151, 151);
+}
+
+.wrap-title {
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+}
+
+.title-collection {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgb(34, 34, 34);
+}
+
+.link-view-all {
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  color: rgb(34, 34, 34);
+  cursor: pointer;
+  font-size: 1.13rem;
+}
+
+.collection-detail .logo-grid {
+  width: 10rem;
+  margin-right: 3rem;
+  text-align: center;
+}
+
+.btn-edit-collection {
+  box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, 0.23) 0px 10px 20px;
+  border-radius: 48px;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  margin-bottom: 0.75rem;
+  margin-top: 1rem;
+}
+
+.upload-img.upload-avatar.logo-collection-edit {
+  width: 150px;
+  height: 150px;
+  margin: 0.5rem;
+}
+
+@media (max-width: 992px) {
+  .collection-detail {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-banner-home .item-carousel {
+    height: 30vh;
+  }
+  .collection-detail .ant-card .ant-card-cover img {
+    height: 35vh;
+  }
+
+  .collection-detail .collection-info .collection-info-content {
+    flex-direction: column;
+  }
+
+  .collection-detail .logo-grid {
+    margin-bottom: 1.5rem;
+  }
+}
+@media (max-width: 568px) {
+  .carousel-banner-home .item-carousel {
+    height: 25vh;
+  }
+
+  .slick-arrow.slick-next::before {
+    margin-left: 5px;
+  }
+  .slick-arrow.slick-prev::before {
+    margin-left: 0;
+  }
+
+  .name-user-top {
+    font-size: small;
+  }
+  .amount-top {
+    font-size: small;
+  }
+}

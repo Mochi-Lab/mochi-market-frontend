@@ -29,3 +29,22 @@ export const uploadJsonToIpfs = async (data) => {
     console.log(error);
   }
 };
+
+export const deleteFileInIpfs = async (hash) => {
+  const result = await axios
+    .delete(`https://api.pinata.cloud/pinning/unpin/${hash}`, {
+      headers: {
+        pinata_api_key: process.env.REACT_APP_API_KEY,
+        pinata_secret_api_key: process.env.REACT_APP_API_SECRET,
+      },
+    })
+    .then(function (res) {
+      console.log('res: ', res);
+      return true;
+    })
+    .catch(function (e) {
+      console.log('error:', e);
+      return false;
+    });
+  return result;
+};

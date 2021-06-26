@@ -21,9 +21,12 @@ import ERC20 from 'Contracts/ERC20.json';
 import MOMAabi from 'Contracts/MOMAabi.json';
 import axios from 'axios';
 import { getContractAddress } from 'utils/getContractAddress';
-import * as randomAvatarGenerator from '@fractalsoftware/random-avatar-generator';
 import { getWeb3List } from 'utils/getWeb3List';
 import { uploadJsonToIpfs, uploadFileToIpfs } from 'utils/ipfs';
+import { getCollectionByAddress } from 'APIs/Collections/Gets';
+import { getProfileByAddress } from 'APIs/Users/Gets';
+import logoCollectionDefault from 'Assets/logo-mochi.png';
+import avatarDefault from 'Assets/avatar-profile.png';
 
 var contractAddress;
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -46,8 +49,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
     );
     const data = await response.json();
     if (!Array.isArray(data)) {
-      // eslint-disable-next-line
-      throw 'Error fetching data ' + data;
+      throw new Error('Error fetching data ' + data);
     }
     dispatch(setVerifiedContracts(data));
   } catch (e) {
@@ -99,16 +101,24 @@ export const setAdminAddress = (addressesProvider) => async (dispatch) => {
 };
 
 export const SET_ADDRESS = 'SET_ADDRESS';
-export const setAddress = (walletAddress) => (dispatch) => {
+export const setAddress = (walletAddress) => async (dispatch) => {
   if (walletAddress !== null) {
     var shortAddress = `${walletAddress.slice(0, 8)}...${walletAddress.slice(
       walletAddress.length - 6,
       walletAddress.length
     )}`;
+
+    let infoUserLogin = (await dispatch(getUser(walletAddress))).user;
+
     dispatch({
       type: SET_ADDRESS,
       walletAddress,
       shortAddress,
+    });
+
+    dispatch({
+      type: SET_INFO_USER_LOGIN,
+      infoUserLogin,
     });
     dispatch(setBalance());
 
@@ -160,6 +170,21 @@ export const setStrSearch = (strSearch) => (dispatch) => {
 export const SET_VERIFIED_CONTRACTS = 'SET_VERIFIED_CONTRACTS';
 export const setVerifiedContracts = (verifiedContracts) => (dispatch) => {
   dispatch({ type: SET_VERIFIED_CONTRACTS, verifiedContracts });
+};
+
+export const SET_INFO_COLLECTIONS = 'SET_INFO_COLLECTIONS';
+export const setInfoCollections = (infoCollections) => (dispatch) => {
+  dispatch({ type: SET_INFO_COLLECTIONS, infoCollections });
+};
+
+export const SET_INFO_USERS = 'SET_INFO_USERS';
+export const setInfoUsers = (infoUsers) => (dispatch) => {
+  dispatch({ type: SET_INFO_USERS, infoUsers });
+};
+
+export const SET_INFO_USER_LOGIN = 'SET_INFO_USER_LOGIN';
+export const setInfoUserLogin = (infoUserLogin) => (dispatch) => {
+  dispatch({ type: SET_INFO_USER_LOGIN, infoUserLogin });
 };
 
 ////////////////////
@@ -465,14 +490,16 @@ export const SET_CONVERT_ERC1155 = 'SET_CONVERT_ERC1155';
 export const setAvailableSellOrder = (walletAddress) => async (dispatch, getState) => {
   const { sellOrderList, web3, chainId } = getState();
   let listNFTsOnsale = [];
+  let infoCollections = {};
 
   const pushErc721 = async (listNftContract) => {
     let ERC721token = { name: '', symbol: '', avatarToken: '', tokens: [] };
-    ERC721token.name = await listNftContract.instance.methods.name().call();
+    let resCollection = await dispatch(getCollection(listNftContract.nftAddress, infoCollections));
+    infoCollections = resCollection.infoCollections;
+    ERC721token.addressToken = listNftContract.nftAddress;
+    ERC721token.name = resCollection.collection.name;
     ERC721token.symbol = await listNftContract.instance.methods.symbol().call();
-    let avatarData = randomAvatarGenerator.generateRandomAvatarData();
-    ERC721token.avatarToken = randomAvatarGenerator.getAvatarFromData(avatarData);
-    ERC721token.addressToken = listNftContract.instance._address;
+    ERC721token.avatarToken = resCollection.collection.logo;
 
     ERC721token.tokens = await Promise.all(
       listNftContract.tokenId.map(async (order, index) => {
@@ -481,7 +508,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
         token.tokenURI = await listNftContract.instance.methods.tokenURI(order.id).call();
         token.addressToken = listNftContract.instance._address;
         token.price = listNftContract.price[index];
-        token.collections = ERC721token.name;
+        token.nameCollection = ERC721token.name;
         token.symbolCollections = ERC721token.symbol;
         token.sortIndex = order.sortIndex;
         token.tokenPayment = listNftContract.tokenPayment[index];
@@ -503,26 +530,12 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
 
   const pushErc1155 = async (listNftContract) => {
     let ERC1155token = { name: '', avatarToken: '', tokens: [] };
-    try {
-      ERC1155token.name = await listNftContract.instance.methods.name().call();
-    } catch (error) {
-      const tokenURI = await listNftContract.instance.methods
-        .uri(listNftContract.tokenId[0].id)
-        .call();
-      // get token info
-      try {
-        let req = await axios.get(tokenURI);
-        const data = req.data;
-        ERC1155token.name = !!data.name ? data.name : 'Unnamed';
-      } catch (error) {
-        ERC1155token.name = 'Unnamed';
-      }
-    }
-
+    let resCollection = await dispatch(getCollection(listNftContract.nftAddress, infoCollections));
+    infoCollections = resCollection.infoCollections;
+    ERC1155token.name = resCollection.collection.name;
     ERC1155token.addressToken = listNftContract.nftAddress;
     ERC1155token.tokenId = listNftContract.tokenId[0].id;
-    let avatarData = randomAvatarGenerator.generateRandomAvatarData();
-    ERC1155token.avatarToken = randomAvatarGenerator.getAvatarFromData(avatarData);
+    ERC1155token.avatarToken = resCollection.collection.logo;
 
     ERC1155token.tokens = await Promise.all(
       listNftContract.tokenId.map(async (order, index) => {
@@ -530,7 +543,7 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
         token.index = order.id;
         token.addressToken = listNftContract.nftAddress;
         token.price = listNftContract.price[index];
-        token.collections = ERC1155token.name;
+        token.nameCollection = ERC1155token.name;
         token.symbolCollections = ERC1155token.symbol;
         token.sortIndex = order.sortIndex;
         token.tokenPayment = listNftContract.tokenPayment[index];
@@ -1661,4 +1674,104 @@ export const showNotification = (noti) => (dispatch) => {
 export const ACTIVITY = 'ACTIVITY';
 export const setStatusActivity = (activity) => (dispatch) => {
   dispatch({ type: ACTIVITY, activity });
+};
+
+// Collection
+export const getCollection = (addressToken, _collections) => async (dispatch, getState) => {
+  addressToken = addressToken.toLowerCase();
+  const { web3, nftList, chainId, infoCollections } = getState();
+  let collections = !!_collections ? _collections : infoCollections;
+  let collection;
+  if (!!collections[addressToken]) {
+    collection = collections[addressToken];
+  } else {
+    let res;
+
+    if (!collections[addressToken]) {
+      res = await getCollectionByAddress(addressToken, chainId);
+    }
+
+    if (!!res && !!res.collection) {
+      collection = res.collection;
+      collections[addressToken] = res.collection;
+      dispatch(setInfoCollections(collections));
+    } else {
+      if (web3 && nftList) {
+        let nameCollection;
+        let is1155 = await nftList.methods.isERC1155(addressToken).call();
+        let tokenURI;
+        if (!!is1155) {
+          const erc1155Instances = await new web3.eth.Contract(SampleERC1155.abi, addressToken);
+          try {
+            tokenURI = await erc1155Instances.methods.uri().call();
+          } catch (error) {
+            tokenURI = null;
+          }
+          try {
+            nameCollection = await erc1155Instances.methods.name().call();
+          } catch (error) {
+            nameCollection = null;
+          }
+        } else {
+          const erc721Instances = await new web3.eth.Contract(SampleERC721.abi, addressToken);
+          try {
+            nameCollection = await erc721Instances.methods.name().call();
+          } catch (error) {
+            nameCollection = null;
+          }
+        }
+
+        if (!nameCollection && !!tokenURI) {
+          try {
+            let req = await axios.get(tokenURI);
+            const data = req.data;
+
+            nameCollection = !!data.name ? data.name : 'Unnamed';
+          } catch (error) {
+            nameCollection = 'Unnamed';
+          }
+        } else if (!nameCollection && !tokenURI) {
+          nameCollection = 'Unnamed';
+        }
+
+        collection = { name: nameCollection, logo: logoCollectionDefault };
+        collections[addressToken] = collection;
+        dispatch(setInfoCollections(collections));
+      }
+    }
+  }
+
+  return { collection, infoCollections: collections };
+};
+
+// user
+export const getUser = (walletAddress, _users) => async (dispatch, getState) => {
+  walletAddress = walletAddress.toLowerCase();
+  const { infoUsers } = getState();
+  let users = !!_users ? _users : infoUsers;
+  let user;
+  if (!!users[walletAddress]) {
+    user = users[walletAddress];
+  } else {
+    let res;
+    if (!users[walletAddress]) {
+      try {
+        res = await getProfileByAddress(walletAddress);
+      } catch (error) {
+        res = null;
+      }
+    }
+
+    if (!!res && !!res.user) {
+      user = res.user;
+      users[walletAddress] = res.user;
+      dispatch(setInfoUsers(users));
+    } else {
+      user = { username: 'Unamed', avatar: avatarDefault };
+      users[walletAddress] = user;
+      dispatch(setInfoUsers(users));
+    }
+  }
+
+  return { user, infoUsers: users };
 };

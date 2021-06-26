@@ -14,7 +14,10 @@ const { useBreakpoint } = Grid;
 
 const RightMenu = () => {
   const screen = useBreakpoint();
-  const { shortAddress, walletAddress, chainId, moma, balance } = useSelector((state) => state);
+  const { shortAddress, walletAddress, chainId, moma, balance, infoUserLogin } = useSelector(
+    (state) => state
+  );
+
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -54,7 +57,11 @@ const RightMenu = () => {
             <div className='balance-create background-mode center'>
               <div style={{ paddingLeft: '2px' }}>
                 <div className='center' style={{ display: 'flex' }}>
-                  <img className='nav-avatar' src={avatarDefault} alt='avatar' />
+                  <img
+                    className='nav-avatar'
+                    src={!!infoUserLogin ? infoUserLogin.avatar : avatarDefault}
+                    alt='avatar'
+                  />
                   <p
                     className='textmode'
                     style={{ margin: '0px 10px 0px 10px', color: '#4F4F4F', fontWeight: 'normal' }}
@@ -79,7 +86,9 @@ const RightMenu = () => {
             disabled
           >
             <strong>
-              <h3 className='nav-textmode'>Unnamed</h3>
+              <h3 className='nav-textmode'>
+                {!!infoUserLogin ? `@${infoUserLogin.username}` : 'Unnamed'}
+              </h3>
             </strong>
             <div>
               <div className='address' onClick={() => copyToClipboard()}>

@@ -29,11 +29,11 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
 
   const handleOnFocus = (event) => {
     setSearchBoxFocused(true);
-  }
+  };
 
   const handleOnBlur = (event) => {
     setSearchBoxFocused(false);
-  }
+  };
 
   return (
     <div className='banner-search-home'>
@@ -52,9 +52,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
       <div className='box-search'>
         <div className='center' style={{ width: '100%', position: 'absolute', top: '-2rem' }}>
           <div className={'hs' + (searchBoxFocused ? ' active' : '')}>
-            <div
-              className='search-icon center search-input'
-            >
+            <div className='search-icon center search-input'>
               <SearchOutlined />
             </div>
             <Link to='/browse' ref={browse} />

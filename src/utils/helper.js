@@ -243,3 +243,9 @@ export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, address
   }
   return { ownersOf1155: [], addressOwnersOf1155: {}, totalSupply: 0 };
 }
+
+export const checkUrl = (url) => {
+  // eslint-disable-next-line
+  let regexCheckUrl = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+  return regexCheckUrl.test(url);
+};

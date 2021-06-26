@@ -7,12 +7,15 @@ import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
 import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
+import { getCollection } from 'store/actions';
+import store from 'store/index';
+
 import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
 
 function NFTsCard({ token, strSearch }) {
-  const { web3, chainId, verifiedContracts } = useSelector((state) => state);
+  const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
   useEffect(() => {
@@ -23,11 +26,6 @@ function NFTsCard({ token, strSearch }) {
           if (token.is1155) {
             const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
             tokenURI = await nft.methods.uri(token.index).call();
-            try {
-              token.collections = await nft.methods.name().call();
-            } catch (error) {
-              token.collections = null;
-            }
           } else {
             const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
             tokenURI = await nft.methods.tokenURI(token.index).call();
@@ -39,22 +37,23 @@ function NFTsCard({ token, strSearch }) {
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
-          if (!token.collections) token.collections = !!data.name ? data.name : 'Unnamed';
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
-          if (!token.collections) token.collections = 'Unnamed';
         }
+        token.nameCollection = (
+          await store.dispatch(getCollection(token.addressToken, null))
+        ).collection.name;
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
     }
     fetchDetail();
-  }, [token, web3]);
+  }, [token, web3, chainId, infoCollections]);
 
   return !!detailNFT &&
     !!detailNFT.name &&
     (detailNFT.name.toLocaleLowerCase().includes(strSearch.toLowerCase()) ||
-      token.collections.toLocaleLowerCase().includes(strSearch.toLowerCase())) ? (
+      token.nameCollection.toLocaleLowerCase().includes(strSearch.toLowerCase())) ? (
     <Col
       className='gutter-row'
       xs={{ span: 24 }}
@@ -99,7 +98,13 @@ function NFTsCard({ token, strSearch }) {
                   {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
                     <img src={tick} alt='icon-tick' className='icon-tick' />
                   ) : null}{' '}
-                  {token.collections}
+                  <Link
+                    to={`/collection/${token.addressToken}`}
+                    className='link-collection-name'
+                    tag='span'
+                  >
+                    {token.nameCollection}
+                  </Link>
                 </div>
                 <div className='name-nft textmode'>{detailNFT.name}</div>
               </Col>
