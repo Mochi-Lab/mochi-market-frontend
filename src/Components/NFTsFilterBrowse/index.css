@@ -20,6 +20,10 @@
   border-radius: 1rem !important;
 }
 
+.input-search-collections input.ant-input {
+  border-radius: 0rem !important;
+}
+
 .style-sider-left {
   flex: 0 0 auto !important;
   max-width: 300px !important;

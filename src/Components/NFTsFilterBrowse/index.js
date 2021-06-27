@@ -86,7 +86,7 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                           size='large'
                           value={strSearch}
                           suffix={<SearchOutlined />}
-                          className='style-search-input input-mode-bc'
+                          className='style-search-input input-mode-bc textmode'
                         />
                       </div>
                       <div className='list-collections'>
@@ -144,7 +144,7 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                         size='large'
                         value={tokenPayment}
                         onChange={(value) => setTokenPayment(value)}
-                        className='tokenpayment'
+                        className='tokenpayment textmode'
                       >
                         <Option value='0' key='-1' className='text-center'>
                           All
