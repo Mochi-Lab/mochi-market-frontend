@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { setStrSearch } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './index.css';
 
 export default function BannerSearchHome({ carouselBanner, inputSearch }) {
+  const [searchBoxFocused, setSearchBoxFocused] = useState(false);
   const dispatch = useDispatch();
   const { strSearch } = useSelector((state) => state);
 
@@ -25,11 +26,19 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
     }
   };
 
+  const handleOnFocus = (event) => {
+    setSearchBoxFocused(true);
+  }
+
+  const handleOnBlur = (event) => {
+    setSearchBoxFocused(false);
+  }
+
   return (
     <div className='banner-search-home'>
       <Slider {...carouselBanner} className='carousel-banner-home'>
-        <div className='home-banner'>
-          <img src={cover} alt='cover' />
+        <div className='home-banner' height='241px'>
+          <img src={cover} alt='cover' height='241px' />
           <div className='banner-content center'>
             <div>
               <p className='fontRubik mc-mk'>MOCHI MARKET</p>
@@ -41,7 +50,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
       {/* Search box */}
       <div className='box-search'>
         <div className='center' style={{ width: '100%', position: 'absolute', top: '-2rem' }}>
-          <div className='hs'>
+          <div className={'hs' + (searchBoxFocused ? ' active' : '')}>
             <div
               className='search-icon center search-input'
               style={{
@@ -61,6 +70,8 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
               onChange={(e) => searchNFT(e.target.value)}
               onKeyDown={handleKeyDown}
               value={strSearch}
+              onFocus={handleOnFocus}
+              onBlur={handleOnBlur}
             />
           </div>
         </div>

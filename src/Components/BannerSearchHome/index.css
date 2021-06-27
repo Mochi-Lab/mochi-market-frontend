@@ -38,6 +38,37 @@
   border-radius: 17px;
 }
 
+/* TODO : darkmode */
+
+.hs > div.search-input, .hs > input.search-input.home-search {
+  box-shadow: none;
+  border: 1px solid #d9d9d9;
+}
+
+.hs > div.search-input { 
+  border-right: none;
+}
+
+.hs > input.search-input.home-search { 
+  border-left: none;
+}
+
+.hs.active {
+  border: 1px solid #eb2f96;
+}
+
+.hs.active, .hs.active > div.search-input, .hs.active > input.search-input.home-search {
+  box-shadow: 4px 4px 4px #eb2f961f;
+}
+
+.hs:hover {
+  border: 1px solid #eb2f96;
+}
+
+.hs:hover > div.search-input, .hs:hover > input.search-input.home-search {
+  border-color: #fdeaf4;
+}
+
 .mc-mk {
   font-size: 64px;
   margin-bottom: 10px;
