@@ -11,7 +11,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import './index.css';
 
 export default function BannerSearchHome({ carouselBanner, inputSearch }) {
-  const [ searchBoxFocused, setSearchBoxFocused ] = useState(false);
+  const [searchBoxFocused, setSearchBoxFocused] = useState(false);
   const dispatch = useDispatch();
   const { strSearch } = useSelector((state) => state);
 
@@ -37,8 +37,8 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   return (
     <div className='banner-search-home'>
       <Slider {...carouselBanner} className='carousel-banner-home'>
-        <div className='home-banner'>
-          <img src={cover} alt='cover' height="241px"/>
+        <div className='home-banner' height='241px'>
+          <img src={cover} alt='cover' height='241px' />
           <div className='banner-content center'>
             <div>
               <p className='fontRubik mc-mk'>MOCHI MARKET</p>
