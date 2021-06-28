@@ -97,7 +97,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                 <div className='name-nft textmode'>{detailNFT.name}</div>
               </Col>
               {!!token.is1155 && !onSale ? (
-                <Col className='footer-card-right text-right'>
+                <Col className='footer-card-right text-right price-nft'>
                   <div className='title-price'>Available</div>
                   <div className='textmode'>
                     {!!token.soldAmount
