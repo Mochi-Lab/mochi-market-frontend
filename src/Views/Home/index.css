@@ -104,15 +104,12 @@
   padding: 0;
 }
 
-.content-home .ant-card:hover {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
 .content-home .ant-card .ant-card-cover img {
   height: 20vh;
   margin: 0 auto;
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
   object-fit: cover;
+  object-position: center top;
 }
 
 .icon-new {

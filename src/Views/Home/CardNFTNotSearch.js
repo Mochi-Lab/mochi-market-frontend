@@ -66,6 +66,14 @@ export default function CardNFTHome({ token }) {
           </div>
         }
       >
+        {!!token.price ? (
+            <div className='price-nft textmode'>
+              <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
+              <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+            </div>
+        ) : (
+            <></>
+        )}
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
@@ -73,17 +81,6 @@ export default function CardNFTHome({ token }) {
             </div>
             <div className='name-nft textmode'>{detailNFT.name}</div>
           </Col>
-          {!!token.price ? (
-            <Col className='footer-card-right text-right'>
-              <div className='title-price'>Price</div>
-              <div className='price-nft textmode'>
-                <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-                <b>{getSymbol(chainId)[token.tokenPayment]}</b>
-              </div>
-            </Col>
-          ) : (
-            <></>
-          )}
         </Row>
       </Card>
     </Link>

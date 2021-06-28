@@ -48,16 +48,6 @@
   object-position: center top;
 }
 
-.card-nft .price-nft {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  background: linear-gradient(125.02deg, #ff0086 50%, rgba(255, 0, 134, 0) 118.17%);
-  border-radius: 0 5px 0 5px;
-  color: white !important;
-  padding: 0 0.5rem 0 0.5rem;
-}
-
 @media (max-width: 992px) {
   .content-list-nft {
     display: block;
