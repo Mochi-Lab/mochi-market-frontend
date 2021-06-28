@@ -33,14 +33,6 @@
   font-size: 0.81rem;
 }
 
-.footer-card-right .price-nft {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-top: 0.31rem;
-  font-size: 0.89rem;
-}
-
 .price-nft b {
   font-size: 0.68rem;
 }
@@ -84,7 +76,6 @@
 }
 
 .page-profile .footer-card-left {
-  width: 6.9rem;
 }
 
 .list-nft-owner .fill-width {
