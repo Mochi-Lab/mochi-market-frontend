@@ -22,6 +22,7 @@ export default function ToggleDarkMode() {
   };
   return (
     <div className='darkmode-switch'>
+      <span className='darkmode-switch-label'>Theme: </span>
       <div className='toggle' title='toggle dark mode'>
         <label>
           <input checked={!isDark} onChange={() => toggleThemeChange()} type='checkbox' name='' />

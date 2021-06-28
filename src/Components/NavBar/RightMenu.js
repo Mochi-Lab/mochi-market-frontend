@@ -145,7 +145,7 @@ const RightMenu = () => {
         </Menu.Item>
       )}
       <Menu.Item key='setting:1' disabled>
-        <div style={{ cursor: 'pointer', color: 'black' }} className='justifyContent'>
+        <div style={{ cursor: 'pointer' }} className='justifyContent'>
           <div>
             <ToggleDarkMode />
           </div>
