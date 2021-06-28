@@ -119,9 +119,10 @@ export default function CreateERC1155() {
                 ]}
               >
                 <Input
-                  className='input-name-nft input-mode-bc'
+                  className='input-name-nft input-mode-bc textmode'
                   placeholder='Name of NFT'
                   size='large'
+                  autoComplete='off'
                 />
               </Form.Item>
               {collectionId !== -1 ? (
@@ -154,6 +155,9 @@ export default function CreateERC1155() {
                   className='input-name-nft input-mode-bc'
                   placeholder='Number of NFT'
                   size='large'
+                  autoComplete='off'
+                  min='1'
+                  type='number'
                 />
               </Form.Item>
               <Form.Item

@@ -81,6 +81,10 @@ html[data-theme='dark'] {
   color: rgb(250, 250, 250) !important;
 }
 
+[data-theme='dark'] .textmode input[type="text"] {
+  color: rgb(250, 250, 250) !important;
+}
+
 [data-theme='dark'] .nav-textmode {
   color: rgb(250, 250, 250) !important;
 }

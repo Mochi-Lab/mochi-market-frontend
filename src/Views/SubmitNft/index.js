@@ -62,7 +62,7 @@ export default function SubmitNFT() {
               <Option value={true}>ERC1155</Option>
             </Select>
             <Input
-              className='input-address input-mode-bc'
+              className='input-address input-mode-bc textmode'
               size='large'
               placeholder='Enter your contract address'
               onChange={(event) => setContractAddress(event.target.value)}

@@ -97,9 +97,10 @@ export default function CreateERC721() {
               >
                 <Input
                   addonBefore='Item Name : '
-                  className='input-name-nft input-mode-bc'
+                  className='input-name-nft input-mode-bc textmode'
                   placeholder='Name of NFT'
                   size='large'
+                  autoComplete='off'
                 />
               </Form.Item>
               <Form.Item className='description' name='description' label='Description : '>
