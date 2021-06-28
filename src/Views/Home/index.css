@@ -63,6 +63,7 @@
   border: 1px solid rgba(4, 4, 5, 0.1);
 }
 
+
 .slick-prev:hover,
 .slick-prev:active,
 .slick-prev:focus,
@@ -96,17 +97,22 @@
   width: 95%;
   margin: 0 auto;
   border-radius: 8px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .content-home .ant-card .ant-card-cover {
-  padding: 1rem;
+  padding: 0;
+}
+
+.content-home .ant-card:hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .content-home .ant-card .ant-card-cover img {
   height: 20vh;
   margin: 0 auto;
   border-radius: 5px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .icon-new {
