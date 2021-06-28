@@ -40,6 +40,16 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   let chainId = getState().chainId ? getState().chainId : await web3.eth.net.getId();
   contractAddress = getContractAddress(chainId);
 
+  try {
+    const response = await fetch(
+      process.env.REACT_APP_SERVER_URL + '/verifyAllNetwork?network=' + chainId
+    );
+    const data = await response.json();
+    dispatch(setVerifiedContracts(data));
+  } catch (e) {
+    console.log(e);
+  }
+
   const addressesProvider = new web3.eth.Contract(
     AddressesProvider.abi,
     contractAddress.AddressesProvider
@@ -141,6 +151,11 @@ export const setMomaBalance = () => async (dispatch, getState) => {
 export const SET_STR_SEARCH = 'SET_STR_SEARCH';
 export const setStrSearch = (strSearch) => (dispatch) => {
   dispatch({ type: SET_STR_SEARCH, strSearch });
+};
+
+export const SET_VERIFIED_CONTRACTS = 'SET_VERIFIED_CONTRACTS';
+export const setVerifiedContracts = (verifiedContracts) => (dispatch) => {
+  dispatch({ type: SET_VERIFIED_CONTRACTS, verifiedContracts });
 };
 
 ////////////////////
