@@ -113,14 +113,14 @@ const infoChains = {
   //BSC Testnet
   97: { name: 'BSC-Testnet', icon: bnb },
   // Harmony mainet
-  1666600000: { name: 'Harmony', icon: one },
+  // 1666600000: { name: 'Harmony', icon: one },
 };
 
 export const listChainsSupport = [
   { chainId: 56, name: 'BSC', icon: bnb /*BSC Mainnet*/ },
   { chainId: 137, name: 'Polygon', icon: polygon /* Polygon Mainnet*/ },
   { chainId: 97, name: 'BSC-Testnet', icon: bnb /*BSC Testnet*/ },
-  { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
+  // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
 ];
 
 export const getContractAddress = (_chainId) => {

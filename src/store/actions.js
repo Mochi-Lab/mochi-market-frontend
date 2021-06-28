@@ -45,6 +45,9 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
       process.env.REACT_APP_SERVER_URL + '/verifyAllNetwork?network=' + chainId
     );
     const data = await response.json();
+    if (!Array.isArray(data)) {
+      throw 'Error fetching data ' + data;
+    }
     dispatch(setVerifiedContracts(data));
   } catch (e) {
     console.log(e);
@@ -388,15 +391,15 @@ export const setCreativeStudio = (creativeStudio) => async (dispatch) => {
 // NFTs List
 ////////////////////
 
-export const registerNft = (contractAddress) => async (dispatch, getState) => {
-  const { nftList, walletAddress, web3 } = getState();
+export const registerNft = (contractAddress, isERC1155) => async (dispatch, getState) => {
+  const { nftList, walletAddress } = getState();
 
   try {
     // is contract address
-    let ERC721token = new web3.eth.Contract(ERC721.abi, contractAddress);
-    await ERC721token.methods.name().call();
-    nftList.methods
-      .registerNFT(contractAddress)
+    // let ERC721token = new web3.eth.Contract(ERC721.abi, contractAddress);
+    // await ERC721token.methods.name().call();
+    await nftList.methods
+      .registerNFT(contractAddress, isERC1155)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
         let noti = {};
