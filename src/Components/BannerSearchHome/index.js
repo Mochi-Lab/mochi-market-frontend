@@ -5,7 +5,6 @@ import Slider from 'react-slick';
 import { setStrSearch } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef, useState } from 'react';
-import { Input } from 'antd';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
