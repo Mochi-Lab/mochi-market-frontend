@@ -34,23 +34,24 @@
 
 .hs {
   display: flex;
-  border: 1px solid #d9d9d987;
-  border-radius: 30px;
+  transition: all 0.3s;
+  border-radius: 25px;
 }
 
 .hs div.search-icon.center.search-input {
   height: 3rem;
   width: 3rem;
-  border-radius: 30px 0px 0px 30px;
+  border-radius: 25px 0px 0px 25px;
   background: #ffffff;
 }
 
 /* TODO : darkmode */
 
-.hs > div.search-input, .hs > input.search-input.home-search {
+.hs > .search-input {
   box-shadow: none;
-  border: 1px solid #d9d9d9;
-  border-radius: 0px 30px 30px 0px;
+  border: 1px solid #c3c3c3;
+  border-radius: 0px 25px 25px 0px;
+  transition: all 0.3s;
 }
 
 .hs > div.search-input { 
@@ -62,19 +63,12 @@
 }
 
 .hs.active {
-  border: 1px solid #eb2f96;
+  box-shadow: 0px 0px 0px 3px #eb2f961f;
 }
 
-.hs.active, .hs.active > div.search-input, .hs.active > input.search-input.home-search {
-  box-shadow: 4px 4px 4px #eb2f961f;
-}
-
-.hs:hover {
-  border: 1px solid #eb2f96;
-}
-
-.hs:hover > div.search-input, .hs:hover > input.search-input.home-search {
-  border-color: #fdeaf4;
+.hs:hover .search-input,
+.hs.active .search-input {
+  border-color: #eb2f96;  
 }
 
 .mc-mk {
