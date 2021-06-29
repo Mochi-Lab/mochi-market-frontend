@@ -70,6 +70,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
             hoverable
             cover={
               <div className='wrap-cover'>
+                <div className='blurred-background'  style={{ backgroundImage: `url(${detailNFT.image})` }}/>
                 <div className='NFTResource-Wrapper'>
                   <img
                     alt={`img-nft-${token.index}`}
@@ -79,7 +80,16 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                 </div>
               </div>
             }
+            className='card-nft'
           >
+            {!!token.price ? (
+                <div className='price-nft textmode'>
+                  <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
+                  <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+                </div>
+            ) : (
+                <></>
+            )}
             <Row justify='space-between'>
               <Col className={`footer-card-left ${!token.is1155 ? 'fill-width' : ''}`}>
                 <div className='name-collection'>
@@ -87,19 +97,8 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                 </div>
                 <div className='name-nft textmode'>{detailNFT.name}</div>
               </Col>
-              {!!token.price ? (
-                <Col className='footer-card-right text-right'>
-                  <div className='title-price'>Price</div>
-                  <div className='price-nft textmode'>
-                    <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-                    <b>{getSymbol(chainId)[token.tokenPayment]}</b>
-                  </div>
-                </Col>
-              ) : (
-                <></>
-              )}
               {!!token.is1155 && !onSale ? (
-                <Col className='footer-card-right text-right'>
+                <Col className='footer-card-right text-right price-nft'>
                   <div className='title-price'>Available</div>
                   <div className='textmode'>
                     {!!token.soldAmount
