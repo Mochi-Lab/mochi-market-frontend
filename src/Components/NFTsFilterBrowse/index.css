@@ -16,8 +16,8 @@
   top: 52%;
 }
 
-.input-search-collections {
-  border-radius: 1rem !important;
+.input-search-collections > span.style-search-input {
+  border-radius: 30px !important;
 }
 
 .input-search-collections input.ant-input {
@@ -175,7 +175,9 @@
   display: inline-block;
   width: 2.12rem;
   height: 2.12rem;
-  border-radius: 1.06rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #fafafa;
 }
 
 .icon-collection .avatar-token {
