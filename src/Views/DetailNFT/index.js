@@ -51,6 +51,7 @@ export default function DetailNFT() {
     convertErc1155Tokens,
     availableSellOrder1155,
     erc1155Tokens,
+    verifiedContracts,
   } = useSelector((state) => state);
   const { addressToken, id, sellID } = useParams();
 
@@ -182,7 +183,9 @@ export default function DetailNFT() {
               <div className='info-order-nft'>
                 <div className='collections-nft'>
                   <Link to='#'>{token.collections}</Link>
-                  <img src={tick} alt='icon-tick' />
+                  {verifiedContracts.includes(addressToken.toLowerCase()) ? (
+                    <img src={tick} alt='icon-tick' />
+                  ) : null}
                 </div>
                 <div className='detail-title'>
                   <h1 className='text-title textmode'>{token.name}</h1>

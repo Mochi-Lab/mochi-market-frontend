@@ -12,7 +12,7 @@ import '../NFTsCardBrowse/index.css';
 import 'Assets/css/common-card-nft.css';
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
-  const { web3, chainId } = useSelector((state) => state);
+  const { web3, chainId, verifiedContracts } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
   useEffect(() => {
@@ -93,7 +93,10 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
             <Row justify='space-between'>
               <Col className={`footer-card-left ${!token.is1155 ? 'fill-width' : ''}`}>
                 <div className='name-collection'>
-                  <img src={tick} alt='icon-tick' className='icon-tick' /> {token.collections}
+                  {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+                    <img src={tick} alt='icon-tick' className='icon-tick' />
+                  ) : null}{' '}
+                  {token.collections}
                 </div>
                 <div className='name-nft textmode'>{detailNFT.name}</div>
               </Col>
