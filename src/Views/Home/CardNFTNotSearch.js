@@ -56,6 +56,7 @@ export default function CardNFTHome({ token }) {
         className='home-card card-nft'
         cover={
           <div className='wrap-cover'>
+            <div className='blurred-background'  style={{ backgroundImage: `url(${detailNFT.image})` }}/>
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.index}`}
