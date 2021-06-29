@@ -233,6 +233,10 @@ html[data-theme='dark'] {
   color: #fff;
 }
 
+[data-theme='dark'] .ant-menu-item.ant-menu-item-selected a {
+  color: #000;
+}
+
 [data-theme='dark'] .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
   background: rgb(61, 61, 61) !important;
 }

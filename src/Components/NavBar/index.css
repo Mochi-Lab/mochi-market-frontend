@@ -219,4 +219,12 @@
   .leftMenu {
     width: 100%;
   }
+
+  .ant-drawer-body .btn-create, .ant-drawer-body .bt-cnlo {
+    width: 80%;
+  }
+
+  .balance-create {
+    width: 85%;
+  }
 }
