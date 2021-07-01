@@ -209,10 +209,6 @@ html[data-theme='dark'] {
 [data-theme='dark'] .sidenav-item h2 {
   color: white;
 }
-[data-theme='dark'] .barsMenu {
-  background: none !important;
-  color: white;
-}
 
 [data-theme='dark'] .ant-drawer-content {
   background: #464646 0% 0% no-repeat padding-box;

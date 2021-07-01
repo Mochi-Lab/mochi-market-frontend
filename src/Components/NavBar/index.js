@@ -19,7 +19,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className='menu-bar alignItem'>
+    <nav className='menu-bar'>
       <div className='logo'>
         <Link to='/'>
           <img src={logoMochi} alt='logo' />
@@ -29,7 +29,9 @@ export default function NavBar() {
         <div className='leftMenu'>
           <LeftMenu />
         </div>
-        <MenuOutlined className='barsMenu' style={{ display: 'none' }} onClick={showDrawer} />
+        <div className='menu-triggerer-container'>
+          <MenuOutlined onClick={showDrawer} />
+        </div>
         <div className='rightMenu'>
           <RightMenu />
         </div>
