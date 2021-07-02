@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'antd/lib/modal/Modal';
 import { logout } from 'store/actions';
 import { useState } from 'react';
-import './index.css';
+import './index.scss';
 
 export default function LogoutWallet() {
   const { walletAddress } = useSelector((state) => state);

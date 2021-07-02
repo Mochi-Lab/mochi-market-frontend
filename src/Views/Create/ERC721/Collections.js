@@ -6,7 +6,7 @@ import ConnectWallet from 'Components/ConnectWallet';
 import SampleERC721 from 'Contracts/SampleERC721.json';
 import LoadingModal from 'Components/LoadingModal';
 
-import '../index.css';
+import '../index.scss';
 
 const NFTinfo = ({ userCollection, web3 }) => {
   const [name, setName] = useState('Loading..');

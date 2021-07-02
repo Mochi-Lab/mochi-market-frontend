@@ -1,7 +1,7 @@
 import { ShareAltOutlined, TwitterOutlined } from '@ant-design/icons';
 import { Button, Popconfirm } from 'antd';
 import { useState } from 'react';
-import './index.css';
+import './index.scss';
 
 export default function Share({ token }) {
   const [text] = useState(`Yoo! look what I found! ${token.name}`);

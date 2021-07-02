@@ -12,7 +12,7 @@ import avatarDefault from 'Assets/avatar-profile.png';
 // import iconTwitter from 'Assets/icons/twitter-profile.svg';
 // import TransactionTable from 'Components/TransactionTable';
 import { getNFTsOfOwner, setAvailableSellOrder } from 'store/actions';
-import './index.css';
+import './index.scss';
 import { useParams } from 'react-router';
 
 const { TabPane } = Tabs;

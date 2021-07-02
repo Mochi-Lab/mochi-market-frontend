@@ -1,5 +1,5 @@
-@import '../../dark.css';
-@import '../../light.css';
+@import '../../dark.scss';
+@import '../../light.scss';
 .erc721-img {
   width: 100% !important;
   margin: auto;
@@ -15,7 +15,7 @@
 
 .card-token {
   background-color: var(--nft-background) !important;
-  box-shadow: 0 6px 15px rgb(36 37 38 / 8%);
+  box-shadow: 0 6px 15px rgba(36, 37, 38, 0.08);
   border-radius: 1rem !important;
   overflow: hidden;
   transition: box-shadow 0.25s ease, transform 0.25s ease;

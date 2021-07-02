@@ -6,7 +6,7 @@ import LoadingModal from 'Components/LoadingModal';
 import ERC721Collections from './Collections';
 import ConnectWallet from 'Components/ConnectWallet';
 import { uploadIPFS } from '../UploadIpfs';
-import '../index.css';
+import '../index.scss';
 import { generateERC721NFT } from 'store/actions';
 import { Link } from 'react-router-dom';
 

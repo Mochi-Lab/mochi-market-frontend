@@ -1,4 +1,4 @@
-import 'Views/DetailNFT/style.css';
+import 'Views/DetailNFT/index.scss';
 import { Button, InputNumber, Modal, Form, Input, Select, Col, Row } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
 
-import './index.css';
+import './index.scss';
 
 const { Option } = Select;
 

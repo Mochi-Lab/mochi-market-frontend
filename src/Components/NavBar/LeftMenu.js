@@ -9,7 +9,7 @@ import { getInfoChain, listChainsSupport } from 'utils/getContractAddress';
 import { selectChain } from 'Connections/web3Modal';
 import imgNotFound from 'Assets/notfound.png';
 
-import './index.css';
+import './index.scss';
 
 const { useBreakpoint } = Grid;
 

@@ -5,7 +5,7 @@ import { setAvailableSellOrder, setBalance, setMomaBalance } from 'store/actions
 import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
-import './App.css';
+import './App.scss';
 import Notification from 'Components/Notification';
 import StatusActivity from 'Components/StatusActivity';
 import useInterval from 'utils/useInterval';

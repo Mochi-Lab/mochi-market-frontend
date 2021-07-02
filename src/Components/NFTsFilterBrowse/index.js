@@ -6,7 +6,7 @@ import IconLoading from 'Components/IconLoading';
 import { CheckCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { getTokensPayment } from 'utils/getContractAddress';
 import 'react-alice-carousel/lib/alice-carousel.css';
-import './index.css';
+import './index.scss';
 
 const { Content } = Layout;
 const { Option } = Select;

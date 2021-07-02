@@ -5,7 +5,7 @@ import { registerNft, acceptNft } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
 import { useSelector } from 'react-redux';
 import imgBanner from 'Assets/images/img-banner-submit-nft.png';
-import './index.css';
+import './index.scss';
 
 const { Option } = Select;
 

@@ -1,4 +1,4 @@
-import 'Views/DetailNFT/style.css';
+import 'Views/DetailNFT/index.scss';
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getSymbol } from 'utils/getContractAddress';
 import { balanceOf } from 'utils/helper';
-import './index.css';
+import './index.scss';
 
 export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout1155 }) {
   const { web3, chainId, balance, walletAddress } = useSelector((state) => state);

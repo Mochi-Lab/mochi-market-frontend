@@ -1,6 +1,6 @@
-@import './dark.css';
+@import './dark.scss';
 
-@import './light.css';
+@import './light.scss';
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
@@ -277,7 +277,7 @@ div.menu-triggerer-container > span.anticon.anticon-menu {
 }
 
 .ant-card-bordered {
-  border: 1px solid rgb(0 0 0 / 12%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
 
 .ant-modal-content {

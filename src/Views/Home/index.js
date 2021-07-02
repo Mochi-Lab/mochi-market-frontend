@@ -9,8 +9,8 @@ import CardNFTNotSearch from './CardNFTNotSearch.js';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import './index.css';
-import 'Assets/css/common-card-nft.css';
+import './index.scss';
+import 'Assets/css/common-card-nft.scss';
 
 export default function Home() {
   const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721 } = useSelector(

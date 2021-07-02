@@ -8,8 +8,8 @@ import imgNotFound from 'Assets/notfound.png';
 import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
 import tick from 'Assets/icons/tick-green.svg';
-import '../NFTsCardBrowse/index.css';
-import 'Assets/css/common-card-nft.css';
+import '../NFTsCardBrowse/index.scss';
+import 'Assets/css/common-card-nft.scss';
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
   const { web3, chainId, verifiedContracts } = useSelector((state) => state);

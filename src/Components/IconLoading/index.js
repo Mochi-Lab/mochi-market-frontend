@@ -1,4 +1,4 @@
-import './index.css';
+import './index.scss';
 import logoMochi from 'Assets/logo-mochi.png';
 
 export default function IconLoading() {
