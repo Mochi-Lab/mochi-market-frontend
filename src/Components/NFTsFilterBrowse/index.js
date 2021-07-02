@@ -20,6 +20,7 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
   const [allOrders, setAllOrders] = useState([]);
+  const [filterCount, setFilterCount] = useState(0);
 
   useEffect(() => {
     if (!!chainId) {
@@ -52,6 +53,10 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
   const searchCollections = (e) => {
     const { value } = e.target;
     setStrSearch(value);
+  };
+
+  const _setFilterCount = (count) => {
+    setFilterCount(count);
   };
 
   return (
@@ -136,7 +141,7 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                   <Row className='sort-results'>
                     <Col span='12' className='left-sort-results'>
                       <span className='textmode'>
-                        {`${allOrders.length}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
+                        {`${filterCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
                       </span>
                     </Col>
                     <Col span='12' className='right-sort-results'>
@@ -186,12 +191,14 @@ export default function NFTsFilterBrowse({ erc721Tokens, isLoadingErc721 }) {
                       tokens={selectedTokens.tokens}
                       tokenPayment={tokenPayment}
                       typeSort={typeSort}
+                      filterCountCallback={_setFilterCount}
                     />
                   ) : (
                     <NFTsCardBrowse
                       tokens={allOrders}
                       tokenPayment={tokenPayment}
                       typeSort={typeSort}
+                      filterCountCallback={_setFilterCount}
                     />
                   )}
                 </Col>
