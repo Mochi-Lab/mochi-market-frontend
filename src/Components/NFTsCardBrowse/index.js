@@ -70,7 +70,10 @@ function NFTsCard({ token, strSearch }) {
             hoverable
             cover={
               <div className='wrap-cover'>
-                <div className='blurred-background'  style={{ backgroundImage: `url(${detailNFT.image})` }}/>
+                <div
+                  className='blurred-background'
+                  style={{ backgroundImage: `url(${detailNFT.image})` }}
+                />
                 <div className='NFTResource-Wrapper'>
                   <img
                     alt={`img-nft-${token.index}`}
@@ -83,12 +86,12 @@ function NFTsCard({ token, strSearch }) {
             className='card-nft'
           >
             {!!token.price ? (
-                <div className='price-nft textmode'>
-                  <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-                  <b>{getSymbol(chainId)[token.tokenPayment]}</b>
-                </div>
+              <div className='price-nft textmode'>
+                <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
+                <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+              </div>
             ) : (
-                <></>
+              <></>
             )}
             <Row justify='space-between'>
               <Col className='footer-card-left'>
@@ -110,9 +113,12 @@ function NFTsCard({ token, strSearch }) {
   ) : null;
 }
 
-export default function NFTsCardBrowse({ tokens, tokenPayment, typeSort }) {
+export default function NFTsCardBrowse({ tokens, tokenPayment, typeSort, filterCountCallback }) {
   const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
   const { strSearch, web3 } = useSelector((state) => state);
+  useEffect(() => {
+    filterCountCallback(afterFilter.length);
+  }, [afterFilter.length, filterCountCallback]);
 
   const sortOrders = useCallback(async () => {
     var BN = web3.utils.BN;
