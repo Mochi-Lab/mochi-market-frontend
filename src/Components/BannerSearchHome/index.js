@@ -16,7 +16,8 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   const { strSearch } = useSelector((state) => state);
 
   const browse = useRef(null);
-  const searchNFT = (text) => {
+  const searchNFT = (event) => {
+    const text = event.target.value;
     dispatch(setStrSearch(text));
   };
 
@@ -53,12 +54,6 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
           <div className={'hs' + (searchBoxFocused ? ' active' : '')}>
             <div
               className='search-icon center search-input'
-              style={{
-                height: '3rem',
-                width: '3rem',
-                borderRadius: '16px 0px 0px 16px',
-                background: '#ffffff',
-              }}
             >
               <SearchOutlined />
             </div>
@@ -67,7 +62,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
               className='search-input home-search'
               placeholder='Search'
               ref={inputSearch}
-              onChange={(e) => searchNFT(e.target.value)}
+              onChange={searchNFT}
               onKeyDown={handleKeyDown}
               value={strSearch}
               onFocus={handleOnFocus}

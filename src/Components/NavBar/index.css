@@ -15,6 +15,10 @@
 }
 
 .menu-bar {
+  user-select: none;
+  display: flex;
+  align-items: center;
+  height: 70px !important;
   z-index: 2;
   position: fixed;
   width: 100%;
@@ -36,13 +40,9 @@
   align-items: center;
 }
 
-.alignItems {
+.leftMenu > div.ant-col {
   display: flex;
   align-items: center;
-}
-
-.leftMenu {
-  width: 40%;
 }
 
 .leftMenu .ant-col {
@@ -162,10 +162,6 @@
 }
 
 @media (max-width: 1437px) {
-  .leftMenu {
-    width: 48%;
-  }
-
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 10px;
   }
@@ -174,9 +170,6 @@
   }
 }
 @media (max-width: 1345px) {
-  .leftMenu {
-    width: 37%;
-  }
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 7px;
   }
@@ -185,10 +178,6 @@
   }
 }
 @media (max-width: 1024px) {
-  .leftMenu {
-    width: 38%;
-  }
-
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 5px;
   }
@@ -198,14 +187,8 @@
 }
 
 @media (max-width: 992px) {
-  .barsMenu {
+  div.menu-triggerer-container {
     display: block !important;
-    filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
-    font-size: 2rem;
-  }
-
-  .barsMenu svg {
-    color: #fff;
   }
 
   .balance-create {

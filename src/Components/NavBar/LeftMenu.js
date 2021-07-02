@@ -35,7 +35,7 @@ export default function LeftNar() {
 
   const { md } = useBreakpoint();
   return (
-    <Col span={md ? 40 : 25} className='alignItems' style={{ paddingLeft: md ? '0px' : '10px' }}>
+    <Col span={md ? 40 : 25}>
       <Dropdown
         placement='bottomCenter'
         overlay={

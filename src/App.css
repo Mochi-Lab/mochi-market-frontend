@@ -13,7 +13,6 @@
 }
 
 .menu-bar {
-  padding: 0 20px;
   border-bottom: solid 1px #ff0086;
   overflow: hidden;
   box-shadow: 0 0 3px #f3f1f1;
@@ -55,27 +54,20 @@
   justify-content: center;
 }
 
-.alignItem {
-  display: flex;
-  align-items: center;
-}
-
 .justifyContent {
   display: flex;
   justify-content: space-between;
 }
 
 .logo {
-  width: 85px;
-  height: 75px;
+  width: 70px;
+  height: 70px;
   float: left;
 }
 
 .logo a {
   display: inline-block;
-  font-size: 20px;
-  padding: 10px 0 10px 20px;
-  text-transform: capitalize;
+  padding: 10px;
 }
 
 .logo a img {
@@ -83,6 +75,7 @@
 }
 
 .menuCon {
+  flex: auto;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -112,15 +105,31 @@
 }
 
 .menuCon .rightMenu {
+  flex: auto;
   float: right;
+  user-select: none;
 }
 
-.barsMenu {
+.menuCon .rightMenu ul.ant-menu {
+  width: 100%;
+  float: right;
+  justify-content: flex-end;
+}
+
+div.menu-triggerer-container {
+  flex: auto;
+  margin-right: 20px;
+  display: none;
+}
+
+div.menu-triggerer-container > span.anticon.anticon-menu {
   float: right;
   height: 32px;
   background: none;
   border: none !important;
-  padding: 10px 0 0 0 !important;
+  filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+  font-size: 2rem;
+  color: white !important;
 }
 
 .barsBtn {
@@ -149,10 +158,6 @@
 
 .ant-drawer-body {
   padding: 0;
-}
-
-.barsMenu > span {
-  display: block;
 }
 
 .ant-drawer-body .ant-menu-horizontal > .ant-menu-item,
@@ -208,10 +213,6 @@
 }
 
 @media (max-width: 767px) {
-  .barsMenu {
-    display: inline-block;
-    margin-top: 0;
-  }
 
   .rightMenu {
     display: none;
@@ -222,7 +223,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: calc(100% - 120px);
   }
 
   .menuCon .ant-menu-item,
@@ -374,28 +374,4 @@
   -webkit-box-align: center;
   align-items: center;
   color: rgb(34, 34, 34);
-}
-
-@media (max-width: 992px) {
-  .logo {
-    width: 85px;
-  }
-}
-
-@media (max-width: 768px) {
-  .logo {
-    width: 75px;
-  }
-  .logo a img {
-    width: 50px;
-  }
-  .barsMenu {
-    padding-top: 0 !important;
-  }
-}
-
-@media (max-width: 576px) {
-  .menuCon {
-    width: calc(100% - 90px);
-  }
 }
