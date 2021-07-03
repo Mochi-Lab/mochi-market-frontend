@@ -5,18 +5,16 @@
 .home-banner {
   width: 100%;
   position: relative;
-}
-
-.home-banner > img {
-  object-fit: cover;
-  width: 100%;
-}
-
-.home-banner > .banner-content {
-  position: absolute;
-  top: 0;
-  width: 100vw;
-  height: 100%;
+  > img {
+    object-fit: cover;
+    width: 100%;
+  }
+  > .banner-content {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100%;
+  }
 }
 
 .search-icon {
@@ -97,19 +95,16 @@
   .carousel-banner-home .item-carousel {
     height: 30vh;
   }
-  .home-banner > img {
-    height: 350px;
-  }
   .home-search {
     width: 60vw;
+  }
+  .mc-mk {
+    font-size: 48px;
   }
 }
 @media (max-width: 568px) {
   .carousel-banner-home .item-carousel {
     height: 25vh;
-  }
-  .home-banner > img {
-    height: 250px;
   }
   .mc-mk {
     font-size: 32px;
