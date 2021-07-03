@@ -41,16 +41,13 @@
 
 .content-home .slick-arrow::before {
   opacity: 0.75;
-  color: black;
-  font-size: 30px;
-  font-family: 'Circular Std', Helvetica, Arial, sans-serif !important;
 }
 
 .slick-arrow.slick-next::before {
-  content: '›';
+  content: url(../../Assets/icons/circle-arrow-right.svg);
 }
 .slick-arrow.slick-prev::before {
-  content: '‹';
+  content: url(../../Assets/icons/circle-arrow-left.svg);
 }
 
 .slick-prev,
@@ -58,24 +55,12 @@
   z-index: 3;
   width: 2.5rem;
   height: 2.5rem;
-  background: white;
+  background: #fcfcfc !important;
   border-radius: 50%;
   border: 1px solid rgba(4, 4, 5, 0.1);
-}
-
-
-.slick-prev:hover,
-.slick-prev:active,
-.slick-prev:focus,
-.slick-next:hover,
-.slick-next:focus,
-.slick-next:active {
-  background: white;
-}
-
-.slick-prev:hover,
-.slick-next:hover {
-  border: 1px solid rgba(4, 4, 5, 0.2);
+  &:hover {
+    border-color: rgba(4, 4, 5, 0.2);
+  }
 }
 
 .slick-next {
@@ -224,13 +209,6 @@
 @media (max-width: 568px) {
   .carousel-banner-home .item-carousel {
     height: 25vh;
-  }
-
-  .slick-arrow.slick-next::before {
-    margin-left: 5px;
-  }
-  .slick-arrow.slick-prev::before {
-    margin-left: 0;
   }
 
   .name-user-top {

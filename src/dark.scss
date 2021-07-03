@@ -423,3 +423,19 @@ html[data-theme='dark'] {
     background: none;
   }
 }
+
+[data-theme='dark'] {
+  .slick-arrow {
+    background: #1a1a1a !important;
+    border: 1px solid #333;
+    &:hover {
+      border-color: #666;
+    }
+    &.slick-next:before {
+      content: url(./Assets/icons/circle-arrow-right-dark.svg);
+    }
+    &.slick-prev:before {
+      content: url(./Assets/icons/circle-arrow-left-dark.svg);
+    }
+  }
+}
