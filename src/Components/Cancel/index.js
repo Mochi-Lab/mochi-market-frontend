@@ -1,4 +1,4 @@
-import 'Views/DetailNFT/style.css';
+import 'Views/DetailNFT/index.scss';
 import { Button } from 'antd';
 import { cancelSellOrder } from 'store/actions';
 import store from 'store/index';

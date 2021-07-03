@@ -1,4 +1,4 @@
-import 'Views/DetailNFT/style.css';
+import 'Views/DetailNFT/index.scss';
 import { useState } from 'react';
 import { Modal, Button, Input, Form, InputNumber, Col, Row } from 'antd';
 import { useParams } from 'react-router-dom';

@@ -6,7 +6,7 @@ import {
   acceptCampaign,
 } from 'store/actions';
 import store from 'store/index';
-import './index.css';
+import './index.scss';
 import { useSelector } from 'react-redux';
 import IconLoading from 'Components/IconLoading';
 import FormCreateCampaign from './FormCreateCampaign';

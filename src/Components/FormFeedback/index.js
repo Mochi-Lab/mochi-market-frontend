@@ -1,4 +1,4 @@
-import './index.css';
+import './index.scss';
 import { Avatar } from 'antd';
 import { FormOutlined } from '@ant-design/icons';
 

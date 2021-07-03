@@ -6,7 +6,7 @@ import { Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import useInterval from 'utils/useInterval.js';
 
-import './index.css';
+import './index.scss';
 
 export default function Faucet() {
   const dispatch = useDispatch();

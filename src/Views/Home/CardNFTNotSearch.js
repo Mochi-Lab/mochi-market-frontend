@@ -8,7 +8,7 @@ import { getSymbol } from 'utils/getContractAddress';
 import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
 import tick from 'Assets/icons/tick-green.svg';
-import 'Assets/css/common-card-nft.css';
+import 'Assets/css/common-card-nft.scss';
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId, verifiedContracts } = useSelector((state) => state);

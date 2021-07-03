@@ -1,6 +1,6 @@
 import { CameraOutlined } from '@ant-design/icons';
 
-import './index.css';
+import './index.scss';
 
 export default function Edit() {
   return (

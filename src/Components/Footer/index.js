@@ -1,4 +1,4 @@
-import './index.css';
+import './index.scss';
 import logo from 'Assets/images/logo.png';
 import tele from 'Assets/icons/telegram.svg';
 import twitter from 'Assets/icons/twitter.svg';

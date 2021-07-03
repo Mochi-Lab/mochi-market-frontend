@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router';
-import './index.css';
+import './index.scss';
 import create721Icon from 'Assets/images/create721.png';
 import create1155Icon from 'Assets/images/create1155.png';
 export default function Create() {

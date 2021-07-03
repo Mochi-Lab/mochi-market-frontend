@@ -20,7 +20,7 @@ import store from 'store/index';
 import avatarDefault from 'Assets/avatar-profile.png';
 import tick from 'Assets/icons/tick-green.svg';
 
-import './style.css';
+import './index.scss';
 
 const { TabPane } = Tabs;
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row, Card, Collapse, InputNumber, Form, DatePicker } from 'antd';
 import { fetchListCampaign, addMoreSlots, rescheduleCampaign, extendCampaign } from 'store/actions';
 import store from 'store/index';
-import './index.css';
+import './index.scss';
 import { parseBalance, convertTimestampToDate } from 'utils/helper';
 import BtnClaimCampaign from './BtnClaimCampaign';
 import BtnCancelCampaign from './BtnCancelCampaign';

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConnectWallet from 'Components/ConnectWallet';
 import SampleERC1155 from 'Contracts/SampleERC1155.json';
 
-import '../index.css';
+import '../index.scss';
 
 const NFTinfo = ({ userCollection, web3 }) => {
   const [name, setName] = useState('Loading..');

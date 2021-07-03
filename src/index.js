@@ -4,7 +4,7 @@ import App from './App';
 import store from './store';
 import { Provider } from 'react-redux';
 
-import './index.css';
+import './index.scss';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(

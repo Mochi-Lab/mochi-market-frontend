@@ -9,7 +9,7 @@ import { generateERC1155NFT } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
 import { Link } from 'react-router-dom';
 
-import '../index.css';
+import '../index.scss';
 
 const { TextArea } = Input;
 

@@ -20,7 +20,7 @@ import {
   checkBalance,
 } from 'store/actions';
 import store from 'store/index';
-import './index.css';
+import './index.scss';
 import { useSelector } from 'react-redux';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { parseBalance } from 'utils/helper';

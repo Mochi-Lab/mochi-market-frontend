@@ -16,12 +16,8 @@
   top: 52%;
 }
 
-.input-search-collections > span.style-search-input {
-  border-radius: 30px !important;
-}
-
-.input-search-collections input.ant-input {
-  border-radius: 0rem !important;
+.input-search-collections {
+  border-radius: 1rem !important;
 }
 
 .style-sider-left {
@@ -31,7 +27,7 @@
   overflow: hidden;
   z-index: 1;
   background: none !important;
-  box-shadow: -6px 13px 20px 0px rgb(31 38 103 / 40%);
+  box-shadow: -6px 13px 20px 0px rgba(31, 38, 103, 0.40);
   min-height: 100vh;
 }
 
@@ -58,8 +54,8 @@
   background: #fff;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  -webkit-box-shadow: 0 2px 30px 0 rgb(31 38 103 / 20%);
-  box-shadow: 0 2px 30px 0 rgb(31 38 103 / 20%);
+  -webkit-box-shadow: 0 2px 30px 0 rgba(31, 38, 103, 0.20);
+  box-shadow: 0 2px 30px 0 rgba(31, 38, 103, 0.20);
   overflow: hidden;
   -webkit-transform-origin: center left;
   transform-origin: center left;
@@ -141,115 +137,6 @@
   padding: 1rem;
 }
 
-.input-search-collections .ant-input-affix-wrapper {
-  border-radius: 1rem;
-}
-.input-search-collections .ant-input-affix-wrapper input {
-  border-radius: 1rem;
-}
-
-.list-collections {
-  height: calc(100% - 5rem);
-  margin-top: 1rem;
-  overflow-y: auto;
-  cursor: pointer;
-  padding-left: 1rem;
-}
-.list-collections > .collect-item {
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  height: 2.5rem;
-  margin: 0.45rem 0.45rem;
-  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
-  /* border-radius: 1rem; */
-}
-.list-collections > .collect-item .name-collection {
-  display: inline-block;
-  margin-left: 0.63rem;
-  font-size: 0.88rem;
-  font-weight: 500;
-}
-
-.icon-collection {
-  display: inline-block;
-  width: 2.12rem;
-  height: 2.12rem;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid #fafafa;
-}
-
-.icon-collection .avatar-token {
-  width: 100%;
-  height: 100%;
-  border-radius: 1rem;
-}
-
-.icon-collection .avatar-token svg {
-  fill: #eb2f96;
-}
-
-.search-collections {
-  height: 40vh;
-  transition: all 0.15s ease 0s;
-  margin-top: 1rem;
-  position: relative;
-  overflow: hidden;
-  padding: 0px 4px;
-}
-
-.style-search-input.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
-  border-color: #eb2f96;
-}
-
-.style-search-input.ant-input-affix-wrapper:focus,
-.ant-input-affix-wrapper-focused {
-  border-color: #eb2f96;
-  box-shadow: 0 0 0 2px #eb2f961f;
-}
-
-.sort-results {
-  padding: 0 0.4rem;
-  margin: 1.5rem 0;
-}
-
-.left-sort-results {
-  text-align: start;
-  display: flex;
-  align-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.right-sort-results {
-  text-align: end;
-}
-.right-sort-results .ant-select-selector {
-  text-align: center;
-}
-
-.select-sort {
-  border-radius: 1rem;
-  width: 155px;
-  margin: 0.25rem;
-}
-.select-sort .ant-select-selector,
-.tokenpayment .ant-select-selector {
-  border-radius: 1rem !important;
-}
-
-.tokenpayment {
-  border-radius: 1rem !important;
-  width: 125px;
-  margin: 0.25rem;
-}
-.symbol-tokenpayment {
-  margin-left: 0.5rem;
-}
-.option-tokenpayment {
-  display: flex;
-}
-
 @media (max-width: 992px) {
   .site-layout-background.style-sider-left {
     display: none;
@@ -259,26 +146,5 @@
   }
   .content-home .alice-carousel {
     width: 100%;
-  }
-  .list-collections {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    align-content: stretch;
-    padding-left: 0rem;
-  }
-  .list-collections {
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-  .list-collections > .collect-item {
-    min-width: 150px;
-    margin: 0.45rem 0.65rem;
-  }
-
-  .search-collections {
-    height: auto;
   }
 }

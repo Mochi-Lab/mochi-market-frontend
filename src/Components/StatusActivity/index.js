@@ -3,7 +3,7 @@ import { LoadingOutlined, CheckCircleTwoTone, CloseCircleOutlined } from '@ant-d
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getRootExplorer } from 'utils/getRootExplorer';
-import './index.css';
+import './index.scss';
 
 export default function StatusActivity() {
   const { activity, chainId } = useSelector((state) => state);
