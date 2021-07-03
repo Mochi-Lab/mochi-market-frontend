@@ -40,6 +40,7 @@
   border-radius: 25px;
   .search-input {
     box-shadow: none;
+    -webkit-appearance: none;
     border: 1px solid #c3c3c3;
     border-radius: 0px 25px 25px 0px;
     transition: all 0.3s;
