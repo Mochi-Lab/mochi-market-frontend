@@ -28,6 +28,12 @@ html[data-theme='light'] {
   border: 1px solid #ff0086 !important;
 }
 
+[data-theme='light'] {
+  .textmode.price-nft {
+    color: white !important;
+  }
+}
+
 [data-theme='light'] .textmode,
 .search-style,
 .ant-select-suffix > svg,
