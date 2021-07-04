@@ -44,16 +44,6 @@ export default function UpdatePrice({ orderDetail, token, is1155, available, get
     setIsModalVisible(false);
   };
 
-  const checkAmount = async (_, value) => {
-    if (!value) {
-      return Promise.reject(new Error('Enter amount'));
-    } else if (parseInt(value) > parseInt(available)) {
-      return Promise.reject(new Error('Not enough amount'));
-    } else {
-      return Promise.resolve();
-    }
-  };
-
   return (
     <>
       <div className='gSzfBw'>
@@ -136,15 +126,16 @@ export default function UpdatePrice({ orderDetail, token, is1155, available, get
                   <Form.Item
                     required
                     name={['amount']}
-                    rules={[{ validator: checkAmount }]}
                     label='Amount'
                     className='input-amount-sell'
                   >
                     <InputNumber
                       min='1'
                       size='large'
+                      defaultValue={!!orderDetail ? orderDetail.amount : 0}
                       formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       placeholder='Amount'
+                      disabled
                     />
                   </Form.Item>
                 </Input.Group>
