@@ -46,6 +46,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
     );
     const data = await response.json();
     if (!Array.isArray(data)) {
+      // eslint-disable-next-line
       throw 'Error fetching data ' + data;
     }
     dispatch(setVerifiedContracts(data));
