@@ -3,7 +3,9 @@ import Web3 from 'web3';
 export const web3Default = {
   //Polygon Mainnet
   137: {
-    web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc-mainnet.maticvigil.com')),
+    web3Default: new Web3(
+      new Web3.providers.HttpProvider('https://matic-mainnet.chainstacklabs.com')
+    ),
     name: 'Polygon Mainnet',
     explorer: 'https://polygonscan.com/',
   },
