@@ -977,6 +977,38 @@ export const buyNft = (orderDetail, is1155) => async (dispatch, getState) => {
   }
 };
 
+export const updatePrice = (sellId, newPrice) => async (dispatch, getState) => {
+  const { market, walletAddress, erc721Instances } = getState();
+  let activity = {
+    key: `update-price-${Date.now()}`,
+    status: 'pending',
+    title: 'Update Price',
+    duration: 0,
+    txHash: null,
+  };
+  try {
+    await market.methods
+      .updatePrice(sellId, newPrice)
+      .send({ from: walletAddress })
+      .on('transactionHash', (txHash) => {
+        activity = { ...activity, txHash };
+        dispatch(setStatusActivity(activity));
+      });
+
+    // Fetch new availableOrderList
+    dispatch(setAvailableSellOrder());
+    // get own nft
+    dispatch(getNFTsOfOwner(erc721Instances, walletAddress));
+    activity = { ...activity, status: 'success', duration: 15000 };
+    dispatch(setStatusActivity(activity));
+  } catch (error) {
+    error.type = 'error';
+    dispatch(showNotification(error));
+    dispatch(setStatusActivity({ ...activity, status: 'close' }));
+    return false;
+  }
+};
+
 export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
   const { market, walletAddress, erc721Instances } = getState();
   let activity = {
@@ -995,12 +1027,6 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
         activity = { ...activity, txHash };
         dispatch(setStatusActivity(activity));
       });
-    // .on('receipt', (receipt) => {
-    //   let noti = {};
-    //   noti.type = 'success';
-    //   noti.message = 'Cancel Successfully !';
-    //   dispatch(showNotification(noti));
-    // });;
 
     // Fetch new availableOrderList
     dispatch(setAvailableSellOrder());

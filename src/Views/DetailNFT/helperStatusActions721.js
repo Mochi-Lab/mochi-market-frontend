@@ -70,7 +70,7 @@ export default async function helperStatusActions721(
         isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
       }
       let fil = availableSellOrder721.filter(
-        (token) => token.nftAddress === addressToken && token.tokenId === id
+        (token) => token.nftAddress.toLowerCase() === addressToken && token.tokenId === id
       );
       if (!!fil[0]) {
         setOrderDetail({ ...fil[0], tokenPayment: fil[0].token });
