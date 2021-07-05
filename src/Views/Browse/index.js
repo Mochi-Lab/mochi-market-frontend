@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import NFTsFilterBrowse from 'Components/NFTsFilterBrowse';
 import BannerSearchHome from 'Components/BannerSearchHome';
 import { carouselBanner } from 'Constants/constantCarousel';
@@ -10,6 +11,9 @@ export default function Browse() {
   const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721 } = useSelector(
     (state) => state
   );
+
+  const addressToken = new URLSearchParams(useLocation().search).get('addressToken');
+
   const inputSearch = useRef(null);
   useEffect(() => {
     const fetchSetAvailableOrdersNew = async () => {
@@ -29,8 +33,9 @@ export default function Browse() {
       <BannerSearchHome carouselBanner={carouselBanner} inputSearch={inputSearch} />
       <div className='container' style={{ width: '100%', height: '100%' }}>
         <NFTsFilterBrowse
-          erc721Tokens={convertErc721Tokens.concat(convertErc1155Tokens)}
+          collectionsNFT={convertErc721Tokens.concat(convertErc1155Tokens)}
           isLoadingErc721={isLoadingErc721}
+          addressToken={addressToken}
         />
       </div>
     </>

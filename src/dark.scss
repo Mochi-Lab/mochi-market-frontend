@@ -81,7 +81,7 @@ html[data-theme='dark'] {
   color: rgb(250, 250, 250) !important;
 }
 
-[data-theme='dark'] .textmode input[type="text"] {
+[data-theme='dark'] .textmode input[type='text'] {
   color: rgb(250, 250, 250) !important;
 }
 
@@ -120,8 +120,18 @@ html[data-theme='dark'] {
 
 [data-theme='dark'] #description {
   margin-bottom: 0px !important;
-  border-radius: 0px !important;
-  border: none !important;
+  border-radius: 0.75rem !important;
+}
+
+[data-theme='dark'] .input-area #description {
+  margin-bottom: 0px !important;
+  border-radius: 0.75rem !important;
+  border: 0 !important;
+}
+[data-theme='dark'] .input-area .item-1155#description {
+  margin-bottom: 0px !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid #ff0086 !important;
 }
 
 [data-theme='dark'] .box.input-mode-bc {
@@ -138,6 +148,11 @@ html[data-theme='dark'] {
 [data-theme='dark'] .description,
 [data-theme='dark'] .ant-input-group-addon {
   background-color: rgba(234, 234, 234, 0.15) !important;
+}
+
+[data-theme='dark'] .input-area .ant-col.ant-form-item-label {
+  background-color: rgba(0, 0, 0, 0) !important;
+  padding-left: 0.5rem;
 }
 
 [data-theme='dark'] .ant-input-number {
@@ -291,8 +306,14 @@ html[data-theme='dark'] {
 [data-theme='dark'] a.owner {
   color: deepskyblue;
 }
+
 [data-theme='dark'] .left-profile .info-user .address-wallet {
   box-shadow: rgb(0, 0, 0) 0px 10px 20px;
+}
+
+[data-theme='dark'] .btn-edit-profile {
+  box-shadow: rgba(0, 0, 0, 0) 0px 10px 20px;
+  background: #901f608c;
 }
 
 [data-theme='dark'] .left-profile .info-user {
@@ -364,7 +385,7 @@ html[data-theme='dark'] {
   background-color: #35444f;
 }
 [data-theme='dark'] .wrap-cover {
-  background: rgba(0, 0, 0, 0.10) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 [data-theme='dark'] .expand-img-nft {
@@ -416,6 +437,38 @@ html[data-theme='dark'] {
 .ant-tabs-top > div > .ant-tabs-nav::before,
 .ant-tabs-bottom > div > .ant-tabs-nav::before {
   border-bottom: 1px solid #f0f0f03b;
+}
+
+[data-theme='dark'] .dropzone-collection-submit {
+  background: rgba(0, 0, 0, 0.16) !important;
+}
+
+[data-theme='dark'] .row-input-optional {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+[data-theme='dark'] .input-optional input {
+  border: 1px solid rgba(234, 234, 234, 0.15);
+  box-shadow: none;
+}
+
+[data-theme='dark'] .input-item {
+  background-color: rgba(0, 0, 0, 0.13);
+  border-color: #e6e6e636;
+}
+
+[data-theme='dark'] .btn-edit-collection {
+  background-color: #ff0086;
+  border-color: #ff0086;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+[data-theme='dark'] .list-tags .item-tag {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
 }
 
 @media (max-width: 767px) {

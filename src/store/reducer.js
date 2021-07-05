@@ -14,6 +14,9 @@ const initialState = {
   listNFTsOwner: [],
   listNFTsOnsale: [],
   verifiedContracts: [],
+  infoCollections: {},
+  infoUsers: {},
+  infoUserLogin: null,
 
   // Erc721
   erc721Instances: null,
@@ -237,6 +240,21 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         verifiedContracts: action.verifiedContracts,
+      };
+    case actions.SET_INFO_COLLECTIONS:
+      return {
+        ...state,
+        infoCollections: action.infoCollections,
+      };
+    case actions.SET_INFO_USERS:
+      return {
+        ...state,
+        infoUsers: action.infoUsers,
+      };
+    case actions.SET_INFO_USER_LOGIN:
+      return {
+        ...state,
+        infoUserLogin: action.infoUserLogin,
       };
     default:
       return state;

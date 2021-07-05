@@ -25,7 +25,7 @@
   background: #ffffffe6;
   padding: 0.5rem 1rem 2.15rem 1rem;
   border-radius: 0.75rem;
-  box-shadow: rgba(100, 100, 111, 0.20) 0px 7px 29px 0px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .detail-title {
@@ -196,9 +196,9 @@
 .info-order-nft {
   margin: 0.5rem 0rem;
   background: #ffffffe6;
-  padding: 1.5rem 1rem;
+  padding: 1rem;
   border-radius: 0.75rem;
-  box-shadow: rgba(100, 100, 111, 0.20) 0px 7px 29px 0px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .collections-nft {
@@ -412,6 +412,7 @@
   margin-right: 0.5rem;
   width: 36px;
   height: 36px;
+  border-radius: 50%;
 }
 
 .detail-owner .ant-tabs-ink-bar {
@@ -449,7 +450,7 @@
   font-size: 0.88rem;
   color: rgb(153, 153, 153);
   font-weight: bold;
-  margin-top: 1.93rem;
+  margin-top: 1rem;
 }
 .info-contract-item {
   margin-bottom: 0.88rem;
@@ -473,14 +474,14 @@
   background: rgb(249, 251, 252);
   border-radius: 0.5rem;
   border: 0.06rem solid rgb(238, 238, 238);
-  margin-top: 2.25rem;
+  margin-top: 1rem;
   position: relative;
   overflow: hidden;
 }
 
 .style-purchase {
   position: relative;
-  padding: 1rem 1.04rem 1.81rem;
+  padding: 1rem 1.04rem 1rem;
   bottom: 0px;
   left: 0px;
   right: 0px;
@@ -524,6 +525,24 @@
 .detail-page .ant-image-mask:hover {
   opacity: 0;
   cursor: zoom-in;
+}
+
+.owner-order-nft {
+  height: 1.8rem;
+  display: flex;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 0.88rem;
+  color: rgb(0, 0, 0);
+  margin-top: 1.25rem;
+}
+.owner-order-nft img {
+  margin-right: 0.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 @media (max-width: 992px) {

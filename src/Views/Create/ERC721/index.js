@@ -83,7 +83,7 @@ export default function CreateERC721() {
         <p className='title-function'>Item Details</p>
         <p className='title-note'>Drag or chose your file to upload</p>
         <Link to={`/profile/${walletAddress}`} ref={profile} />
-        <div>
+        <div className='info-item'>
           <div className='input-area'>
             <Form onFinish={onFinish} form={form} layout='vertical'>
               <Form.Item
@@ -130,7 +130,11 @@ export default function CreateERC721() {
             </Form>
             <div>
               <h3 className='text-upload-image textmode'>Choose collection</h3>
-              <ERC721Collections collectionId={collectionId} setCollectionId={setCollectionId} />
+              <ERC721Collections
+                collectionId={collectionId}
+                setCollectionId={setCollectionId}
+                setIsLoading={setIsLoading}
+              />
             </div>
           </div>
           <div className='area-upload'>

@@ -105,7 +105,11 @@ export default function CreateERC1155() {
           <div className='input-area'>
             <div>
               <h3 className='text-upload-image textmode'>Choose collection</h3>
-              <ERC1155Collections collectionId={collectionId} setCollectionId={setCollectionId} />
+              <ERC1155Collections
+                collectionId={collectionId}
+                setCollectionId={setCollectionId}
+                setIsLoading={setIsLoading}
+              />
             </div>
             <Form onFinish={onFinish} form={form} layout='vertical'>
               <Form.Item
@@ -165,7 +169,7 @@ export default function CreateERC1155() {
                 label={<h3 className='text-upload-image textmode'>Description</h3>}
               >
                 <TextArea
-                  className='input-name-nft input-mode-bc'
+                  className='input-name-nft input-mode-bc  item-1155'
                   autoSize={{ minRows: 6 }}
                   placeholder='Description'
                   size='large'
@@ -174,7 +178,13 @@ export default function CreateERC1155() {
               <Form.Item>
                 <Row justify='end'>
                   {walletAddress ? (
-                    <Button type='primary' htmlType='submit' shape='round' size='large'>
+                    <Button
+                      className='btn-create-item'
+                      type='primary'
+                      htmlType='submit'
+                      shape='round'
+                      size='large'
+                    >
                       Create Item
                     </Button>
                   ) : (

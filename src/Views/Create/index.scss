@@ -42,7 +42,11 @@
 }
 
 .input-name-nft {
-  border-radius: 11px !important;
+  border-radius: 0.75rem !important;
+}
+
+.input-name-nft .ant-input {
+  border-radius: 0.75rem !important;
 }
 
 .my-collection {
@@ -52,7 +56,6 @@
 
 .my-collection > div {
   display: flex;
-  justify-content: space-around;
 }
 
 .my-collection .ant-breadcrumb {
@@ -184,12 +187,12 @@
   border-radius: 11px;
 }
 
-.ant-col.ant-form-item-label {
-  padding-left: 18px;
-  padding-top: 20px;
+.form-collection-1155 .ant-col.ant-form-item-label {
   border-top-left-radius: 11px !important;
+  border-top-right-radius: 11px !important;
   border-bottom-left-radius: 11px !important;
   font-family: Roboto;
+  background: none;
 }
 
 .content-description {
@@ -222,6 +225,11 @@
   width: 30vw;
   padding-left: 15px;
 }
+.input-area .ant-input-group-addon,
+.input-area .ant-form-item-label {
+  background: none !important;
+  padding: 0.5rem;
+}
 
 .input-area input,
 .input-area textarea {
@@ -233,7 +241,7 @@
   margin-bottom: 15px;
   width: 30vw;
   border: 1px solid #ff0086;
-  border-radius: 11px;
+  border-radius: 0.75rem;
 }
 
 .btn-721 {
@@ -299,6 +307,19 @@
   display: flex;
   flex-direction: column;
   transition: all 0.12s ease-in-out 0s;
+  position: relative;
+}
+
+.button-edit-collection {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  height: 25px;
+  width: 25px;
+  border-radius: 1rem;
+  border: 1px solid #8f8d8c;
+  text-align: center;
+  background: #ffffff;
 }
 
 .input-mode-bc {
@@ -341,6 +362,56 @@
   margin: 0 auto;
   width: 80%;
 }
+
+h3.text-upload-image {
+  font-size: 27px;
+  font-weight: bold;
+  text-align: start;
+}
+
+.wrap-box-input {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+  align-content: stretch;
+}
+.wrap-box-create-collection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: stretch;
+}
+
+.dropzone-collection {
+  margin: 0 auto;
+  font-size: larger;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  width: 200px;
+  color: #000000;
+  background: #ffffff;
+  border: 1px solid #ff0086;
+  border-radius: 1rem;
+  cursor: pointer;
+  vertical-align: top;
+  overflow: hidden !important;
+  padding: 0.15rem;
+}
+
+.form-collection-1155 .ant-form-item {
+  margin-bottom: 1rem;
+}
+
+.wrap-columm-logo {
+  margin: 0 1rem;
+}
+
 @media (max-width: 1200px) {
   .my-collection {
     margin: 0 auto;
@@ -356,7 +427,6 @@
 
   .my-collection div.input-area {
     width: 100%;
-    margin-left: 1rem;
   }
 }
 
@@ -368,7 +438,7 @@
   }
 
   .choose {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .drag-box-search .dropzone {
@@ -394,11 +464,30 @@
   }
 }
 
-h3.text-upload-image {
-  font-size: 27px;
-  font-weight: bold;
-}
+@media (max-width: 992px) {
+  .info-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .input-area {
+    padding-left: 0;
+  }
+  .area-upload {
+    margin-left: 1rem;
+  }
 
+  .my-collection div.input-area {
+    margin-left: 0;
+  }
+
+  .my-collection .ant-breadcrumb,
+  .title-function,
+  .create-pt h2.textmode,
+  .title-note {
+    padding-left: 0 !important;
+    text-align: start;
+  }
+}
 @media (max-width: 576px) {
   .my-collection > div {
     display: block;
@@ -415,7 +504,6 @@ h3.text-upload-image {
   .drag-box-search .dropzone {
     width: 200px;
     height: 200px;
-    margin: 0 auto;
     margin-bottom: 24px;
   }
 
@@ -439,5 +527,17 @@ h3.text-upload-image {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .wrap-box-create-collection {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    align-content: stretch;
+  }
+
+  .area-upload {
+    margin-left: 0;
   }
 }

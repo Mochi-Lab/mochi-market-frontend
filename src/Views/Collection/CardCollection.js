@@ -12,7 +12,7 @@ import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 
-export default function CardNFTHome({ token }) {
+export default function CardCollection({ token, infoCollection }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
@@ -51,7 +51,7 @@ export default function CardNFTHome({ token }) {
   return !!detailNFT ? (
     <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
       <Card
-        className='home-card card-nft'
+        className='collection-card card-nft'
         cover={
           <div className='wrap-cover'>
             <div
@@ -82,13 +82,7 @@ export default function CardNFTHome({ token }) {
               {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
               ) : null}{' '}
-              <Link
-                to={`/collection/${token.addressToken}`}
-                className='link-collection-name'
-                tag='span'
-              >
-                {token.nameCollection}
-              </Link>
+              {!!infoCollection.name ? infoCollection.name : token.nameCollection}
             </div>
             <div className='name-nft textmode'>{detailNFT.name}</div>
           </Col>

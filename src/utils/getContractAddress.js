@@ -3,6 +3,10 @@ import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
 import one from 'Assets/one-coin.png';
 
+import bscTag from 'Assets/logo/bsc.png';
+import polygonTag from 'Assets/logo/polygon.png';
+import harmonyTag from 'Assets/logo/harmony.png';
+
 const contractAddress = {
   //Polygon Mainnet
   137: {
@@ -123,6 +127,17 @@ export const listChainsSupport = [
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
 ];
 
+const logoChainsTags = {
+  //Polygon Mainnet
+  137: { name: 'Polygon', logo: polygonTag },
+  //BSC Mainnet
+  56: { name: 'BSC', logo: bscTag },
+  //BSC Testnet
+  97: { name: 'BSC-Testnet', logo: bscTag },
+  // Harmony mainet
+  1666600000: { name: 'Harmony', logo: harmonyTag },
+};
+
 export const getContractAddress = (_chainId) => {
   return contractAddress[_chainId];
 };
@@ -134,4 +149,7 @@ export const getSymbol = (_chainId) => {
 };
 export const getInfoChain = (_chainId) => {
   return infoChains[_chainId];
+};
+export const getLogoChainsTags = (_chainId) => {
+  return logoChainsTags[_chainId];
 };
