@@ -1,0 +1,23 @@
+.page-not-found-container {
+    text-align: center;
+    user-select: none;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    img {
+        width: 128px;
+        height: 128px;
+    }
+    .info {
+        padding: 20px;
+        font-size: 2rem;
+        text-shadow: 1px 1px 3px #eee;
+    }
+}
+
+[data-theme='dark'] .page-not-found-container .info {
+    color: #fafafa;
+}
