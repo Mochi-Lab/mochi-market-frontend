@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import './index.scss';
 
@@ -19,6 +20,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
   const { addressToken, id } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [tokenPayment, setTokenPayment] = useState();
+  const [transactionInProgress, setTransactionInProgress] = useState();
 
   const [form] = Form.useForm();
 
@@ -30,6 +32,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
 
   const showModal = () => {
     setIsModalVisible(true);
+    setTransactionInProgress(false);
   };
 
   const handleOk = useCallback(async () => {
@@ -56,6 +59,29 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
       }
     }
   }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form, getOwners1155]);
+
+  const confirmSell = useCallback(async () => {
+    const values = await form.validateFields();
+    if (!!values && parseFloat(values.price) > 0) {
+      let currency = getTokensPayment(chainId).find(item => item.address === tokenPayment)
+      currency = currency ? currency.symbol : 'MOMA'
+      Modal.confirm({
+        title: 'Confirm placing sell order?',
+        icon: <ExclamationCircleOutlined/>,
+        content: `You're going to put an ${values.amount} item(s) on sell for ${values.price} ${currency}. Are you sure?`,
+        okText: "Sell",
+        okButtonProps: { className: 'ant-btn ant-btn-primary ant-btn-round ant-btn-lg' },
+        cancelButtonProps: { className: 'ant-btn ant-btn-round ant-btn-lg', disabled: transactionInProgress },
+        onOk() {
+          setTransactionInProgress(true)
+          return handleOk()
+        },
+        onCancel() {
+
+        },
+      });
+    }
+  }, [chainId, handleOk, form, tokenPayment, transactionInProgress]);
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -87,7 +113,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
           <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>
             Cancel
           </Button>,
-          <Button key='sell' type='primary' shape='round' size='large' onClick={() => handleOk()}>
+          <Button key='sell' type='primary' shape='round' size='large' onClick={() => confirmSell()}>
             Sell
           </Button>,
         ]}
@@ -114,6 +140,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                   size='large'
                   value={tokenPayment}
                   onChange={(value) => setTokenPayment(value)}
+                  style={{ width: '40%' }}
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
@@ -124,6 +151,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                               src={token.icon}
                               alt={token.symbol}
                             />
+                            <span className='textmode pl-1'>{token.symbol}</span>
                           </Option>
                         );
                       })
@@ -132,7 +160,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                 <Form.Item
                   name={['price']}
                   rules={[{ required: true, message: 'Enter price' }]}
-                  className='input-price'
+                  style={{ width: '60%' }}
                 >
                   <InputNumber
                     min='0.1'
