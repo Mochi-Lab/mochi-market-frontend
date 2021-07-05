@@ -36,7 +36,6 @@ export default function Collection() {
     isLoadingErc721,
     nftList,
     chainId,
-    creativeStudio,
     walletAddress,
     verifiedContracts,
     infoCollections,
@@ -49,22 +48,28 @@ export default function Collection() {
   const [infoCollection, setInfoCollection] = useState({});
   const [statusEdit, setStatusEdit] = useState(false);
 
-  console.log();
-
-  const getInfoCollection = useCallback(async () => {
-    let tokenAddress = addressToken.toLowerCase();
-    let res = await store.dispatch(getCollection(tokenAddress, collections));
-    let _collections = res.infoCollections;
-
-    if (infoCollection !== res.collection) {
-      setInfoCollection(res.collection);
-    }
-
-    if (_collections[tokenAddress] !== collections[tokenAddress]) {
-      setCollections(_collections);
-      await store.dispatch(setInfoCollections(_collections));
-    }
-  }, [addressToken, collections, infoCollection]);
+  const getInfoCollection = useCallback(
+    async (collection) => {
+      let _collections;
+      let tokenAddress = addressToken.toLowerCase();
+      if (!!collection) {
+        _collections = collections;
+        _collections[tokenAddress] = collection;
+        setInfoCollection(collection);
+      } else {
+        let res = await store.dispatch(getCollection(tokenAddress, collections));
+        _collections = res.infoCollections;
+        if (infoCollection !== res.collection) {
+          setInfoCollection(res.collection);
+        }
+      }
+      if (_collections[tokenAddress] !== collections[tokenAddress]) {
+        setCollections(_collections);
+        await store.dispatch(setInfoCollections(_collections));
+      }
+    },
+    [addressToken, collections, infoCollection]
+  );
 
   useEffect(() => {
     getInfoCollection();
@@ -108,22 +113,16 @@ export default function Collection() {
 
   const checkRegister = useCallback(async () => {
     let result = false;
-    if (!!walletAddress && !!creativeStudio) {
-      let collections = await creativeStudio.methods.getAllCollections().call();
-      for (let i = 0; i < collections.length; i++) {
-        const collection = collections[i];
-        if (
-          !!collection &&
-          collection.contractAddress.toLowerCase() === addressToken.toLowerCase() &&
-          collection.creator.toLowerCase() === walletAddress.toLowerCase()
-        ) {
-          result = true;
-          break;
-        }
-      }
+    if (
+      !!walletAddress &&
+      !!infoCollection &&
+      !!infoCollection.addressSubmit &&
+      infoCollection.addressSubmit.toLocaleLowerCase() === walletAddress.toLowerCase()
+    ) {
+      result = true;
     }
     setStatusEdit(result);
-  }, [creativeStudio, walletAddress, addressToken]);
+  }, [infoCollection, walletAddress]);
 
   useEffect(() => {
     checkRegister();
