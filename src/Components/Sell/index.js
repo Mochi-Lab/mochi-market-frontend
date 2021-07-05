@@ -114,6 +114,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                   size='large'
                   value={tokenPayment}
                   onChange={(value) => setTokenPayment(value)}
+                  style={{ width: '40%' }}
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
@@ -124,6 +125,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                               src={token.icon}
                               alt={token.symbol}
                             />
+                            <span className='textmode pl-1'>{token.symbol}</span>
                           </Option>
                         );
                       })
@@ -132,7 +134,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                 <Form.Item
                   name={['price']}
                   rules={[{ required: true, message: 'Enter price' }]}
-                  className='input-price'
+                  style={{ width: '60%' }}
                 >
                   <InputNumber
                     min='0.1'
