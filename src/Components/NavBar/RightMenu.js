@@ -46,13 +46,6 @@ const RightMenu = () => {
           <Link to='/faucet'>Faucet</Link>
         </Menu.Item>
       ) : null}
-      <Menu.Item key='/create'>
-        <div className='btn-create center'>
-          <Link to='/create'>
-            <p style={{ margin: '0px', color: '#ffffff' }}>Create</p>
-          </Link>
-        </div>
-      </Menu.Item>
 
       {shortAddress ? (
         <SubMenu
