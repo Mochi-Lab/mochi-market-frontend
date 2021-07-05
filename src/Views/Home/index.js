@@ -6,6 +6,7 @@ import BannerSearchHome from 'Components/BannerSearchHome';
 import { carouselBanner, carouselCard } from 'Constants/constantCarousel';
 import Footer from 'Components/Footer';
 import CardNFTNotSearch from './CardNFTNotSearch.js';
+import CardCollection from './CardCollection.js';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -68,20 +69,23 @@ export default function Home() {
         <div className='container'>
           <div className='new-nfts'>
             <div className='title-new'>
-              <h2 className='textmode'>New List</h2>
+              <h2 className='textmode'>Hot Collections</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              {newListing().map((nft, i) => (
-                <div className='item-carousel' key={i}>
-                  <CardNFTNotSearch token={nft} />
-                </div>
-              ))}
+              <CardCollection
+                addressToken='0xC33d69a337B796A9f0F7588169cd874C3987BDE9'
+                chainID={56}
+              />
+              <CardCollection
+                addressToken='0x301817312598f8f48cb7d898d659ca4a4d457ad8'
+                chainID={56}
+              />
             </Slider>
           </div>
 
           <div className='new-nfts'>
             <div className='title-new'>
-              <h2 className='textmode'>Hot Collections</h2>
+              <h2 className='textmode'>New List</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
               {newListing().map((nft, i) => (

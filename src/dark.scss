@@ -18,12 +18,10 @@ html[data-theme='dark'] {
 [data-theme='dark'] {
   .ant-select-suffix > svg,
   .ant-modal-confirm-title,
-  .ant-modal-confirm-content{
+  .ant-modal-confirm-content {
     color: #fff !important;
   }
 }
-
-
 
 [data-theme='dark'] .page {
   background-color: rgba(0, 0, 0, 0.85) !important;
@@ -339,7 +337,8 @@ html[data-theme='dark'] {
     border-color: #585858;
     color: white;
   }
-  &.active, &:hover {
+  &.active,
+  &:hover {
     .search-input {
       border-color: #3d3d3d;
     }
@@ -475,6 +474,10 @@ html[data-theme='dark'] {
   border-color: rgba(0, 0, 0, 0.3);
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
     rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+[data-theme='dark'] .content-home .ant-card.card-collection .div-box-top {
+  background: rgba(0, 0, 0, 0.36);
 }
 
 @media (max-width: 767px) {
