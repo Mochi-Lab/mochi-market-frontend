@@ -6,6 +6,7 @@ import { getNonce } from 'APIs/Collections/Gets';
 import { checkUrl } from 'utils/helper';
 import { verifySignature } from 'APIs/Collections/Post';
 import { updateCollection } from 'APIs/Collections/Puts';
+import { getCollectionByAddress } from 'APIs/Collections/Gets';
 import { uploadIPFS, updateIPFS } from 'Views/Profile/UpdateIPFS';
 import createSignature from 'APIs/createSignature';
 import Dropzone from 'react-dropzone';
@@ -96,7 +97,8 @@ export default function EditCollection({
             collection
           );
           if (resUpdate) {
-            await getInfoCollection();
+            let resCollections = await getCollectionByAddress(addressToken, chainId);
+            await getInfoCollection(resCollections.collection);
             let noti = {};
             noti.type = 'success';
             noti.message = 'Updated Successfully';
