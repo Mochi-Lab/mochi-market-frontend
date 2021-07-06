@@ -174,7 +174,7 @@ export default function Collection() {
                     <img src={tick} alt='icon-tick' className='icon-tick' />
                   ) : null}{' '}
                 </div>
-                <div className='list-tags'>
+                <div className='list-tags textmode'>
                   {!!infoCollection.chainId ? (
                     <div className='item-tag'>
                       <img src={getLogoChainsTags(infoCollection.chainId).logo} alt='img-tag' />

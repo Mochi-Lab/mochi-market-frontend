@@ -82,6 +82,14 @@
   margin-left: 8px !important;
 }
 
+.address {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+}
 .address p {
   color: rgba(0, 0, 0, 18);
 }
@@ -203,7 +211,8 @@
     width: 100%;
   }
 
-  .ant-drawer-body .btn-create, .ant-drawer-body .bt-cnlo {
+  .ant-drawer-body .btn-create,
+  .ant-drawer-body .bt-cnlo {
     width: 80%;
   }
 

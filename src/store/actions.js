@@ -103,8 +103,8 @@ export const setAdminAddress = (addressesProvider) => async (dispatch) => {
 export const SET_ADDRESS = 'SET_ADDRESS';
 export const setAddress = (walletAddress) => async (dispatch) => {
   if (walletAddress !== null) {
-    var shortAddress = `${walletAddress.slice(0, 8)}...${walletAddress.slice(
-      walletAddress.length - 6,
+    var shortAddress = `${walletAddress.slice(0, 7)}...${walletAddress.slice(
+      walletAddress.length - 7,
       walletAddress.length
     )}`;
 
@@ -1764,7 +1764,7 @@ export const getCollection = (addressToken, _collections) => async (dispatch, ge
           nameCollection = 'Unnamed';
         }
 
-        collection = { name: nameCollection, logo: logoCollectionDefault };
+        collection = { name: nameCollection, logo: logoCollectionDefault, addressToken, chainId };
         collections[addressToken] = collection;
         dispatch(setInfoCollections(collections));
       }
