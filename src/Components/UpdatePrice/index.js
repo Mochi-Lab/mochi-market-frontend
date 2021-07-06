@@ -87,6 +87,7 @@ export default function UpdatePrice({ orderDetail, token, is1155, available, get
                   size='large'
                   value={orderDetail ? orderDetail.token : tokenPayment}
                   onChange={(value) => setTokenPayment(value)}
+                  disabled
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
