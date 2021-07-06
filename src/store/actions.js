@@ -741,6 +741,7 @@ export const createSellOrder = (
   tokenPayment,
   amount,
   is1155,
+
   activity
 ) => async (dispatch, getState) => {
   const { market, walletAddress, web3, erc721Instances, sellOrderList } = getState();
@@ -789,9 +790,12 @@ export const createSellOrder = (
       const erc721Instance = await new web3.eth.Contract(ERC721.abi, nftAddress);
 
       // Check to see if nft have accepted
-      let addressApproved = await erc721Instance.methods.getApproved(tokenId).call();
+      let addressApproved = await erc721Instance.methods
+        .isApprovedForAll(walletAddress, market._address)
+        .call();
 
-      if (addressApproved !== market._address) {
+      if (!addressApproved) {
+        // if not approved
         let activity = {
           key: `approve-${Date.now()}`,
           status: 'pending',
@@ -801,10 +805,10 @@ export const createSellOrder = (
         };
         dispatch(setStatusActivity(activity));
 
-        // Approve ERC721
+        // Approve All ERC721
         try {
           await erc721Instance.methods
-            .approve(market._address, tokenId)
+            .setApprovalForAll(market._address, true)
             .send({ from: walletAddress })
             .on('transactionHash', function (txHash) {
               activity = { ...activity, txHash };
