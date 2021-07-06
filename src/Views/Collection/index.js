@@ -330,7 +330,7 @@ export default function Collection() {
           <div className='new-nfts'>
             <div className='title-new'>
               <div className='wrap-title'>
-                <h2 className='textmode title-collection'>One Sale</h2>
+                <h2 className='textmode title-collection'>On Sale</h2>
                 <Link
                   className='link-view-all textmode'
                   rel='noreferrer'
@@ -351,7 +351,7 @@ export default function Collection() {
 
           <div className='new-nfts'>
             <div className='title-new'>
-              <h2 className='textmode'>Newly Create</h2>
+              <h2 className='textmode'>New List</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
               {collectionOnSale().map((nft, i) => (
