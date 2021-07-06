@@ -11,6 +11,7 @@
     "antd": "^4.11.2",
     "axios": "^0.21.1",
     "ipfs-http-client": "44.3.0",
+    "lodash.debounce": "^4.0.8",
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-alice-carousel": "^2.4.0",

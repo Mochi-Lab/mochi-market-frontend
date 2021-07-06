@@ -3,8 +3,9 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { setStrSearch } from 'store/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRef, useState, useCallback } from 'react';
+import debounce from 'lodash.debounce';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -12,14 +13,20 @@ import './index.scss';
 
 export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   const [searchBoxFocused, setSearchBoxFocused] = useState(false);
+  const [textSearch, setTextSearch] = useState('');
   const dispatch = useDispatch();
-  const { strSearch } = useSelector((state) => state);
 
   const browse = useRef(null);
   const searchNFT = (event) => {
     const text = event.target.value;
-    dispatch(setStrSearch(text));
+    setTextSearch(text);
+    debounceSearchText(text);
   };
+  // eslint-disable-next-line
+  const debounceSearchText = useCallback(
+    debounce((text) => dispatch(setStrSearch(text)), 1000),
+    []
+  );
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -62,7 +69,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
               ref={inputSearch}
               onChange={searchNFT}
               onKeyDown={handleKeyDown}
-              value={strSearch}
+              value={textSearch}
               onFocus={handleOnFocus}
               onBlur={handleOnBlur}
             />
