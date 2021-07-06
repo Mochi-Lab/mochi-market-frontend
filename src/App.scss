@@ -63,15 +63,13 @@
   width: 70px;
   height: 70px;
   float: left;
-}
-
-.logo a {
-  display: inline-block;
-  padding: 10px;
-}
-
-.logo a img {
-  width: 50px;
+  a {
+    display: inline-block;
+    padding: 12px;
+    img {
+      width: 46px;
+    }
+  }
 }
 
 .menuCon {
@@ -120,16 +118,17 @@ div.menu-triggerer-container {
   flex: auto;
   margin-right: 20px;
   display: none;
-}
-
-div.menu-triggerer-container > span.anticon.anticon-menu {
-  float: right;
-  height: 32px;
-  background: none;
-  border: none !important;
-  filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
-  font-size: 2rem;
-  color: white !important;
+  span.anticon.anticon-menu {
+    float: right;
+    height: 32px;
+    background: none;
+    border: none !important;
+    filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+    color: white !important;
+    svg {
+      font-size: 32px !important;
+    }
+  }
 }
 
 .barsBtn {
@@ -403,18 +402,9 @@ div.menu-triggerer-container > span.anticon.anticon-menu {
 }
 
 @media (max-width: 992px) {
-  .logo {
-    width: 85px;
-  }
 }
 
 @media (max-width: 768px) {
-  .logo {
-    width: 75px;
-  }
-  .logo a img {
-    width: 50px;
-  }
   .barsMenu {
     padding-top: 0 !important;
   }
