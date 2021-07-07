@@ -46,7 +46,7 @@ const RightMenu = () => {
           <Link to='/faucet'>Faucet</Link>
         </Menu.Item>
       ) : null}
-      {chainId == 56 && <Menu.Item key='getMOMA'>
+      {chainId === 56 && <Menu.Item key='getMOMA'>
         <div className='btn-get-moma center'>
           <a
             href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
