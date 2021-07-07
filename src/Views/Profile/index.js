@@ -98,7 +98,7 @@ export default function Profile() {
                   </div>
                   <div className='name-user'>
                     <h2 className='textmode'>
-                      {!!infoUser && !!infoUser.username ? `@${infoUser.username}` : 'Unamed'}
+                      {!!infoUser && !!infoUser.username ? `@${infoUser.username}` : 'Unnamed'}
                     </h2>
                     <h2> </h2>
                   </div>
