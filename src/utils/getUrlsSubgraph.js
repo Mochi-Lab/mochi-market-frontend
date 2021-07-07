@@ -7,7 +7,7 @@ const urlsSubgraph = {
   //BSC Mainnet
   56: {
     url1155: 'https://api.thegraph.com/subgraphs/name/tranchien2002/eip1155-bsc-main',
-    url721: 'https://api.thegraph.com/subgraphs/name/daisai3/eip721_bsc1',
+    url721: 'https://api.thegraph.com/subgraphs/name/tranchien2002/eip721-bsc-main',
   },
   //BSC Testnet
   97: {
