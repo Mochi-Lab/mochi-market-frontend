@@ -47,13 +47,16 @@ const RightMenu = () => {
         </Menu.Item>
       ) : null}
       <Menu.Item key='getMOMA'>
-        <a
-          href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
-          target='_blank'
-          rel='noreferrer'
-        >
-          Get MOMA
-        </a>
+        <div className='btn-get-moma center'>
+          <a
+            href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
+            target='_blank'
+            rel='noreferrer'
+            style={{ margin: '0px', color: '#ffffff' }}
+          >
+            <p style={{ margin: '0px', color: '#ffffff' }}> Get $MOMA</p>
+          </a>
+        </div>
       </Menu.Item>
 
       {shortAddress ? (
