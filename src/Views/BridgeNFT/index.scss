@@ -20,7 +20,35 @@
   color: rgba(0, 0, 0, 0.74);
 }
 
+.circle {
+  position: relative;
+  display: inline-block;
+  vertical-align: text-top;
+  width: 56px;
+  height: 56px;
+  border-radius: 100%;
+  margin-left: 20px;
+  background: #ff0086;
+  border: 3px solid #9f9f9f;
+  .up {
+    position: absolute;
+    left: 25%;
+    right: 29.17%;
+    top: 20%;
+    bottom: -8.33%;
+  }
+  .down {
+    position: absolute;
+    left: 39%;
+    top: 47.5%;
+    bottom: 16.67%;
+
+    transform: rotate(180deg);
+  }
+}
+
 .content-bridge {
+  margin-top: 30px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -30,8 +58,8 @@
   .content-bridge-left {
     width: 25%;
     height: 100%;
-    border: 1px solid #ff0086;
-    border-radius: 1rem;
+    border: 2px solid #ff0086;
+    border-radius: 11px;
     .header-tabs {
       display: flex;
       flex-direction: row;
@@ -53,9 +81,21 @@
         border-bottom: 1px solid #ff0086;
         border-left: 1px solid #ff0086;
       }
+      .ant-tabs {
+        width: 100%;
+      }
+      .ant-tabs-nav-list {
+        margin: auto;
+      }
+      .ant-tabs-ink-bar {
+        background: #ff0086 !important;
+      }
+      .ant-tabs-tab-active {
+      }
     }
     .list-nft-owner {
       padding: 1rem;
+      text-align: left;
       .item-nft {
         display: flex;
         flex-direction: row;
@@ -66,6 +106,7 @@
         img {
           width: 64px;
           height: 64px;
+          border-radius: 11px;
         }
         .name-id {
           margin-left: 1rem;
@@ -82,7 +123,11 @@
   }
   .content-bridge-right {
     width: 70%;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px dashed #ff0086;
+    border-radius: 11px;
     .area-swap {
+      padding: 20px 32px;
       .area-swap-content {
         display: flex;
         flex-direction: row;
@@ -115,7 +160,45 @@
           width: 40%;
         }
       }
+      .eth-address {
+        margin-top: 15px;
+        margin-bottom: 30px;
+        p {
+          color: #000000;
+          text-transform: uppercase;
+        }
+        .ant-input-affix-wrapper {
+          height: 50px;
+          background: #ffffff;
+          box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.25);
+          border-radius: 11px;
+          input {
+            font-size: 16px;
+          }
+        }
+      }
     }
+  }
+}
+
+.swap-list {
+  margin-top: 35px;
+  margin-left: 30%;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed #bfbfbf;
+  border-radius: 11px;
+  text-align: center;
+  img {
+    padding-top: 22px;
+    padding-bottom: 33px;
+  }
+
+  p {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 26px;
+    text-transform: uppercase;
+    color: #929292;
   }
 }
 
@@ -127,11 +210,15 @@
   align-items: center;
   align-content: stretch;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.68);
-  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 11px;
   img {
     width: 40px;
     height: 40px;
     margin-right: 0.5rem;
+  }
+  .text-mode {
+    color: #501a1a;
   }
 }

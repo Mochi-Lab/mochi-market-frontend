@@ -453,20 +453,47 @@ html[data-theme='dark'] {
 }
 
 [data-theme='dark'] .bridge-nft .title-page h1 {
-  color: #ff63b2 !important;
+  color: #ffe7f0 !important;
 }
 
 [data-theme='dark'] .bridge-nft .desciption-page h3 {
   color: #ffffff !important;
 }
 
+[data-theme='dark'] .bridge-nft .content-bridge-left {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme='dark'] .bridge-nft .header-tabs .ant-tabs-tab-btn {
+  color: #fff !important;
+}
+
+[data-theme='dark'] .content-bridge-right {
+  background: rgba(0, 0, 0, 0.5) !important;
+  .connection-wallet .textmode {
+    color: #501a1a !important;
+  }
+}
+
+[data-theme='dark'] .content-bridge-right .eth-address p {
+  color: #fff !important;
+}
+
+[data-theme='dark'] .swap-list {
+  background: rgba(104, 42, 75, 0.5) !important;
+  border: 2px dashed #bfbfbf !important;
+  border-radius: 11px !important;
+
+  p {
+    color: #fff !important;
+  }
+}
+
 [data-theme='dark'] .search-input {
-  background-color: #343434 !important;
-  border-color: #585858;
-  color: white;
+  background-color: #fff !important;
   .ant-input {
     background-color: rgba(234, 234, 234, 0) !important;
-    color: white;
+    color: #000000;
   }
 }
 
