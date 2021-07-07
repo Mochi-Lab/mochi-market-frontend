@@ -1,4 +1,4 @@
-import { Card, Row, Col, Skeleton } from 'antd';
+import {Card, Row, Col, Skeleton, Popover} from 'antd';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import '../NFTsCardBrowse/index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
+import {handleChildClick} from "../../utils/helper";
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -31,6 +32,9 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
           }
           let req = await axios.get(tokenURI);
           const data = req.data;
+
+          token.attributes = !!data.attributes ? data.attributes : null;
+
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
             description: !!data.description ? data.description : '',
@@ -83,6 +87,21 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
             }
             className='card-nft'
           >
+            {!!token.attributes
+                ?
+                <Popover onClick={handleChildClick}
+                         placement="bottomLeft"
+                         content={token.attributes.map((attr, i) => (
+                             <div key={i} onClick={handleChildClick}>
+                               <strong>{attr.trait_type}</strong>: {attr.value}
+                             </div>
+                         ))}
+                >
+                  <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
+                </Popover>
+            : (
+                <></>
+            )}
             {!!token.price ? (
               <div className='price-nft textmode'>
                 <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}

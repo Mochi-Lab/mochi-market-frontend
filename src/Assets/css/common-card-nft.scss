@@ -17,16 +17,26 @@
   font-size: 0.88rem;
 }
 
-.card-nft .price-nft {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  background: linear-gradient(125.02deg, #ff0086 50%, rgba(255, 0, 134, 0) 118.17%);
-  border-radius: 0 5px 0 5px;
-  color: white !important;
-  padding: 0 0.5rem 0 0.5rem;
-  z-index: 3;
+.card-nft  {
+  .price-nft {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    background: linear-gradient(125.02deg, #ff0086 50%, rgba(255, 0, 134, 0) 118.17%);
+    border-radius: 0 5px 0 5px;
+    color: white !important;
+    padding: 0 0.5rem 0 0.5rem;
+    z-index: 3;
+  }
+
+  .attribs-nft {
+    @extend .price-nft;
+    right: auto;
+    left: -1px;
+    border-radius: 5px 0 5px 0;
+  }
 }
+
 
 .footer-card-right .title-price {
   white-space: nowrap;
