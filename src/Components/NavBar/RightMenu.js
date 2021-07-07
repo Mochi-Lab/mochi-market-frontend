@@ -36,9 +36,6 @@ const RightMenu = () => {
       <Menu.Item key='/submit-Nfts'>
         <Link to='/submit-Nfts'>Submit NFTs</Link>
       </Menu.Item>
-      {/* <Menu.Item key='/airdrops'>
-        <Link to='/airdrops'>Airdrops</Link>
-      </Menu.Item> */}
       {!!walletAddress ? (
         <Menu.Item key={`/profile/${walletAddress}`}>
           <Link to={`/profile/${walletAddress}`}>Profile</Link>
@@ -49,6 +46,15 @@ const RightMenu = () => {
           <Link to='/faucet'>Faucet</Link>
         </Menu.Item>
       ) : null}
+      <Menu.Item key='getMOMA'>
+        <a
+          href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
+          target='_blank'
+          rel='noreferrer'
+        >
+          Get MOMA
+        </a>
+      </Menu.Item>
 
       {shortAddress ? (
         <SubMenu
