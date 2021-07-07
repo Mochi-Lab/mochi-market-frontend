@@ -388,7 +388,7 @@ export default function DetailNFT() {
                           <div className='link-and-available'>
                             <Link to={`/profile/${owner.owner.toLowerCase()}`} className='owner'>
                               {!!infoOwners[owner.owner.toLowerCase()] &&
-                              infoOwners[owner.owner.toLowerCase()].username !== 'Unamed' ? (
+                              infoOwners[owner.owner.toLowerCase()].username !== 'Unnamed' ? (
                                 <strong>@{infoOwners[owner.owner.toLowerCase()].username}</strong>
                               ) : (
                                 <strong>
@@ -425,7 +425,7 @@ export default function DetailNFT() {
                           <div className='link-and-available'>
                             <Link to={`/profile/${owner.seller}`} className='owner'>
                               {!!infoOwners[owner.seller.toLowerCase()] &&
-                              infoOwners[owner.seller.toLowerCase()].username !== 'Unamed' ? (
+                              infoOwners[owner.seller.toLowerCase()].username !== 'Unnamed' ? (
                                 <strong>@{infoOwners[owner.seller.toLowerCase()].username}</strong>
                               ) : (
                                 <strong>

@@ -95,10 +95,10 @@
 }
 
 .btn-get-moma {
-  width: 100px;
   height: 28px;
   background: linear-gradient(125.02deg, #ff0086 7.52%, rgba(255, 0, 134, 0) 118.17%);
   border-radius: 30px;
+  padding: 0.25rem;
 }
 
 .balance-create {
@@ -212,7 +212,8 @@
   }
 
   .ant-drawer-body .btn-create,
-  .ant-drawer-body .bt-cnlo {
+  .ant-drawer-body .bt-cnlo,
+  .ant-drawer-body .btn-get-moma {
     width: 80%;
   }
 

@@ -68,7 +68,7 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
       Modal.confirm({
         title: 'Confirm placing sell order?',
         icon: <ExclamationCircleOutlined/>,
-        content: `You're going to put an ${values.amount} item(s) on sell for ${values.price} ${currency}. Are you sure?`,
+        content: `You're going to create a sell order for ${values.price} ${currency}. Are you sure?`,
         okText: "Sell",
         okButtonProps: { className: 'ant-btn ant-btn-primary ant-btn-round ant-btn-lg' },
         cancelButtonProps: { className: 'ant-btn ant-btn-round ant-btn-lg', disabled: transactionInProgress },

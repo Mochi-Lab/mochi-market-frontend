@@ -1797,7 +1797,7 @@ export const getUser = (walletAddress, _users) => async (dispatch, getState) => 
       users[walletAddress] = res.user;
       dispatch(setInfoUsers(users));
     } else {
-      user = { username: 'Unamed', avatar: avatarDefault };
+      user = { username: 'Unnamed', avatar: avatarDefault };
       users[walletAddress] = user;
       dispatch(setInfoUsers(users));
     }
