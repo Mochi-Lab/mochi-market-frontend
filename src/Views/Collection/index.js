@@ -1,18 +1,17 @@
 import { useSelector } from 'react-redux';
-
-import Slider from 'react-slick';
 import IconLoading from 'Components/IconLoading';
-import { carouselCard } from 'Constants/constantCarousel';
 import Footer from 'Components/Footer';
-import CardCollection from './CardCollection.js';
 import EditCollection from './EditCollection';
+import ViewLess from './ViewLess';
+import ViewAll from './ViewAll';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import 'Views/Home/index.scss';
 import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
 import tick from 'Assets/icons/tick-green.svg';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { setInfoCollections, getCollection } from 'store/actions';
 import store from 'store/index';
@@ -31,22 +30,23 @@ import website from 'Assets/icons/website.svg';
 
 export default function Collection() {
   const {
-    convertErc721Tokens,
-    convertErc1155Tokens,
     isLoadingErc721,
-    nftList,
     chainId,
     walletAddress,
     verifiedContracts,
     infoCollections,
+    nftList,
+    convertErc1155Tokens,
+    convertErc721Tokens,
   } = useSelector((state) => state);
   const { addressToken } = useParams();
 
-  const [nftsOnSale, setNftsOnSale] = useState([]);
   const [visibleEitdCollection, setvisibleEitdCollection] = useState(false);
   const [collections, setCollections] = useState(infoCollections);
   const [infoCollection, setInfoCollection] = useState({});
   const [statusEdit, setStatusEdit] = useState(false);
+  const [nftsOnSale, setNftsOnSale] = useState([]);
+  const [viewAll, setViewAll] = useState(false);
 
   const getInfoCollection = useCallback(
     async (collection) => {
@@ -74,6 +74,23 @@ export default function Collection() {
   useEffect(() => {
     getInfoCollection();
   }, [getInfoCollection, addressToken, chainId, walletAddress]);
+
+  const checkRegister = useCallback(async () => {
+    let result = false;
+    if (
+      !!walletAddress &&
+      !!infoCollection &&
+      !!infoCollection.addressSubmit &&
+      infoCollection.addressSubmit.toLocaleLowerCase() === walletAddress.toLowerCase()
+    ) {
+      result = true;
+    }
+    setStatusEdit(result);
+  }, [infoCollection, walletAddress]);
+
+  useEffect(() => {
+    checkRegister();
+  }, [checkRegister]);
 
   const filterCollectionInOnSale = useCallback(async () => {
     if (!!nftList) {
@@ -103,7 +120,7 @@ export default function Collection() {
     filterCollectionInOnSale();
   }, [filterCollectionInOnSale]);
 
-  const collectionOnSale = () => {
+  const collectionOnSaleLess = () => {
     let listNFT = nftsOnSale;
     listNFT = listNFT.sort((a, b) =>
       a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
@@ -111,22 +128,13 @@ export default function Collection() {
     return listNFT.slice(0, 10);
   };
 
-  const checkRegister = useCallback(async () => {
-    let result = false;
-    if (
-      !!walletAddress &&
-      !!infoCollection &&
-      !!infoCollection.addressSubmit &&
-      infoCollection.addressSubmit.toLocaleLowerCase() === walletAddress.toLowerCase()
-    ) {
-      result = true;
-    }
-    setStatusEdit(result);
-  }, [infoCollection, walletAddress]);
-
-  useEffect(() => {
-    checkRegister();
-  }, [checkRegister]);
+  const collectionOnSaleAll = () => {
+    let listNFT = nftsOnSale;
+    listNFT = listNFT.sort((a, b) =>
+      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
+    );
+    return listNFT;
+  };
 
   return (
     <div className='collection-detail'>
@@ -326,41 +334,19 @@ export default function Collection() {
               <div className='contact-grid'></div>
             </div>
           </div>
-
-          <div className='new-nfts'>
-            <div className='title-new'>
-              <div className='wrap-title'>
-                <h2 className='textmode title-collection'>On Sale</h2>
-                <Link
-                  className='link-view-all textmode'
-                  rel='noreferrer'
-                  to={`/browse?addressToken=${addressToken}`}
-                >
-                  View all
-                </Link>
-              </div>
-            </div>
-            <Slider className='carousel-new-nfts' {...carouselCard}>
-              {collectionOnSale().map((nft, i) => (
-                <div className='item-carousel' key={i}>
-                  <CardCollection token={nft} infoCollection={infoCollection} />
-                </div>
-              ))}
-            </Slider>
-          </div>
-
-          <div className='new-nfts'>
-            <div className='title-new'>
-              <h2 className='textmode'>New List</h2>
-            </div>
-            <Slider className='carousel-new-nfts' {...carouselCard}>
-              {collectionOnSale().map((nft, i) => (
-                <div className='item-carousel' key={i}>
-                  <CardCollection token={nft} infoCollection={infoCollection} />
-                </div>
-              ))}
-            </Slider>
-          </div>
+          {viewAll ? (
+            <ViewAll
+              infoCollection={infoCollection}
+              collectionOnSale={collectionOnSaleAll}
+              setViewAll={setViewAll}
+            />
+          ) : (
+            <ViewLess
+              infoCollection={infoCollection}
+              collectionOnSale={collectionOnSaleLess}
+              setViewAll={setViewAll}
+            />
+          )}
         </div>
       )}
       <Footer />

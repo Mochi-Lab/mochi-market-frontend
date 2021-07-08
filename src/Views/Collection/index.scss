@@ -363,9 +363,37 @@
   margin: 0.5rem;
 }
 
+.view-all-collection {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.sort-results-collection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-content: center;
+  width: 100%;
+}
+
+.link-view-less {
+  margin-left: 1rem;
+  cursor: pointer;
+  font-size: 1.13rem;
+}
+
 @media (max-width: 992px) {
   .collection-detail {
     display: block;
+  }
+  .link-view-less {
+    display: block;
+    margin-left: 0;
+    margin-top: 1rem;
+    margin-right: 0.75rem;
   }
 }
 
@@ -402,5 +430,13 @@
   }
   .amount-top {
     font-size: small;
+  }
+
+  .sort-results-collection .left-sort-results {
+    width: 30%;
+  }
+
+  .sort-results-collection .right-sort-results {
+    width: 70%;
   }
 }
