@@ -21,6 +21,20 @@ html[data-theme='dark'] {
   .ant-modal-confirm-content {
     color: #fff !important;
   }
+
+  .ant-popover-arrow {
+    border-top-color: var(--background-color) !important;
+    border-left-color: var(--background-color) !important;;
+  }
+
+  .ant-popover-inner {
+    background-color: var(--background-color);
+
+    .ant-popover-inner-content {
+      color: var(--color)
+    }
+  }
+
 }
 
 [data-theme='dark'] .page {

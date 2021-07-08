@@ -1,4 +1,4 @@
-import { Card, Col, Row } from 'antd';
+import {Card, Col, Popover, Row} from 'antd';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -11,6 +11,7 @@ import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
+import {handleChildClick} from "../../utils/helper";
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -30,6 +31,9 @@ export default function CardNFTHome({ token }) {
           }
           let req = await axios.get(tokenURI);
           const data = req.data;
+
+          token.attributes = !!data.attributes ? data.attributes : null;
+
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
             description: !!data.description ? data.description : '',
@@ -68,6 +72,21 @@ export default function CardNFTHome({ token }) {
           </div>
         }
       >
+        {!!token.attributes
+            ?
+            <Popover onClick={handleChildClick}
+                     placement="bottomLeft"
+                     content={token.attributes.map((attr, i) => (
+                         <div key={i} onClick={handleChildClick}>
+                           <strong>{attr.trait_type}</strong>: {attr.value}
+                         </div>
+                     ))}
+            >
+              <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
+            </Popover>
+        : (
+            <></>
+        )}
         {!!token.price ? (
           <div className='price-nft textmode'>
             <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
