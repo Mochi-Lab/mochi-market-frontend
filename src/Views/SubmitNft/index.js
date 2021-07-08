@@ -45,23 +45,27 @@ export default function SubmitNFT() {
     if (!!walletAddress) {
       if (files.length > 0) {
         if (files[0].size <= 4000000) {
-          // upload image
-          setContent('Upload Logo');
-          setVisible(true);
-          let logo = await uploadIPFS(files);
-          setVisible(false);
-
           setContent('Submit NFTs');
           setVisible(true);
-          await dispatch(registerNft(contractAddress, isERC1155));
+          let resultRegister = await dispatch(registerNft(contractAddress, isERC1155));
           setVisible(false);
+          if (!!resultRegister) {
+            // upload image
+            setContent('Upload Logo');
+            setVisible(true);
+            let logo = await uploadIPFS(files);
+            setVisible(false);
 
-          let newCollection = {
-            logo: !!logo.image ? logo.image : '',
-            hashLogo: !!logo.ipfsHash ? logo.ipfsHash : '',
-          };
-          await uploadCollection(chainId, contractAddress, walletAddress, newCollection);
-          // reset form and file
+            let newCollection = {
+              logo: !!logo.image ? logo.image : '',
+              hashLogo: !!logo.ipfsHash ? logo.ipfsHash : '',
+            };
+            await uploadCollection(chainId, contractAddress, walletAddress, newCollection);
+            // reset form and file
+          } else {
+            return;
+          }
+
           setFiles([]);
         } else message.warn('You can only upload up to 4MB');
       } else message.warn('Please upload logo');

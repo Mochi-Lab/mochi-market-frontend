@@ -433,10 +433,12 @@ export const registerNft = (contractAddress, isERC1155) => async (dispatch, getS
         noti.message = 'Register Successfully';
         dispatch(showNotification(noti));
       });
+    return true;
   } catch (error) {
     error.message = 'Sorry, but this is not contract address or this address has been accepted';
     error.type = 'error';
     dispatch(showNotification(error));
+    return false;
   }
 };
 
