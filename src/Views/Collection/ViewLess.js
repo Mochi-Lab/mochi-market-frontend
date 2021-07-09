@@ -8,9 +8,9 @@ import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
 
-export default function ViewLess({ infoCollection, collectionOnSale, setViewAll }) {
+export default function ViewLess({ infoCollection, collectionOnSale, setViewAll, viewAll }) {
   return (
-    <>
+    <div className={`${!!viewAll ? 'display-none-view-all' : 'display-block-view-all'}`}>
       <div className='new-nfts'>
         <div className='title-new'>
           <div className='wrap-title'>
@@ -41,6 +41,6 @@ export default function ViewLess({ infoCollection, collectionOnSale, setViewAll 
           ))}
         </Slider>
       </div>
-    </>
+    </div>
   );
 }

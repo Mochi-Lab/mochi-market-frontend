@@ -13,7 +13,7 @@ import store from 'store/index';
 import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
-import {handleChildClick} from "../../utils/helper";
+import { handleChildClick } from '../../utils/helper';
 
 function NFTsCard({ token, strSearch }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -88,20 +88,22 @@ function NFTsCard({ token, strSearch }) {
             }
             className='card-nft'
           >
-            {!!token.attributes
-                ?
-                <Popover onClick={handleChildClick}
-                         placement="bottomLeft"
-                         content={token.attributes.map((attr, i) => (
-                             <div key={i} onClick={handleChildClick}>
-                               <strong>{attr.trait_type}</strong>: {attr.value}
-                             </div>
-                         ))}
-                >
-                  <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
-                </Popover>
-            : (
-                <></>
+            {!!token.attributes ? (
+              <Popover
+                onClick={handleChildClick}
+                placement='bottomLeft'
+                content={token.attributes.map((attr, i) => (
+                  <div key={i} onClick={handleChildClick}>
+                    <strong>{attr.trait_type}</strong>: {attr.value}
+                  </div>
+                ))}
+              >
+                <div className='attribs-nft' onClick={handleChildClick}>
+                  Stats
+                </div>
+              </Popover>
+            ) : (
+              <></>
             )}
             {!!token.price ? (
               <div className='price-nft textmode'>
@@ -137,9 +139,19 @@ function NFTsCard({ token, strSearch }) {
   ) : null;
 }
 
-export default function NFTsCardBrowse({ tokens, tokenPayment, typeSort, filterCountCallback }) {
-  const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
+export default function NFTsCardBrowse({
+  tokens,
+  tokenPayment,
+  typeSort,
+  filterCountCallback,
+  strSearchInCollection,
+}) {
   const { strSearch, web3 } = useSelector((state) => state);
+
+  const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
+  const [cardsPaginated, setCardsPaginated] = useState({ cards: [], indexEnd: 0 });
+  const [currentYOffset, setCurrentYOffset] = useState(0);
+
   useEffect(() => {
     filterCountCallback(afterFilter.length);
   }, [afterFilter.length, filterCountCallback]);
@@ -182,12 +194,61 @@ export default function NFTsCardBrowse({ tokens, tokenPayment, typeSort, filterC
     if (tokens) sortOrders();
   }, [tokens, sortOrders]);
 
+  const setPaginationDefault = useCallback(async () => {
+    setCardsPaginated({
+      cards: afterFilter.slice(0, 20),
+      indexEnd: afterFilter.slice(0, 20).length > 0 ? afterFilter.slice(0, 20).length - 1 : 0,
+    });
+  }, [afterFilter]);
+
+  const paginationCards = useCallback(
+    async (index) => {
+      setCardsPaginated({
+        cards: afterFilter.slice(0, index),
+        indexEnd:
+          afterFilter.slice(0, index).length > 0 ? afterFilter.slice(0, index).length - 1 : 0,
+      });
+    },
+    [afterFilter]
+  );
+
+  useEffect(() => {
+    if (afterFilter.length > 0) setPaginationDefault();
+  }, [setPaginationDefault, afterFilter, tokens]);
+
+  // listen scroll
+  const logit = useCallback(async () => {
+    console.log('1321312321');
+    if (
+      window.pageYOffset >= window.innerHeight &&
+      window.pageYOffset > currentYOffset &&
+      cardsPaginated.cards.length < afterFilter.length
+    ) {
+      // paginationCards(cardsPaginated.indexEnd + 21);
+      setCurrentYOffset(window.pageYOffset);
+    }
+  }, [afterFilter, cardsPaginated, paginationCards, currentYOffset]);
+
+  useEffect(() => {
+    function watchScroll() {
+      window.addEventListener('scroll', logit);
+    }
+    watchScroll();
+    return () => {
+      window.removeEventListener('scroll', logit);
+    };
+  }, [logit]);
+
   return (
     <div className='explore-nft content-list-nft'>
       <Row justify='start' gutter={[15, 20]}>
-        {!!afterFilter ? (
-          afterFilter.map((token, index) => (
-            <NFTsCard key={index} token={token} strSearch={strSearch} />
+        {!!cardsPaginated.cards ? (
+          cardsPaginated.cards.map((token, index) => (
+            <NFTsCard
+              key={index}
+              token={token}
+              strSearch={!!strSearchInCollection ? strSearchInCollection : strSearch}
+            />
           ))
         ) : (
           <></>

@@ -1,19 +1,21 @@
-import { Layout, Select } from 'antd';
+import { Input, Layout, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import NFTsCardBrowse from 'Components/NFTsCardBrowse';
 import { getTokensPayment } from 'utils/getContractAddress';
 import './index.scss';
 import 'Components/NFTsFilterBrowse/index.scss';
+import { SearchOutlined } from '@ant-design/icons';
+import IconLoading from 'Components/IconLoading';
 
 const { Option } = Select;
 
-export default function ViewAll({ collectionOnSale, setViewAll }) {
+export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loadingNFTs }) {
   const { chainId } = useSelector((state) => state);
 
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
-  const [filterCount, setFilterCount] = useState(0);
+  const [strSearch, setStrSearch] = useState();
 
   useEffect(() => {
     if (!!chainId) {
@@ -21,18 +23,28 @@ export default function ViewAll({ collectionOnSale, setViewAll }) {
     }
   }, [chainId]);
 
-  const _setFilterCount = (count) => {
-    setFilterCount(count);
+  const _setFilterCount = (count) => {};
+
+  const searchNFTsCollection = (e) => {
+    const { value } = e.target;
+    setStrSearch(value);
   };
 
   return (
-    <>
+    <div className={`${!!viewAll ? 'display-block-view-all' : 'display-none-view-all'}`}>
       <Layout style={{ minHeight: '100%' }} className='view-all-collection background-mode'>
         <div className='sort-results-collection'>
           <div className='left-sort-results'>
-            <span className='textmode'>
-              {`${filterCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
-            </span>
+            <div className='input-search-collections search-nft-in-collection-1 mr-0d5rem'>
+              <Input
+                placeholder='Search collections '
+                onChange={searchNFTsCollection}
+                size='large'
+                value={strSearch}
+                suffix={<SearchOutlined />}
+                className='style-search-input input-mode-bc textmode '
+              />
+            </div>
           </div>
           <div className='right-sort-results'>
             <Select
@@ -71,13 +83,32 @@ export default function ViewAll({ collectionOnSale, setViewAll }) {
             </span>
           </div>
         </div>
-        <NFTsCardBrowse
-          tokens={collectionOnSale()}
-          tokenPayment={tokenPayment}
-          typeSort={typeSort}
-          filterCountCallback={_setFilterCount}
-        />
+        <div className='search-nft-in-collection-2'>
+          <div className='input-search-collections'>
+            <Input
+              placeholder='Search collections '
+              onChange={searchNFTsCollection}
+              size='large'
+              value={strSearch}
+              suffix={<SearchOutlined />}
+              className='style-search-input input-mode-bc textmode'
+            />
+          </div>
+        </div>
+        {loadingNFTs || loadingNFTs === null ? (
+          <div className='center' style={{ width: '100%', height: '100%' }}>
+            <IconLoading />
+          </div>
+        ) : (
+          <NFTsCardBrowse
+            tokens={collectionOnSale}
+            tokenPayment={tokenPayment}
+            typeSort={typeSort}
+            filterCountCallback={_setFilterCount}
+            strSearchInCollection={strSearch}
+          />
+        )}
       </Layout>
-    </>
+    </div>
   );
 }

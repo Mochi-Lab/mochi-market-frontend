@@ -46,7 +46,8 @@ export default function Collection() {
   const [infoCollection, setInfoCollection] = useState({});
   const [statusEdit, setStatusEdit] = useState(false);
   const [nftsOnSale, setNftsOnSale] = useState([]);
-  const [viewAll, setViewAll] = useState(false);
+  const [viewAll, setViewAll] = useState(null);
+  const [loadingNFTs, setLoadingNFTs] = useState();
 
   const getInfoCollection = useCallback(
     async (collection) => {
@@ -94,6 +95,7 @@ export default function Collection() {
 
   const filterCollectionInOnSale = useCallback(async () => {
     if (!!nftList) {
+      setLoadingNFTs(true);
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
       let onSaleOfAddressToken = [];
       if (is1155) {
@@ -113,6 +115,7 @@ export default function Collection() {
         }
       }
       setNftsOnSale(onSaleOfAddressToken);
+      setLoadingNFTs(false);
     }
   }, [addressToken, convertErc1155Tokens, convertErc721Tokens, nftList]);
 
@@ -121,18 +124,22 @@ export default function Collection() {
   }, [filterCollectionInOnSale]);
 
   const collectionOnSaleLess = () => {
+    setLoadingNFTs(true);
     let listNFT = nftsOnSale;
     listNFT = listNFT.sort((a, b) =>
       a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
     );
+    setLoadingNFTs(false);
     return listNFT.slice(0, 10);
   };
 
   const collectionOnSaleAll = () => {
+    setLoadingNFTs(true);
     let listNFT = nftsOnSale;
     listNFT = listNFT.sort((a, b) =>
       a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
     );
+    setLoadingNFTs(false);
     return listNFT;
   };
 
@@ -334,19 +341,24 @@ export default function Collection() {
               <div className='contact-grid'></div>
             </div>
           </div>
-          {viewAll ? (
+
+          <ViewLess
+            infoCollection={infoCollection}
+            collectionOnSale={collectionOnSaleLess}
+            setViewAll={setViewAll}
+            viewAll={viewAll}
+            loadingNFTs={loadingNFTs}
+          />
+
+          {viewAll !== null ? (
             <ViewAll
               infoCollection={infoCollection}
               collectionOnSale={collectionOnSaleAll}
               setViewAll={setViewAll}
+              viewAll={viewAll}
+              loadingNFTs={loadingNFTs}
             />
-          ) : (
-            <ViewLess
-              infoCollection={infoCollection}
-              collectionOnSale={collectionOnSaleLess}
-              setViewAll={setViewAll}
-            />
-          )}
+          ) : null}
         </div>
       )}
       <Footer />
