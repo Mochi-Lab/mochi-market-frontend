@@ -651,7 +651,6 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
         type: SET_LIST_NTTS_ONSALE,
         listNFTsOnsale,
       });
-
       dispatch({
         type: SET_AVAILABLE_SELL_ORDER_721,
         availableSellOrder721: availableSellOrderERC721,
@@ -663,7 +662,6 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
       dispatch({
         type: SET_CONVERT_ERC721,
         convertErc721Tokens,
-        convertErc1155Tokens,
       });
       dispatch({
         type: SET_CONVERT_ERC1155,

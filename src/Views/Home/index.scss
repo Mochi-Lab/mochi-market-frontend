@@ -50,6 +50,21 @@
   content: url(../../Assets/icons/circle-arrow-left.svg);
 }
 
+.loadmore {
+  width: 100%;
+  box-shadow: 0px 4px 8px rgba(235, 80, 134, 0.8);
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.loadmore:active {
+  box-shadow: 0px 4px 8px rgba(209, 73, 120, 0.8);
+  transform: translateY(2px);
+}
+
 .slick-prev,
 .slick-next {
   z-index: 3;
@@ -223,6 +238,31 @@
   margin-right: 0.5rem;
 }
 
+.explore {
+  margin-top: 16px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 300px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1440px) {
+  .card {
+    width: 243px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .card {
+    width: 216px;
+  }
+}
+
 @media (max-width: 992px) {
   .content-home {
     display: block;
@@ -236,10 +276,20 @@
   .content-home .ant-card .ant-card-cover img {
     height: 35vh;
   }
+  .card {
+    width: 326px;
+  }
 }
 @media (max-width: 568px) {
   .carousel-banner-home .item-carousel {
     height: 25vh;
+  }
+
+  .slick-arrow.slick-next::before {
+    margin-left: 5px;
+  }
+  .slick-arrow.slick-prev::before {
+    margin-left: 0;
   }
 
   .name-user-top {
@@ -247,5 +297,8 @@
   }
   .amount-top {
     font-size: small;
+  }
+  .card {
+    width: 361px;
   }
 }

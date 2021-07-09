@@ -96,7 +96,7 @@ const symbolToken = {
   },
   //BSC Mainnet
   56: {
-    '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E': 'MOMA',
+    '0xb72842d6f5fedf91d22d56202802bb9a79c6322e': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
   },
   //BSC Testnet

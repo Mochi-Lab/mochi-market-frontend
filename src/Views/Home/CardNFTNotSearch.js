@@ -23,22 +23,30 @@ export default function CardNFTHome({ token }) {
       if (!!token) {
         try {
           let tokenURI;
-          if (token.is1155) {
-            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
-            tokenURI = await nft.methods.uri(token.index).call();
+          let req;
+          var data;
+          if (!token.nft) {
+            if (token.is1155) {
+              const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
+              tokenURI = await nft.methods.uri(token.index).call();
+              req = await axios.get(tokenURI);
+              data = req.data;
+            } else {
+              const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
+              tokenURI = await nft.methods.tokenURI(token.index).call();
+              req = await axios.get(tokenURI);
+              data = req.data;
+            }
           } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
+            data = token.nft.tokens[0];
           }
-          let req = await axios.get(tokenURI);
-          const data = req.data;
 
           token.attributes = !!data.attributes ? data.attributes : null;
 
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
             description: !!data.description ? data.description : '',
-            image: !!data.image ? data.image : imgNotFound,
+            image: !!data.thumb ? data.thumb : !!data.image ? data.image : imgNotFound,
           });
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
@@ -101,7 +109,7 @@ export default function CardNFTHome({ token }) {
         {!!token.price && (
           <div className='price-nft textmode'>
             <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-            <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+            <b>{getSymbol(chainId)[token.tokenPayment.toLowerCase()]}</b>
           </div>
         )}
         <Row justify='space-between'>
@@ -129,7 +137,11 @@ export default function CardNFTHome({ token }) {
       cover={
         <div className='wrap-cover'>
           <div className='NFTResource-Wrapper'>
-            <img className="display-resource-nft" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="" />
+            <img
+              className='display-resource-nft'
+              src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+              alt=''
+            />
           </div>
         </div>
       }
