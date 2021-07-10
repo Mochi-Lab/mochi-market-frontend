@@ -146,12 +146,12 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 19 }}>
                   <Row className='sort-results'>
-                    <Col span='12' className='left-sort-results'>
+                    <Col span='4' className='left-sort-results'>
                       <span className='textmode'>
                         {`${filterCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
                       </span>
                     </Col>
-                    <Col span='12' className='right-sort-results'>
+                    <Col span='20' className='right-sort-results'>
                       <Select
                         size='large'
                         value={tokenPayment}
