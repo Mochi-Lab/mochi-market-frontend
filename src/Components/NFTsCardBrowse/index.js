@@ -150,7 +150,6 @@ export default function NFTsCardBrowse({
 
   const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
   const [cardsPaginated, setCardsPaginated] = useState({ cards: [], indexEnd: 0 });
-  const [currentYOffset, setCurrentYOffset] = useState(0);
 
   useEffect(() => {
     filterCountCallback(afterFilter.length);
@@ -201,33 +200,33 @@ export default function NFTsCardBrowse({
     });
   }, [afterFilter]);
 
-  const paginationCards = useCallback(
-    async (index) => {
-      setCardsPaginated({
-        cards: afterFilter.slice(0, index),
-        indexEnd:
-          afterFilter.slice(0, index).length > 0 ? afterFilter.slice(0, index).length - 1 : 0,
-      });
-    },
-    [afterFilter]
-  );
-
   useEffect(() => {
     if (afterFilter.length > 0) setPaginationDefault();
   }, [setPaginationDefault, afterFilter, tokens]);
 
   // listen scroll
-  const logit = useCallback(async () => {
-    console.log('1321312321');
-    if (
-      window.pageYOffset >= window.innerHeight &&
-      window.pageYOffset > currentYOffset &&
-      cardsPaginated.cards.length < afterFilter.length
-    ) {
-      // paginationCards(cardsPaginated.indexEnd + 21);
-      setCurrentYOffset(window.pageYOffset);
-    }
-  }, [afterFilter, cardsPaginated, paginationCards, currentYOffset]);
+  const logit = useCallback(
+    async (e) => {
+      const wrappedElement = document.getElementById('row-cards');
+      const isBottom = (el) => el.getBoundingClientRect().bottom <= window.innerHeight;
+
+      const paginationCards = () => {
+        let { cards, indexEnd } = cardsPaginated;
+        setCardsPaginated({
+          cards: cards.concat(afterFilter.slice(indexEnd, indexEnd + 20)),
+          indexEnd:
+            afterFilter.slice(indexEnd, indexEnd + 20).length > 0
+              ? afterFilter.slice(indexEnd, indexEnd + 20).length - 1
+              : 0,
+        });
+      };
+
+      if (isBottom(wrappedElement) && cardsPaginated.cards.length < afterFilter.length) {
+        paginationCards();
+      }
+    },
+    [afterFilter, cardsPaginated]
+  );
 
   useEffect(() => {
     function watchScroll() {
@@ -241,7 +240,7 @@ export default function NFTsCardBrowse({
 
   return (
     <div className='explore-nft content-list-nft'>
-      <Row justify='start' gutter={[15, 20]}>
+      <Row justify='start' gutter={[15, 20]} id='row-cards'>
         {!!cardsPaginated.cards ? (
           cardsPaginated.cards.map((token, index) => (
             <NFTsCard
