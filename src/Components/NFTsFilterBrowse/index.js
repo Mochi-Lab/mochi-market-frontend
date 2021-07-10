@@ -74,7 +74,7 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
   return (
     <>
       <Layout style={{ minHeight: '100%' }}>
-        <Layout style={{ padding: '1rem' }} className='background-mode'>
+        <Layout style={{ padding: '1rem' }} className='nfts-filter-browse-container background-mode'>
           <Content
             className='site-layout-background'
             style={{
