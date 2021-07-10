@@ -16,7 +16,8 @@
   border-bottom: solid 1px #ff0086;
   overflow: hidden;
   box-shadow: 0 0 3px #f3f1f1;
-  position: relative;
+  position: sticky;
+  z-index: 99;
 }
 
 .error-dot {
@@ -402,6 +403,20 @@ div.menu-triggerer-container {
 }
 
 @media (max-width: 992px) {
+  .menu-bar {
+    height: 60px !important;
+    .logo {
+      width: 60px;
+      height: 60px;
+      a {
+        padding: 8px;
+        img {
+          height: 44px;
+          width: 44px;
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
