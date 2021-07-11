@@ -211,12 +211,12 @@ export default function NFTsCardBrowse({
       const isBottom = (el) => el.getBoundingClientRect().bottom <= window.innerHeight;
 
       const paginationCards = () => {
-        let { cards, indexEnd } = cardsPaginated;
+        let { indexEnd } = cardsPaginated;
         setCardsPaginated({
-          cards: cards.concat(afterFilter.slice(indexEnd, indexEnd + 20)),
+          cards: afterFilter.slice(0, indexEnd + 20),
           indexEnd:
-            afterFilter.slice(indexEnd, indexEnd + 20).length > 0
-              ? afterFilter.slice(indexEnd, indexEnd + 20).length - 1
+            afterFilter.slice(0, indexEnd + 20).length > 0
+              ? afterFilter.slice(0, indexEnd + 20).length - 1
               : 0,
         });
       };

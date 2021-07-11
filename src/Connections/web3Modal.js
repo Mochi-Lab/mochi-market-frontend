@@ -89,10 +89,23 @@ export const selectChain = async (chainId, walletAddress) => {
   await store.dispatch(setWeb3(getWeb3List(chainId).web3Default));
 };
 
+// Switch for chains is not ETH
 export const injectNetworkNoEthereum = async (chainId) => {
   await window.ethereum.request({
     method: 'wallet_addEthereumChain',
     params: paramsSwitchNetwork[chainId],
+  });
+};
+
+// Switch for chains in ecosystems of Ethereum
+export const injectNetworkEthereum = async (chainId, web3) => {
+  await window.ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [
+      {
+        chainId: web3.utils.numberToHex(chainId),
+      },
+    ],
   });
 };
 

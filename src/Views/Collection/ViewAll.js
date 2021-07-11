@@ -16,7 +16,6 @@ export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loading
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
   const [strSearch, setStrSearch] = useState();
-  const [filterCount, setFilterCount] = useState(0);
 
   useEffect(() => {
     if (!!chainId) {
@@ -24,13 +23,15 @@ export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loading
     }
   }, [chainId]);
 
-  const _setFilterCount = (count) => {
-    setFilterCount(count);
-  };
+  const _setFilterCount = (count) => {};
 
   const searchNFTsCollection = (e) => {
     const { value } = e.target;
-    setStrSearch(value);
+    if (!!value) {
+      setStrSearch(value);
+    } else {
+      setStrSearch('');
+    }
   };
 
   return (
@@ -48,9 +49,6 @@ export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loading
                 className='style-search-input input-mode-bc textmode '
               />
             </div>
-            <span className='textmode text-result-collection'>
-              {`${filterCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
-            </span>
           </div>
           <div className='right-sort-results'>
             <Select
