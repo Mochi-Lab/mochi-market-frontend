@@ -514,4 +514,11 @@ html[data-theme='dark'] {
       content: url(./Assets/icons/circle-arrow-left-dark.svg);
     }
   }
+  .menu-bar-drawer {
+    .ant-menu-inline {
+      li.ant-menu-item a {
+        color: #fd5e9b !important;
+      }
+    }
+  }
 }

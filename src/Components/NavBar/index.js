@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Drawer } from 'antd';
 import LeftMenu from './LeftMenu';
@@ -17,6 +17,18 @@ export default function NavBar() {
   const onClose = () => {
     setVisible(false);
   };
+
+  useEffect(() => {
+    const hideDrawerOnWindowResize = () => {
+      // mobile menu should be closed on desktop display mode
+      let windowInnerWidth = window.innerWidth;
+      if(windowInnerWidth > 992) onClose();
+    }
+    window.addEventListener("resize", hideDrawerOnWindowResize);
+    return () => {
+      window.removeEventListener("resize", hideDrawerOnWindowResize);
+    }
+  }, [])
 
   return (
     <nav className='menu-bar'>
@@ -37,13 +49,14 @@ export default function NavBar() {
         </div>
 
         <Drawer
-          bodyStyle={{ padding: 0, width: '300px' }}
+          bodyStyle={{ padding: 0 }}
           placement='right'
           closable={false}
           onClose={onClose}
           visible={visible}
+          className="menu-bar-drawer"
         >
-          <RightMenu />
+          <RightMenu onClose={onClose}/>
         </Drawer>
       </div>
       <img src={navbar} className='narbar-image' alt='navbar' />

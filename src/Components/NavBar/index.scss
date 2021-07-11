@@ -115,6 +115,29 @@
   background: transparent !important;
 }
 
+.menu-bar-drawer {
+  .ant-menu-inline {
+    .connect-wallet {
+      padding-right: 24px;
+    }
+    li.connect-wallet {
+      padding-right: 24px;
+      button.ant-btn {
+        width: 100% !important;
+      }
+    }
+    li.ant-menu-item a {
+      color: #bd187b !important;
+    }
+    li.ant-menu-item:active, .ant-menu-item-selected {
+      background-color: #fcf5f9 !important;
+      &::after {
+        border-color: #bd187b !important;
+      }
+    }
+  }
+}
+
 .dropdown_network_header {
   height: 40px;
   display: flex;

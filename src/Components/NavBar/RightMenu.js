@@ -12,7 +12,7 @@ const SubMenu = Menu.SubMenu;
 
 const { useBreakpoint } = Grid;
 
-const RightMenu = () => {
+const RightMenu = ({onClose}) => {
   const screen = useBreakpoint();
   const { shortAddress, walletAddress, chainId, moma, balance, infoUserLogin } = useSelector(
     (state) => state
@@ -31,19 +31,19 @@ const RightMenu = () => {
   return (
     <Menu mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
       <Menu.Item key='browse'>
-        <Link to='/browse'>Browse</Link>
+        <Link to='/browse' onClick={onClose}>Browse</Link>
       </Menu.Item>
       <Menu.Item key='/submit-Nfts'>
-        <Link to='/submit-Nfts'>Submit NFTs</Link>
+        <Link to='/submit-Nfts' onClick={onClose}>Submit NFTs</Link>
       </Menu.Item>
       {!!walletAddress ? (
         <Menu.Item key={`/profile/${walletAddress}`}>
-          <Link to={`/profile/${walletAddress}`}>Profile</Link>
+          <Link to={`/profile/${walletAddress}`} onClick={onClose}>Profile</Link>
         </Menu.Item>
       ) : null}
       {!!getContractAddress(chainId) && chainId === 97 ? (
         <Menu.Item key='/faucet'>
-          <Link to='/faucet'>Faucet</Link>
+          <Link to='/faucet' onClick={onClose}>Faucet</Link>
         </Menu.Item>
       ) : null}
       {chainId === 56 && <Menu.Item key='getMOMA'>
@@ -59,7 +59,7 @@ const RightMenu = () => {
         </div>
       </Menu.Item>}
 
-      {shortAddress ? (
+      {shortAddress && (
         <SubMenu
           key='sub1'
           title={
@@ -148,9 +148,12 @@ const RightMenu = () => {
             <LogoutWallet />
           </Menu.Item>
         </SubMenu>
-      ) : (
-        <Menu.Item key='connect-wallet'>
-          <ConnectWallet />
+      )}
+      {!shortAddress && (
+        <Menu.Item key='connect-wallet' className="connect-wallet">
+          <div onClick={onClose}>
+            <ConnectWallet/>
+          </div>
         </Menu.Item>
       )}
       <Menu.Item key='setting:1' disabled>
