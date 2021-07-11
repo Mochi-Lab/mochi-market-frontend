@@ -60,7 +60,7 @@ html[data-theme='dark'] {
   /* border-bottom: solid 1px rgb(38 38 38) !important; */
 }
 [data-theme='dark'] .menu-bar {
-  border: none !important;
+  border-bottom-color: #555;
 }
 
 [data-theme='dark'] .background-airdrop-mode,
