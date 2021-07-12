@@ -198,13 +198,14 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                     name={['amount']}
                     rules={[{ validator: checkAmount }]}
                     label='Amount'
-                    className='input-amount-sell'
+                    className='input-amount-sell textmode'
                   >
                     <InputNumber
                       min='1'
                       size='large'
                       formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       placeholder='Amount'
+                      className='textmode'
                     />
                   </Form.Item>
                 </Input.Group>

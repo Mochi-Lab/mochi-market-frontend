@@ -12,17 +12,20 @@ export default async function helperStatusActions721(
   setStatus,
   setOwners,
   setOwnersOnSale,
-  setOrderDetail
+  setOrderDetail,
+  history,
+  sellID
 ) {
   if (web3 && sellOrderList && availableSellOrder721 && nftList) {
     try {
       const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
-      const sellId = await sellOrderList.methods.getLatestSellIdERC721(addressToken, id).call();
-
       let tokenOwner;
-      // check if user is owner of token
-      if (!!sellId.found) {
-        const order = await sellOrderList.methods.getSellOrderById(sellId.id).call();
+      if (sellID === 'null') {
+        tokenOwner = await erc721Instances.methods.ownerOf(id).call();
+        setOwners([{ owner: tokenOwner, totalSupply: 1, value: 1 }]);
+      } else {
+        // check if user is owner of token
+        const order = await sellOrderList.methods.getSellOrderById(sellID).call();
         if (order.isActive) {
           tokenOwner = order.seller;
           setOwners([{ owner: tokenOwner, totalSupply: 1, value: 1 }]);
@@ -38,12 +41,8 @@ export default async function helperStatusActions721(
             },
           ]);
         } else {
-          tokenOwner = await erc721Instances.methods.ownerOf(id).call();
-          setOwners([{ owner: tokenOwner, totalSupply: 1, value: 1 }]);
+          history.push('/404');
         }
-      } else {
-        tokenOwner = await erc721Instances.methods.ownerOf(id).call();
-        setOwners([{ owner: tokenOwner, totalSupply: 1, value: 1 }]);
       }
 
       let isSelling;
@@ -78,7 +77,7 @@ export default async function helperStatusActions721(
       }
     } catch (error) {
       console.log(error);
-      // message.error("NFT doesn't exist!");
+      history.push('/404');
     }
   }
 }

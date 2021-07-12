@@ -60,7 +60,7 @@ function App() {
             <div style={{ height: '100%' }}>
               <Switch>
                 <Route exact path='/' component={Home} />
-                <Route exact path='/profile/:address' component={Profile} />
+                <Route exact path='/profile/:chainID/:address' component={Profile} />
                 <Route exact path='/submit-Nfts' component={SubmitNFT} />
                 <Route exact path='/browse' component={Browse} />
                 <Route

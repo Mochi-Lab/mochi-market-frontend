@@ -2,7 +2,7 @@ import { /* Button,  message, */ Tabs, Grid, Image } from 'antd';
 import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import IconLoading from 'Components/IconLoading';
 import Share from 'Components/Share';
 import { getSymbol } from 'utils/getContractAddress';
@@ -30,6 +30,7 @@ export default function DetailNFT() {
   const { lg } = useBreakpoint();
 
   const dispatch = useDispatch();
+  let history = useHistory();
 
   const [token, setToken] = useState(null);
   const [is1155, setIs1155] = useState(false);
@@ -41,6 +42,7 @@ export default function DetailNFT() {
   const [totalSupply, setTotalSupply] = useState(1);
   const [showMoreDescription, setShowMoreDescription] = useState(false);
   const [infoOwners, setInfoOwners] = useState({});
+  const [balanceOf, setBalanceOf] = useState(0);
 
   // get details nft
   const {
@@ -115,9 +117,19 @@ export default function DetailNFT() {
             web3,
             sellID,
             setStatus,
-            setOrderDetail
+            setOrderDetail,
+            history
           );
-        else helperStatusActions1155Profile(walletAddress, setStatus, addressToken, id, chainId);
+        else
+          helperStatusActions1155Profile(
+            walletAddress,
+            setStatus,
+            addressToken,
+            id,
+            chainId,
+            web3,
+            setBalanceOf
+          );
       } else {
         //  Process ERC721
         helperStatusActions721(
@@ -132,7 +144,9 @@ export default function DetailNFT() {
           setStatus,
           setOwners,
           setOwnersOnSale,
-          setOrderDetail
+          setOrderDetail,
+          history,
+          sellID
         );
       }
     }
@@ -149,6 +163,7 @@ export default function DetailNFT() {
     sellID,
     getOwners1155,
     chainId,
+    history,
   ]);
 
   useEffect(() => {
@@ -264,7 +279,10 @@ export default function DetailNFT() {
                       alt='avatar-default'
                     />{' '}
                     <span className='text-blur mr-0d5rem'>Owned by </span>{' '}
-                    <a href={`/profile/${orderDetail.seller}`} className='href-to-address-contract'>
+                    <a
+                      href={`/profile/${chainId}/${orderDetail.seller}`}
+                      className='href-to-address-contract'
+                    >
                       {`${orderDetail.seller.slice(0, 8)}...${orderDetail.seller.slice(
                         orderDetail.seller.length - 6,
                         orderDetail.seller.length
@@ -308,6 +326,14 @@ export default function DetailNFT() {
                     <span>Token ID</span>
                     <span>{id}</span>
                   </p>
+                  {!!walletAddress && sellID === 'null' ? (
+                    <p className='info-contract-item'>
+                      <span>Balance: </span>
+                      <span>{balanceOf}</span>
+                    </p>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div className='purchase-nft'>
                   <div className='style-purchase'>
@@ -393,7 +419,10 @@ export default function DetailNFT() {
                             />
                           </div>
                           <div className='link-and-available'>
-                            <Link to={`/profile/${owner.owner.toLowerCase()}`} className='owner'>
+                            <Link
+                              to={`/profile/${chainId}/${owner.owner.toLowerCase()}`}
+                              className='owner'
+                            >
                               {!!infoOwners[owner.owner.toLowerCase()] &&
                               infoOwners[owner.owner.toLowerCase()].username !== 'Unnamed' ? (
                                 <strong>@{infoOwners[owner.owner.toLowerCase()].username}</strong>
@@ -430,7 +459,7 @@ export default function DetailNFT() {
                             />
                           </div>
                           <div className='link-and-available'>
-                            <Link to={`/profile/${owner.seller}`} className='owner'>
+                            <Link to={`/profile/${chainId}/${owner.seller}`} className='owner'>
                               {!!infoOwners[owner.seller.toLowerCase()] &&
                               infoOwners[owner.seller.toLowerCase()].username !== 'Unnamed' ? (
                                 <strong>@{infoOwners[owner.seller.toLowerCase()].username}</strong>

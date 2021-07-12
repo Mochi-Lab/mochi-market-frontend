@@ -37,8 +37,8 @@ const RightMenu = () => {
         <Link to='/submit-Nfts'>Submit NFTs</Link>
       </Menu.Item>
       {!!walletAddress ? (
-        <Menu.Item key={`/profile/${walletAddress}`}>
-          <Link to={`/profile/${walletAddress}`}>Profile</Link>
+        <Menu.Item key={`/profile/${chainId}/${walletAddress}`}>
+          <Link to={`/profile/${chainId}/${walletAddress}`}>Profile</Link>
         </Menu.Item>
       ) : null}
       {!!getContractAddress(chainId) && chainId === 97 ? (
@@ -46,18 +46,20 @@ const RightMenu = () => {
           <Link to='/faucet'>Faucet</Link>
         </Menu.Item>
       ) : null}
-      {chainId === 56 && <Menu.Item key='getMOMA'>
-        <div className='btn-get-moma center'>
-          <a
-            href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
-            target='_blank'
-            rel='noreferrer'
-            style={{ margin: '0px', color: '#ffffff' }}
-          >
-            <p style={{ margin: '0px', color: '#ffffff' }}> Get $MOMA</p>
-          </a>
-        </div>
-      </Menu.Item>}
+      {chainId === 56 && (
+        <Menu.Item key='getMOMA'>
+          <div className='btn-get-moma center'>
+            <a
+              href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
+              target='_blank'
+              rel='noreferrer'
+              style={{ margin: '0px', color: '#ffffff' }}
+            >
+              <p style={{ margin: '0px', color: '#ffffff' }}> Get $MOMA</p>
+            </a>
+          </div>
+        </Menu.Item>
+      )}
 
       {shortAddress ? (
         <SubMenu
@@ -140,7 +142,7 @@ const RightMenu = () => {
             </div>
           </Menu.Item>
           <Menu.Item key='setting:3'>
-            <Link to={`/profile/${walletAddress}`}>
+            <Link to={`/profile/${chainId}/${walletAddress}`}>
               <strong className='nav-textmode'>Profile</strong>
             </Link>
           </Menu.Item>
