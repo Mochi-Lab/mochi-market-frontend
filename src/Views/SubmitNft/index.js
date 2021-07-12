@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Button, Input, Select, message } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import { Button, Input, Select, message, Row, Col } from 'antd';
 import { useDispatch } from 'react-redux';
-import { registerNft, acceptNft } from 'store/actions';
+import { registerNft, acceptNft, getCollection } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
+import IconLoading from 'Components/IconLoading';
 import { useSelector } from 'react-redux';
 import { useDropzone } from 'react-dropzone';
 import { uploadIPFS } from 'Views/Profile/UpdateIPFS';
@@ -11,17 +12,20 @@ import { connectWeb3Modal } from 'Connections/web3Modal';
 import imgBanner from 'Assets/images/img-banner-submit-nft.png';
 import logoIcon from 'Assets/logo-mochi.png';
 import './index.scss';
+import store from 'store';
 
 const { Option } = Select;
 
 export default function SubmitNFT() {
-  const { walletAddress, adminAddress, chainId } = useSelector((state) => state);
+  const { walletAddress, adminAddress, chainId, nftList, web3 } = useSelector((state) => state);
   const [visible, setVisible] = useState(false);
   const [isERC1155, setIsERC1155] = useState(false);
   const [content, setContent] = useState('');
   const [contractAddress, setContractAddress] = useState('');
   const [acceptContractAddress, setAcceptContractAddress] = useState('');
   const [files, setFiles] = useState([]);
+  const [submitsPending, setSubmitsPending] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   function handleChange(value) {
@@ -72,14 +76,43 @@ export default function SubmitNFT() {
     } else connectWeb3Modal();
   };
 
-  const accept = async () => {
+  const accept = async (addressAccept) => {
     if (!!walletAddress) {
       setContent('Accept NFT');
       setVisible(true);
-      await dispatch(acceptNft(acceptContractAddress));
+      await dispatch(acceptNft(addressAccept));
       setVisible(false);
     } else connectWeb3Modal();
   };
+
+  const getSubmitsPending = useCallback(async () => {
+    setLoading(true);
+    let allNFTAddress = await nftList.methods.getAllNFTAddress().call();
+    let acceptedNFTs = await nftList.methods.getAcceptedNFTs().call();
+    var submitsPending = allNFTAddress
+      .filter(function (e) {
+        return acceptedNFTs.indexOf(e) < 0;
+      })
+      .reverse();
+
+    let collections = [];
+    for (let i = 0; i < submitsPending.length; i++) {
+      const nftAddress = submitsPending[i];
+      const res = await web3.eth.getCode(nftAddress);
+      if (res !== '0x') {
+        let collection = (await store.dispatch(getCollection(nftAddress, null))).collection;
+        collections.push(collection);
+      }
+    }
+    setSubmitsPending(collections);
+    setLoading(false);
+  }, [nftList, web3]);
+
+  useEffect(() => {
+    if (!!nftList) {
+      getSubmitsPending();
+    }
+  }, [getSubmitsPending, nftList]);
 
   return (
     <div className='create-page'>
@@ -164,13 +197,33 @@ export default function SubmitNFT() {
 
             <Button
               type='primary'
-              onClick={() => accept()}
+              onClick={() => accept(acceptContractAddress)}
               shape='round'
               size='large'
               className='btn-submit-nft'
             >
               Accept
             </Button>
+
+            {!!loading ? (
+              <IconLoading />
+            ) : (
+              <Row className='list-not-accept' justify='center'>
+                {submitsPending.map((collection, index) => (
+                  <Col className='item-accept' key={index} span={24}>
+                    <div className='logo-collection-accept'>
+                      <img src={collection.logo} alt='logo-collection' />
+                    </div>
+                    <div className='address-button-accept'>
+                      <div className='address-accept'>{collection.addressToken}</div>
+                      <div className='button-accept'>
+                        <Button onClick={() => accept(collection.addressToken)}>accept</Button>
+                      </div>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            )}
           </div>
         ) : (
           <></>

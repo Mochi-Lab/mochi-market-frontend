@@ -191,7 +191,7 @@
 }
 
 .explore-nft {
-  margin: 2rem auto;
+  margin: 2rem 0 !important;
 }
 
 .explore-nft .ant-card {
@@ -287,15 +287,11 @@
   margin-left: -1px;
   display: inline-block;
   width: 4rem;
-  height: 3.13rem;
   border: 1px solid rgb(238, 238, 238);
   border-collapse: collapse;
   border-radius: 0.6rem;
-  margin: 0 0.15rem;
-}
-
-.contact-colletion .link-contact:first-child {
-  margin-left: 0;
+  margin: 0.25rem 0.15rem;
+  padding: 0.25rem;
 }
 
 .icon-contact {
@@ -363,9 +359,55 @@
   margin: 0.5rem;
 }
 
+.view-all-collection {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.sort-results-collection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-content: center;
+  width: 100%;
+}
+
+.link-view-less {
+  margin-left: 1rem;
+  cursor: pointer;
+  font-size: 1.13rem;
+}
+
+.display-block-view-all {
+  display: block !important;
+}
+
+.display-none-view-all {
+  display: none !important;
+}
+
+.search-nft-in-collection-1 { 
+  display: block;
+}
+
+.search-nft-in-collection-2 { 
+  margin-top: 1rem;
+  display: none;
+}
+
+
 @media (max-width: 992px) {
   .collection-detail {
     display: block;
+  }
+  .link-view-less {
+    display: block;
+    margin-left: 0;
+    margin-top: 1rem;
+    margin-right: 0.75rem;
   }
 }
 
@@ -383,6 +425,10 @@
 
   .collection-detail .logo-grid {
     margin-bottom: 1.5rem;
+  }
+
+  .text-result-collection {
+    margin-top: 1.5rem;
   }
 }
 @media (max-width: 568px) {
@@ -402,5 +448,21 @@
   }
   .amount-top {
     font-size: small;
+  }
+
+  .sort-results-collection .left-sort-results {
+    width: 30%;
+  }
+
+  .sort-results-collection .right-sort-results {
+    width: 70%;
+  }
+
+  .search-nft-in-collection-1 { 
+    display: none;
+  }
+
+  .search-nft-in-collection-2 { 
+    display: block;
   }
 }
