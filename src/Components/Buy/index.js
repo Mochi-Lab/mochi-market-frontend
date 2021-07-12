@@ -55,7 +55,7 @@ export default function Buy({ orderDetail, is1155, id, addressToken, getOwners11
         await getOwners1155();
       }
       history.push({
-        pathname: `/token/${addressToken}/${id}/null`,
+        pathname: `/token/${chainId}/${addressToken}/${id}/null`,
       });
     }
   };

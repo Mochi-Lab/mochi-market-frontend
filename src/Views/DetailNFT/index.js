@@ -20,6 +20,7 @@ import avatarDefault from 'Assets/avatar-profile.png';
 import tick from 'Assets/icons/tick-green.svg';
 
 import './index.scss';
+import { selectChain } from 'Connections/web3Modal';
 
 const { TabPane } = Tabs;
 
@@ -57,7 +58,12 @@ export default function DetailNFT() {
     infoCollections,
     infoUsers,
   } = useSelector((state) => state);
-  const { addressToken, id, sellID } = useParams();
+  const { chainID, addressToken, id, sellID } = useParams();
+
+  // Check chainId in route
+  useEffect(() => {
+    if (chainId !== chainID) selectChain(chainID, walletAddress);
+  }, [chainId, chainID, walletAddress]);
 
   useEffect(() => {
     const fetchSetAvailableOrdersNew = async () => {
@@ -202,7 +208,7 @@ export default function DetailNFT() {
             <div className='info-wrap-right'>
               <div className='info-order-nft'>
                 <div className='collections-nft'>
-                  <Link to={`/collection/${addressToken.toLowerCase()}`}>
+                  <Link to={`/collection/${chainId}/${addressToken.toLowerCase()}`}>
                     {token.nameCollection}
                   </Link>
                   {verifiedContracts.includes(addressToken.toLowerCase()) ? (
@@ -339,6 +345,7 @@ export default function DetailNFT() {
                         getOwners1155={getOwners1155}
                         addressToken={addressToken}
                         id={id}
+                        chainId={chainId}
                       />
                     </div>
                   </div>

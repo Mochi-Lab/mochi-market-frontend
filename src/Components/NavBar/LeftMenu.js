@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Grid, Col, Menu, Dropdown } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
 import { setWeb3, setChainId } from 'store/actions';
@@ -14,6 +15,10 @@ import './index.scss';
 const { useBreakpoint } = Grid;
 
 export default function LeftNar() {
+  let history = useHistory();
+  let matchRouteToken = useRouteMatch('/token/:chainID/:addressToken/:id/:sellID');
+  let matchRouteCollection = useRouteMatch('/collection/:addressToken');
+
   const { chainId, web3, walletAddress } = useSelector((state) => state);
   const [infoChain, setInfoChain] = useState(getInfoChain(chainId));
 
@@ -33,6 +38,13 @@ export default function LeftNar() {
     }
   }, [web3, chainId]);
 
+  const switchNetworks = (chainId) => {
+    if (!!matchRouteToken || !!matchRouteCollection) {
+      history.push('/');
+    }
+    selectChain(chainId, walletAddress);
+  };
+
   const { md } = useBreakpoint();
   return (
     <Col span={md ? 40 : 25}>
@@ -45,7 +57,7 @@ export default function LeftNar() {
                 <Menu.Item
                   key={i}
                   className='textmode'
-                  onClick={() => selectChain(info.chainId, walletAddress)}
+                  onClick={() => switchNetworks(info.chainId)}
                 >
                   <img className='network_icon' src={info.icon} alt={`${info.name} Icon`}></img>
                   {info.name}

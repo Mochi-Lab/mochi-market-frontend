@@ -81,12 +81,16 @@ const paramsSwitchNetwork = {
 };
 
 export const selectChain = async (chainId, walletAddress) => {
-  if (!!walletAddress) {
-    injectNetworkNoEthereum(chainId);
+  if (!!rpcSupport[chainId]) {
+    if (!!walletAddress) {
+      injectNetworkNoEthereum(chainId);
+    }
+    await store.dispatch(setChainId(chainId));
+    await store.dispatch(setAcceptedNfts());
+    await store.dispatch(setWeb3(getWeb3List(chainId).web3Default));
+  } else {
+    alert('Market does not support this network');
   }
-  await store.dispatch(setChainId(chainId));
-  await store.dispatch(setAcceptedNfts());
-  await store.dispatch(setWeb3(getWeb3List(chainId).web3Default));
 };
 
 // Switch for chains is not ETH

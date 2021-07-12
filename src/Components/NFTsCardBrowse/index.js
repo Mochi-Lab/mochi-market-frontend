@@ -68,7 +68,7 @@ function NFTsCard({ token, strSearch }) {
       xxl={{ span: 6 }}
     >
       {!!detailNFT ? (
-        <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
+        <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
           <Card
             hoverable
             cover={
@@ -120,7 +120,7 @@ function NFTsCard({ token, strSearch }) {
                     <img src={tick} alt='icon-tick' className='icon-tick' />
                   ) : null}{' '}
                   <Link
-                    to={`/collection/${token.addressToken}`}
+                    to={`/collection/${chainId}/${token.addressToken}`}
                     className='link-collection-name'
                     tag='span'
                   >

@@ -63,8 +63,12 @@ function App() {
                 <Route exact path='/profile/:address' component={Profile} />
                 <Route exact path='/submit-Nfts' component={SubmitNFT} />
                 <Route exact path='/browse' component={Browse} />
-                <Route exact path='/token/:addressToken/:id/:sellID' component={DetailNFT} />
-                <Route exact path='/collection/:addressToken' component={Collection} />
+                <Route
+                  exact
+                  path='/token/:chainID/:addressToken/:id/:sellID'
+                  component={DetailNFT}
+                />
+                <Route exact path='/collection/:chainID/:addressToken' component={Collection} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
                 <Route exact path='/faucet' component={Faucet} />
                 <Route path='*' component={NotFound} />

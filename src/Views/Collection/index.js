@@ -27,6 +27,7 @@ import github from 'Assets/icons/github-01.svg';
 import twitter from 'Assets/icons/twitter-01.svg';
 import telegram from 'Assets/icons/telegram-01.svg';
 import website from 'Assets/icons/website.svg';
+import { selectChain } from 'Connections/web3Modal.js';
 
 export default function Collection() {
   const {
@@ -39,7 +40,7 @@ export default function Collection() {
     convertErc1155Tokens,
     convertErc721Tokens,
   } = useSelector((state) => state);
-  const { addressToken } = useParams();
+  const { chainID, addressToken } = useParams();
 
   const [visibleEitdCollection, setvisibleEitdCollection] = useState(false);
   const [collections, setCollections] = useState(infoCollections);
@@ -48,6 +49,11 @@ export default function Collection() {
   const [nftsOnSale, setNftsOnSale] = useState([]);
   const [viewAll, setViewAll] = useState(null);
   const [loadingNFTs, setLoadingNFTs] = useState();
+
+  // Check chainId in route
+  useEffect(() => {
+    if (chainId !== chainID) selectChain(chainID, walletAddress);
+  }, [chainId, chainID, walletAddress]);
 
   const getInfoCollection = useCallback(
     async (collection) => {
