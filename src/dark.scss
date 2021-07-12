@@ -516,8 +516,24 @@ html[data-theme='dark'] {
   }
   .menu-bar-drawer {
     .ant-menu-inline {
-      li.ant-menu-item a {
-        color: #fd5e9b !important;
+      li.ant-menu-item {
+        a.text-white {
+          color: white !important;
+        }
+        a:not(.text-white) {
+          color: #fd5e9b !important;
+        }
+      }
+      li.ant-menu-item:active, li.ant-menu-item-selected {
+        background: #323131 !important;
+      }
+    }
+  }
+  .rightMenu .ant-menu-horizontal {
+    div.menu-button {
+      color: #fd5e9b;
+      &.active {
+        background: #323131;
       }
     }
   }

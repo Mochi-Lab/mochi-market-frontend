@@ -1,6 +1,6 @@
 import { Menu, Grid } from 'antd';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ConnectWallet from 'Components/ConnectWallet';
 import { useSelector } from 'react-redux';
 import avatarDefault from 'Assets/avatar-default.svg';
@@ -13,6 +13,7 @@ const SubMenu = Menu.SubMenu;
 const { useBreakpoint } = Grid;
 
 const RightMenu = ({onClose}) => {
+  const location = useLocation();
   const screen = useBreakpoint();
   const { shortAddress, walletAddress, chainId, moma, balance, infoUserLogin } = useSelector(
     (state) => state
@@ -28,33 +29,46 @@ const RightMenu = ({onClose}) => {
     }, 3000);
   };
 
+  const generateMenuItemForRouteKey = routeKey => {
+    const pathName = location.pathname
+    const routeMap = {
+      "/browse": "Browse",
+      "/submit-Nfts": "Submit NFTs",
+      "/profile": "Profile",
+      "/faucet": "Faucet",
+    }
+    let linkClassName = "menu-button"
+    let menuClassName = ''
+    if(routeKey === pathName || (routeKey === '/profile' && `/profile/${walletAddress}` === pathName)) {
+      linkClassName += ' active';
+      menuClassName = 'ant-menu-selected ant-menu-item-selected'
+    }
+    return (
+      <Menu.Item key={routeKey} className={menuClassName}>
+        <Link to={routeKey + (routeKey === '/profile' ? `/${walletAddress}` : '')} onClick={onClose}><div className={linkClassName}>{routeMap[routeKey]}</div></Link>
+      </Menu.Item>
+    )
+  }
+
   return (
-    <Menu mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
-      <Menu.Item key='browse'>
-        <Link to='/browse' onClick={onClose}>Browse</Link>
-      </Menu.Item>
-      <Menu.Item key='/submit-Nfts'>
-        <Link to='/submit-Nfts' onClick={onClose}>Submit NFTs</Link>
-      </Menu.Item>
-      {!!walletAddress ? (
-        <Menu.Item key={`/profile/${walletAddress}`}>
-          <Link to={`/profile/${walletAddress}`} onClick={onClose}>Profile</Link>
-        </Menu.Item>
-      ) : null}
-      {!!getContractAddress(chainId) && chainId === 97 ? (
-        <Menu.Item key='/faucet'>
-          <Link to='/faucet' onClick={onClose}>Faucet</Link>
-        </Menu.Item>
-      ) : null}
-      {chainId === 56 && <Menu.Item key='getMOMA'>
+    <Menu selectable={false} mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
+      {generateMenuItemForRouteKey('/browse')}
+      {generateMenuItemForRouteKey('/submit-Nfts')}
+      {!!walletAddress && (
+        generateMenuItemForRouteKey('/profile')
+      )}
+      {!!getContractAddress(chainId) && chainId === 97 && (
+        generateMenuItemForRouteKey('/faucet')
+      )}
+      {chainId === 56 && <Menu.Item key='getMOMA' className="get-moma">
         <div className='btn-get-moma center'>
           <a
             href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
             target='_blank'
             rel='noreferrer'
-            style={{ margin: '0px', color: '#ffffff' }}
+            className='text-white'
           >
-            <p style={{ margin: '0px', color: '#ffffff' }}> Get $MOMA</p>
+            Get $MOMA
           </a>
         </div>
       </Menu.Item>}
