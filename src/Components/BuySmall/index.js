@@ -56,7 +56,7 @@ export default function BuySmall({ orderDetail, is1155, id, addressToken, getOwn
         await getOwners1155();
       }
       history.push({
-        pathname: `/token/${addressToken}/${id}/null`,
+        pathname: `/token/${chainId}/${addressToken}/${id}/null`,
       });
     }
   };

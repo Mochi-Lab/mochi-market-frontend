@@ -1,4 +1,4 @@
-import {Card, Row, Col, Skeleton, Popover} from 'antd';
+import { Card, Row, Col, Skeleton, Popover } from 'antd';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import '../NFTsCardBrowse/index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import {handleChildClick} from "../../utils/helper";
+import { handleChildClick } from '../../utils/helper';
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -66,7 +66,9 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
     >
       {!!detailNFT ? (
         <Link
-          to={`/token/${token.addressToken}/${token.index}/${!!token.sellId ? token.sellId : null}`}
+          to={`/token/${chainId}/${token.addressToken}/${token.index}/${
+            !!token.sellId ? token.sellId : null
+          }`}
         >
           <Card
             hoverable
@@ -87,20 +89,22 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
             }
             className='card-nft'
           >
-            {!!token.attributes
-                ?
-                <Popover onClick={handleChildClick}
-                         placement="bottomLeft"
-                         content={token.attributes.map((attr, i) => (
-                             <div key={i} onClick={handleChildClick}>
-                               <strong>{attr.trait_type}</strong>: {attr.value}
-                             </div>
-                         ))}
-                >
-                  <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
-                </Popover>
-            : (
-                <></>
+            {!!token.attributes ? (
+              <Popover
+                onClick={handleChildClick}
+                placement='bottomLeft'
+                content={token.attributes.map((attr, i) => (
+                  <div key={i} onClick={handleChildClick}>
+                    <strong>{attr.trait_type}</strong>: {attr.value}
+                  </div>
+                ))}
+              >
+                <div className='attribs-nft' onClick={handleChildClick}>
+                  Stats
+                </div>
+              </Popover>
+            ) : (
+              <></>
             )}
             {!!token.price ? (
               <div className='price-nft textmode'>

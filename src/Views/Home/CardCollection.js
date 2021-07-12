@@ -24,7 +24,7 @@ export default function CardCollection({ addressToken, chainID }) {
 
   return !!collection.addressToken && chainId === chainID ? (
     <div className='item-carousel'>
-      <Link to={`/collection/${collection.addressToken}`}>
+      <Link to={`/collection/${chainId}/${collection.addressToken}`}>
         <Card
           className='home-card card-nft card-collection'
           cover={<div className='wrap-cover'></div>}

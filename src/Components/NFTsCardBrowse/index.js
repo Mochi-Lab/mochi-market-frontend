@@ -13,7 +13,7 @@ import store from 'store/index';
 import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
-import {handleChildClick} from "../../utils/helper";
+import { handleChildClick } from '../../utils/helper';
 
 function NFTsCard({ token, strSearch }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -68,7 +68,7 @@ function NFTsCard({ token, strSearch }) {
       xxl={{ span: 6 }}
     >
       {!!detailNFT ? (
-        <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
+        <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
           <Card
             hoverable
             cover={
@@ -88,20 +88,22 @@ function NFTsCard({ token, strSearch }) {
             }
             className='card-nft'
           >
-            {!!token.attributes
-                ?
-                <Popover onClick={handleChildClick}
-                         placement="bottomLeft"
-                         content={token.attributes.map((attr, i) => (
-                             <div key={i} onClick={handleChildClick}>
-                               <strong>{attr.trait_type}</strong>: {attr.value}
-                             </div>
-                         ))}
-                >
-                  <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
-                </Popover>
-            : (
-                <></>
+            {!!token.attributes ? (
+              <Popover
+                onClick={handleChildClick}
+                placement='bottomLeft'
+                content={token.attributes.map((attr, i) => (
+                  <div key={i} onClick={handleChildClick}>
+                    <strong>{attr.trait_type}</strong>: {attr.value}
+                  </div>
+                ))}
+              >
+                <div className='attribs-nft' onClick={handleChildClick}>
+                  Stats
+                </div>
+              </Popover>
+            ) : (
+              <></>
             )}
             {!!token.price ? (
               <div className='price-nft textmode'>
@@ -118,7 +120,7 @@ function NFTsCard({ token, strSearch }) {
                     <img src={tick} alt='icon-tick' className='icon-tick' />
                   ) : null}{' '}
                   <Link
-                    to={`/collection/${token.addressToken}`}
+                    to={`/collection/${chainId}/${token.addressToken}`}
                     className='link-collection-name'
                     tag='span'
                   >
