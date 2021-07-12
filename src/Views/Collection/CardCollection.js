@@ -100,10 +100,10 @@ export default function CardCollection({ token, infoCollection }) {
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
+              {!!infoCollection.name ? infoCollection.name : token.nameCollection}
               {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
               ) : null}{' '}
-              {!!infoCollection.name ? infoCollection.name : token.nameCollection}
             </div>
             <div className='name-nft textmode'>{detailNFT.name}</div>
           </Col>

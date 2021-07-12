@@ -83,7 +83,7 @@ export default function CreateERC1155() {
 
         <div>
           <div>
-            <Link to={`/profile/${walletAddress}`} ref={profile} />
+            <Link to={`/profile/${chainId}/${walletAddress}`} ref={profile} />
             <h3 className='text-upload-image textmode'>Upload Image</h3>
             <div className='drag-box-search'>
               <div className='drag-box' {...getRootProps({ className: 'dropzone' })}>

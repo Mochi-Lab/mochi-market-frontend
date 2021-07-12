@@ -117,16 +117,16 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
             <Row justify='space-between'>
               <Col className={`footer-card-left ${!token.is1155 ? 'fill-width' : ''}`}>
                 <div className='name-collection'>
-                  {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
-                    <img src={tick} alt='icon-tick' className='icon-tick' />
-                  ) : null}{' '}
                   <Link
-                    to={`/collection/${token.addressToken}`}
+                    to={`/collection/${chainId}/${token.addressToken}`}
                     className='link-collection-name'
                     tag='span'
                   >
                     {token.nameCollection}
                   </Link>
+                  {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+                    <img src={tick} alt='icon-tick' className='icon-tick' />
+                  ) : null}{' '}
                 </div>
                 <div className='name-nft textmode'>{detailNFT.name}</div>
               </Col>

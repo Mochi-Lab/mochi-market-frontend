@@ -17,7 +17,8 @@ const { useBreakpoint } = Grid;
 export default function LeftNar() {
   let history = useHistory();
   let matchRouteToken = useRouteMatch('/token/:chainID/:addressToken/:id/:sellID');
-  let matchRouteCollection = useRouteMatch('/collection/:addressToken');
+  let matchRouteCollection = useRouteMatch('/collection/:chainID/:addressToken');
+  let matchRouteProfile = useRouteMatch('/profile/:chainID/:address');
 
   const { chainId, web3, walletAddress } = useSelector((state) => state);
   const [infoChain, setInfoChain] = useState(getInfoChain(chainId));
@@ -39,7 +40,7 @@ export default function LeftNar() {
   }, [web3, chainId]);
 
   const switchNetworks = (chainId) => {
-    if (!!matchRouteToken || !!matchRouteCollection) {
+    if (!!matchRouteToken || !!matchRouteCollection || matchRouteProfile) {
       history.push('/');
     }
     selectChain(chainId, walletAddress);

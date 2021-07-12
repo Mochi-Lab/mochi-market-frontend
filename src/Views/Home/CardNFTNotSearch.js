@@ -100,9 +100,6 @@ export default function CardNFTHome({ token }) {
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
-              {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
-                <img src={tick} alt='icon-tick' className='icon-tick' />
-              ) : null}{' '}
               <Link
                 to={`/collection/${chainId}/${token.addressToken}`}
                 className='link-collection-name'
@@ -110,6 +107,9 @@ export default function CardNFTHome({ token }) {
               >
                 {token.nameCollection}
               </Link>
+              {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+                <img src={tick} alt='icon-tick' className='icon-tick' />
+              ) : null}{' '}
             </div>
             <div className='name-nft textmode'>{detailNFT.name}</div>
           </Col>

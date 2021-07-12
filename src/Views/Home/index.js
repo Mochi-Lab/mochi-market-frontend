@@ -14,7 +14,7 @@ import './index.scss';
 import 'Assets/css/common-card-nft.scss';
 
 export default function Home() {
-  const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721 } = useSelector(
+  const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721, chainId } = useSelector(
     (state) => state
   );
 
@@ -46,6 +46,26 @@ export default function Home() {
     );
     return listNFT.slice(0, 10);
   };
+
+  const listHotCollections = [
+    {
+      addressToken: '0xC33d69a337B796A9f0F7588169cd874C3987BDE9',
+      chainId: 56,
+    },
+    {
+      addressToken: '0x301817312598f8f48cb7d898d659ca4a4d457ad8',
+      chainId: 56,
+    },
+    {
+      addressToken: '0xc0cee8f3799be895e8f53ee97ab66d7581017b5f',
+      chainId: 137,
+    },
+    {
+      addressToken: '0x85bc2e8aaad5dbc347db49ea45d95486279ed918',
+      chainId: 137,
+    },
+  ];
+
   return (
     <div className='content-home'>
       <BannerSearchHome carouselBanner={carouselBanner} />
@@ -72,14 +92,17 @@ export default function Home() {
               <h2 className='textmode'>Hot Collections</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              <CardCollection
-                addressToken='0xC33d69a337B796A9f0F7588169cd874C3987BDE9'
-                chainID={56}
-              />
-              <CardCollection
-                addressToken='0x301817312598f8f48cb7d898d659ca4a4d457ad8'
-                chainID={56}
-              />
+              {listHotCollections.map((collection, index) =>
+                parseInt(collection.chainId) === parseInt(chainId) ? (
+                  <CardCollection
+                    key={index}
+                    addressToken={collection.addressToken}
+                    chainId={collection.chainId}
+                  />
+                ) : (
+                  ''
+                )
+              )}
             </Slider>
           </div>
 
