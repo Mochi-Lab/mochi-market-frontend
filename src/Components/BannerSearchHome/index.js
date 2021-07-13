@@ -38,7 +38,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   };
   // eslint-disable-next-line
   const debounceSearchText = useCallback(
-    debounce((text) => dispatch(setStrSearch(text)), 1000),
+    debounce((text) => dispatch(setStrSearch(text)), 500),
     []
   );
 
