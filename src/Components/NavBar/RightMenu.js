@@ -12,7 +12,7 @@ const SubMenu = Menu.SubMenu;
 
 const { useBreakpoint } = Grid;
 
-const RightMenu = ({onClose}) => {
+const RightMenu = ({ onClose }) => {
   const location = useLocation();
   const screen = useBreakpoint();
   const { shortAddress, walletAddress, chainId, moma, balance, infoUserLogin } = useSelector(
@@ -39,13 +39,14 @@ const RightMenu = ({onClose}) => {
     }
     let linkClassName = "menu-button"
     let menuClassName = ''
-    if(routeKey === pathName || (routeKey === '/profile' && `/profile/${walletAddress}` === pathName)) {
+    let walletProfilePath = `/profile/${chainId}/${walletAddress}`
+    if (routeKey === pathName || (routeKey === '/profile' && walletProfilePath === pathName)) {
       linkClassName += ' active';
       menuClassName = 'ant-menu-selected ant-menu-item-selected'
     }
     return (
       <Menu.Item key={routeKey} className={menuClassName}>
-        <Link to={routeKey + (routeKey === '/profile' ? `/${walletAddress}` : '')} onClick={onClose}><div className={linkClassName}>{routeMap[routeKey]}</div></Link>
+        <Link to={routeKey === '/profile' ? walletProfilePath : routeKey} onClick={onClose}><div className={linkClassName}>{routeMap[routeKey]}</div></Link>
       </Menu.Item>
     )
   }
@@ -60,18 +61,20 @@ const RightMenu = ({onClose}) => {
       {!!getContractAddress(chainId) && chainId === 97 && (
         generateMenuItemForRouteKey('/faucet')
       )}
-      {chainId === 56 && <Menu.Item key='getMOMA' className="get-moma">
-        <div className='btn-get-moma center'>
-          <a
-            href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
-            target='_blank'
-            rel='noreferrer'
-            className='text-white'
-          >
-            Get $MOMA
-          </a>
-        </div>
-      </Menu.Item>}
+      {chainId === 56 && (
+        <Menu.Item key='getMOMA' className="get-moma">
+          <div className='btn-get-moma center'>
+            <a
+              href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
+              target='_blank'
+              rel='noreferrer'
+              className='text-white'
+            >
+              Get $MOMA
+            </a>
+          </div>
+        </Menu.Item>
+      )}
 
       {shortAddress && (
         <SubMenu
@@ -154,7 +157,7 @@ const RightMenu = ({onClose}) => {
             </div>
           </Menu.Item>
           <Menu.Item key='setting:3'>
-            <Link to={`/profile/${walletAddress}`}>
+            <Link to={`/profile/${chainId}/${walletAddress}`}>
               <strong className='nav-textmode'>Profile</strong>
             </Link>
           </Menu.Item>
@@ -166,7 +169,7 @@ const RightMenu = ({onClose}) => {
       {!shortAddress && (
         <Menu.Item key='connect-wallet' className="connect-wallet">
           <div onClick={onClose}>
-            <ConnectWallet/>
+            <ConnectWallet />
           </div>
         </Menu.Item>
       )}

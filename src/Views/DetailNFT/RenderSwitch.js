@@ -14,6 +14,7 @@ export default function RenderSwitch({
   getOwners1155,
   addressToken,
   id,
+  chainId,
 }) {
   switch (status) {
     case 3:
@@ -28,7 +29,7 @@ export default function RenderSwitch({
               getOwners1155={getOwners1155}
             />
             <div className='cAFwWB' />
-            <Cancel orderDetail={orderDetail} getOwners1155={getOwners1155} />
+            <Cancel orderDetail={orderDetail} getOwners1155={getOwners1155} chainId={chainId} />
           </div>
         </div>
       );

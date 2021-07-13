@@ -54,31 +54,43 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
         }
         setIsModalVisible(false);
         history.push({
-          pathname: `/token/${addressToken}/${id}/${result.sellId}`,
+          pathname: `/token/${chainId}/${addressToken}/${id}/${result.sellId}`,
         });
       }
     }
-  }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form, getOwners1155]);
+  }, [
+    dispatch,
+    addressToken,
+    id,
+    web3.utils,
+    tokenPayment,
+    is1155,
+    history,
+    form,
+    getOwners1155,
+    chainId,
+  ]);
 
   const confirmSell = useCallback(async () => {
     const values = await form.validateFields();
     if (!!values && parseFloat(values.price) > 0) {
-      let currency = getTokensPayment(chainId).find(item => item.address === tokenPayment)
-      currency = currency ? currency.symbol : 'MOMA'
+      let currency = getTokensPayment(chainId).find((item) => item.address === tokenPayment);
+      currency = currency ? currency.symbol : 'MOMA';
       Modal.confirm({
         title: 'Confirm placing sell order?',
-        icon: <ExclamationCircleOutlined/>,
+        icon: <ExclamationCircleOutlined />,
         content: `You're going to create a sell order for ${values.price} ${currency}. Are you sure?`,
-        okText: "Sell",
+        okText: 'Sell',
         okButtonProps: { className: 'ant-btn ant-btn-primary ant-btn-round ant-btn-lg' },
-        cancelButtonProps: { className: 'ant-btn ant-btn-round ant-btn-lg', disabled: transactionInProgress },
+        cancelButtonProps: {
+          className: 'ant-btn ant-btn-round ant-btn-lg',
+          disabled: transactionInProgress,
+        },
         onOk() {
-          setTransactionInProgress(true)
-          return handleOk()
+          setTransactionInProgress(true);
+          return handleOk();
         },
-        onCancel() {
-
-        },
+        onCancel() {},
       });
     }
   }, [chainId, handleOk, form, tokenPayment, transactionInProgress]);
@@ -113,7 +125,13 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
           <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>
             Cancel
           </Button>,
-          <Button key='sell' type='primary' shape='round' size='large' onClick={() => confirmSell()}>
+          <Button
+            key='sell'
+            type='primary'
+            shape='round'
+            size='large'
+            onClick={() => confirmSell()}
+          >
             Sell
           </Button>,
         ]}
@@ -180,13 +198,14 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                     name={['amount']}
                     rules={[{ validator: checkAmount }]}
                     label='Amount'
-                    className='input-amount-sell'
+                    className='input-amount-sell textmode'
                   >
                     <InputNumber
                       min='1'
                       size='large'
                       formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       placeholder='Amount'
+                      className='textmode'
                     />
                   </Form.Item>
                 </Input.Group>

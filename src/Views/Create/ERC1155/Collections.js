@@ -142,7 +142,7 @@ export default function ERC1155Collections({ collectionId, setCollectionId, setI
                 onClick={() => setCollectionId(userCollection.index)}
               >
                 <Link
-                  to={`/collection/${userCollection.contractAddress}`}
+                  to={`/collection/${chainId}/${userCollection.contractAddress}`}
                   className='button-edit-collection'
                 >
                   <EditOutlined />

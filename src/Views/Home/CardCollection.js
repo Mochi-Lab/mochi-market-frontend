@@ -7,8 +7,9 @@ import { getCollection } from 'store/actions';
 import store from 'store/index';
 import { useEffect, useState } from 'react';
 
-export default function CardCollection({ addressToken, chainID }) {
-  const { verifiedContracts, nftList, chainId } = useSelector((state) => state);
+export default function CardCollection({ addressToken, chainId }) {
+  console.log();
+  const { verifiedContracts, nftList } = useSelector((state) => state);
   const [collection, setCollection] = useState({});
   const [is1155, setIs1155] = useState({});
 
@@ -22,9 +23,9 @@ export default function CardCollection({ addressToken, chainID }) {
     if (!!nftList) fetchCollection();
   }, [addressToken, nftList]);
 
-  return !!collection.addressToken && chainId === chainID ? (
+  return !!collection.addressToken ? (
     <div className='item-carousel'>
-      <Link to={`/collection/${collection.addressToken}`}>
+      <Link to={`/collection/${chainId}/${collection.addressToken}`}>
         <Card
           className='home-card card-nft card-collection'
           cover={<div className='wrap-cover'></div>}
@@ -40,10 +41,10 @@ export default function CardCollection({ addressToken, chainID }) {
           <Row justify='center'>
             <Col className='footer-card-left'>
               <div className='textmode collection-name'>
+                {collection.name}
                 {verifiedContracts.includes(collection.addressToken.toLocaleLowerCase()) ? (
                   <img src={tick} alt='icon-tick' className='icon-tick' />
                 ) : null}{' '}
-                {collection.name}
               </div>
               <div className='collection-type textmode text-blur'>
                 {!!is1155 ? 'ERC-1155' : 'ERC-721'}

@@ -736,16 +736,10 @@ export const setMySellOrder = () => async (dispatch, getState) => {
   }
 };
 
-export const createSellOrder = (
-  nftAddress,
-  tokenId,
-  price,
-  tokenPayment,
-  amount,
-  is1155,
-
-  activity
-) => async (dispatch, getState) => {
+export const createSellOrder = (nftAddress, tokenId, price, tokenPayment, amount, is1155) => async (
+  dispatch,
+  getState
+) => {
   const { market, walletAddress, web3, erc721Instances, sellOrderList } = getState();
   let activity = {
     key: `sell-${Date.now()}`,
@@ -1725,6 +1719,8 @@ export const getCollection = (addressToken, _collections) => async (dispatch, ge
 
     if (!!res && !!res.collection) {
       collection = res.collection;
+      if (!collection.name) collection.name = 'Unnamed';
+      if (!res.collection.name) res.collection.name = 'Unnamed';
       collections[addressToken] = res.collection;
       dispatch(setInfoCollections(collections));
     } else {

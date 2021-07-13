@@ -31,7 +31,7 @@
   overflow: hidden;
   z-index: 1;
   background: none !important;
-  box-shadow: -6px 13px 20px 0px rgba(31, 38, 103, 0.40);
+  box-shadow: -6px 13px 20px 0px rgba(31, 38, 103, 0.4);
   min-height: 100vh;
 }
 
@@ -58,8 +58,8 @@
   background: #fff;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  -webkit-box-shadow: 0 2px 30px 0 rgba(31, 38, 103, 0.20);
-  box-shadow: 0 2px 30px 0 rgba(31, 38, 103, 0.20);
+  -webkit-box-shadow: 0 2px 30px 0 rgba(31, 38, 103, 0.2);
+  box-shadow: 0 2px 30px 0 rgba(31, 38, 103, 0.2);
   overflow: hidden;
   -webkit-transform-origin: center left;
   transform-origin: center left;
@@ -225,6 +225,8 @@
   display: flex;
   align-content: center;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .right-sort-results {

@@ -82,7 +82,7 @@ export default function CreateERC721() {
         <h2 className='textmode'>Create single collectible</h2>
         <p className='title-function'>Item Details</p>
         <p className='title-note'>Drag or chose your file to upload</p>
-        <Link to={`/profile/${walletAddress}`} ref={profile} />
+        <Link to={`/profile/${chainId}/${walletAddress}`} ref={profile} />
         <div className='info-item'>
           <div className='input-area'>
             <Form onFinish={onFinish} form={form} layout='vertical'>

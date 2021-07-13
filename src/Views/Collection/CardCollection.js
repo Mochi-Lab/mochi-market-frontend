@@ -1,4 +1,4 @@
-import {Card, Col, Popover, Row} from 'antd';
+import { Card, Col, Popover, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -37,7 +37,7 @@ export default function CardCollection({ token, infoCollection }) {
           setDetailNFT({
             name: !!data.name ? data.name : 'Unnamed',
             description: !!data.description ? data.description : '',
-            image: !!data.image ? data.image : imgNotFound
+            image: !!data.image ? data.image : imgNotFound,
           });
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
@@ -53,7 +53,7 @@ export default function CardCollection({ token, infoCollection }) {
   }, [token, web3, chainId, infoCollections]);
 
   return !!detailNFT ? (
-    <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
+    <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
       <Card
         className='collection-card card-nft'
         cover={
@@ -72,20 +72,22 @@ export default function CardCollection({ token, infoCollection }) {
           </div>
         }
       >
-        {!!token.attributes
-            ?
-            <Popover onClick={handleChildClick}
-                     placement="bottomLeft"
-                     content={token.attributes.map((attr, i) => (
-                                <div key={i} onClick={handleChildClick}>
-                                  <strong>{attr.trait_type}</strong>: {attr.value}
-                                </div>
-                              ))}
-            >
-              <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
-            </Popover>
-        : (
-            <></>
+        {!!token.attributes ? (
+          <Popover
+            onClick={handleChildClick}
+            placement='bottomLeft'
+            content={token.attributes.map((attr, i) => (
+              <div key={i} onClick={handleChildClick}>
+                <strong>{attr.trait_type}</strong>: {attr.value}
+              </div>
+            ))}
+          >
+            <div className='attribs-nft' onClick={handleChildClick}>
+              Stats
+            </div>
+          </Popover>
+        ) : (
+          <></>
         )}
         {!!token.price ? (
           <div className='price-nft textmode'>
@@ -98,10 +100,10 @@ export default function CardCollection({ token, infoCollection }) {
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
+              {!!infoCollection.name ? infoCollection.name : token.nameCollection}
               {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
               ) : null}{' '}
-              {!!infoCollection.name ? infoCollection.name : token.nameCollection}
             </div>
             <div className='name-nft textmode'>{detailNFT.name}</div>
           </Col>

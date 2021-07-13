@@ -1,4 +1,4 @@
-import {Card, Col, Popover, Row} from 'antd';
+import { Card, Col, Popover, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -11,7 +11,7 @@ import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import {handleChildClick} from "../../utils/helper";
+import { handleChildClick } from '../../utils/helper';
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -53,7 +53,7 @@ export default function CardNFTHome({ token }) {
   }, [token, web3, chainId, infoCollections]);
 
   return !!detailNFT ? (
-    <Link to={`/token/${token.addressToken}/${token.index}/${token.sellId}`}>
+    <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
       <Card
         className='home-card card-nft'
         cover={
@@ -72,20 +72,22 @@ export default function CardNFTHome({ token }) {
           </div>
         }
       >
-        {!!token.attributes
-            ?
-            <Popover onClick={handleChildClick}
-                     placement="bottomLeft"
-                     content={token.attributes.map((attr, i) => (
-                         <div key={i} onClick={handleChildClick}>
-                           <strong>{attr.trait_type}</strong>: {attr.value}
-                         </div>
-                     ))}
-            >
-              <div className='attribs-nft' onClick={handleChildClick}>Stats</div>
-            </Popover>
-        : (
-            <></>
+        {!!token.attributes ? (
+          <Popover
+            onClick={handleChildClick}
+            placement='bottomLeft'
+            content={token.attributes.map((attr, i) => (
+              <div key={i} onClick={handleChildClick}>
+                <strong>{attr.trait_type}</strong>: {attr.value}
+              </div>
+            ))}
+          >
+            <div className='attribs-nft' onClick={handleChildClick}>
+              Stats
+            </div>
+          </Popover>
+        ) : (
+          <></>
         )}
         {!!token.price ? (
           <div className='price-nft textmode'>
@@ -98,16 +100,16 @@ export default function CardNFTHome({ token }) {
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
-              {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
-                <img src={tick} alt='icon-tick' className='icon-tick' />
-              ) : null}{' '}
               <Link
-                to={`/collection/${token.addressToken}`}
+                to={`/collection/${chainId}/${token.addressToken}`}
                 className='link-collection-name'
                 tag='span'
               >
                 {token.nameCollection}
               </Link>
+              {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+                <img src={tick} alt='icon-tick' className='icon-tick' />
+              ) : null}{' '}
             </div>
             <div className='name-nft textmode'>{detailNFT.name}</div>
           </Col>
