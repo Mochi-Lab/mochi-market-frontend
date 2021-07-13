@@ -173,17 +173,17 @@
 
 .icon-collection {
   display: inline-block;
-  width: 2.12rem;
-  height: 2.12rem;
+  width:36px;
+  height:36px;
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid #fafafa;
 }
 
 .icon-collection img {
-  width: 36px;
-  height: 36px;
   object-fit: contain;
+  width: 100%;
+  height: 100%;
 }
 
 .icon-collection .avatar-token {

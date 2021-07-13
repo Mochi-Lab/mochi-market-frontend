@@ -1,7 +1,14 @@
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { setChainId, setWeb3, setAddress, setAcceptedNfts } from 'store/actions';
+import {
+  setChainId,
+  setWeb3,
+  setAddress,
+  setAcceptedNfts,
+  setBalance,
+  setMomaBalance,
+} from 'store/actions';
 import store from 'store/index';
 import { getWeb3List } from 'utils/getWeb3List';
 
@@ -141,6 +148,8 @@ export const connectWeb3Modal = async () => {
 
     store.dispatch(setChainId(chainID));
     store.dispatch(setWeb3(web3));
+    store.dispatch(setBalance(accounts[0]));
+    store.dispatch(setMomaBalance(accounts[0]));
 
     if (accounts.length > 0) {
       store.dispatch(setAddress(accounts[0]));
@@ -156,15 +165,20 @@ export const connectWeb3Modal = async () => {
   provider.on('accountsChanged', async (accounts) => {
     store.dispatch(setAddress(accounts[0]));
     store.dispatch(setAcceptedNfts());
+    store.dispatch(setBalance(accounts[0]));
+    store.dispatch(setMomaBalance(accounts[0]));
   });
 
   // Subscribe to chainID change
-  provider.on('chainChanged', (chainID) => {
+  provider.on('chainChanged', async (chainID) => {
     chainID = parseInt(web3.utils.hexToNumber(chainID));
     if (!!rpcSupport[chainID]) {
+      let accounts = await web3.eth.getAccounts();
       store.dispatch(setChainId(chainID));
       store.dispatch(setAcceptedNfts());
       store.dispatch(setWeb3(web3));
+      store.dispatch(setBalance(accounts[0]));
+      store.dispatch(setMomaBalance(accounts[0]));
     } else {
       alert('Market does not support this network');
     }

@@ -3,6 +3,10 @@ import Buy from 'Components/Buy';
 import Cancel from 'Components/Cancel';
 import Transfer from 'Components/Transfer';
 import UpdatePrice from 'Components/UpdatePrice';
+import { setBalance, setMomaBalance } from 'store/actions';
+import store from 'store/index';
+import useInterval from 'utils/useInterval';
+import { useSelector } from 'react-redux';
 
 export default function RenderSwitch({
   status,
@@ -16,6 +20,15 @@ export default function RenderSwitch({
   id,
   chainId,
 }) {
+  const { walletAddress } = useSelector((state) => state);
+
+  useInterval(() => {
+    if (!!walletAddress) {
+      store.dispatch(setBalance(walletAddress));
+      store.dispatch(setMomaBalance(walletAddress));
+    }
+  }, 3000);
+
   switch (status) {
     case 3:
       return (

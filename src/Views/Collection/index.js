@@ -16,6 +16,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { setInfoCollections, getCollection } from 'store/actions';
 import store from 'store/index';
 import { getLogoChainsTags } from 'utils/getContractAddress';
+import { newMintOf721, newMintOf1155 } from 'utils/helper';
 import logoMochi from 'Assets/logo-mochi.png';
 import discord from 'Assets/icons/discord-01.svg';
 import youtube from 'Assets/icons/youtube.svg';
@@ -49,11 +50,12 @@ export default function Collection() {
   const [nftsOnSale, setNftsOnSale] = useState([]);
   const [viewAll, setViewAll] = useState(null);
   const [loadingNFTs, setLoadingNFTs] = useState();
+  const [listNewNFT, setListNewNFT] = useState([]);
 
   // Check chainId in route
   useEffect(() => {
-    if (chainId !== chainID) selectChain(chainID, walletAddress);
-  }, [chainId, chainID, walletAddress]);
+    if (parseInt(chainId) !== parseInt(chainID)) selectChain(chainID, walletAddress);
+  }, [walletAddress, chainId, chainID]);
 
   const getInfoCollection = useCallback(
     async (collection) => {
@@ -148,6 +150,23 @@ export default function Collection() {
     setLoadingNFTs(false);
     return listNFT;
   };
+
+  const newMintNFT = useCallback(async () => {
+    if (nftList) {
+      let is1155 = await nftList.methods.isERC1155(addressToken).call();
+      let result;
+      if (is1155) {
+        result = await newMintOf1155(addressToken, chainID);
+      } else {
+        result = await newMintOf721(addressToken, chainID);
+      }
+      setListNewNFT(result);
+    }
+  }, [addressToken, chainID, nftList]);
+
+  useEffect(() => {
+    newMintNFT();
+  }, [newMintNFT]);
 
   return (
     <div className='collection-detail'>
@@ -351,6 +370,7 @@ export default function Collection() {
           <ViewLess
             infoCollection={infoCollection}
             collectionOnSale={collectionOnSaleLess}
+            listNewNFT={listNewNFT}
             setViewAll={setViewAll}
             viewAll={viewAll}
             loadingNFTs={loadingNFTs}

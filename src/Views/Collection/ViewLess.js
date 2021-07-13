@@ -8,7 +8,13 @@ import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
 
-export default function ViewLess({ infoCollection, collectionOnSale, setViewAll, viewAll }) {
+export default function ViewLess({
+  infoCollection,
+  collectionOnSale,
+  listNewNFT,
+  setViewAll,
+  viewAll,
+}) {
   return (
     <div className={`${!!viewAll ? 'display-none-view-all' : 'display-block-view-all'}`}>
       <div className='new-nfts'>
@@ -31,10 +37,10 @@ export default function ViewLess({ infoCollection, collectionOnSale, setViewAll,
 
       <div className='new-nfts'>
         <div className='title-new'>
-          <h2 className='textmode'>New List</h2>
+          <h2 className='textmode'>Newly Created</h2>
         </div>
         <Slider className='carousel-new-nfts' {...carouselCard}>
-          {collectionOnSale().map((nft, i) => (
+          {listNewNFT.map((nft, i) => (
             <div className='item-carousel' key={i}>
               <CardCollection token={nft} infoCollection={infoCollection} />
             </div>

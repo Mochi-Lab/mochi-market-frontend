@@ -64,8 +64,8 @@ export default function DetailNFT() {
 
   // Check chainId in route
   useEffect(() => {
-    if (chainId !== chainID) selectChain(chainID, walletAddress);
-  }, [chainId, chainID, walletAddress]);
+    if (parseInt(chainId) !== parseInt(chainID)) selectChain(chainID, walletAddress);
+  }, [walletAddress, chainId, chainID]);
 
   useEffect(() => {
     const fetchSetAvailableOrdersNew = async () => {
@@ -278,7 +278,7 @@ export default function DetailNFT() {
                       }
                       alt='avatar-default'
                     />{' '}
-                    <span className='text-blur mr-0d5rem'>Owned by </span>{' '}
+                    <span className='text-blur mr-0d5rem textmode'>Owned by </span>{' '}
                     <a
                       href={`/profile/${chainId}/${orderDetail.seller}`}
                       className='href-to-address-contract'
