@@ -32,6 +32,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   const searchNFT = (event, skipDebounce = false) => {
     const text = event.target.value;
     setTextSearch(text);
+    if(location.pathname === '/' && skipDebounce === false) return;
     if(!skipDebounce) debounceSearchText(text);
     else dispatch(setStrSearch(text));
   };
