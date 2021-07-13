@@ -60,7 +60,7 @@ html[data-theme='dark'] {
   /* border-bottom: solid 1px rgb(38 38 38) !important; */
 }
 [data-theme='dark'] .menu-bar {
-  border: none !important;
+  border-bottom-color: #555;
 }
 
 [data-theme='dark'] .background-airdrop-mode,
@@ -512,6 +512,29 @@ html[data-theme='dark'] {
     }
     &.slick-prev:before {
       content: url(./Assets/icons/circle-arrow-left-dark.svg);
+    }
+  }
+  .menu-bar-drawer {
+    .ant-menu-inline {
+      li.ant-menu-item {
+        a.text-white {
+          color: white !important;
+        }
+        a:not(.text-white) {
+          color: #fd5e9b !important;
+        }
+      }
+      li.ant-menu-item:active, li.ant-menu-item-selected {
+        background: #323131 !important;
+      }
+    }
+  }
+  .rightMenu .ant-menu-horizontal {
+    div.menu-button {
+      color: #fd5e9b;
+      &.active {
+        background: #323131;
+      }
     }
   }
 }

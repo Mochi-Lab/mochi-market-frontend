@@ -13,10 +13,11 @@
 }
 
 .menu-bar {
-  border-bottom: solid 1px #ff0086;
+  border-bottom: solid 1px #d9d9d9c9;
   overflow: hidden;
-  box-shadow: 0 0 3px #f3f1f1;
-  position: relative;
+  box-shadow: rgba(4, 17, 29, 0.25) 0px 0px 8px 0px;
+  position: sticky;
+  z-index: 99;
 }
 
 .error-dot {
@@ -406,6 +407,20 @@ div.menu-triggerer-container {
 }
 
 @media (max-width: 992px) {
+  .menu-bar {
+    height: 60px !important;
+    .logo {
+      width: 60px;
+      height: 60px;
+      a {
+        padding: 8px;
+        img {
+          height: 44px;
+          width: 44px;
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {

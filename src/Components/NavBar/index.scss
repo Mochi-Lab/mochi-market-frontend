@@ -53,8 +53,40 @@
   background: transparent !important;
 }
 
-.rightMenu .ant-menu-horizontal .ant-menu-item a {
-  color: #c64488 !important;
+.rightMenu .ant-menu-horizontal {  
+  .ant-menu-item a {
+    color: #c64488 !important;
+  }
+}
+
+.rightMenu .ant-menu-horizontal .btn-get-moma a {
+  color: white !important;
+}
+
+.rightMenu .ant-menu-horizontal {
+  li.ant-menu-submenu::after {
+    border-color: transparent !important;
+  }
+  li.ant-menu-item::after { display: none; }
+  li.ant-menu-item span.ant-menu-title-content {
+    display: inline-block;
+    a {
+      display: inline-block;
+    }
+  }
+  div.menu-button {
+    padding-left: 13px;
+    padding-right: 13px;
+    border-radius: 30px;
+    height: 28px;
+    text-align: center;
+    line-height: 28px;
+    &.active {
+      color: #bd187b;
+      background: #fcf5f9;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+    }
+  }
 }
 
 .narbar-image {
@@ -99,6 +131,9 @@
   background: linear-gradient(125.02deg, #ff0086 7.52%, rgba(255, 0, 134, 0) 118.17%);
   border-radius: 30px;
   padding: 0.25rem;
+  a {
+    margin: 0px;
+  }
 }
 
 .balance-create {
@@ -113,6 +148,35 @@
 
 .ant-menu-sub.ant-menu-inline {
   background: transparent !important;
+}
+
+.menu-bar-drawer {
+  .ant-menu-inline {
+    .get-moma, .connect-wallet {
+      padding-right: 24px;
+      .btn-get-moma {
+        width: 100%;
+        a {
+          color: white !important;
+        }
+      }
+    }
+    li.connect-wallet {
+      padding-right: 24px;
+      button.ant-btn {
+        width: 100% !important;
+      }
+    }
+    li.ant-menu-item a {
+      color: #bd187b !important;
+    }
+    li.ant-menu-item:active, .ant-menu-item-selected {
+      background-color: #fcf5f9 !important;
+      &::after {
+        border-color: #bd187b !important;
+      }
+    }
+  }
 }
 
 .dropdown_network_header {
@@ -171,26 +235,26 @@
 
 @media (max-width: 1437px) {
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
-    margin: 0 10px;
+    margin: 0px;
   }
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
-    padding: 10px 10px;
+    padding: 10px 5px;
   }
 }
 @media (max-width: 1345px) {
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
-    margin: 0 7px;
+    margin: 0px;
   }
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
-    padding: 10px 7px;
+    padding: 10px 3px;
   }
 }
 @media (max-width: 1024px) {
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
-    margin: 0 5px;
+    margin: 0px;
   }
   .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
-    padding: 10px 5px;
+    padding: 10px 2px;
   }
 }
 

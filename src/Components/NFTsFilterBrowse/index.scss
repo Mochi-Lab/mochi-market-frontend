@@ -223,7 +223,7 @@
 .left-sort-results {
   text-align: start;
   display: flex;
-  align-content: flex-end;
+  align-content: center;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
@@ -256,6 +256,10 @@
 }
 .option-tokenpayment {
   display: flex;
+}
+
+.nfts-filter-browse-container {
+  background: transparent !important;
 }
 
 @media (max-width: 992px) {
