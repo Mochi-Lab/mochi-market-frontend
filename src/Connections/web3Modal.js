@@ -5,6 +5,8 @@ import { setChainId, setWeb3, setAddress, setAcceptedNfts } from 'store/actions'
 import store from 'store/index';
 import { getWeb3List } from 'utils/getWeb3List';
 
+export const CONNECTID = 'WEB3_CONNECT_CACHED_PROVIDER';
+
 const rpcSupport = {
   97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
   56: 'https://bsc-dataseed.binance.org/',
@@ -84,11 +86,10 @@ export const selectChain = async (chainId, walletAddress) => {
   if (!!rpcSupport[chainId]) {
     if (!!walletAddress) {
       injectNetworkNoEthereum(chainId);
-    } else {
-      await store.dispatch(setWeb3(getWeb3List(chainId).web3Default));
     }
     await store.dispatch(setChainId(chainId));
     await store.dispatch(setAcceptedNfts());
+    await store.dispatch(setWeb3(getWeb3List(chainId).web3Default));
   } else {
     alert('Market does not support this network');
   }
@@ -114,15 +115,20 @@ export const injectNetworkEthereum = async (chainId, web3) => {
   });
 };
 
+const web3Modal = new Web3Modal({
+  cacheProvider: true, // optional
+  providerOptions, // required
+});
+
+export const disconnectWeb3Modal = async () => {
+  localStorage.removeItem(CONNECTID);
+  web3Modal.clearCachedProvider();
+};
+
 export const connectWeb3Modal = async () => {
   const { chainId } = store.getState();
 
   injectNetworkNoEthereum(chainId);
-
-  const web3Modal = new Web3Modal({
-    cacheProvider: false, // optional
-    providerOptions, // required
-  });
 
   const provider = await web3Modal.connect();
 
@@ -143,6 +149,7 @@ export const connectWeb3Modal = async () => {
     }
   } else {
     alert('Market does not support this network');
+    localStorage.removeItem(CONNECTID);
   }
 
   // Subscribe to accounts change
