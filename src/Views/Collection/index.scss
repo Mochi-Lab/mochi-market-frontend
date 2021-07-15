@@ -47,10 +47,10 @@
 }
 
 .slick-arrow.slick-next::before {
-  content: '›';
+  content: url(../../Assets/icons/circle-arrow-right.svg);
 }
 .slick-arrow.slick-prev::before {
-  content: '‹';
+  content: url(../../Assets/icons/circle-arrow-left.svg);
 }
 
 .slick-prev,

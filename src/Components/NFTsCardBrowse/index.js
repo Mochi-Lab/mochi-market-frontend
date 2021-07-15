@@ -14,6 +14,7 @@ import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { handleChildClick } from '../../utils/helper';
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 function NFTsCard({ token, strSearch }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -204,39 +205,22 @@ export default function NFTsCardBrowse({
     if (afterFilter.length > 0) setPaginationDefault();
   }, [setPaginationDefault, afterFilter, tokens]);
 
-  // listen scroll
-  const logit = useCallback(
+  const paginationCards = useCallback(
     async (e) => {
-      const wrappedElement = document.getElementById('row-cards');
-      const isBottom = (el) => el.getBoundingClientRect().bottom <= window.innerHeight;
-
-      const paginationCards = () => {
-        let { indexEnd } = cardsPaginated;
-        setCardsPaginated({
-          cards: afterFilter.slice(0, indexEnd + 20),
-          indexEnd:
-            afterFilter.slice(0, indexEnd + 20).length > 0
-              ? afterFilter.slice(0, indexEnd + 20).length - 1
-              : 0,
-        });
-      };
-
-      if (isBottom(wrappedElement) && cardsPaginated.cards.length < afterFilter.length) {
-        paginationCards();
-      }
+      let { indexEnd } = cardsPaginated;
+      setCardsPaginated({
+        cards: afterFilter.slice(0, indexEnd + 20),
+        indexEnd:
+          afterFilter.slice(0, indexEnd + 20).length > 0
+            ? afterFilter.slice(0, indexEnd + 20).length - 1
+            : 0,
+      });
+      console.log(e);
     },
     [afterFilter, cardsPaginated]
   );
 
-  useEffect(() => {
-    function watchScroll() {
-      window.addEventListener('scroll', logit);
-    }
-    watchScroll();
-    return () => {
-      window.removeEventListener('scroll', logit);
-    };
-  }, [logit]);
+  useBottomScrollListener(paginationCards);
 
   return (
     <div className='explore-nft content-list-nft'>

@@ -1,15 +1,13 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
 import IconLoading from 'Components/IconLoading';
-import { setAvailableSellOrder, setBalance, setMomaBalance } from 'store/actions';
+import { setAvailableSellOrder } from 'store/actions';
 import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
 import './App.scss';
 import Notification from 'Components/Notification';
 import StatusActivity from 'Components/StatusActivity';
-import useInterval from 'utils/useInterval';
-import { useSelector } from 'react-redux';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -22,26 +20,15 @@ const Collection = lazy(() => import('Views/Collection'));
 const NotFound = lazy(() => import('Views/NotFound'));
 
 function App() {
-  const { walletAddress } = useSelector((state) => state);
-
   useEffect(() => {
     async function fetchDataInit() {
       document
         .getElementsByTagName('HTML')[0]
         .setAttribute('data-theme', localStorage.getItem('theme'));
       await store.dispatch(setAvailableSellOrder());
-      store.dispatch(setBalance());
-      store.dispatch(setMomaBalance());
     }
     fetchDataInit();
   }, []);
-
-  useInterval(() => {
-    if (!!walletAddress) {
-      store.dispatch(setBalance());
-      store.dispatch(setMomaBalance());
-    }
-  }, 3000);
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>

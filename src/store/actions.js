@@ -86,9 +86,22 @@ export const logout = () => (dispatch) => {
 };
 
 export const SET_CHAINID = 'SET_CHAINID';
-export const setChainId = (chainId) => (dispatch) => {
+export const setChainId = (chainId) => async (dispatch) => {
   localStorage.setItem('chainId', chainId);
   dispatch({ type: SET_CHAINID, chainId });
+
+  try {
+    const response = await fetch(
+      process.env.REACT_APP_SERVER_URL + '/verifyAllNetwork?network=' + chainId
+    );
+    const data = await response.json();
+    if (!Array.isArray(data)) {
+      throw new Error('Error fetching data ' + data);
+    }
+    dispatch(setVerifiedContracts(data));
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const SET_ADMIN_ADDRESS = 'SET_ADMIN_ADDRESS';
@@ -127,10 +140,10 @@ export const setAddress = (walletAddress) => async (dispatch) => {
 };
 
 export const SET_BALANCE = 'SET_BALANCE';
-export const setBalance = () => async (dispatch, getState) => {
-  let { web3, walletAddress } = getState();
+export const setBalance = (walletAddress) => async (dispatch, getState) => {
+  let { web3 } = getState();
   let balance;
-  if (walletAddress !== null) {
+  if (!!walletAddress) {
     balance = await web3.eth.getBalance(walletAddress);
     if (!!balance) {
       balance = parseBalance(balance.toString(), 18);
@@ -143,8 +156,8 @@ export const setBalance = () => async (dispatch, getState) => {
 };
 
 export const SET_MOMA_BALANCE = 'SET_MOMA_BALANCE';
-export const setMomaBalance = () => async (dispatch, getState) => {
-  let { web3, walletAddress } = getState();
+export const setMomaBalance = (walletAddress) => async (dispatch, getState) => {
+  let { web3 } = getState();
   let balance;
   let ctAddress;
   if (!!contractAddress && contractAddress.MOMA.length > 0) {

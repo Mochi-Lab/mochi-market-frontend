@@ -244,6 +244,77 @@ export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, address
   return { ownersOf1155: [], addressOwnersOf1155: {}, totalSupply: 0 };
 }
 
+export async function newMintOf721(tokenAddress, chainId) {
+  if (!!chainId) {
+    const url = getUrlSubgraph(chainId);
+    if (url.url721.length > 0) {
+      const result = await axios.post(url.url721, {
+        query: `{
+          tokens(where: { contract: "${tokenAddress.toLowerCase()}"}, orderBy:mintTime, orderDirection: desc, first:10){
+              contract {
+                id
+              }
+              tokenID
+              mintTime
+            }
+          }`,
+      });
+
+      let nftsOf721Raw = !!result.data && !!result.data.data.tokens ? result.data.data.tokens : [];
+
+      let nftsOf721 = await Promise.all(
+        nftsOf721Raw.map(async (nft) => {
+          return {
+            addressToken: nft.contract.id,
+            symbol: nft.contract.symbol,
+            collections: nft.contract.name,
+            index: nft.tokenID,
+            tokenURI: nft.tokenURI,
+            is1155: false,
+          };
+        })
+      );
+      return nftsOf721;
+    }
+  }
+  return [];
+}
+
+export async function newMintOf1155(tokenAddress, chainId) {
+  const url = getUrlSubgraph(chainId);
+  if (url.url1155.length > 0) {
+    const result = await axios.post(url.url1155, {
+      query: `{
+        tokens(where :{
+          registry: "${tokenAddress.toLowerCase()}"}
+          orderBy: identifier,
+          orderDirection:desc,
+          first:10){
+            id
+            registry {
+              id
+            }
+            identifier
+            totalSupply
+          }
+        }`,
+    });
+    let list1155Raw =
+      result.data && result.data.data && result.data.data.tokens ? result.data.data.tokens : [];
+    let list1155 = Promise.all(
+      list1155Raw.map(async (nft) => {
+        return {
+          addressToken: nft.registry.id,
+          index: nft.identifier,
+          totalSupply: nft.totalSupply,
+          is1155: true,
+        };
+      })
+    );
+    return list1155;
+  } else return [];
+}
+
 export const checkUrl = (url) => {
   // eslint-disable-next-line
   let regexCheckUrl = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;

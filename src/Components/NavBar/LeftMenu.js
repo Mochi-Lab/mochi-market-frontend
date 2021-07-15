@@ -39,11 +39,12 @@ export default function LeftNar() {
     }
   }, [web3, chainId]);
 
-  const switchNetworks = (chainId) => {
+  const switchNetworks = async (chainId) => {
     if (!!matchRouteToken || !!matchRouteCollection || matchRouteProfile) {
       history.push('/');
     }
-    selectChain(chainId, walletAddress);
+    await selectChain(chainId, walletAddress);
+    window.location.reload();
   };
 
   const { md } = useBreakpoint();

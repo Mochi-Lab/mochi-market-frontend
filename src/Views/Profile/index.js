@@ -50,8 +50,8 @@ export default function Profile() {
 
   // Check chainId in route
   useEffect(() => {
-    if (chainId !== chainID) selectChain(chainID, walletAddress);
-  }, [chainId, chainID, walletAddress]);
+    if (parseInt(chainId) !== parseInt(chainID)) selectChain(chainID, walletAddress);
+  }, [walletAddress, chainId, chainID]);
 
   const getInfoUser = useCallback(async () => {
     let res = await getProfileByAddress(address);

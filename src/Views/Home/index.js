@@ -57,6 +57,10 @@ export default function Home() {
       chainId: 56,
     },
     {
+      addressToken: '0x0AC1bd198DB93d7EC428b698DCEf2E43DBcea7D1',
+      chainId: 56,
+    },
+    {
       addressToken: '0xc0cee8f3799be895e8f53ee97ab66d7581017b5f',
       chainId: 137,
     },

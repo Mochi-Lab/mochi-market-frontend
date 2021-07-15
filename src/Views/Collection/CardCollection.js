@@ -53,7 +53,11 @@ export default function CardCollection({ token, infoCollection }) {
   }, [token, web3, chainId, infoCollections]);
 
   return !!detailNFT ? (
-    <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
+    <Link
+      to={`/token/${chainId}/${token.addressToken}/${token.index}/${
+        !!token.sellId ? token.sellId : 'null'
+      }`}
+    >
       <Card
         className='collection-card card-nft'
         cover={
