@@ -1075,7 +1075,8 @@ export const generateERC721NFT = (collectionId, tokenUri, routeFunc) => async (
         });
     } catch (error) {
       error.type = 'error';
-      dispatch(showNotification(error));
+      // dispatch(showNotification(error));
+      console.log(error);
     }
   } else {
     erc721Instance = await new web3.eth.Contract(
@@ -1096,7 +1097,8 @@ export const generateERC721NFT = (collectionId, tokenUri, routeFunc) => async (
         });
     } catch (error) {
       error.type = 'error';
-      dispatch(showNotification(error));
+      // dispatch(showNotification(error));
+      console.log(error);
     }
   }
 
@@ -1131,7 +1133,8 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri, routeFunc
         });
     } catch (error) {
       error.type = 'error';
-      dispatch(showNotification(error));
+      // dispatch(showNotification(error));
+      console.log(error);
     }
   } else {
     erc1155Instance = await new web3.eth.Contract(
@@ -1152,7 +1155,8 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri, routeFunc
         });
     } catch (error) {
       error.type = 'error';
-      dispatch(showNotification(error));
+      // dispatch(showNotification(error));
+      console.log(error);
     }
   }
 
@@ -1186,7 +1190,8 @@ export const setCollectionByUser = () => async (dispatch, getState) => {
     dispatch({ type: SET_USER_COLLECTIONS, userCollections: formatUserCollections });
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    // dispatch(showNotification(error));
+    console.log(error);
   }
 };
 
@@ -1456,7 +1461,8 @@ export const checkWhiteListNft = (addressNft) => async (dispatch, getState) => {
     return result;
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    // dispatch(showNotification(error));
+    console.log(error);
   }
 };
 
@@ -1470,7 +1476,8 @@ export const checkAllowanceCampaign = (addressToken, amount) => async (dispatch,
     return allowance;
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    // dispatch(showNotification(error));
+    console.log(error);
   }
 };
 
@@ -1483,7 +1490,8 @@ export const checkBalance = (addressToken) => async (dispatch, getState) => {
     return { weiBalance, symbol };
   } catch (error) {
     error.type = 'error';
-    dispatch(showNotification(error));
+    // dispatch(showNotification(error));
+    console.log(error);
   }
 };
 

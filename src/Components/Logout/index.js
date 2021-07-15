@@ -2,6 +2,7 @@ import { Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'antd/lib/modal/Modal';
 import { logout } from 'store/actions';
+import { disconnectWeb3Modal } from 'Connections/web3Modal';
 import { useState } from 'react';
 import './index.scss';
 
@@ -11,6 +12,7 @@ export default function LogoutWallet() {
   const dispatch = useDispatch();
   const logoutAction = () => {
     dispatch(logout());
+    disconnectWeb3Modal();
     cancelModal();
   };
 
