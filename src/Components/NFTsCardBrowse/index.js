@@ -1,4 +1,4 @@
-import { Card, Row, Col, Skeleton, Popover } from 'antd';
+import { Card, Row, Col, Popover } from 'antd';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -55,10 +55,14 @@ function NFTsCard({ token, strSearch }) {
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
 
-  return !!detailNFT &&
-    !!detailNFT.name &&
-    (detailNFT.name.toLocaleLowerCase().includes(strSearch.toLowerCase()) ||
-      token.nameCollection.toLocaleLowerCase().includes(strSearch.toLowerCase())) ? (
+  const _strSearch = strSearch.toLowerCase()
+  const visible = !!detailNFT
+    && !!detailNFT.name
+    && (detailNFT.name.toLocaleLowerCase().includes(_strSearch) || token.nameCollection.toLocaleLowerCase().includes(_strSearch))
+
+  return detailNFT !== null ? (
+    <>
+    { !visible ? null : (
     <Col
       className='gutter-row'
       xs={{ span: 24 }}
@@ -68,7 +72,6 @@ function NFTsCard({ token, strSearch }) {
       xl={{ span: 6 }}
       xxl={{ span: 6 }}
     >
-      {!!detailNFT ? (
         <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
           <Card
             hoverable
@@ -89,7 +92,7 @@ function NFTsCard({ token, strSearch }) {
             }
             className='card-nft'
           >
-            {!!token.attributes ? (
+            {!!token.attributes && (
               <Popover
                 onClick={handleChildClick}
                 placement='bottomLeft'
@@ -103,16 +106,12 @@ function NFTsCard({ token, strSearch }) {
                   Stats
                 </div>
               </Popover>
-            ) : (
-              <></>
             )}
-            {!!token.price ? (
+            {!!token.price && (
               <div className='price-nft textmode'>
                 <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
                 <b>{getSymbol(chainId)[token.tokenPayment]}</b>
               </div>
-            ) : (
-              <></>
             )}
             <Row justify='space-between'>
               <Col className='footer-card-left'>
@@ -124,20 +123,47 @@ function NFTsCard({ token, strSearch }) {
                   >
                     {token.nameCollection}
                   </Link>
-                  {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+                  {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) && (
                     <img src={tick} alt='icon-tick' className='icon-tick' />
-                  ) : null}{' '}
+                  )}{' '}
                 </div>
                 <div className='name-nft textmode'>{detailNFT.name}</div>
               </Col>
             </Row>
           </Card>
         </Link>
-      ) : (
-        <Skeleton active round title='123' />
-      )}
     </Col>
-  ) : null;
+    )
+    }
+    </>
+  ) : (
+    <Col
+      className='gutter-row'
+      xs={{ span: 24 }}
+      sm={{ span: 12 }}
+      md={{ span: 8 }}
+      lg={{ span: 8 }}
+      xl={{ span: 6 }}
+      xxl={{ span: 6 }}
+    >
+      <Card className='card-nft card-nft-content-loader'
+        cover={
+          <div className='wrap-cover'>
+            <div className='NFTResource-Wrapper'>
+              <img className="display-resource-nft" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="" />
+            </div>
+          </div>
+        }
+      >
+        <Row justify='space-between'>
+          <Col className='footer-card-left'>
+            <div className='name-collection'>&nbsp;</div>
+            <div className='name-nft'>&nbsp;</div>
+          </Col>
+        </Row>
+      </Card>
+    </Col>
+  )
 }
 
 export default function NFTsCardBrowse({
