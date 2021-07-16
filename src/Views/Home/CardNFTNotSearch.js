@@ -12,6 +12,7 @@ import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 import { handleChildClick } from '../../utils/helper';
+import moment from 'moment';
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -53,7 +54,10 @@ export default function CardNFTHome({ token }) {
   }, [token, web3, chainId, infoCollections]);
 
   return !!detailNFT ? (
-    <Link to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}>
+    <Link
+      to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}
+      target='_blank'
+    >
       <Card
         className='home-card card-nft'
         cover={
@@ -78,7 +82,14 @@ export default function CardNFTHome({ token }) {
             placement='bottomLeft'
             content={token.attributes.map((attr, i) => (
               <div key={i} onClick={handleChildClick}>
-                <strong>{attr.trait_type}</strong>: {attr.value}
+                <strong>{attr.trait_type}</strong>:{' '}
+                {!!attr.display_type &&
+                attr.display_type.toLowerCase() === 'date' &&
+                !!moment(attr.value).isValid()
+                  ? moment(
+                      attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
+                    ).format('DD-MM-YYYY')
+                  : attr.value}
               </div>
             ))}
           >

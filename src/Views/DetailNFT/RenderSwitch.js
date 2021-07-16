@@ -19,6 +19,7 @@ export default function RenderSwitch({
   addressToken,
   id,
   chainId,
+  sellID,
 }) {
   const { walletAddress } = useSelector((state) => state);
 

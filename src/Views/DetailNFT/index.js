@@ -16,6 +16,7 @@ import BuySmall from 'Components/BuySmall';
 import IconCoppy from 'Components/IconCoppy';
 import { getRootExplorer } from 'utils/getRootExplorer';
 import { setAvailableSellOrder, getUser, setInfoUsers } from 'store/actions';
+import moment from 'moment';
 import avatarDefault from 'Assets/avatar-profile.png';
 import tick from 'Assets/icons/tick-green.svg';
 
@@ -209,7 +210,17 @@ export default function DetailNFT() {
                           ? token.attributes.map((attr, i) => (
                               <div className='item-properties' key={i}>
                                 <div className='name-properties'>{attr.trait_type}</div>
-                                <div className='value-properties textmode'>{attr.value}</div>
+                                <div className='value-properties textmode'>
+                                  {!!attr.display_type &&
+                                  attr.display_type.toLowerCase() === 'date' &&
+                                  !!moment(attr.value).isValid()
+                                    ? moment(
+                                        attr.value.toString().length < 13
+                                          ? attr.value * 1000
+                                          : attr.value
+                                      ).format('DD-MM-YYYY')
+                                    : attr.value}
+                                </div>
                               </div>
                             ))
                           : null}
@@ -372,6 +383,7 @@ export default function DetailNFT() {
                         addressToken={addressToken}
                         id={id}
                         chainId={chainId}
+                        sellID={sellID}
                       />
                     </div>
                   </div>
@@ -389,7 +401,17 @@ export default function DetailNFT() {
                           ? token.attributes.map((attr, i) => (
                               <div className='item-properties' key={i}>
                                 <div className='name-properties'>{attr.trait_type}</div>
-                                <div className='value-properties'>{attr.value}</div>
+                                <div className='value-properties'>
+                                  {!!attr.display_type &&
+                                  attr.display_type.toLowerCase() === 'date' &&
+                                  !!moment(attr.value).isValid()
+                                    ? moment(
+                                        attr.value.toString().length < 13
+                                          ? attr.value * 1000
+                                          : attr.value
+                                      ).format('DD-MM-YYYY')
+                                    : attr.value}
+                                </div>
                               </div>
                             ))
                           : null}

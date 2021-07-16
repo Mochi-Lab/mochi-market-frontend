@@ -6,6 +6,7 @@ import { carouselBanner } from 'Constants/constantCarousel';
 import { useEffect, useRef } from 'react';
 import { setAvailableSellOrder } from 'store/actions';
 import store from 'store/index';
+import Footer from 'Components/Footer';
 
 export default function Browse() {
   const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721 } = useSelector(
@@ -38,6 +39,7 @@ export default function Browse() {
           addressToken={addressToken}
         />
       </div>
+      <Footer />
     </>
   );
 }

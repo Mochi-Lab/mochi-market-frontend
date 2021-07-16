@@ -21,7 +21,6 @@ export const getNonce = async (addressSubmit, addressToken, chainId) => {
       return { nonce: response.data.nonce };
     })
     .catch(function (error) {
-      console.log(error);
       return { nonce: null, msg: 'error server' };
     });
   return result;

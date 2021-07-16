@@ -160,7 +160,7 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
         account(
           id:"${walletAddress.toLowerCase()}"
         ){
-          balances(where: {value_gt: 0}){
+          balances(where: {value_gt: 0, account: "${walletAddress.toLowerCase()}"}){
             token{
               id
               registry {
