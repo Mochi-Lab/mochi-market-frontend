@@ -234,6 +234,7 @@ export default function NFTsCardBrowse({
   const logit = useCallback(
     async (e) => {
       const wrappedElement = document.getElementById('row-cards');
+      if(wrappedElement === null) return;
       const isBottom = (el) => el.getBoundingClientRect().bottom <= window.innerHeight;
 
       const paginationCards = () => {

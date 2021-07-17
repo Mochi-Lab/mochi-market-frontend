@@ -47,25 +47,6 @@
   object-fit: contain;
 }
 
-.card-nft-content-loader {
-  opacity: 0.65;
-  img, .name-collection, .name-nft {
-    // taken from ant Skeleton
-    animation: ant-skeleton-loading 1.4s ease infinite;
-    background: linear-gradient(90deg,rgba(190,190,190,.2) 25%,rgba(129,129,129,.24) 37%,rgba(190,190,190,.2) 63%);
-    background-size: 400% 100%;
-  }
-  .footer-card-left {
-    width: 100% !important;
-    .name-collection, .name-nft {
-      border-radius: 2px;
-    }
-  }
-  .wrap-cover {
-    border-radius: 0px;
-  }
-}
-
 @media (max-width: 992px) {
   .content-list-nft {
     display: block;

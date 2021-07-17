@@ -72,7 +72,7 @@ export default function CardNFTHome({ token }) {
           </div>
         }
       >
-        {!!token.attributes ? (
+        {!!token.attributes && (
           <Popover
             onClick={handleChildClick}
             placement='bottomLeft'
@@ -86,16 +86,12 @@ export default function CardNFTHome({ token }) {
               Stats
             </div>
           </Popover>
-        ) : (
-          <></>
         )}
-        {!!token.price ? (
+        {!!token.price && (
           <div className='price-nft textmode'>
             <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
             <b>{getSymbol(chainId)[token.tokenPayment]}</b>
           </div>
-        ) : (
-          <></>
         )}
         <Row justify='space-between'>
           <Col className='footer-card-left'>
@@ -116,5 +112,23 @@ export default function CardNFTHome({ token }) {
         </Row>
       </Card>
     </Link>
-  ) : null;
+  ) : (
+    <Card
+      className='home-card card-nft card-nft-content-loader'
+      cover={
+        <div className='wrap-cover'>
+          <div className='NFTResource-Wrapper'>
+            <img className="display-resource-nft" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="" />
+          </div>
+        </div>
+      }
+    >
+      <Row justify='space-between'>
+        <Col className='footer-card-left'>
+          <div className='name-collection'>&nbsp;</div>
+          <div className='name-nft textmode'>&nbsp;</div>
+        </Col>
+      </Row>
+    </Card>
+  );
 }
