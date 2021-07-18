@@ -295,11 +295,11 @@
 }
 
 .icon-contact {
-  display: block;
   margin: 0.19rem auto 0px;
   height: 1.63rem;
   width: 1.63rem;
   object-fit: cover;
+  text-align: center;
 }
 
 .name-contact {
@@ -389,15 +389,23 @@
   display: none !important;
 }
 
-.search-nft-in-collection-1 { 
+.search-nft-in-collection-1 {
   display: block;
 }
 
-.search-nft-in-collection-2 { 
+.search-nft-in-collection-2 {
   margin-top: 1rem;
   display: none;
 }
 
+.social-profile {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
 
 @media (max-width: 992px) {
   .collection-detail {
@@ -458,11 +466,11 @@
     width: 70%;
   }
 
-  .search-nft-in-collection-1 { 
+  .search-nft-in-collection-1 {
     display: none;
   }
 
-  .search-nft-in-collection-2 { 
+  .search-nft-in-collection-2 {
     display: block;
   }
 }
