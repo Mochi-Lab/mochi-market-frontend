@@ -22,9 +22,8 @@ const NotFound = lazy(() => import('Views/NotFound'));
 function App() {
   useEffect(() => {
     async function fetchDataInit() {
-      document
-        .getElementsByTagName('HTML')[0]
-        .setAttribute('data-theme', localStorage.getItem('theme'));
+      const selectedMode = localStorage.getItem('theme')
+      if(selectedMode !== null) document.querySelector("html").setAttribute('data-theme', selectedMode);
       await store.dispatch(setAvailableSellOrder());
     }
     fetchDataInit();
