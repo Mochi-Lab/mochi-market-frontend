@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react';
 import { setAvailableSellOrder } from 'store/actions';
 import store from 'store/index';
 import Footer from 'Components/Footer';
+import { unpinFooterOnLoad } from 'utils/helper.js';
 
 export default function Browse() {
   const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721 } = useSelector(
@@ -29,6 +30,11 @@ export default function Browse() {
       inputSearch.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null)
+  }, [isLoadingErc721])
+  
   return (
     <>
       <BannerSearchHome carouselBanner={carouselBanner} inputSearch={inputSearch} />
