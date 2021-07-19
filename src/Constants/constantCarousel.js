@@ -10,6 +10,7 @@ export const carouselBanner = {
 
 export const carouselCard = {
   infinite: false,
+  lazyLoad: true,
   speed: 500,
   initialSlide: 0,
   slidesToShow: 5,
