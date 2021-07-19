@@ -324,3 +324,12 @@ export const checkUrl = (url) => {
 export const handleChildClick = (e) => {
   e.preventDefault();
 };
+
+export const unpinFooterOnLoad = (loading) => {
+  let footerEl = document.querySelector(".footer");
+  if(footerEl === null) return;
+  footerEl.style.position = loading ? "fixed" : "relative";
+  return () => {
+    footerEl.style.position = "auto";
+  }
+}

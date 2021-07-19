@@ -7,6 +7,8 @@ import { carouselBanner, carouselCard } from 'Constants/constantCarousel';
 import Footer from 'Components/Footer';
 import CardNFTNotSearch from './CardNFTNotSearch.js';
 import CardCollection from './CardCollection.js';
+import { useEffect } from 'react';
+import { unpinFooterOnLoad } from 'utils/helper.js';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -46,6 +48,10 @@ export default function Home() {
     );
     return listNFT.slice(0, 10);
   };
+
+  useEffect(() => {
+    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null)
+  }, [isLoadingErc721])
 
   const listHotCollections = [
     {
