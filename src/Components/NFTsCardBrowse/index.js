@@ -8,9 +8,11 @@ import imgNotFound from 'Assets/notfound.png';
 import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import abiERC721 from 'Contracts/ERC721.json';
 import { getCollection } from 'store/actions';
+import useLoadImage from 'hooks/useLoadImage';
 import store from 'store/index';
 
 import tick from 'Assets/icons/tick-green.svg';
+import mochi from 'Assets/icons/mochi.png';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { handleChildClick } from '../../utils/helper';
@@ -19,6 +21,7 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 function NFTsCard({ token, strSearch }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
+  const [src, { blur }] = useLoadImage(mochi, detailNFT);
 
   useEffect(() => {
     async function fetchDetail() {
@@ -77,15 +80,17 @@ function NFTsCard({ token, strSearch }) {
             hoverable
             cover={
               <div className='wrap-cover'>
-                <div
-                  className='blurred-background'
-                  style={{ backgroundImage: `url(${detailNFT.image})` }}
-                />
+                <div className='blurred-background' style={{ backgroundImage: `url(${src})` }} />
                 <div className='NFTResource-Wrapper'>
+                  {/* <img alt={`img-nft-${token.index}`} src={src} className='display-resource-nft' /> */}
                   <img
+                    src={src}
                     alt={`img-nft-${token.index}`}
-                    src={detailNFT.image}
                     className='display-resource-nft'
+                    style={{
+                      filter: blur ? 'blur(20px)' : 'none',
+                      transition: blur ? 'none' : 'filter 0.3s ease-out',
+                    }}
                   />
                 </div>
               </div>
