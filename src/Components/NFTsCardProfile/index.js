@@ -1,4 +1,4 @@
-import { Card, Row, Col, Skeleton, Popover } from 'antd';
+import { Card, Row, Col, Skeleton, Popover, Empty } from 'antd';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,8 @@ import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 import { handleChildClick } from '../../utils/helper';
+import moment from 'moment';
+import empty from 'Assets/icons/empty.svg';
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -95,7 +97,14 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                 placement='bottomLeft'
                 content={token.attributes.map((attr, i) => (
                   <div key={i} onClick={handleChildClick}>
-                    <strong>{attr.trait_type}</strong>: {attr.value}
+                    <strong>{attr.trait_type}</strong>:{' '}
+                    {!!attr.display_type &&
+                    attr.display_type.toLowerCase() === 'date' &&
+                    !!moment(attr.value).isValid()
+                      ? moment(
+                          attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
+                        ).format('DD-MM-YYYY')
+                      : attr.value}
                   </div>
                 ))}
               >
@@ -163,13 +172,20 @@ export default function ERC721({ tokens, onSale }) {
 
   return (
     <div className='explore-nft content-list-nft'>
-      <Row justify='start' gutter={[20, 20]}>
-        {!!afterFilter ? (
+      <Row justify={afterFilter.length > 0 ? 'start' : 'center'} gutter={[20, 20]}>
+        {afterFilter.length > 0 ? (
           afterFilter.map((token, index) => (
             <NFTsCardProfile key={index} token={token} strSearch={strSearch} onSale={onSale} />
           ))
         ) : (
-          <></>
+          <Empty
+            image={empty}
+            imageStyle={{
+              height: 86,
+              width: 86,
+            }}
+            description={<span className='textmode'>No Data</span>}
+          ></Empty>
         )}
       </Row>
     </div>

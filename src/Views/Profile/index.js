@@ -2,12 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Col, Row, Tabs } from 'antd';
 import {
-  WalletOutlined,
-  ShopOutlined,
   DoubleRightOutlined,
   DoubleLeftOutlined,
+  ShopOutlined,
+  WalletOutlined,
 } from '@ant-design/icons';
-import NFTsProfile from 'Components/NFTsProfile';
 import IconCoppy from 'Components/IconCoppy';
 import Edit from './Edit';
 import backgroundDefault from 'Assets/backgrounds/background-profile.png';
@@ -22,29 +21,23 @@ import github from 'Assets/icons/github-01.svg';
 import twitter from 'Assets/icons/twitter-01.svg';
 import telegram from 'Assets/icons/telegram-01.svg';
 // import TransactionTable from 'Components/TransactionTable';
-import { getNFTsOfOwner, setAvailableSellOrder, setInfoUserLogin } from 'store/actions';
+import { setInfoUserLogin } from 'store/actions';
 import store from 'store/index';
 import { getProfileByAddress } from 'APIs/Users/Gets';
 import './index.scss';
 import { useParams } from 'react-router';
 import { selectChain } from 'Connections/web3Modal';
+import TabOwner from './TabOwner';
+import TabOnSale from './TabOnSale';
 
 const { TabPane } = Tabs;
 
 export default function Profile() {
-  const {
-    listNFTsOwner,
-    listNFTsOnsale,
-    isLoadingErc721,
-    erc721Instances,
-    walletAddress,
-    chainId,
-  } = useSelector((state) => state);
+  const { walletAddress, chainId } = useSelector((state) => state);
 
   const [visibleEitdProfile, setvisibleEitdProfile] = useState(false);
   const [infoUser, setInfrUser] = useState({});
   const [showMoreBio, setShowMoreBio] = useState(false);
-  const [loadingGetOwner, setloadingGetOwner] = useState(false);
 
   const { chainID, address } = useParams();
 
@@ -68,19 +61,6 @@ export default function Profile() {
   useEffect(() => {
     getInfoUser();
   }, [getInfoUser, walletAddress]);
-
-  const fetchOwner = useCallback(async () => {
-    setloadingGetOwner(true);
-    await store.dispatch(getNFTsOfOwner(erc721Instances, address));
-    await store.dispatch(setAvailableSellOrder(address));
-    setloadingGetOwner(false);
-  }, [erc721Instances, address]);
-
-  useEffect(() => {
-    if (!!erc721Instances && !!address) {
-      fetchOwner();
-    }
-  }, [fetchOwner, address, erc721Instances]);
 
   return (
     <>
@@ -239,7 +219,7 @@ export default function Profile() {
           <Col xs={{ span: 24 }} md={{ span: 16 }} xl={{ span: 18 }}>
             <div className='right-profile'>
               <Tabs
-                defaultActiveKey={listNFTsOwner.length >= listNFTsOnsale.length ? '2' : '1'}
+                defaultActiveKey={'2'}
                 type='card'
                 size={'large'}
                 className='tabs-actions-profile'
@@ -253,11 +233,7 @@ export default function Profile() {
                   }
                   key='1'
                 >
-                  <NFTsProfile
-                    listNFTs={listNFTsOnsale}
-                    isLoadingErc721={isLoadingErc721 || loadingGetOwner}
-                    onSale={true}
-                  />
+                  <TabOnSale address={address} />
                 </TabPane>
                 <TabPane
                   tab={
@@ -269,11 +245,7 @@ export default function Profile() {
                   key='2'
                 >
                   <div className='list-nft-owner'>
-                    <NFTsProfile
-                      listNFTs={listNFTsOwner}
-                      isLoadingErc721={isLoadingErc721 || loadingGetOwner}
-                      onSale={false}
-                    />
+                    <TabOwner address={address} key='2' />
                   </div>
                 </TabPane>
                 {/* <TabPane

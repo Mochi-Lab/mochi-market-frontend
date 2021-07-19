@@ -19,7 +19,7 @@ export default function NFTsProfile({ listNFTs, isLoadingErc721, onSale }) {
               minHeight: 280,
             }}
           >
-            {isLoadingErc721 || isLoadingErc721 === null ? (
+            {listNFTs === null || isLoadingErc721 || isLoadingErc721 === null ? (
               <div className='center' style={{ width: '100%', height: '100%' }}>
                 <IconLoading />
               </div>

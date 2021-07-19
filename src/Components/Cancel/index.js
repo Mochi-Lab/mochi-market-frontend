@@ -6,14 +6,16 @@ import { useHistory } from 'react-router-dom';
 export default function Cancel({ orderDetail, is1155, getOwners1155, chainId }) {
   let history = useHistory();
   const cancel = async () => {
-    let result = await store.dispatch(cancelSellOrder(orderDetail));
-    if (result) {
-      if (!!is1155) {
-        await getOwners1155();
+    if (orderDetail && orderDetail.sellId) {
+      let result = await store.dispatch(cancelSellOrder(orderDetail));
+      if (result) {
+        if (!!is1155) {
+          await getOwners1155();
+        }
+        history.push({
+          pathname: `/token/${chainId}/${orderDetail.nftAddress}/${orderDetail.tokenId}/null`,
+        });
       }
-      history.push({
-        pathname: `/token/${chainId}/${orderDetail.nftAddress}/${orderDetail.tokenId}/null`,
-      });
     }
   };
 
