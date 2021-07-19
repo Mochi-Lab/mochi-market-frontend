@@ -503,14 +503,14 @@ export const SET_AVAILABLE_SELL_ORDER_721 = 'SET_AVAILABLE_SELL_ORDER_721';
 export const SET_LIST_NTTS_ONSALE = 'SET_LIST_NTTS_ONSALE';
 export const SET_CONVERT_ERC1155 = 'SET_CONVERT_ERC1155';
 export const setAvailableSellOrder = (walletAddress) => async (dispatch, getState) => {
-  const { sellOrderList, web3, chainId } = getState();
+  const { sellOrderList, web3, chainId, infoCollections } = getState();
   let listNFTsOnsale = [];
-  let infoCollections = {};
+  let collectionsInfo = infoCollections;
 
   const pushErc721 = async (listNftContract) => {
     let ERC721token = { name: '', symbol: '', avatarToken: '', tokens: [] };
-    let resCollection = await dispatch(getCollection(listNftContract.nftAddress, infoCollections));
-    infoCollections = resCollection.infoCollections;
+    let resCollection = await dispatch(getCollection(listNftContract.nftAddress, collectionsInfo));
+    collectionsInfo = resCollection.infoCollections;
     ERC721token.addressToken = listNftContract.nftAddress;
     ERC721token.name = resCollection.collection.name;
     ERC721token.symbol = await listNftContract.instance.methods.symbol().call();
@@ -545,8 +545,8 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
 
   const pushErc1155 = async (listNftContract) => {
     let ERC1155token = { name: '', avatarToken: '', tokens: [] };
-    let resCollection = await dispatch(getCollection(listNftContract.nftAddress, infoCollections));
-    infoCollections = resCollection.infoCollections;
+    let resCollection = await dispatch(getCollection(listNftContract.nftAddress, collectionsInfo));
+    collectionsInfo = resCollection.infoCollections;
     ERC1155token.name = resCollection.collection.name;
     ERC1155token.addressToken = listNftContract.nftAddress;
     ERC1155token.tokenId = listNftContract.tokenId[0].id;
