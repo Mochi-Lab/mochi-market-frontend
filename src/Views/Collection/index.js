@@ -11,7 +11,7 @@ import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
 import tick from 'Assets/icons/tick-green.svg';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { setInfoCollections, getCollection } from 'store/actions';
 import store from 'store/index';
@@ -31,6 +31,8 @@ import website from 'Assets/icons/website.svg';
 import { selectChain } from 'Connections/web3Modal.js';
 
 export default function Collection() {
+  let history = useHistory();
+
   const {
     isLoadingErc721,
     chainId,
@@ -41,7 +43,9 @@ export default function Collection() {
     convertErc1155Tokens,
     convertErc721Tokens,
   } = useSelector((state) => state);
+
   const { chainID, addressToken } = useParams();
+  const statusViewAll = new URLSearchParams(useLocation().search).get('ViewAll');
 
   const [visibleEitdCollection, setvisibleEitdCollection] = useState(false);
   const [collections, setCollections] = useState(infoCollections);
@@ -167,6 +171,30 @@ export default function Collection() {
   useEffect(() => {
     newMintNFT();
   }, [newMintNFT]);
+
+  const handleSetViewAll = useCallback(
+    async (status) => {
+      setViewAll(status);
+      if (!!status) {
+        history.push({
+          search: '?ViewAll=true',
+        });
+      } else {
+        history.push({
+          search: '?ViewAll=false',
+        });
+      }
+    },
+    [history]
+  );
+
+  useEffect(() => {
+    if (statusViewAll === 'true') {
+      handleSetViewAll(true);
+    } else {
+      handleSetViewAll(false);
+    }
+  }, [statusViewAll, handleSetViewAll]);
 
   return (
     <div className='collection-detail'>
@@ -371,7 +399,7 @@ export default function Collection() {
             infoCollection={infoCollection}
             collectionOnSale={collectionOnSaleLess}
             listNewNFT={listNewNFT}
-            setViewAll={setViewAll}
+            setViewAll={handleSetViewAll}
             viewAll={viewAll}
             loadingNFTs={loadingNFTs}
           />
@@ -380,7 +408,7 @@ export default function Collection() {
             <ViewAll
               infoCollection={infoCollection}
               collectionOnSale={collectionOnSaleAll}
-              setViewAll={setViewAll}
+              setViewAll={handleSetViewAll}
               viewAll={viewAll}
               loadingNFTs={loadingNFTs}
             />

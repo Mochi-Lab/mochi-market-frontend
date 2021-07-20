@@ -269,7 +269,7 @@ export default function NFTsCardBrowse({
           {!!cardsPaginated.cards ? (
             cardsPaginated.cards.map((token, index) => (
               <NFTsCard
-                key={index}
+                key={token.sellId}
                 token={token}
                 strSearch={!!strSearchInCollection ? strSearchInCollection : strSearch}
               />
