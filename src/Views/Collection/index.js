@@ -29,6 +29,7 @@ import twitter from 'Assets/icons/twitter-01.svg';
 import telegram from 'Assets/icons/telegram-01.svg';
 import website from 'Assets/icons/website.svg';
 import { selectChain } from 'Connections/web3Modal.js';
+import { unpinFooterOnLoad } from 'utils/helper.js';
 
 export default function Collection() {
   let history = useHistory();
@@ -195,6 +196,9 @@ export default function Collection() {
       handleSetViewAll(false);
     }
   }, [statusViewAll, handleSetViewAll]);
+  useEffect(() => {
+    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null)
+  }, [isLoadingErc721])
 
   return (
     <div className='collection-detail'>

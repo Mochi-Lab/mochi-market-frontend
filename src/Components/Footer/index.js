@@ -52,10 +52,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      <div className='copyright center'>
-        <p className='copyright-font textmode'>© Copyright 2021, MochiLab</p>
-      </div>
     </div>
   );
 }
