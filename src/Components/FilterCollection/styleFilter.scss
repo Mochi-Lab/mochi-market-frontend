@@ -1,0 +1,47 @@
+.collection-filter {
+  margin: 2rem 1rem 0 0;
+  .ant-collapse {
+    border-radius: 0.75rem;
+    border: 1px solid rgba(17, 17, 26, 0.1);
+
+    .ant-collapse-item {
+      &:last-child {
+        border-bottom: none;
+      }
+      border-bottom: 1px solid rgba(17, 17, 26, 0.1);
+      .ant-collapse-content {
+        background: none;
+        border-top: 1px solid rgba(17, 17, 26, 0.1);
+        .type-enum {
+          .ant-checkbox-checked::after {
+            border-radius: 0.65rem;
+          }
+          .ant-checkbox-inner {
+            border-radius: 0.65rem;
+          }
+          .list-enum {
+            .item-enum {
+              .color-text-enum {
+              }
+            }
+          }
+        }
+        .type-date {
+          text-align: center;
+          .ant-picker {
+            border-radius: 0.65rem;
+          }
+        }
+        .type-number {
+          .ant-input-number {
+          }
+        }
+      }
+    }
+  }
+  .list-properties {
+    .text-trait-type {
+      color: #000000b3;
+    }
+  }
+}

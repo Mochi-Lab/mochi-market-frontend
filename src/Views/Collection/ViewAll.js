@@ -1,4 +1,4 @@
-import { Input, Layout, Select } from 'antd';
+import { Col, Input, Layout, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import NFTsCardBrowse from 'Components/NFTsCardBrowse';
@@ -7,6 +7,7 @@ import './index.scss';
 import 'Components/NFTsFilterBrowse/index.scss';
 import { SearchOutlined } from '@ant-design/icons';
 import IconLoading from 'Components/IconLoading';
+import FilterCollection from 'Components/FilterCollection';
 
 const { Option } = Select;
 
@@ -104,13 +105,20 @@ export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loading
             <IconLoading />
           </div>
         ) : (
-          <NFTsCardBrowse
-            tokens={collectionOnSale()}
-            tokenPayment={tokenPayment}
-            typeSort={typeSort}
-            filterCountCallback={_setFilterCount}
-            strSearchInCollection={strSearch}
-          />
+          <Row>
+            <Col xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 5 }}>
+              <FilterCollection />
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
+              <NFTsCardBrowse
+                tokens={collectionOnSale()}
+                tokenPayment={tokenPayment}
+                typeSort={typeSort}
+                filterCountCallback={_setFilterCount}
+                strSearchInCollection={strSearch}
+              />
+            </Col>
+          </Row>
         )}
       </Layout>
     </div>
