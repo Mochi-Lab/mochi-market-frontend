@@ -1,5 +1,19 @@
 .collection-filter {
   margin: 2rem 1rem 0 0;
+  .row-title-filter {
+    display: flex;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    .btn-clear-filter {
+      color: #c64488;
+      cursor: pointer;
+      &:hover {
+        color: #fb2796;
+      }
+    }
+  }
   .ant-collapse {
     border-radius: 0.75rem;
     border: 1px solid rgba(17, 17, 26, 0.1);
@@ -12,20 +26,6 @@
       .ant-collapse-content {
         background: none;
         border-top: 1px solid rgba(17, 17, 26, 0.1);
-        .type-enum {
-          .ant-checkbox-checked::after {
-            border-radius: 0.65rem;
-          }
-          .ant-checkbox-inner {
-            border-radius: 0.65rem;
-          }
-          .list-enum {
-            .item-enum {
-              .color-text-enum {
-              }
-            }
-          }
-        }
         .type-date {
           text-align: center;
           .ant-picker {
@@ -34,6 +34,22 @@
         }
         .type-number {
           .ant-input-number {
+            border-radius: 0.65rem;
+          }
+          .input-min {
+            width: 95%;
+            margin-right: 0.5rem;
+          }
+          .input-max {
+            width: 95%;
+            margin-left: 0.5rem;
+          }
+          .row-min-max {
+            display: flex;
+            flex-wrap: nowrap;
+            align-content: center;
+            justify-content: space-between;
+            align-items: center;
           }
         }
       }

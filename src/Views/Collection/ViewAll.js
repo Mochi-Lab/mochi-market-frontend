@@ -11,12 +11,20 @@ import FilterCollection from 'Components/FilterCollection';
 
 const { Option } = Select;
 
-export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loadingNFTs }) {
+export default function ViewAll({
+  collectionOnSale,
+  setViewAll,
+  viewAll,
+  loadingNFTs,
+  setObjectFilter,
+  objectFilter,
+}) {
   const { chainId } = useSelector((state) => state);
 
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
   const [strSearch, setStrSearch] = useState();
+  const [showFilter, setShowFilter] = useState(true);
 
   useEffect(() => {
     if (!!chainId) {
@@ -105,11 +113,27 @@ export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loading
             <IconLoading />
           </div>
         ) : (
-          <Row>
-            <Col xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 5 }}>
-              <FilterCollection />
-            </Col>
-            <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
+          <>
+            {!!showFilter ? (
+              <Row>
+                <Col xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 5 }}>
+                  <FilterCollection
+                    setShowFilter={setShowFilter}
+                    setObjectFilter={setObjectFilter}
+                    objectFilter={objectFilter}
+                  />
+                </Col>
+                <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
+                  <NFTsCardBrowse
+                    tokens={collectionOnSale()}
+                    tokenPayment={tokenPayment}
+                    typeSort={typeSort}
+                    filterCountCallback={_setFilterCount}
+                    strSearchInCollection={strSearch}
+                  />
+                </Col>
+              </Row>
+            ) : (
               <NFTsCardBrowse
                 tokens={collectionOnSale()}
                 tokenPayment={tokenPayment}
@@ -117,8 +141,8 @@ export default function ViewAll({ collectionOnSale, setViewAll, viewAll, loading
                 filterCountCallback={_setFilterCount}
                 strSearchInCollection={strSearch}
               />
-            </Col>
-          </Row>
+            )}
+          </>
         )}
       </Layout>
     </div>

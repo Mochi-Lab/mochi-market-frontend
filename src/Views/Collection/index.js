@@ -56,6 +56,9 @@ export default function Collection() {
   const [viewAll, setViewAll] = useState(null);
   const [loadingNFTs, setLoadingNFTs] = useState();
   const [listNewNFT, setListNewNFT] = useState([]);
+  const [objectFilter, setObjectFilter] = useState({});
+
+  console.log(objectFilter);
 
   // Check chainId in route
   useEffect(() => {
@@ -197,8 +200,8 @@ export default function Collection() {
     }
   }, [statusViewAll, handleSetViewAll]);
   useEffect(() => {
-    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null)
-  }, [isLoadingErc721])
+    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null);
+  }, [isLoadingErc721]);
 
   return (
     <div className='collection-detail'>
@@ -415,6 +418,8 @@ export default function Collection() {
               setViewAll={handleSetViewAll}
               viewAll={viewAll}
               loadingNFTs={loadingNFTs}
+              setObjectFilter={setObjectFilter}
+              objectFilter={objectFilter}
             />
           ) : null}
         </div>
