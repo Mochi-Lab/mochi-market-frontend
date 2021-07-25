@@ -57,8 +57,7 @@ export default function Collection() {
   const [loadingNFTs, setLoadingNFTs] = useState();
   const [listNewNFT, setListNewNFT] = useState([]);
   const [objectFilter, setObjectFilter] = useState({});
-
-  console.log(objectFilter);
+  const [activeKeysCollapse, setActiveKeysCollapse] = useState([]);
 
   // Check chainId in route
   useEffect(() => {
@@ -231,16 +230,16 @@ export default function Collection() {
                     />
                   </div>
                 </div>
-                {!!statusEdit ? (
-                  <button
-                    className='btn-edit-collection'
-                    onClick={() => setvisibleEitdCollection(true)}
-                  >
-                    <div className='textmode'>Edit Collection</div>
-                  </button>
-                ) : (
-                  ''
-                )}
+                <div>
+                  {!!statusEdit && (
+                    <button
+                      className='btn-edit-collection'
+                      onClick={() => setvisibleEitdCollection(true)}
+                    >
+                      <div className='textmode'>Edit Collection</div>
+                    </button>
+                  )}
+                </div>
               </div>
               <div className='info-grid'>
                 <div className='collection-name textmode'>
@@ -420,6 +419,9 @@ export default function Collection() {
               loadingNFTs={loadingNFTs}
               setObjectFilter={setObjectFilter}
               objectFilter={objectFilter}
+              activeKeysCollapse={activeKeysCollapse}
+              setActiveKeysCollapse={setActiveKeysCollapse}
+              getInfoCollection={getInfoCollection}
             />
           ) : null}
         </div>

@@ -1,72 +1,60 @@
-import { Col, Collapse, Row, Checkbox, Slider, InputNumber, DatePicker /* , Radio */ } from 'antd';
-import { ArrowDownOutlined } from '@ant-design/icons';
-import './styleFilter.scss';
 import { useEffect, useState } from 'react';
+import {
+  Col,
+  Collapse,
+  Row,
+  Checkbox,
+  Slider,
+  InputNumber,
+  DatePicker,
+  /* , Radio */
+} from 'antd';
+import { ArrowDownOutlined, EditOutlined } from '@ant-design/icons';
+import './styleFilter.scss';
 
 const { Panel } = Collapse;
 
-const attributes = [
-  {
-    index: 0,
-    trait_type: 'Element Type',
-    display_type: 'enum',
-    values: ['Air', 'Fire', 'Water', 'Ice', 'Ground', 'Electro', 'Grass', 'Ghost'],
-  },
-  {
-    index: 1,
-    trait_type: 'Speciality',
-    display_type: 'enum',
-    values: ['Defense', 'Attack', 'Balance'],
-  },
-  { index: 2, trait_type: 'Super', display_type: 'enum', values: ['Normal'] },
-  { index: 3, trait_type: 'Affection', display_type: 'number' },
-  { index: 4, trait_type: 'Braveness', display_type: 'number', min: 0, max: 100 },
-  { index: 5, trait_type: 'Constitution', display_type: 'number', min: 0, max: 100 },
-  { index: 6, trait_type: 'Craziness', display_type: 'number', min: 0, max: 100 },
-  { index: 7, trait_type: 'Hunger', display_type: 'number', min: 0, max: 100 },
-  { index: 8, trait_type: 'Instinct', display_type: 'number', min: 0, max: 100 },
-  { index: 9, trait_type: 'Smart', display_type: 'number', min: 0, max: 100 },
-  {
-    index: 10,
-    trait_type: 'Element Starting Talent',
-    display_type: 'number',
-    min: 0,
-    max: 1000,
-  },
-  { index: 11, trait_type: 'Laziness', display_type: 'number', min: 0, max: 100 },
-  {
-    index: 12,
-    trait_type: 'Unfreezable',
-    display_type: 'enum',
-    values: ['Yes', 'No'],
-  },
-  { index: 13, trait_type: 'Generation', display_type: 'number', min: 0, max: 100 },
-];
-
-export default function FilterCollection({ setShowFilter, setObjectFilter, objectFilter }) {
+export default function FilterCollection({
+  setShowFilter,
+  setObjectFilter,
+  objectFilter,
+  activeKeysCollapse,
+  setActiveKeysCollapse,
+  attributesFilter,
+  setModalEditFilter,
+}) {
   return (
     <div className='collection-filter'>
       <div className='row-title-filter'>
-        <h1 className='textmode'>Filter</h1>
+        <h1 className='textmode'>
+          Filter{' '}
+          <EditOutlined className='cursor-pointer' onClick={() => setModalEditFilter(true)} />
+        </h1>
         <div
           className='btn-clear-filter'
           onClick={() => {
-            setShowFilter(false);
-            setTimeout(() => {
-              setShowFilter(true);
-              setObjectFilter({});
-            }, 10);
+            if (Object.keys(objectFilter).length > 0) {
+              setShowFilter(false);
+              setTimeout(async () => {
+                await setShowFilter(true);
+                await setObjectFilter({});
+              }, 10);
+            }
           }}
         >
           Clear Filter
         </div>
       </div>
       <div className='list-properties'>
-        <Collapse className='background-mode'>
-          {attributes.map((attribute, index) => (
+        <Collapse
+          className='background-mode'
+          defaultActiveKey={activeKeysCollapse}
+          onChange={(e) => setActiveKeysCollapse(e)}
+        >
+          {attributesFilter.map((attribute) => (
             <Panel
               header={<span className='text-trait-type'>{attribute.trait_type}</span>}
-              key={index}
+              key={attribute.index}
             >
               <RenderSwitch
                 attribute={attribute}
@@ -162,8 +150,6 @@ function TypeEnum({ attribute, setObjectFilter, objectFilter }) {
 function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
   const [min, setMin] = useState();
   const [max, setMax] = useState();
-  const [minSlider, setMinSlider] = useState(attribute.min);
-  const [maxSlider, setMaxSlider] = useState(attribute.max);
   const [inputSlider, setInputSlider] = useState([
     typeof attribute.min !== 'undefined' ? attribute.min : 0,
     typeof attribute.max !== 'undefined' ? attribute.max : 0,
@@ -210,13 +196,13 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
             setInputSlider(e);
             changeMinMax(e[0], e[1]);
           }}
-          min={minSlider}
-          max={maxSlider}
+          min={attribute.min}
+          max={attribute.max}
         />
       )}
       <div className='row-min-max'>
-        <div className='min-slider textmode'>{minSlider}</div>
-        <div className='max-slider textmode'>{maxSlider}</div>
+        <div className='min-slider textmode'>{attribute.min}</div>
+        <div className='max-slider textmode'>{attribute.max}</div>
       </div>
 
       <Row justify='center'>
@@ -226,10 +212,11 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
             value={min}
             className='textmode input-min'
             onChange={(value) => {
-              setMin(value);
-              setInputSlider([value, max]);
-              changeMinMax(value, max);
-              value < attribute.min && setMinSlider(value);
+              if (value >= attribute.min) {
+                setMin(value);
+                setInputSlider([value, max]);
+                changeMinMax(value, max);
+              }
             }}
           />
         </Col>
@@ -239,10 +226,11 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
             value={max}
             className='textmode input-max'
             onChange={(value) => {
-              setMax(value);
-              setInputSlider([min, value]);
-              changeMinMax(min, value);
-              value > attribute.max && setMaxSlider(value);
+              if (value <= attribute.max) {
+                setMax(value);
+                setInputSlider([min, value]);
+                changeMinMax(min, value);
+              }
             }}
           />
         </Col>
