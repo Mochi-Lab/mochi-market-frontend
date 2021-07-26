@@ -29,11 +29,12 @@ import { useParams } from 'react-router';
 import { selectChain } from 'Connections/web3Modal';
 import TabOwner from './TabOwner';
 import TabOnSale from './TabOnSale';
+import TabAdmins from './TabAdmins';
 
 const { TabPane } = Tabs;
 
 export default function Profile() {
-  const { walletAddress, chainId } = useSelector((state) => state);
+  const { walletAddress, chainId, infoAdmins } = useSelector((state) => state);
 
   const [visibleEitdProfile, setvisibleEitdProfile] = useState(false);
   const [infoUser, setInfrUser] = useState({});
@@ -202,8 +203,8 @@ export default function Profile() {
                     ) : (
                       ''
                     )}
-                    {!!infoUser.titok ? (
-                      <a target='_blank' rel='noreferrer' href={infoUser.titok}>
+                    {!!infoUser.tiktok ? (
+                      <a target='_blank' rel='noreferrer' href={infoUser.tiktok}>
                         <img src={titok} alt='icon-link' className='icon-contact' />
                       </a>
                     ) : (
@@ -248,6 +249,24 @@ export default function Profile() {
                     <TabOwner address={address} key='2' />
                   </div>
                 </TabPane>
+                {!!walletAddress &&
+                  walletAddress.toLowerCase() === address.toLowerCase() &&
+                  infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) && (
+                    <TabPane
+                      tab={
+                        <div className='action-profile'>
+                          <WalletOutlined />
+                          <strong>Admins</strong>
+                        </div>
+                      }
+                      key='3'
+                    >
+                      <div className='list-nft-owner'>
+                        <TabAdmins />
+                      </div>
+                    </TabPane>
+                  )}
+
                 {/* <TabPane
                   tab={
                     <div className='action-profile'>

@@ -43,6 +43,7 @@ export default function Collection() {
     nftList,
     convertErc1155Tokens,
     convertErc721Tokens,
+    infoAdmins,
   } = useSelector((state) => state);
 
   const { chainID, addressToken } = useParams();
@@ -95,14 +96,15 @@ export default function Collection() {
     let result = false;
     if (
       !!walletAddress &&
-      !!infoCollection &&
-      !!infoCollection.addressSubmit &&
-      infoCollection.addressSubmit.toLocaleLowerCase() === walletAddress.toLowerCase()
+      ((!!infoCollection &&
+        !!infoCollection.addressSubmit &&
+        infoCollection.addressSubmit.toLocaleLowerCase() === walletAddress.toLowerCase()) ||
+        infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()))
     ) {
       result = true;
     }
     setStatusEdit(result);
-  }, [infoCollection, walletAddress]);
+  }, [infoCollection, walletAddress, infoAdmins]);
 
   useEffect(() => {
     checkRegister();
@@ -382,11 +384,11 @@ export default function Collection() {
                   ) : (
                     ''
                   )}
-                  {!!infoCollection.titok ? (
+                  {!!infoCollection.tiktok ? (
                     <a
                       target='_blank'
                       rel='noreferrer'
-                      href={infoCollection.titok}
+                      href={infoCollection.tiktok}
                       className='link-contact'
                     >
                       <img src={titok} alt='icon-link' className='icon-contact' />

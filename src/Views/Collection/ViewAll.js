@@ -32,7 +32,7 @@ export default function ViewAll({
 }) {
   const dispatch = useDispatch();
 
-  const { walletAddress, chainId, web3 } = useSelector((state) => state);
+  const { walletAddress, chainId, web3, infoAdmins } = useSelector((state) => state);
   const { addressToken } = useParams();
 
   const [tokenPayment, setTokenPayment] = useState('0');
@@ -110,6 +110,8 @@ export default function ViewAll({
           dispatch(showNotification(noti));
           setLoadingUpdate(false);
         }
+      } else {
+        message.error('Verify failed');
       }
     }
   };
@@ -150,11 +152,13 @@ export default function ViewAll({
                 className='style-search-input input-mode-bc textmode '
               />
             </div>
-            {!infoCollection.attributesFilter && (
-              <div className='btn-edit-filter' onClick={() => setModalEditFilter(true)}>
-                Add Filter
-              </div>
-            )}
+            {!!walletAddress &&
+              infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) &&
+              !infoCollection.attributesFilter && (
+                <div className='btn-edit-filter' onClick={() => setModalEditFilter(true)}>
+                  Add Filter
+                </div>
+              )}
           </div>
           <div className='right-sort-results'>
             <Select

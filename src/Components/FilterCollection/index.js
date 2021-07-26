@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Col,
   Collapse,
@@ -23,12 +24,15 @@ export default function FilterCollection({
   attributesFilter,
   setModalEditFilter,
 }) {
+  const { walletAddress, infoAdmins } = useSelector((state) => state);
   return (
     <div className='collection-filter'>
       <div className='row-title-filter'>
         <h1 className='textmode'>
           Filter{' '}
-          <EditOutlined className='cursor-pointer' onClick={() => setModalEditFilter(true)} />
+          {!!walletAddress && infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) && (
+            <EditOutlined className='cursor-pointer' onClick={() => setModalEditFilter(true)} />
+          )}
         </h1>
         <div
           className='btn-clear-filter'

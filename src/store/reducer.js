@@ -16,6 +16,7 @@ const initialState = {
   verifiedContracts: [],
   infoCollections: {},
   infoUsers: {},
+  infoAdmins: {},
   infoUserLogin: null,
 
   // Erc721
@@ -250,6 +251,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         infoUsers: action.infoUsers,
+      };
+    case actions.SET_INFO_ADMINS:
+      return {
+        ...state,
+        infoAdmins: action.infoAdmins,
       };
     case actions.SET_INFO_USER_LOGIN:
       return {

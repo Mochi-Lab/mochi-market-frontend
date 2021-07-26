@@ -25,7 +25,7 @@ export const updateCollection = async (
 };
 
 export const updateAttributesFilter = async (
-  addressSubmit,
+  addressAdmin,
   signature,
   addressToken,
   chainId,
@@ -35,7 +35,7 @@ export const updateAttributesFilter = async (
   console.log(typeof attributesFilter);
   let result = await axios
     .put(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/update-attributes-filter`, {
-      addressSubmit,
+      addressAdmin,
       signature,
       addressToken,
       chainId,

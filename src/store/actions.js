@@ -25,7 +25,7 @@ import { getContractAddress } from 'utils/getContractAddress';
 import { getWeb3List } from 'utils/getWeb3List';
 import { uploadJsonToIpfs, uploadFileToIpfs } from 'utils/ipfs';
 import { getCollectionByAddress } from 'APIs/Collections/Gets';
-import { getProfileByAddress } from 'APIs/Users/Gets';
+import { getProfileByAddress, getAdminAll } from 'APIs/Users/Gets';
 import logoCollectionDefault from 'Assets/logo-mochi.png';
 import avatarDefault from 'Assets/avatar-profile.png';
 
@@ -123,7 +123,7 @@ export const setAddress = (walletAddress) => async (dispatch) => {
     )}`;
 
     let infoUserLogin = (await dispatch(getUser(walletAddress))).user;
-
+    await dispatch(getAllAdmins());
     dispatch({
       type: SET_ADDRESS,
       walletAddress,
@@ -194,6 +194,10 @@ export const setInfoCollections = (infoCollections) => (dispatch) => {
 export const SET_INFO_USERS = 'SET_INFO_USERS';
 export const setInfoUsers = (infoUsers) => (dispatch) => {
   dispatch({ type: SET_INFO_USERS, infoUsers });
+};
+export const SET_INFO_ADMINS = 'SET_INFO_ADMINS';
+export const setInfoAdmins = (infoAdmins) => (dispatch) => {
+  dispatch({ type: SET_INFO_ADMINS, infoAdmins });
 };
 
 export const SET_INFO_USER_LOGIN = 'SET_INFO_USER_LOGIN';
@@ -1755,4 +1759,17 @@ export const getUser = (walletAddress, _users) => async (dispatch, getState) => 
   }
 
   return { user, infoUsers: users };
+};
+
+// Admin
+export const getAllAdmins = () => async (dispatch, getState) => {
+  let res = await getAdminAll();
+  if (!!res && !!res.admins) {
+    let admins = res.admins;
+    let listAdmin = {};
+    admins.forEach((e) => (listAdmin[e.address.toLowerCase()] = e));
+    dispatch(setInfoAdmins(listAdmin));
+  } else {
+    dispatch(setInfoAdmins({}));
+  }
 };
