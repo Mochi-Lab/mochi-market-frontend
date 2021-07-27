@@ -1,7 +1,6 @@
 import { Card, Col, Popover, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import imgNotFound from 'Assets/notfound.png';
 import { getSymbol } from 'utils/getContractAddress';
@@ -10,7 +9,7 @@ import abiERC721 from 'Contracts/ERC721.json';
 import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
-import { handleChildClick } from 'utils/helper';
+import { handleChildClick, getTokenUri } from 'utils/helper';
 import store from 'store/index';
 import moment from 'moment';
 
@@ -30,7 +29,7 @@ export default function CardCollection({ token, infoCollection }) {
             const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
             tokenURI = await nft.methods.tokenURI(token.index).call();
           }
-          let req = await axios.get(tokenURI);
+          let req = await getTokenUri(tokenURI);
           const data = req.data;
 
           token.attributes = !!data.attributes ? data.attributes : null;
@@ -121,21 +120,25 @@ export default function CardCollection({ token, infoCollection }) {
     </Link>
   ) : (
     <Card
-        className='collection-card card-nft card-nft-content-loader'
-        cover={
-          <div className='wrap-cover'>
-            <div className='NFTResource-Wrapper'>
-            <img className="display-resource-nft" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="" />
-            </div>
+      className='collection-card card-nft card-nft-content-loader'
+      cover={
+        <div className='wrap-cover'>
+          <div className='NFTResource-Wrapper'>
+            <img
+              className='display-resource-nft'
+              src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+              alt=''
+            />
           </div>
-        }
-      >
-        <Row justify='space-between'>
-          <Col className='footer-card-left'>
-            <div className='name-collection'>&nbsp;</div>
-            <div className='name-nft textmode'>&nbsp;</div>
-          </Col>
-        </Row>
-      </Card>
+        </div>
+      }
+    >
+      <Row justify='space-between'>
+        <Col className='footer-card-left'>
+          <div className='name-collection'>&nbsp;</div>
+          <div className='name-nft textmode'>&nbsp;</div>
+        </Col>
+      </Row>
+    </Card>
   );
 }

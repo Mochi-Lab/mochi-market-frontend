@@ -2,7 +2,6 @@ import { Card, Row, Col, Skeleton, Popover, Empty } from 'antd';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
 import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
@@ -12,7 +11,7 @@ import '../NFTsCardBrowse/index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import { handleChildClick } from '../../utils/helper';
+import { handleChildClick, getTokenUri } from 'utils/helper';
 import moment from 'moment';
 import empty from 'Assets/icons/empty.svg';
 
@@ -32,7 +31,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
             const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
             tokenURI = await nft.methods.tokenURI(token.index).call();
           }
-          let req = await axios.get(tokenURI);
+          let req = await getTokenUri(tokenURI);
           const data = req.data;
 
           token.attributes = !!data.attributes ? data.attributes : null;

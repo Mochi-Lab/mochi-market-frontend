@@ -326,10 +326,23 @@ export const handleChildClick = (e) => {
 };
 
 export const unpinFooterOnLoad = (loading) => {
-  let footerEl = document.querySelector(".footer");
-  if(footerEl === null) return;
-  footerEl.style.position = loading ? "fixed" : "relative";
+  let footerEl = document.querySelector('.footer');
+  if (footerEl === null) return;
+  footerEl.style.position = loading ? 'fixed' : 'relative';
   return () => {
-    footerEl.style.position = "auto";
+    footerEl.style.position = 'auto';
+  };
+};
+
+export const getTokenUri = async (uri) => {
+  const regex = /ipfs:\/\/(.+)/;
+  var myArray = uri.match(regex);
+  let req;
+  if (uri.includes('http')) {
+    req = await axios.get(uri);
+  } else {
+    req = await axios.get('https://storage.mochi.market/ipfs/' + myArray[myArray.length - 1]);
   }
-}
+
+  return req;
+};

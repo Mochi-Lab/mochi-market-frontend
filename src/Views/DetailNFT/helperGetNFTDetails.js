@@ -1,9 +1,9 @@
 import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
 import ERC721 from 'Contracts/ERC721.json';
-import axios from 'axios';
 import imgNotFound from 'Assets/notfound.png';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
+import { getTokenUri } from 'utils/helper';
 
 export default async function helperGetNFTDetails(
   web3,
@@ -39,7 +39,7 @@ export default async function helperGetNFTDetails(
     }
     // get token info
     try {
-      let req = await axios.get(tokenURI);
+      let req = await getTokenUri(tokenURI);
       const data = req.data;
       setToken({
         name: !!data.name ? data.name : 'Unnamed',
