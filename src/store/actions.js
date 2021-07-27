@@ -207,7 +207,7 @@ export const setInfoUserLogin = (infoUserLogin) => (dispatch) => {
 export const INIT_ERC721 = 'INIT_ERC721';
 export const INIT_ERC1155 = 'INIT_ERC1155';
 export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {
-  const { web3, nftList, walletAddress } = getState();
+  const { web3, nftList } = getState();
   let erc721Instances = [];
   // let erc1155Instances = [];
   if (!!acceptedNftsAddress) {
@@ -222,7 +222,6 @@ export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) =>
 
     dispatch({ type: INIT_ERC721, erc721Instances });
     // dispatch({ type: INIT_ERC1155, erc1155Instances });
-    dispatch(getNFTsOfOwner(walletAddress));
   }
 };
 
@@ -327,8 +326,6 @@ export const transferNft = (contractAddress, to, tokenId, amount, is1155) => asy
       dispatch(setStatusActivity({ ...activity, status: 'close' }));
     }
   }
-  // get own nft
-  dispatch(getNFTsOfOwner(walletAddress));
 };
 
 ////////////////////
@@ -808,8 +805,6 @@ export const createSellOrder = (nftAddress, tokenId, price, tokenPayment, amount
       });
     // Fetch new availableOrderList
     dispatch(setAvailableSellOrder());
-    // get own nft
-    dispatch(getNFTsOfOwner(walletAddress));
 
     let orders = await sellOrderList.methods
       .getAvailableSellOrdersIdListByUser(walletAddress)
@@ -931,8 +926,6 @@ export const buyNft = (orderDetail, is1155) => async (dispatch, getState) => {
 
     // Fetch new availableOrderList
     dispatch(setAvailableSellOrder());
-    // get own nft
-    dispatch(getNFTsOfOwner(walletAddress));
     return { status: true, link };
   } catch (error) {
     error.type = 'error';
@@ -962,8 +955,6 @@ export const updatePrice = (sellId, newPrice) => async (dispatch, getState) => {
 
     // Fetch new availableOrderList
     dispatch(setAvailableSellOrder());
-    // get own nft
-    dispatch(getNFTsOfOwner(walletAddress));
     activity = { ...activity, status: 'success', duration: 15000 };
     dispatch(setStatusActivity(activity));
   } catch (error) {
@@ -995,8 +986,6 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
 
     // Fetch new availableOrderList
     dispatch(setAvailableSellOrder());
-    // get own nft
-    dispatch(getNFTsOfOwner(walletAddress));
     activity = { ...activity, status: 'success', duration: 15000 };
     dispatch(setStatusActivity(activity));
 
@@ -1066,9 +1055,6 @@ export const generateERC721NFT = (collectionId, tokenUri, routeFunc) => async (
       console.log(error);
     }
   }
-
-  // get own nft
-  dispatch(getNFTsOfOwner(walletAddress));
 };
 
 // TODO
@@ -1124,9 +1110,6 @@ export const generateERC1155NFT = (collectionId, id, amount, tokenUri, routeFunc
       console.log(error);
     }
   }
-
-  // get own nft
-  dispatch(getNFTsOfOwner(walletAddress));
 };
 
 ////////////////////
