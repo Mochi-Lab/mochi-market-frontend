@@ -1,88 +1,76 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Input, Select, message, Row, Col } from 'antd';
+import { message, List, Avatar, Spin, Tooltip } from 'antd';
 import { useDispatch } from 'react-redux';
 import { registerNft, acceptNft, getCollection } from 'store/actions';
 import LoadingModal from 'Components/LoadingModal';
-import IconLoading from 'Components/IconLoading';
 import { useSelector } from 'react-redux';
 import { useDropzone } from 'react-dropzone';
 import { uploadIPFS } from 'Views/Profile/UpdateIPFS';
 import { uploadCollection } from 'APIs/Collections/Post';
 import { connectWeb3Modal } from 'Connections/web3Modal';
-import imgBanner from 'Assets/images/img-banner-submit-nft.png';
-import logoIcon from 'Assets/logo-mochi.png';
+import _ from 'lodash';
+import classNames from 'classnames';
+import camera_png from 'Assets/images/camera.png';
+import { NFT_AVATAR_MAX_FILE_SIZE } from 'Constants'
 import './index.scss';
 import store from 'store';
 
-const { Option } = Select;
 
 export default function SubmitNFT() {
   const { walletAddress, adminAddress, chainId, nftList, web3 } = useSelector((state) => state);
   const [visible, setVisible] = useState(false);
-  const [isERC1155, setIsERC1155] = useState(false);
   const [content, setContent] = useState('');
   const [contractAddress, setContractAddress] = useState('');
   const [acceptContractAddress, setAcceptContractAddress] = useState('');
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState(null);
   const [submitsPending, setSubmitsPending] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("ERC 721")
   const dispatch = useDispatch();
-
-  function handleChange(value) {
-    setIsERC1155(value);
-  }
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
-    onDrop: (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+    onDrop: (selectedFiles) => {
+      const instance = _.head(selectedFiles)
+      const preview = URL.createObjectURL(instance)
+      setFiles({
+        instance,
+        preview,
+      });
     },
+    multiple: false,
   });
 
   const register = async () => {
-    if (!!walletAddress) {
-      if (files.length > 0) {
-        if (files[0].size <= 4000000) {
-          setContent('Submit NFTs');
-          setVisible(true);
-          let resultRegister = await dispatch(registerNft(contractAddress, isERC1155));
-          setVisible(false);
-          if (!!resultRegister) {
-            // upload image
-            setContent('Upload Logo');
-            setVisible(true);
-            let logo = await uploadIPFS(files);
-            setVisible(false);
+    if(!walletAddress) return connectWeb3Modal();
+    if (files === null) return message.warn('Please upload logo');
+    if (files.instance.size > NFT_AVATAR_MAX_FILE_SIZE) return message.warn('You can only upload up to 4MB');
 
-            let newCollection = {
-              logo: !!logo.image ? logo.image : '',
-              hashLogo: !!logo.ipfsHash ? logo.ipfsHash : '',
-            };
-            await uploadCollection(chainId, contractAddress, walletAddress, newCollection);
-            // reset form and file
-          } else {
-            return;
-          }
-
-          setFiles([]);
-        } else message.warn('You can only upload up to 4MB');
-      } else message.warn('Please upload logo');
-    } else connectWeb3Modal();
+    setContent('Submit NFTs');
+    setVisible(true);
+    let resultRegister = await dispatch(registerNft(contractAddress, activeTab === "ERC 1155"));
+    setVisible(false);
+    if (!resultRegister) return;
+    // upload image
+    setContent('Upload Logo');
+    setVisible(true);
+    let logo = await uploadIPFS(files.instance);
+    setVisible(false);
+    let newCollection = {
+      logo: !!logo.image ? logo.image : '',
+      hashLogo: !!logo.ipfsHash ? logo.ipfsHash : '',
+    };
+    await uploadCollection(chainId, contractAddress, walletAddress, newCollection);
+    // reset form and file
+    setFiles(null);
   };
 
-  const accept = async (addressAccept) => {
-    if (!!walletAddress) {
-      setContent('Accept NFT');
-      setVisible(true);
-      await dispatch(acceptNft(addressAccept));
-      setVisible(false);
-    } else connectWeb3Modal();
+  const accept = async () => {
+    if (!walletAddress) return connectWeb3Modal();
+    setContent('Accept NFT');
+    setVisible(true);
+    await dispatch(acceptNft(acceptContractAddress));
+    setVisible(false);
   };
 
   const getSubmitsPending = useCallback(async () => {
@@ -114,125 +102,107 @@ export default function SubmitNFT() {
     }
   }, [getSubmitsPending, nftList]);
 
-  return (
-    <div className='create-page'>
-      <LoadingModal title={content} visible={visible} />
+  const onActiveTabChange = (selectedTab) => {
+    setActiveTab(selectedTab)
+  }
 
-      <div className='steps-content'>
-        <div className='area-submit-nft-user'>
-          <h1 className='get-listed'>List your NFT on Mochi Marketplace</h1>
-          <p className='select-network'>
-            Select the NFT type and input the contract address bellow.
-          </p>
-          <div className='wrap-box-submit'>
-            <div
-              className='drag-box'
-              {...getRootProps({ className: 'dropzone-collection-submit' })}
-            >
-              <input {...getInputProps()} />
-              {!!files[0] ? (
-                <div className='preview'>
-                  <img
-                    src={files[0].preview}
-                    alt='priview'
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      objectFit: 'contain',
-                      borderRadius: '1rem',
-                    }}
-                  />
-                </div>
-              ) : (
-                <p
-                  className='textmode'
-                  style={{ textAlign: 'center', marginBottom: 0, fontSize: '12.9px' }}
-                >
-                  {'Upload logo'}
-                  <img src={logoIcon} alt='logo-icon' width='32px' height='32px' />
-                </p>
-              )}
-            </div>
-            <div className='wrap-input-and-button-submit'>
-              <div className='wrap-input-submit'>
-                <Select
-                  size='large'
-                  className='input-mode-bc select-type-nft-submit'
-                  defaultValue={false}
-                  onChange={handleChange}
-                >
-                  <Option value={false}>ERC721</Option>
-                  <Option value={true}>ERC1155</Option>
-                </Select>
-                <Input
-                  className='input-address input-mode-bc'
-                  size='large'
-                  placeholder='Enter your contract address'
-                  onChange={(event) => setContractAddress(event.target.value)}
-                />
-              </div>
-              <Button
-                type='primary'
-                onClick={() => register()}
-                shape='round'
-                size='large'
-                className='btn-submit-nft'
-              >
-                Submit
-              </Button>
-            </div>
+  const walletIsApprover = !!adminAddress && walletAddress === adminAddress
+
+  return (<>
+    <LoadingModal title={content} visible={visible} />
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <div className="modal-header">
+          <div className="modal-tab-container">
+            {
+              _.map(["ERC 721", "ERC 1155", "Approver"], (tab) => {
+                return (
+                  <div key={tab} onClick={() => { onActiveTabChange(tab) }} className={
+                    classNames(
+                      'modal-tab',
+                      {
+                        active: activeTab === tab,
+                        hidden: tab === "Approver" && !walletIsApprover
+                      }
+                    )
+                  }>{tab}</div>
+                )
+              })
+            }
           </div>
         </div>
-        {!!adminAddress && walletAddress === adminAddress ? (
-          <div className='area-accpet'>
-            <p className='get-listed'>Accept NFT Address</p>
-            <div>
-              <Input
-                className='input-address input-mode-bc input-accept'
-                size='large'
-                placeholder='Enter contract address'
-                onChange={(event) => setAcceptContractAddress(event.target.value)}
-              />
-            </div>
-
-            <Button
-              type='primary'
-              onClick={() => accept(acceptContractAddress)}
-              shape='round'
-              size='large'
-              className='btn-submit-nft'
-            >
-              Accept
-            </Button>
-
-            {!!loading ? (
-              <IconLoading />
-            ) : (
-              <Row className='list-not-accept' justify='center'>
-                {submitsPending.map((collection, index) => (
-                  <Col className='item-accept' key={index} span={24}>
-                    <div className='logo-collection-accept'>
-                      <img src={collection.logo} alt='logo-collection' />
-                    </div>
-                    <div className='address-button-accept'>
-                      <div className='address-accept'>{collection.addressToken}</div>
-                      <div className='button-accept'>
-                        <Button onClick={() => accept(collection.addressToken)}>accept</Button>
+        <div className="modal-body">
+          {
+            (activeTab === 'ERC 721' || activeTab === 'ERC 1155') && (<>
+            
+              <div className='avatar-picker-container'>
+                <div {...getRootProps({ className: 'avatar-picker' })}>
+                  <input {...getInputProps()} />
+                  <Tooltip placement="bottom" title="Avatar">
+                  {
+                    files
+                    ? (
+                        <img className="avatar" src={files.preview} alt="avatar"/>
+                    )
+                    : <img className="avatar placeholder" src={camera_png} alt="avatar" />
+                  }
+                  </Tooltip>
+                </div>
+              </div>
+              <div className="contract-address-input">
+                <input type="text" className="contract-address" placeholder="Contract Address" value={contractAddress} onChange={(event) => setContractAddress(event.target.value)}/>
+              </div>
+            </>)
+          }
+          {
+            activeTab === "Approver" && (<>
+              <div className="approve-pending-container">
+                <div className="contract-address-input">
+                  <input type="text" className="contract-address" placeholder="Search by Contract Address" value={acceptContractAddress} onChange={(event) => setAcceptContractAddress(event.target.value)} />
+                </div>
+                <div className="approve-pending-list">
+                  <List
+                    dataSource={submitsPending}
+                    renderItem={item => (
+                      <List.Item
+                        className={classNames({selected: item.addressToken === acceptContractAddress})}
+                        key={item.addressToken}
+                        onClick={() => setAcceptContractAddress(item.addressToken)}
+                      >
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar src={item.logo} />
+                          }
+                          title={item.name}
+                          description={item.addressToken}
+                        />
+                      </List.Item>
+                    )}
+                  >
+                    {loading && (
+                      <div className="approve-pending-list-spinner">
+                        <Spin />
                       </div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            )}
-          </div>
-        ) : (
-          <></>
-        )}
-      </div>
-
-      <div className='img-banner-submit-nft'>
-        <img src={imgBanner} alt='banner-submit' />
+                    )}
+                  </List>
+                </div>
+              </div>
+            </>)
+          }
+        </div>
+        <div className="modal-footer">
+          {
+            (activeTab === 'ERC 721' || activeTab === 'ERC 1155') && (<>
+              <button className="submit-button" onClick={register} disabled={!web3.utils.isAddress(contractAddress)}>Submit</button>
+            </>)
+          }
+          {
+            activeTab === 'Approver' && (<>
+              <button className="submit-button" onClick={accept} disabled={!web3.utils.isAddress(acceptContractAddress)}>Approve</button>
+            </>)
+          }
+        </div>
       </div>
     </div>
-  );
+  </>)
 }

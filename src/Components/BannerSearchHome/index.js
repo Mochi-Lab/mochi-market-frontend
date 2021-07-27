@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import { setStrSearch } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef, useState, useCallback, useEffect } from 'react';
-import debounce from 'lodash.debounce';
+import { debounce } from 'lodash';
 import { useLocation } from 'react-router-dom';
 
 import 'slick-carousel/slick/slick.css';
