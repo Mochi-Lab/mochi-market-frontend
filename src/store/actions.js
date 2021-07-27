@@ -3,6 +3,7 @@ import {
   listTokensERC721OfOwner,
   listTokensERC115OfOwner,
   getAllOwnersOf1155,
+  getTokenUri,
 } from 'utils/helper';
 import ERC721 from 'Contracts/ERC721.json';
 import ERC1155 from 'Contracts/ERC1155.json';
@@ -1723,7 +1724,7 @@ export const getCollection = (addressToken, _collections) => async (dispatch, ge
 
         if (!nameCollection && !!tokenURI) {
           try {
-            let req = await axios.get(tokenURI);
+            let req = await getTokenUri(tokenURI);
             const data = req.data;
 
             nameCollection = !!data.name ? data.name : 'Unnamed';
