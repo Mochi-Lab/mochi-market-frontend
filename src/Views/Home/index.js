@@ -50,8 +50,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null)
-  }, [isLoadingErc721])
+    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null);
+  }, [isLoadingErc721]);
 
   const listHotCollections = [
     {
@@ -64,6 +64,10 @@ export default function Home() {
     },
     {
       addressToken: '0x0AC1bd198DB93d7EC428b698DCEf2E43DBcea7D1',
+      chainId: 56,
+    },
+    {
+      addressToken: '0x3e629332c51046a17ec236553cb931cf0548b5e1',
       chainId: 56,
     },
     {
