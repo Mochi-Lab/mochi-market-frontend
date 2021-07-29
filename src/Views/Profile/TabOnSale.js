@@ -1,31 +1,54 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import NFTsProfile from 'Components/NFTsProfile';
-import { setAvailableSellOrder } from 'store/actions';
-import store from 'store/index';
+import { getSellOrderByUser } from 'APIs/SellOrder/Gets';
 
 export default function TabOnSale({ address }) {
-  const { listNFTsOnsale, isLoadingErc721, erc721Instances } = useSelector((state) => state);
+  const { chainId } = useSelector((state) => state);
 
   const [loadingGetOnSale, setloadingGetOnSale] = useState(false);
+  const [loadingScroll, setLoadingScroll] = useState(false);
+  const [nftsOnSale, setNftsOnSale] = useState();
+  const [skip, setSkip] = useState(0);
+  const [isEndOfOrderList, setIsEndOfOrderList] = useState(false);
 
   const fetchOnSale = useCallback(async () => {
-    setloadingGetOnSale(true);
-    await store.dispatch(setAvailableSellOrder(address));
-    setloadingGetOnSale(false);
-  }, [address]);
+    if (!!chainId) {
+      try {
+        if (skip > 1) {
+          setLoadingScroll(true);
+        }
+        let exp = await getSellOrderByUser(chainId, address, skip, 20);
+        setSkip(skip + 20);
+        setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
+        if (exp.length < 20) setIsEndOfOrderList(true);
+        setLoadingScroll(false);
+      } catch (error) {
+        console.log({ error });
+      }
+    }
+  }, [address, skip, chainId]);
 
   useEffect(() => {
-    if (!!erc721Instances && !!address) {
-      fetchOnSale();
+    async function loadingInit() {
+      setloadingGetOnSale(true);
+      await fetchOnSale();
+      setloadingGetOnSale(false);
     }
-  }, [fetchOnSale, address, erc721Instances]);
+    if (!nftsOnSale) {
+      loadingInit();
+    }
+  }, [fetchOnSale, nftsOnSale, chainId, address]);
 
   return (
     <NFTsProfile
-      listNFTs={listNFTsOnsale}
-      isLoadingErc721={isLoadingErc721 || loadingGetOnSale}
+      listNFTs={nftsOnSale}
+      isLoadingErc721={loadingGetOnSale}
       onSale={true}
+      loadingScroll={loadingScroll}
+      fetchExplore={fetchOnSale}
+      isEndOfOrderList={isEndOfOrderList}
+      loadingNFT={loadingGetOnSale}
     />
   );
 }

@@ -141,10 +141,10 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
   let list721Raw = result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
   let list721 = list721Raw.map(function (nft) {
     return {
-      addressToken: nft.contract.id,
+      collectionAddress: nft.contract.id,
       symbol: nft.contract.symbol,
       collections: nft.contract.name,
-      index: nft.tokenID,
+      tokenId: nft.tokenID,
       tokenURI: nft.tokenURI,
       is1155: false,
     };
@@ -185,8 +185,8 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
     let list1155 = Promise.all(
       list1155Raw.map(async (nft) => {
         return {
-          addressToken: nft.token.registry.id,
-          index: nft.token.identifier,
+          collectionAddress: nft.token.registry.id,
+          tokenId: nft.token.identifier,
           value: nft.value,
           totalSupply: nft.token.totalSupply,
           is1155: true,
@@ -265,10 +265,10 @@ export async function newMintOf721(tokenAddress, chainId) {
       let nftsOf721 = await Promise.all(
         nftsOf721Raw.map(async (nft) => {
           return {
-            addressToken: nft.contract.id,
+            collectionAddress: nft.contract.id,
             symbol: nft.contract.symbol,
             collections: nft.contract.name,
-            index: nft.tokenID,
+            tokenId: nft.tokenID,
             tokenURI: nft.tokenURI,
             is1155: false,
           };
@@ -304,8 +304,8 @@ export async function newMintOf1155(tokenAddress, chainId) {
     let list1155 = Promise.all(
       list1155Raw.map(async (nft) => {
         return {
-          addressToken: nft.registry.id,
-          index: nft.identifier,
+          collectionAddress: nft.registry.id,
+          tokenId: nft.identifier,
           totalSupply: nft.totalSupply,
           is1155: true,
         };

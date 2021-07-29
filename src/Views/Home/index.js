@@ -7,51 +7,49 @@ import { carouselBanner, carouselCard } from 'Constants/constantCarousel';
 import Footer from 'Components/Footer';
 import CardNFTNotSearch from './CardNFTNotSearch.js';
 import CardCollection from './CardCollection.js';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { unpinFooterOnLoad } from 'utils/helper.js';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
+import { getAll } from 'APIs/SellOrder/Gets.js';
 
 export default function Home() {
-  const { convertErc721Tokens, convertErc1155Tokens, isLoadingErc721, chainId } = useSelector(
-    (state) => state
-  );
+  const { chainId } = useSelector((state) => state);
 
   const tags = ['Artwork', '3D', 'Character', 'Art'];
 
-  const mergeAllCollections = () => {
-    return [].concat(
-      ...convertErc721Tokens.map((collections) => collections.tokens.map((token) => token))
-    );
-  };
-  const mergeAllCollections1155 = () => {
-    return [].concat(
-      ...convertErc1155Tokens.map((collections) => collections.tokens.map((token) => token))
-    );
-  };
+  const [loadingNFTs, setLoadingNFTs] = useState();
+  const [listAll, setListAll] = useState([]);
+  const [list1155, setList1155] = useState([]);
 
-  const newListing = () => {
-    let listNFT = mergeAllCollections();
-    listNFT = listNFT.sort((a, b) =>
-      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
-    );
-    return listNFT.slice(0, 10);
-  };
+  const mergeAllCollections = useCallback(async () => {
+    let all = await getAll(chainId, 0, 10);
+    setListAll(all);
+  }, [chainId]);
 
-  const new1155 = () => {
-    let listNFT = mergeAllCollections1155();
-    listNFT = listNFT.sort((a, b) =>
-      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
-    );
-    return listNFT.slice(0, 10);
-  };
+  const mergeAllCollections1155 = useCallback(async () => {
+    let all = await getAll(chainId, 0, 10);
+    setList1155(all);
+  }, [chainId]);
 
   useEffect(() => {
-    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null);
-  }, [isLoadingErc721]);
+    async function loadNFTs() {
+      setLoadingNFTs(true);
+      await mergeAllCollections();
+      await mergeAllCollections1155();
+      setLoadingNFTs(false);
+    }
+    if (!!chainId) {
+      loadNFTs();
+    }
+  }, [mergeAllCollections, mergeAllCollections1155, chainId]);
+
+  useEffect(() => {
+    return unpinFooterOnLoad(!!loadingNFTs);
+  }, [loadingNFTs]);
 
   const listHotCollections = [
     {
@@ -102,7 +100,7 @@ export default function Home() {
         ))}
       </div>
 
-      {isLoadingErc721 || isLoadingErc721 === null ? (
+      {!!loadingNFTs ? (
         // Loading if done load the first type of token user have, if user select other load other
         <div className='center' style={{ width: '100%', height: '100%' }}>
           <IconLoading className='search-icon' />
@@ -133,7 +131,7 @@ export default function Home() {
               <h2 className='textmode'>New List</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              {newListing().map((nft, i) => (
+              {listAll.map((nft, i) => (
                 <div className='item-carousel' key={i}>
                   <CardNFTNotSearch token={nft} />
                 </div>
@@ -146,7 +144,7 @@ export default function Home() {
               <h2 className='textmode'>COLLECTIONS 1155</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              {new1155().map((nft, i) => (
+              {list1155.map((nft, i) => (
                 <div className='item-carousel' key={i}>
                   <CardNFTNotSearch token={nft} />
                 </div>

@@ -11,28 +11,23 @@ import './index.scss';
 const { Content } = Layout;
 const { Option } = Select;
 
-export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addressToken }) {
+export default function NFTsFilterBrowse({
+  collectionsNFT,
+  isLoadingErc721,
+  isEndOfOrderList,
+  loadingScroll,
+  fetchExplore,
+  listCollections,
+  setSelectedToken,
+  setSkip,
+  setNftsOnSale,
+}) {
   const { chainId } = useSelector((state) => state);
-
-  const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState('');
   const [strSearch, setStrSearch] = useState();
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
-  const [allOrders, setAllOrders] = useState([]);
   const [filterCount, setFilterCount] = useState(0);
-
-  useEffect(() => {
-    if (!!addressToken && tokenActive === '') {
-      for (let i = 0; i < collectionsNFT.length; i++) {
-        const collection = collectionsNFT[i];
-        if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
-          setSelectedTokens(collection);
-          setTokenActive(i);
-        }
-      }
-    }
-  }, [addressToken, collectionsNFT, tokenActive]);
 
   useEffect(() => {
     if (!!chainId) {
@@ -40,25 +35,17 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
     }
   }, [chainId]);
 
-  useEffect(() => {
-    if (!!collectionsNFT) {
-      setAllOrders(
-        collectionsNFT
-          ? [].concat(
-              ...collectionsNFT.map((collections) => collections.tokens.map((token) => token))
-            )
-          : []
-      );
-    }
-  }, [collectionsNFT]);
-
-  const selectToken = (token, index) => {
+  const selectToken = async (token, index) => {
     if (index === tokenActive) {
-      setSelectedTokens(null);
+      setSelectedToken(null);
       setTokenActive(null);
+      setSkip(0);
+      setNftsOnSale(null);
     } else {
-      setSelectedTokens(token);
+      await setSelectedToken(token.addressToken);
       setTokenActive(index);
+      setSkip(0);
+      setNftsOnSale(null);
     }
   };
 
@@ -74,7 +61,10 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
   return (
     <>
       <Layout style={{ minHeight: '100%' }}>
-        <Layout style={{ padding: '1rem' }} className='nfts-filter-browse-container background-mode'>
+        <Layout
+          style={{ padding: '1rem' }}
+          className='nfts-filter-browse-container background-mode'
+        >
           <Content
             className='site-layout-background'
             style={{
@@ -107,15 +97,14 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                         />
                       </div>
                       <div className='list-collections'>
-                        {collectionsNFT
-                          ? collectionsNFT.map((collection, index) => {
+                        {!!listCollections
+                          ? listCollections.map((collection, index) => {
                               if (
-                                ((!!strSearch &&
+                                (!!strSearch &&
                                   collection.name
                                     .toLocaleLowerCase()
                                     .includes(strSearch.toLowerCase())) ||
-                                  !strSearch) &&
-                                collection.tokens.length > 0
+                                !strSearch
                               )
                                 return (
                                   <div
@@ -129,11 +118,19 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                                           <CheckCircleOutlined />
                                         </div>
                                       ) : (
-                                        <img src={collection.avatarToken} alt='logo-collection' />
+                                        <img src={collection.logo} alt='logo-collection' />
                                       )}
                                     </div>
+
                                     <div className='name-collection textmode'>
-                                      {collection.name}
+                                      <a
+                                        href={`/collection/${chainId}/${collection.addressToken}?ViewAll=true`}
+                                        target='_blank'
+                                        rel='noreferrer'
+                                        className='link-collection-name'
+                                      >
+                                        {collection.name}
+                                      </a>
                                     </div>
                                   </div>
                                 );
@@ -193,21 +190,15 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                       </Select>
                     </Col>
                   </Row>
-                  {!!selectedTokens && !!selectedTokens.tokens ? (
-                    <NFTsCardBrowse
-                      tokens={selectedTokens.tokens}
-                      tokenPayment={tokenPayment}
-                      typeSort={typeSort}
-                      filterCountCallback={_setFilterCount}
-                    />
-                  ) : (
-                    <NFTsCardBrowse
-                      tokens={allOrders}
-                      tokenPayment={tokenPayment}
-                      typeSort={typeSort}
-                      filterCountCallback={_setFilterCount}
-                    />
-                  )}
+                  <NFTsCardBrowse
+                    tokens={collectionsNFT}
+                    tokenPayment={tokenPayment}
+                    typeSort={typeSort}
+                    filterCountCallback={_setFilterCount}
+                    isEndOfOrderList={isEndOfOrderList}
+                    loadingScroll={loadingScroll}
+                    fetchExplore={fetchExplore}
+                  />
                 </Col>
               </Row>
             )}

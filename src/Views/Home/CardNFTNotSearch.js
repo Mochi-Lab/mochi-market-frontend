@@ -23,11 +23,11 @@ export default function CardNFTHome({ token }) {
         try {
           let tokenURI;
           if (token.is1155) {
-            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
-            tokenURI = await nft.methods.uri(token.index).call();
+            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.collectionAddress);
+            tokenURI = await nft.methods.uri(token.tokenId).call();
           } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
+            const nft = new web3.eth.Contract(abiERC721.abi, token.collectionAddress);
+            tokenURI = await nft.methods.tokenURI(token.tokenId).call();
           }
           let req = await getTokenUri(tokenURI);
           const data = req.data;
@@ -38,23 +38,25 @@ export default function CardNFTHome({ token }) {
             name: !!data.name ? data.name : 'ID: ' + token.index,
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
+            nameCollection: (await store.dispatch(getCollection(token.collectionAddress, null)))
+              .collection.name,
           });
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }
-        token.nameCollection = (
-          await store.dispatch(getCollection(token.addressToken, null))
-        ).collection.name;
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
+      token.nameCollection = (
+        await store.dispatch(getCollection(token.collectionAddress, null))
+      ).collection.name;
     }
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
 
   return !!detailNFT ? (
     <Link
-      to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}
+      to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`}
       target='_blank'
     >
       <Card
@@ -67,7 +69,7 @@ export default function CardNFTHome({ token }) {
             />
             <div className='NFTResource-Wrapper'>
               <img
-                alt={`img-nft-${token.index}`}
+                alt={`img-nft-${token.tokenId}`}
                 src={detailNFT.image}
                 className='display-resource-nft'
               />
@@ -101,25 +103,24 @@ export default function CardNFTHome({ token }) {
         )}
         {!!token.price && (
           <div className='price-nft textmode'>
-            <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-            <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+            <span>{token.price}</span> <b>{getSymbol(chainId)[token.tokenPayment]}</b>
           </div>
         )}
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
               <Link
-                to={`/collection/${chainId}/${token.addressToken}`}
+                to={`/collection/${chainId}/${token.collectionAddress}`}
                 className='link-collection-name'
                 tag='span'
               >
-                {token.nameCollection}
+                {!!detailNFT.nameCollection ? detailNFT.nameCollection : token.nameCollection}
               </Link>
-              {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+              {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
               ) : null}{' '}
             </div>
-            <div className='name-nft textmode'>{detailNFT.name}</div>
+            <div className='name-nft textmode'>{!!token.name ? token.name : detailNFT.name}</div>
           </Col>
         </Row>
       </Card>

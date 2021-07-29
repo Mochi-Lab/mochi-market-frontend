@@ -22,12 +22,14 @@ export default function CardCollection({ token, infoCollection }) {
         try {
           let tokenURI;
           if (token.is1155) {
-            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
-            tokenURI = await nft.methods.uri(token.index).call();
+            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.collectionAddress);
+            tokenURI = await nft.methods.uri(token.tokenId).call();
           } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
+            const nft = new web3.eth.Contract(abiERC721.abi, token.collectionAddress);
+            tokenURI = await nft.methods.tokenURI(token.tokenId).call();
+            // let name = await nft.methods.name().call();
           }
+
           let req = await getTokenUri(tokenURI);
           const data = req.data;
 
@@ -42,7 +44,7 @@ export default function CardCollection({ token, infoCollection }) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }
         token.nameCollection = (
-          await store.dispatch(getCollection(token.addressToken, null))
+          await store.dispatch(getCollection(token.collectionAddress, null))
         ).collection.name;
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
@@ -53,7 +55,7 @@ export default function CardCollection({ token, infoCollection }) {
 
   return !!detailNFT ? (
     <Link
-      to={`/token/${chainId}/${token.addressToken}/${token.index}/${
+      to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${
         !!token.sellId ? token.sellId : 'null'
       }`}
       target='_blank'
@@ -64,12 +66,12 @@ export default function CardCollection({ token, infoCollection }) {
           <div className='wrap-cover'>
             <div
               className='blurred-background'
-              style={{ backgroundImage: `url(${detailNFT.image})` }}
+              style={{ backgroundImage: `url(${!!token.image ? token.image : detailNFT.image})` }}
             />
             <div className='NFTResource-Wrapper'>
               <img
-                alt={`img-nft-${token.index}`}
-                src={detailNFT.image}
+                alt={`img-nft-${token.tokenId}`}
+                src={!!token.image ? token.image : detailNFT.image}
                 className='display-resource-nft'
               />
             </div>
@@ -102,19 +104,19 @@ export default function CardCollection({ token, infoCollection }) {
         )}
         {!!token.price && (
           <div className='price-nft textmode'>
-            <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-            <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+            <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b>
           </div>
         )}
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
               {!!infoCollection.name ? infoCollection.name : token.nameCollection}
-              {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+              {!!token.collectionAddress &&
+              verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
               ) : null}{' '}
             </div>
-            <div className='name-nft textmode'>{detailNFT.name}</div>
+            <div className='name-nft textmode'>{!!token.name ? token.name : detailNFT.name}</div>
           </Col>
         </Row>
       </Card>

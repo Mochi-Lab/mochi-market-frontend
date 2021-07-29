@@ -25,3 +25,15 @@ export const getNonce = async (addressSubmit, addressToken, chainId) => {
     });
   return result;
 };
+
+export const getAllCollections = async (chainId) => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER}/collection/${chainId}`)
+    .then(function (response) {
+      return response.data.collections;
+    })
+    .catch(function (error) {
+      return [];
+    });
+  return result;
+};

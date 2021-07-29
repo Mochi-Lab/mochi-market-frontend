@@ -1,5 +1,5 @@
 import { Card, Row, Col, Skeleton, Popover, Empty } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getSymbol } from 'utils/getContractAddress';
@@ -14,6 +14,9 @@ import store from 'store/index';
 import { handleChildClick, getTokenUri, objToString } from 'utils/helper';
 import moment from 'moment';
 import empty from 'Assets/icons/empty.svg';
+import LoadingScroll from 'Components/LoadingScroll';
+import { useStateWithCallbackLazy } from 'use-state-with-callback';
+import { BottomScrollListener } from 'react-bottom-scroll-listener';
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -25,11 +28,11 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
         try {
           let tokenURI;
           if (token.is1155) {
-            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
-            tokenURI = await nft.methods.uri(token.index).call();
+            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.collectionAddress);
+            tokenURI = await nft.methods.uri(token.tokenId).call();
           } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
+            const nft = new web3.eth.Contract(abiERC721.abi, token.collectionAddress);
+            tokenURI = await nft.methods.tokenURI(token.tokenId).call();
           }
           let req = await getTokenUri(tokenURI);
           const data = req.data;
@@ -45,7 +48,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }
         token.nameCollection = (
-          await store.dispatch(getCollection(token.addressToken, null))
+          await store.dispatch(getCollection(token.collectionAddress, null))
         ).collection.name;
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
@@ -73,7 +76,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
         >
           {!!detailNFT ? (
             <Link
-              to={`/token/${chainId}/${token.addressToken}/${token.index}/${
+              to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${
                 !!token.sellId ? token.sellId : null
               }`}
             >
@@ -87,7 +90,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                     />
                     <div className='NFTResource-Wrapper'>
                       <img
-                        alt={`img-nft-${token.index}`}
+                        alt={`img-nft-${token.tokenId}`}
                         src={detailNFT.image}
                         className='display-resource-nft'
                       />
@@ -124,8 +127,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                 )}
                 {!!token.price ? (
                   <div className='price-nft textmode'>
-                    <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-                    <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+                    <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b>
                   </div>
                 ) : (
                   <></>
@@ -134,17 +136,19 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                   <Col className={`footer-card-left ${!token.is1155 ? 'fill-width' : ''}`}>
                     <div className='name-collection'>
                       <Link
-                        to={`/collection/${chainId}/${token.addressToken}`}
+                        to={`/collection/${chainId}/${token.collectionAddress}`}
                         className='link-collection-name'
                         tag='span'
                       >
                         {token.nameCollection}
                       </Link>
-                      {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) ? (
+                      {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                         <img src={tick} alt='icon-tick' className='icon-tick' />
                       ) : null}{' '}
                     </div>
-                    <div className='name-nft textmode'>{detailNFT.name}</div>
+                    <div className='name-nft textmode'>
+                      {!!token.name ? token.name : detailNFT.name}
+                    </div>
                   </Col>
                   {!!token.is1155 && !onSale ? (
                     <Col className='footer-card-right text-right price-nft'>
@@ -203,32 +207,50 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
   );
 }
 
-export default function ERC721({ tokens, onSale }) {
+export default function ERC721({ tokens, onSale, loadingScroll, fetchExplore, isEndOfOrderList }) {
   const [afterFilter, setafterFilter] = useState(!!tokens ? tokens : []);
   const { strSearch } = useSelector((state) => state);
+
+  const [loadingNFTs, setLoadingNFTs] = useStateWithCallbackLazy(false);
 
   useEffect(() => {
     if (tokens) setafterFilter(() => tokens);
   }, [tokens]);
 
+  const paginationCards = useCallback(
+    async (e) => {
+      if (!!tokens && tokens.length > 0 && !!fetchExplore && !isEndOfOrderList && !loadingNFTs) {
+        setLoadingNFTs(true, async () => {
+          setLoadingNFTs(true);
+          if (!loadingNFTs) fetchExplore();
+          setLoadingNFTs(false);
+        });
+      }
+    },
+    [fetchExplore, isEndOfOrderList, loadingNFTs, tokens, setLoadingNFTs]
+  );
+
   return (
     <div className='explore-nft content-list-nft'>
       <Row justify={afterFilter.length > 0 ? 'start' : 'center'} gutter={[20, 20]}>
-        {afterFilter.length > 0 ? (
-          afterFilter.map((token, index) => (
-            <NFTsCardProfile key={index} token={token} strSearch={strSearch} onSale={onSale} />
-          ))
-        ) : (
-          <Empty
-            image={empty}
-            imageStyle={{
-              height: 86,
-              width: 86,
-            }}
-            description={<span className='textmode'>No Data</span>}
-          ></Empty>
-        )}
+        <BottomScrollListener onBottom={() => paginationCards()}>
+          {afterFilter.length > 0 ? (
+            afterFilter.map((token, index) => (
+              <NFTsCardProfile key={index} token={token} strSearch={strSearch} onSale={onSale} />
+            ))
+          ) : (
+            <Empty
+              image={empty}
+              imageStyle={{
+                height: 86,
+                width: 86,
+              }}
+              description={<span className='textmode'>No Data</span>}
+            ></Empty>
+          )}
+        </BottomScrollListener>
       </Row>
+      {!!loadingScroll && <LoadingScroll />}
     </div>
   );
 }

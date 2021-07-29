@@ -10,11 +10,15 @@
 .left-profile .info-user .background-avatar .background-profile img {
   width: 100%;
   border-radius: 1rem;
+  max-height: 210px;
+  object-fit: cover;
 }
 .left-profile .info-user .background-avatar .avatar-profile {
   position: absolute;
   bottom: -20%;
   left: 35%;
+  max-height: 100px;
+  max-width: 100px;
 }
 .left-profile .info-user .background-avatar .avatar-profile {
   width: 30%;

@@ -20,7 +20,7 @@ const { Option } = Select;
 
 export default function ViewAll({
   infoCollection,
-  collectionOnSale,
+  nftsOnSale,
   setViewAll,
   viewAll,
   loadingNFTs,
@@ -29,11 +29,16 @@ export default function ViewAll({
   activeKeysCollapse,
   setActiveKeysCollapse,
   getInfoCollection,
+  fetchExplore,
+  isEndOfOrderList,
+  loadingScroll,
+  filterChange,
 }) {
   const dispatch = useDispatch();
 
   const { walletAddress, chainId, web3, infoAdmins } = useSelector((state) => state);
   const { addressToken } = useParams();
+  let checkInfoExist = !!infoCollection && !!infoCollection.attributesFilter;
 
   const [tokenPayment, setTokenPayment] = useState('0');
   const [typeSort, setTypeSort] = useState('recentlyListed');
@@ -42,12 +47,10 @@ export default function ViewAll({
   const [modalEditFilter, setModalEditFilter] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [valueEditFilter, setValueEditFilter] = useState(
-    !!infoCollection.attributesFilter ? infoCollection.attributesFilter : []
+    checkInfoExist ? infoCollection.attributesFilter : []
   );
   const [defaultValue, setDefaultValue] = useState(
-    !!infoCollection.attributesFilter
-      ? JSON.stringify(infoCollection.attributesFilter, null, '\t')
-      : ''
+    checkInfoExist ? JSON.stringify(infoCollection.attributesFilter, null, '\t') : ''
   );
   const [checkValidator, setCheckValidator] = useState([]);
   const [darkMode, setDarkMode] = useState();
@@ -58,10 +61,10 @@ export default function ViewAll({
   }, [modalEditFilter]);
 
   useEffect(() => {
-    if (!!infoCollection.attributesFilter) {
+    if (checkInfoExist) {
       setDefaultValue(JSON.stringify(infoCollection.attributesFilter, null, '\t'));
     }
-  }, [infoCollection.attributesFilter]);
+  }, [checkInfoExist, infoCollection]);
 
   useEffect(() => {
     if (!!chainId) {
@@ -137,6 +140,10 @@ export default function ViewAll({
     setCheckValidator(markers);
   }
 
+  const checkLoadMore = () => {
+    if (!!viewAll) fetchExplore();
+  };
+
   return (
     <div className={`${!!viewAll ? 'display-block-view-all' : 'display-none-view-all'}`}>
       <Layout style={{ minHeight: '100%' }} className='view-all-collection background-mode'>
@@ -154,7 +161,8 @@ export default function ViewAll({
             </div>
             {!!walletAddress &&
               infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) &&
-              !infoCollection.attributesFilter && (
+              ((checkInfoExist && infoCollection.attributesFilter.length <= 0) ||
+                !infoCollection.attributesFilter) && (
                 <div className='btn-edit-filter' onClick={() => setModalEditFilter(true)}>
                   Add Filter
                 </div>
@@ -215,9 +223,7 @@ export default function ViewAll({
           </div>
         ) : (
           <>
-            {!!showFilter &&
-            !!infoCollection.attributesFilter &&
-            infoCollection.attributesFilter.length > 0 ? (
+            {!!showFilter && checkInfoExist && infoCollection.attributesFilter.length > 0 ? (
               <Row>
                 <Col xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 5 }}>
                   <FilterCollection
@@ -226,30 +232,37 @@ export default function ViewAll({
                     objectFilter={objectFilter}
                     activeKeysCollapse={activeKeysCollapse}
                     setActiveKeysCollapse={setActiveKeysCollapse}
-                    attributesFilter={
-                      !!infoCollection.attributesFilter ? infoCollection.attributesFilter : []
-                    }
+                    attributesFilter={checkInfoExist ? infoCollection.attributesFilter : []}
                     getInfoCollection={getInfoCollection}
                     setModalEditFilter={setModalEditFilter}
+                    filterChange={filterChange}
                   />
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
                   <NFTsCardBrowse
-                    tokens={collectionOnSale()}
+                    tokens={nftsOnSale}
                     tokenPayment={tokenPayment}
                     typeSort={typeSort}
                     filterCountCallback={_setFilterCount}
                     strSearchInCollection={strSearch}
+                    fetchExplore={checkLoadMore}
+                    isEndOfOrderList={isEndOfOrderList}
+                    loadingScroll={loadingScroll}
+                    collectionName={infoCollection.name}
                   />
                 </Col>
               </Row>
             ) : (
               <NFTsCardBrowse
-                tokens={collectionOnSale()}
+                tokens={nftsOnSale}
                 tokenPayment={tokenPayment}
                 typeSort={typeSort}
                 filterCountCallback={_setFilterCount}
                 strSearchInCollection={strSearch}
+                fetchExplore={checkLoadMore}
+                isEndOfOrderList={isEndOfOrderList}
+                loadingScroll={loadingScroll}
+                collectionName={infoCollection.name}
               />
             )}
           </>

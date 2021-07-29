@@ -77,8 +77,6 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch(setCreativeStudio(creativeStudio));
   dispatch(setNftClaimToken(nftCampaign));
   dispatch(setAdminAddress(addressesProvider));
-
-  dispatch(setAvailableSellOrder());
 };
 
 export const LOGOUT = 'LOGOUT';
@@ -208,26 +206,7 @@ export const setInfoUserLogin = (infoUserLogin) => (dispatch) => {
 ////////////////////
 // ERC721
 ////////////////////
-export const INIT_ERC721 = 'INIT_ERC721';
-export const INIT_ERC1155 = 'INIT_ERC1155';
-export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {
-  const { web3, nftList } = getState();
-  let erc721Instances = [];
-  // let erc1155Instances = [];
-  if (!!acceptedNftsAddress) {
-    for (let i = 0; i < acceptedNftsAddress.length; i++) {
-      let is1155 = await nftList.methods.isERC1155(acceptedNftsAddress[i]).call();
-      if (is1155) {
-        // erc1155Instances.push(new web3.eth.Contract(ERC1155.abi, acceptedNftsAddress[i]));
-      } else {
-        erc721Instances.push(new web3.eth.Contract(ERC721.abi, acceptedNftsAddress[i]));
-      }
-    }
-
-    dispatch({ type: INIT_ERC721, erc721Instances });
-    // dispatch({ type: INIT_ERC1155, erc1155Instances });
-  }
-};
+export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {};
 
 export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
 export const GET_OWNED_ERC1155 = 'GET_OWNED_ERC1155';
@@ -259,7 +238,6 @@ export const setAcceptedNftsUser = () => async (dispatch, getState) => {
     let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
     acceptedNftsAddress = acceptedNftsAddress.map((value) => value.toLowerCase());
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
-    dispatch(initERC721(acceptedNftsAddress));
   } catch (e) {
     console.log(e);
     return e;
@@ -442,7 +420,6 @@ export const setAcceptedNfts = () => async (dispatch, getState) => {
     let acceptedNftsAddress = await nftList.methods.getAcceptedNFTs().call();
     acceptedNftsAddress = acceptedNftsAddress.map((value) => value.toLowerCase());
     dispatch({ type: SET_ACCEPTED_NFTS, acceptedNftsAddress });
-    dispatch(initERC721(acceptedNftsAddress));
   } catch (error) {
     error.type = 'error';
     // dispatch(showNotification(error));
@@ -548,11 +525,11 @@ export const setAvailableSellOrder = (walletAddress) => async (dispatch, getStat
         .getAvailableSellOrdersIdList()
         .call();
       let availableSellOrderERC721 = await sellOrderList.methods
-        .getSellOrdersByIdList(availableSellOrderIdList.resultERC721)
+        .getSellOrdersByIdList(availableSellOrderIdList.resultERC721.slice(0, 10))
         .call();
 
       let availableSellOrderERC1155 = await sellOrderList.methods
-        .getSellOrdersByIdList(availableSellOrderIdList.resultERC1155)
+        .getSellOrdersByIdList(availableSellOrderIdList.resultERC1155.slice(0, 10))
         .call();
 
       var convertErc721Tokens = [];
@@ -808,7 +785,6 @@ export const createSellOrder = (nftAddress, tokenId, price, tokenPayment, amount
         dispatch(setStatusActivity(activity));
       });
     // Fetch new availableOrderList
-    dispatch(setAvailableSellOrder());
 
     let orders = await sellOrderList.methods
       .getAvailableSellOrdersIdListByUser(walletAddress)
@@ -928,8 +904,6 @@ export const buyNft = (orderDetail, is1155) => async (dispatch, getState) => {
         link = getWeb3List(chainId).explorer + receipt.transactionHash;
       });
 
-    // Fetch new availableOrderList
-    dispatch(setAvailableSellOrder());
     return { status: true, link };
   } catch (error) {
     error.type = 'error';
@@ -958,7 +932,6 @@ export const updatePrice = (sellId, newPrice) => async (dispatch, getState) => {
       });
 
     // Fetch new availableOrderList
-    dispatch(setAvailableSellOrder());
     activity = { ...activity, status: 'success', duration: 15000 };
     dispatch(setStatusActivity(activity));
   } catch (error) {
@@ -988,8 +961,6 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
         dispatch(setStatusActivity(activity));
       });
 
-    // Fetch new availableOrderList
-    dispatch(setAvailableSellOrder());
     activity = { ...activity, status: 'success', duration: 15000 };
     dispatch(setStatusActivity(activity));
 

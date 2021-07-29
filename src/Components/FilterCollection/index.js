@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Col,
@@ -23,6 +23,7 @@ export default function FilterCollection({
   setActiveKeysCollapse,
   attributesFilter,
   setModalEditFilter,
+  filterChange,
 }) {
   const { walletAddress, infoAdmins } = useSelector((state) => state);
   return (
@@ -64,6 +65,7 @@ export default function FilterCollection({
                 attribute={attribute}
                 setObjectFilter={setObjectFilter}
                 objectFilter={objectFilter}
+                filterChange={filterChange}
               />
             </Panel>
           ))}
@@ -73,7 +75,7 @@ export default function FilterCollection({
   );
 }
 
-function RenderSwitch({ attribute, setObjectFilter, objectFilter }) {
+function RenderSwitch({ attribute, setObjectFilter, objectFilter, filterChange }) {
   switch (attribute.display_type) {
     case 'enum':
       return (
@@ -81,6 +83,7 @@ function RenderSwitch({ attribute, setObjectFilter, objectFilter }) {
           attribute={attribute}
           setObjectFilter={setObjectFilter}
           objectFilter={objectFilter}
+          filterChange={filterChange}
         />
       );
     case 'number':
@@ -89,6 +92,7 @@ function RenderSwitch({ attribute, setObjectFilter, objectFilter }) {
           attribute={attribute}
           setObjectFilter={setObjectFilter}
           objectFilter={objectFilter}
+          filterChange={filterChange}
         />
       );
     case 'date':
@@ -97,6 +101,7 @@ function RenderSwitch({ attribute, setObjectFilter, objectFilter }) {
           attribute={attribute}
           setObjectFilter={setObjectFilter}
           objectFilter={objectFilter}
+          filterChange={filterChange}
         />
       );
     default:
@@ -104,8 +109,8 @@ function RenderSwitch({ attribute, setObjectFilter, objectFilter }) {
   }
 }
 
-function TypeEnum({ attribute, setObjectFilter, objectFilter }) {
-  const handleOnChange = (e, element) => {
+function TypeEnum({ attribute, setObjectFilter, objectFilter, filterChange }) {
+  const handleOnChange = async (e, element) => {
     if (!!e.target.checked) {
       if (!!objectFilter[`${attribute.index}`]) {
         let attrs = objectFilter;
@@ -126,6 +131,7 @@ function TypeEnum({ attribute, setObjectFilter, objectFilter }) {
       attrs[`${attribute.index}`] = traitTypes;
       setObjectFilter({ ...attrs });
     }
+    await filterChange();
   };
 
   return (
@@ -151,36 +157,33 @@ function TypeEnum({ attribute, setObjectFilter, objectFilter }) {
   );
 }
 
-function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
+function TypeNumber({ attribute, setObjectFilter, objectFilter, filterChange }) {
   const [min, setMin] = useState();
   const [max, setMax] = useState();
-  const [inputSlider, setInputSlider] = useState([
-    typeof attribute.min !== 'undefined' ? attribute.min : 0,
-    typeof attribute.max !== 'undefined' ? attribute.max : 0,
-  ]);
+  const [inputSlider, setInputSlider] = useState([0, 0]);
   // const [sort, setSort] = useState();
 
-  useEffect(() => {
-    if (!!attribute && typeof attribute.max !== 'undefined') {
-      setMax(attribute.max);
-    }
-    if (!!attribute && typeof attribute.min !== 'undefined') {
-      setMin(attribute.min);
-    }
-  }, [attribute]);
-
-  const changeMinMax = (_min, _max) => {
+  const changeMinMax = async (_min, _max) => {
+    let attrs = objectFilter;
     setMin(_min);
     setMax(_max);
-    let attrs = objectFilter;
-    if (typeof _min !== 'undefined') {
-      attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], min: _min };
+    if (_max === _min) {
+      attrs[`${attribute.index}`] = { ...delete attrs[`${attribute.index}`] };
+    } else {
+      if (typeof _min !== 'undefined') {
+        attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], min: _min };
+      }
+      if (typeof _max !== 'undefined') {
+        attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], max: _max };
+      }
     }
-    if (typeof _max !== 'undefined') {
-      attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], max: _max };
-    }
-    setObjectFilter({ ...attrs });
+
+    await setObjectFilter({ ...attrs });
+    await filterChange();
   };
+
+  const checkExistMinMax =
+    typeof attribute.max !== 'undefined' && typeof attribute.min !== 'undefined';
 
   // const changeSort = (e) => {
   //   setSort(e.target.value);
@@ -191,13 +194,15 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
 
   return (
     <div className='type-number'>
-      {typeof attribute.max !== 'undefined' && typeof attribute.min !== 'undefined' && (
+      {!!checkExistMinMax && (
         <Slider
           range={{ draggableTrack: true }}
           defaultValue={[min, max]}
           value={inputSlider}
           onChange={(e) => {
             setInputSlider(e);
+          }}
+          onAfterChange={(e) => {
             changeMinMax(e[0], e[1]);
           }}
           min={attribute.min}
@@ -216,9 +221,12 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
             value={min}
             className='textmode input-min'
             onChange={(value) => {
-              if (value >= attribute.min) {
+              if (!!checkExistMinMax && value >= attribute.min) {
                 setMin(value);
                 setInputSlider([value, max]);
+                changeMinMax(value, max);
+              } else {
+                setMin(value);
                 changeMinMax(value, max);
               }
             }}
@@ -230,9 +238,12 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter }) {
             value={max}
             className='textmode input-max'
             onChange={(value) => {
-              if (value <= attribute.max) {
+              if (!!checkExistMinMax && value <= attribute.max) {
                 setMax(value);
                 setInputSlider([min, value]);
+                changeMinMax(min, value);
+              } else {
+                setMax(value);
                 changeMinMax(min, value);
               }
             }}

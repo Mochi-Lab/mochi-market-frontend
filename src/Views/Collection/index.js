@@ -1,48 +1,34 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import IconLoading from 'Components/IconLoading';
 import Footer from 'Components/Footer';
 import EditCollection from './EditCollection';
 import ViewLess from './ViewLess';
 import ViewAll from './ViewAll';
+import DisplayInfoCollection from './DisplayInfoCollection';
+import { setInfoCollections, getCollection } from 'store/actions';
+import store from 'store/index';
+import { newMintOf721, newMintOf1155 } from 'utils/helper';
+import { selectChain } from 'Connections/web3Modal.js';
+import { unpinFooterOnLoad } from 'utils/helper.js';
+import { getSellOrderByAttributes } from 'APIs/SellOrder/Gets';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'Views/Home/index.scss';
 import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
-import tick from 'Assets/icons/tick-green.svg';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
-import { setInfoCollections, getCollection } from 'store/actions';
-import store from 'store/index';
-import { getLogoChainsTags } from 'utils/getContractAddress';
-import { newMintOf721, newMintOf1155 } from 'utils/helper';
-import logoMochi from 'Assets/logo-mochi.png';
-import discord from 'Assets/icons/discord-01.svg';
-import youtube from 'Assets/icons/youtube.svg';
-import facebook from 'Assets/icons/facebook-01.svg';
-import instagram from 'Assets/icons/instagram.svg';
-import medium from 'Assets/icons/medium-01.svg';
-import titok from 'Assets/icons/tiktok.svg';
-import github from 'Assets/icons/github-01.svg';
-import twitter from 'Assets/icons/twitter-01.svg';
-import telegram from 'Assets/icons/telegram-01.svg';
-import website from 'Assets/icons/website.svg';
-import { selectChain } from 'Connections/web3Modal.js';
-import { unpinFooterOnLoad } from 'utils/helper.js';
 
 export default function Collection() {
   let history = useHistory();
 
   const {
-    isLoadingErc721,
     chainId,
     walletAddress,
     verifiedContracts,
     infoCollections,
     nftList,
-    convertErc1155Tokens,
-    convertErc721Tokens,
     infoAdmins,
   } = useSelector((state) => state);
 
@@ -51,14 +37,18 @@ export default function Collection() {
 
   const [visibleEitdCollection, setvisibleEitdCollection] = useState(false);
   const [collections, setCollections] = useState(infoCollections);
-  const [infoCollection, setInfoCollection] = useState({});
+  const [infoCollection, setInfoCollection] = useState();
   const [statusEdit, setStatusEdit] = useState(false);
-  const [nftsOnSale, setNftsOnSale] = useState([]);
+  const [nftsOnSale, setNftsOnSale] = useState();
   const [viewAll, setViewAll] = useState(null);
   const [loadingNFTs, setLoadingNFTs] = useState();
+  const [loadingInfo, setLoadingInfo] = useState();
   const [listNewNFT, setListNewNFT] = useState([]);
   const [objectFilter, setObjectFilter] = useState({});
   const [activeKeysCollapse, setActiveKeysCollapse] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [isEndOfOrderList, setIsEndOfOrderList] = useState(false);
+  const [loadingScroll, setLoadingScroll] = useState(false);
 
   // Check chainId in route
   useEffect(() => {
@@ -84,12 +74,20 @@ export default function Collection() {
         setCollections(_collections);
         await store.dispatch(setInfoCollections(_collections));
       }
+      return _collections;
     },
     [addressToken, collections, infoCollection]
   );
 
   useEffect(() => {
-    getInfoCollection();
+    async function loadInfor() {
+      setLoadingInfo(true);
+      let res = await getInfoCollection();
+      if (!!res) {
+        setLoadingInfo(false);
+      }
+    }
+    loadInfor();
   }, [getInfoCollection, addressToken, chainId, walletAddress]);
 
   const checkRegister = useCallback(async () => {
@@ -110,55 +108,41 @@ export default function Collection() {
     checkRegister();
   }, [checkRegister]);
 
-  const filterCollectionInOnSale = useCallback(async () => {
-    if (!!nftList) {
-      setLoadingNFTs(true);
-      let is1155 = await nftList.methods.isERC1155(addressToken).call();
-      let onSaleOfAddressToken = [];
-      if (is1155) {
-        for (let i = 0; i < convertErc1155Tokens.length; i++) {
-          const collection = convertErc1155Tokens[i];
-          if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
-            onSaleOfAddressToken = collection.tokens;
-          }
-        }
-      } else {
-        for (let i = 0; i < convertErc721Tokens.length; i++) {
-          const collection = convertErc721Tokens[i];
-          if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
-            onSaleOfAddressToken = collection.tokens;
-            break;
-          }
-        }
+  const fetchExplore = useCallback(async () => {
+    try {
+      if (skip > 1) {
+        setLoadingScroll(true);
       }
-      setNftsOnSale(onSaleOfAddressToken);
-      setLoadingNFTs(false);
+      let exp = await getSellOrderByAttributes(chainID, addressToken, skip, 20, objectFilter);
+      setSkip(skip + 20);
+      setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
+      if (exp.length < 20) setIsEndOfOrderList(true);
+      setLoadingScroll(false);
+    } catch (error) {
+      console.log({ error });
     }
-  }, [addressToken, convertErc1155Tokens, convertErc721Tokens, nftList]);
+  }, [chainID, addressToken, skip, objectFilter]);
 
   useEffect(() => {
-    filterCollectionInOnSale();
-  }, [filterCollectionInOnSale]);
+    async function loadInitNFTs() {
+      setLoadingNFTs(true);
+      await fetchExplore();
+      setLoadingNFTs(false);
+    }
+    if (!nftsOnSale) {
+      loadInitNFTs();
+    }
+  }, [fetchExplore, nftsOnSale]);
 
-  const collectionOnSaleLess = () => {
-    setLoadingNFTs(true);
-    let listNFT = nftsOnSale;
-    listNFT = listNFT.sort((a, b) =>
-      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
-    );
-    setLoadingNFTs(false);
-    return listNFT.slice(0, 10);
-  };
-
-  const collectionOnSaleAll = () => {
-    setLoadingNFTs(true);
-    let listNFT = nftsOnSale;
-    listNFT = listNFT.sort((a, b) =>
-      a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
-    );
-    setLoadingNFTs(false);
-    return listNFT;
-  };
+  const filterChange = useCallback(async () => {
+    try {
+      let exp = await getSellOrderByAttributes(chainID, addressToken, 0, 20, objectFilter);
+      setSkip(0);
+      setNftsOnSale(exp);
+    } catch (error) {
+      console.log({ error });
+    }
+  }, [chainID, addressToken, objectFilter]);
 
   const newMintNFT = useCallback(async () => {
     if (nftList) {
@@ -201,234 +185,66 @@ export default function Collection() {
     }
   }, [statusViewAll, handleSetViewAll]);
   useEffect(() => {
-    return unpinFooterOnLoad(isLoadingErc721 || isLoadingErc721 === null);
-  }, [isLoadingErc721]);
+    return unpinFooterOnLoad(!!loadingInfo || !nftsOnSale || !infoCollection || !listNewNFT);
+  }, [loadingNFTs, loadingInfo, nftsOnSale, infoCollection, listNewNFT]);
 
   return (
-    <div className='collection-detail'>
-      <EditCollection
-        visible={visibleEitdCollection}
-        setvisibleEitdCollection={setvisibleEitdCollection}
-        infoCollection={infoCollection}
-        getInfoCollection={getInfoCollection}
-        addressToken={addressToken}
-        chainId={chainId}
-      />
-      {isLoadingErc721 || isLoadingErc721 === null ? (
+    <>
+      {!!loadingInfo || !nftsOnSale || !infoCollection || !listNewNFT ? (
         // Loading if done load the first type of token user have, if user select other load other
         <div className='center' style={{ width: '100%', height: '100%' }}>
           <IconLoading className='search-icon' />
         </div>
       ) : (
-        <div className='container'>
-          <div className='collection-info'>
-            <div className='collection-info-content'>
-              <div className='logo-grid'>
-                <div className='logo-collection'>
-                  <div className='wrap-img-logo'>
-                    <img
-                      src={!!infoCollection.logo ? infoCollection.logo : logoMochi}
-                      alt='logo-collection'
-                    />
-                  </div>
-                </div>
-                <div>
-                  {!!statusEdit && (
-                    <button
-                      className='btn-edit-collection'
-                      onClick={() => setvisibleEitdCollection(true)}
-                    >
-                      <div className='textmode'>Edit Collection</div>
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className='info-grid'>
-                <div className='collection-name textmode'>
-                  {infoCollection.name}
-                  {verifiedContracts.includes(addressToken.toLocaleLowerCase()) ? (
-                    <img src={tick} alt='icon-tick' className='icon-tick' />
-                  ) : null}{' '}
-                </div>
-                <div className='list-tags textmode'>
-                  {!!infoCollection.chainId ? (
-                    <div className='item-tag'>
-                      <img src={getLogoChainsTags(infoCollection.chainId).logo} alt='img-tag' />
-                      <span className='textmode'>
-                        {getLogoChainsTags(infoCollection.chainId).name}
-                      </span>
-                    </div>
-                  ) : (
-                    'Tags: '
-                  )}
-                </div>
-                <div className='description-colletion textmode'>
-                  {!!infoCollection.description ? infoCollection.description : 'Description:'}
-                </div>
-                <div className='statistics-colletion'></div>
-                <div className='contact-colletion'>
-                  {!!infoCollection.website ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.website}
-                      className='link-contact'
-                    >
-                      <img src={website} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Website</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.twitter ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.twitter}
-                      className='link-contact'
-                    >
-                      <img src={twitter} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Twitter</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.telegram ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.telegram}
-                      className='link-contact'
-                    >
-                      <img src={telegram} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Telegram</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.discord ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.discord}
-                      className='link-contact'
-                    >
-                      <img src={discord} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Discord</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.youtube ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.youtube}
-                      className='link-contact'
-                    >
-                      <img src={youtube} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>YouTube</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.facebook ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.facebook}
-                      className='link-contact'
-                    >
-                      <img src={facebook} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Facebook</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.instagram ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.instagram}
-                      className='link-contact'
-                    >
-                      <img src={instagram} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Instagram</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.github ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.github}
-                      className='link-contact'
-                    >
-                      <img src={github} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Github</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.medium ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.medium}
-                      className='link-contact'
-                    >
-                      <img src={medium} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Medium</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                  {!!infoCollection.tiktok ? (
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={infoCollection.tiktok}
-                      className='link-contact'
-                    >
-                      <img src={titok} alt='icon-link' className='icon-contact' />
-                      <div className='name-contact textmode'>Titok</div>
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              </div>
-              <div className='contact-grid'></div>
-            </div>
-          </div>
-
-          <ViewLess
+        <div className='collection-detail'>
+          <EditCollection
+            visible={visibleEitdCollection}
+            setvisibleEitdCollection={setvisibleEitdCollection}
             infoCollection={infoCollection}
-            collectionOnSale={collectionOnSaleLess}
-            listNewNFT={listNewNFT}
-            setViewAll={handleSetViewAll}
-            viewAll={viewAll}
-            loadingNFTs={loadingNFTs}
+            getInfoCollection={getInfoCollection}
+            addressToken={addressToken}
+            chainId={chainId}
           />
-
-          {viewAll !== null ? (
-            <ViewAll
+          <div className='container'>
+            <DisplayInfoCollection
               infoCollection={infoCollection}
-              collectionOnSale={collectionOnSaleAll}
+              statusEdit={statusEdit}
+              setvisibleEitdCollection={setvisibleEitdCollection}
+              verifiedContracts={verifiedContracts}
+              addressToken={addressToken}
+            />
+            <ViewLess
+              infoCollection={infoCollection}
+              nftsOnSale={!!nftsOnSale ? nftsOnSale.slice(0, 10) : []}
+              listNewNFT={listNewNFT}
               setViewAll={handleSetViewAll}
               viewAll={viewAll}
               loadingNFTs={loadingNFTs}
-              setObjectFilter={setObjectFilter}
-              objectFilter={objectFilter}
-              activeKeysCollapse={activeKeysCollapse}
-              setActiveKeysCollapse={setActiveKeysCollapse}
-              getInfoCollection={getInfoCollection}
             />
-          ) : null}
+
+            {viewAll !== null ? (
+              <ViewAll
+                infoCollection={infoCollection}
+                nftsOnSale={!!nftsOnSale ? nftsOnSale : []}
+                setViewAll={handleSetViewAll}
+                viewAll={viewAll}
+                loadingNFTs={loadingNFTs}
+                setObjectFilter={setObjectFilter}
+                objectFilter={objectFilter}
+                activeKeysCollapse={activeKeysCollapse}
+                setActiveKeysCollapse={setActiveKeysCollapse}
+                getInfoCollection={getInfoCollection}
+                fetchExplore={fetchExplore}
+                isEndOfOrderList={isEndOfOrderList}
+                loadingScroll={loadingScroll}
+                filterChange={filterChange}
+              />
+            ) : null}
+          </div>
+
+          <Footer />
         </div>
       )}
-      <Footer />
-    </div>
+    </>
   );
 }
