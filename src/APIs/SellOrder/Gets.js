@@ -53,6 +53,54 @@ export const getSellOrderByUser = async (chainId, walletAddress, skip, page) => 
   return result;
 };
 
+export const getSellOrderBySellId = async (chainId, sellId) => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER}/sellOrder/bySellId/${chainId}/${sellId}`)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      return [];
+    });
+  return result;
+};
+
+export const getSellOrderERC1155 = async (chainId, skip, page) => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER}/sellOrder/erc1155/${chainId}?skip=${skip}&limit=${page}`)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      return [];
+    });
+  return result;
+};
+
+export const getSellOrderERC721 = async (chainId, skip, page) => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER}/sellOrder/erc721/${chainId}?skip=${skip}&limit=${page}`)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      return [];
+    });
+  return result;
+};
+
+export const getSellerByNft = async (chainId, addressToken, tokenId) => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER}/sellOrder/byNft/${chainId}/${addressToken}/${tokenId}`)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      return [];
+    });
+  return result;
+};
+
 export const getAll = async (chainId, skip, page) => {
   let result = await axios
     .get(`${process.env.REACT_APP_SERVER}/sellOrder/${chainId}?skip=${skip}&limit=${page}`)

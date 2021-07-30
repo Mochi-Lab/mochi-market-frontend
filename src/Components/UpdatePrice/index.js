@@ -10,7 +10,7 @@ import '../Sell/index.scss';
 
 const { Option } = Select;
 
-export default function UpdatePrice({ orderDetail, token, is1155, available, getOwners1155 }) {
+export default function UpdatePrice({ orderDetail, token, is1155 }) {
   const dispatch = useDispatch();
 
   const { web3, chainId } = useSelector((state) => state);
@@ -112,9 +112,7 @@ export default function UpdatePrice({ orderDetail, token, is1155, available, get
                     min='0.1'
                     size='large'
                     className='search-style'
-                    defaultValue={
-                      !!orderDetail ? web3.utils.fromWei(orderDetail.price, 'ether') : 0
-                    }
+                    defaultValue={!!orderDetail ? orderDetail.price : 0}
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     placeholder='Set Price'
                   />

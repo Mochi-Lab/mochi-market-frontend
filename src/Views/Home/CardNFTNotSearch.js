@@ -4,14 +4,13 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import imgNotFound from 'Assets/notfound.png';
 import { getSymbol } from 'utils/getContractAddress';
-import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
-import abiERC721 from 'Contracts/ERC721.json';
 import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import { handleChildClick, getTokenUri, objToString } from 'utils/helper';
+import { handleChildClick, objToString } from 'utils/helper';
 import moment from 'moment';
+import { getDetailNFT } from 'APIs/NFT/Get';
 
 export default function CardNFTHome({ token }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
@@ -21,35 +20,17 @@ export default function CardNFTHome({ token }) {
     async function fetchDetail() {
       if (!!token) {
         try {
-          let tokenURI;
-          if (token.is1155) {
-            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.collectionAddress);
-            tokenURI = await nft.methods.uri(token.tokenId).call();
-          } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.collectionAddress);
-            tokenURI = await nft.methods.tokenURI(token.tokenId).call();
-          }
-          let req = await getTokenUri(tokenURI);
-          const data = req.data;
-
-          token.attributes = !!data.attributes ? data.attributes : null;
-
-          setDetailNFT({
-            name: !!data.name ? data.name : 'ID: ' + token.index,
-            description: !!data.description ? data.description : '',
-            image: !!data.image ? data.image : imgNotFound,
-            nameCollection: (await store.dispatch(getCollection(token.collectionAddress, null)))
-              .collection.name,
-          });
+          let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+          token.nameCollection = (
+            await store.dispatch(getCollection(nft.collectionAddress, null))
+          ).collection.name;
+          setDetailNFT(nft);
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
-      token.nameCollection = (
-        await store.dispatch(getCollection(token.collectionAddress, null))
-      ).collection.name;
     }
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
@@ -65,12 +46,12 @@ export default function CardNFTHome({ token }) {
           <div className='wrap-cover'>
             <div
               className='blurred-background'
-              style={{ backgroundImage: `url(${detailNFT.image})` }}
+              style={{ backgroundImage: `url(${!!token.image ? token.image : detailNFT.image})` }}
             />
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}
-                src={detailNFT.image}
+                src={!!token.image ? token.image : detailNFT.image}
                 className='display-resource-nft'
               />
             </div>
@@ -103,7 +84,7 @@ export default function CardNFTHome({ token }) {
         )}
         {!!token.price && (
           <div className='price-nft textmode'>
-            <span>{token.price}</span> <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+            <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b>
           </div>
         )}
         <Row justify='space-between'>

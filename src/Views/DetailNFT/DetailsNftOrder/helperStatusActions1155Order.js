@@ -1,39 +1,52 @@
+import { message } from 'antd';
+import { getSellOrderBySellId } from 'APIs/SellOrder/Gets';
+import { getAvailableToken1155OfOwner } from 'utils/helper';
+
 export default async function helperStatusActions1155Order(
-  availableSellOrder721,
-  availableSellOrder1155,
-  nftList,
-  sellOrderList,
   walletAddress,
-  web3,
+  chainId,
   sellID,
+  addressToken,
+  id,
   setStatus,
   setOrderDetail,
-  history
+  history,
+  setOwnersOnSale,
+  setAvailable
 ) {
-  if (web3 && sellOrderList && availableSellOrder721 && nftList) {
+  if (!!chainId && !!sellID) {
     try {
-      const sellOrder = await sellOrderList.methods.getSellOrderById(sellID).call();
-      if (sellOrder.isActive) {
+      const sellOrder = await getSellOrderBySellId(chainId, sellID);
+      if (!!sellOrder.isActive) {
         if (!!walletAddress) {
           if (sellOrder.seller.toLowerCase() === walletAddress.toLowerCase()) {
             setStatus(3);
           } else {
             setStatus(1);
           }
+          let availableToken = await getAvailableToken1155OfOwner(
+            walletAddress,
+            addressToken,
+            id,
+            chainId
+          );
+          setAvailable(availableToken.balance);
         } else {
           setStatus(1);
         }
-        let fil = availableSellOrder1155.filter((token) => token.sellId === sellID);
-        if (!!fil[0]) {
-          setOrderDetail({ ...fil[0], tokenPayment: fil[0].token });
+        if (!!sellOrder) {
+          setOrderDetail({ ...sellOrder, tokenPayment: sellOrder.token });
+          let listSeller = sellOrder.otherSellOrders;
+          listSeller.unshift(sellOrder);
+          setOwnersOnSale(listSeller);
         }
       } else {
-        history.push('/404');
+        return history.push('/404');
       }
     } catch (error) {
       console.log(error);
-      // message.error("NFT doesn't exist!");
-      history.push('/404');
+      message.error("Sell order doesn't exist!");
+      return history.push('/404');
     }
   }
 }

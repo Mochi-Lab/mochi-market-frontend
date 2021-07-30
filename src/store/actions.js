@@ -203,11 +203,6 @@ export const setInfoUserLogin = (infoUserLogin) => (dispatch) => {
   dispatch({ type: SET_INFO_USER_LOGIN, infoUserLogin });
 };
 
-////////////////////
-// ERC721
-////////////////////
-export const initERC721 = (acceptedNftsAddress) => async (dispatch, getState) => {};
-
 export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
 export const GET_OWNED_ERC1155 = 'GET_OWNED_ERC1155';
 export const SET_LIST_NTTS_OWNER = 'SET_LIST_NTTS_OWNER';
@@ -805,8 +800,8 @@ export const createSellOrder = (nftAddress, tokenId, price, tokenPayment, amount
 export const SET_ALLOWANCE = 'SET_ALLOWANCE';
 export const approveToken = (orderDetail) => async (dispatch, getState) => {
   const { market, walletAddress, web3 } = getState();
-  if (orderDetail.tokenPayment !== NULL_ADDRESS) {
-    const instaneErc20 = new web3.eth.Contract(ERC20.abi, orderDetail.tokenPayment);
+  if (orderDetail.token !== NULL_ADDRESS) {
+    const instaneErc20 = new web3.eth.Contract(ERC20.abi, orderDetail.token);
     const allowance = await instaneErc20.methods.allowance(walletAddress, market._address).call();
     if (parseInt(allowance) <= 0) {
       let activity = {

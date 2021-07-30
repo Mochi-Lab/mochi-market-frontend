@@ -1,5 +1,5 @@
-import { /* Button,  message, */ Tabs, Grid, Image } from 'antd';
-import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
+import { /* Button,  message, */ Tabs, Grid, Image, Spin } from 'antd';
+import { DoubleRightOutlined, DoubleLeftOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
@@ -15,14 +15,14 @@ import RenderSwitch from './RenderSwitch';
 import BuySmall from 'Components/BuySmall';
 import IconCoppy from 'Components/IconCoppy';
 import { getRootExplorer } from 'utils/getRootExplorer';
-import { setAvailableSellOrder, getUser, setInfoUsers } from 'store/actions';
-import { objToString } from 'utils/helper';
+import { getUser, setInfoUsers } from 'store/actions';
 import moment from 'moment';
 import avatarDefault from 'Assets/avatar-profile.png';
 import tick from 'Assets/icons/tick-green.svg';
 
 import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
+import { objToString } from 'utils/helper';
 
 const { TabPane } = Tabs;
 
@@ -32,34 +32,30 @@ export default function DetailNFT() {
   const { lg } = useBreakpoint();
 
   const dispatch = useDispatch();
-  let history = useHistory();
+  const history = useHistory();
 
   const [token, setToken] = useState(null);
   const [is1155, setIs1155] = useState(false);
   const [orderDetail, setOrderDetail] = useState();
   const [status, setStatus] = useState(0);
-  const [owners, setOwners] = useState([]);
-  const [ownersOnSale, setOwnersOnSale] = useState([]);
+  const [owners, setOwners] = useState();
+  const [ownersOnSale, setOwnersOnSale] = useState();
   const [available, setAvailable] = useState(1);
   const [totalSupply, setTotalSupply] = useState(1);
   const [showMoreDescription, setShowMoreDescription] = useState(false);
   const [infoOwners, setInfoOwners] = useState({});
   const [balanceOf, setBalanceOf] = useState(0);
+  const [loadingDetailNft, setLoadingDetailNft] = useState(false);
+  const [loadingOrderDetail, setLoadingOrderDetail] = useState(false);
 
   // get details nft
   const {
     web3,
     walletAddress,
-    sellOrderList,
-    availableSellOrder721,
     market,
     chainId,
     nftList,
-    convertErc1155Tokens,
-    availableSellOrder1155,
-    erc1155Tokens,
     verifiedContracts,
-    infoCollections,
     infoUsers,
   } = useSelector((state) => state);
   const { chainID, addressToken, id, sellID } = useParams();
@@ -69,58 +65,44 @@ export default function DetailNFT() {
     if (parseInt(chainId) !== parseInt(chainID)) selectChain(chainID, walletAddress);
   }, [walletAddress, chainId, chainID]);
 
-  useEffect(() => {
-    const fetchSetAvailableOrdersNew = async () => {
-      await dispatch(setAvailableSellOrder());
-    };
-    fetchSetAvailableOrdersNew();
-    setTimeout(() => {
-      fetchSetAvailableOrdersNew();
-      fetchSetAvailableOrdersNew();
-    }, 500);
-  }, [dispatch]);
-
   // Get detail nft by TokenURI for both 721 and 1155
   useEffect(() => {
-    helperGetNFTDetails(web3, nftList, addressToken, id, erc1155Tokens, setAvailable, setToken);
-  }, [web3, nftList, addressToken, id, erc1155Tokens, infoCollections]);
+    async function loadNftDetail() {
+      setLoadingDetailNft(true);
+      await helperGetNFTDetails(chainId, addressToken, id, setToken);
+      setLoadingDetailNft(false);
+    }
+    loadNftDetail();
+  }, [chainId, addressToken, id]);
 
   // Modules getOwners1155 to other file so short index file
   const getOwners1155 = useCallback(async () => {
     if (!!market) {
-      helperGetOwner1155(
-        convertErc1155Tokens,
-        addressToken,
-        id,
-        chainId,
-        market,
-        setTotalSupply,
-        setOwners,
-        setOwnersOnSale
-      );
+      helperGetOwner1155(addressToken, id, chainId, market, setTotalSupply, setOwners);
     }
-  }, [convertErc1155Tokens, addressToken, id, chainId, market]);
+  }, [addressToken, id, chainId, market]);
 
   // Check status action sell, transfer, cancel and buy
   const statusActions = useCallback(async () => {
-    if (web3 && sellOrderList && availableSellOrder721 && nftList) {
+    if (web3 && nftList) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
+      setLoadingOrderDetail(true);
       //  Process ERC1155
       if (is1155) {
         getOwners1155();
         setIs1155(true);
         if (Number.isInteger(parseInt(sellID)) && sellID !== 'null')
           helperStatusActions1155Order(
-            availableSellOrder721,
-            availableSellOrder1155,
-            nftList,
-            sellOrderList,
             walletAddress,
-            web3,
+            chainId,
             sellID,
+            addressToken,
+            id,
             setStatus,
             setOrderDetail,
-            history
+            history,
+            setOwnersOnSale,
+            setAvailable
           );
         else
           helperStatusActions1155Profile(
@@ -130,17 +112,15 @@ export default function DetailNFT() {
             id,
             chainId,
             web3,
-            setBalanceOf
+            setBalanceOf,
+            setOwnersOnSale
           );
       } else {
         //  Process ERC721
         helperStatusActions721(
           addressToken,
-          availableSellOrder721,
           id,
-          market,
-          nftList,
-          sellOrderList,
+          chainId,
           walletAddress,
           web3,
           setStatus,
@@ -151,22 +131,9 @@ export default function DetailNFT() {
           sellID
         );
       }
+      setLoadingOrderDetail(false);
     }
-  }, [
-    addressToken,
-    availableSellOrder721,
-    availableSellOrder1155,
-    id,
-    market,
-    nftList,
-    sellOrderList,
-    walletAddress,
-    web3,
-    sellID,
-    getOwners1155,
-    chainId,
-    history,
-  ]);
+  }, [addressToken, chainId, getOwners1155, history, id, nftList, sellID, walletAddress, web3]);
 
   useEffect(() => {
     statusActions();
@@ -174,11 +141,12 @@ export default function DetailNFT() {
 
   const getInfoOwners = useCallback(() => {
     let _infoUsers = infoUsers;
-    owners.forEach(async (owner) => {
-      let res = await dispatch(getUser(owner.owner.toLowerCase()));
-      let infoUser = res.user;
-      _infoUsers[owner.owner.toLowerCase()] = infoUser;
-    });
+    if (owners)
+      owners.forEach(async (owner) => {
+        let res = await dispatch(getUser(owner.owner.toLowerCase()));
+        let infoUser = res.user;
+        _infoUsers[owner.owner.toLowerCase()] = infoUser;
+      });
     setInfoOwners(_infoUsers);
     dispatch(setInfoUsers(_infoUsers));
   }, [dispatch, infoUsers, owners]);
@@ -190,7 +158,7 @@ export default function DetailNFT() {
   return (
     <div className='detail-page center'>
       <div className='body-page'>
-        {!!token ? (
+        {!!token && !loadingDetailNft ? (
           <div className='detail-main'>
             {lg ? (
               <div className='info-wrap-left'>
@@ -282,7 +250,7 @@ export default function DetailNFT() {
                     token.description
                   )}
                 </div>
-                {!!orderDetail ? (
+                {!!orderDetail && !loadingOrderDetail ? (
                   <div className='owner-order-nft'>
                     <img
                       src={
@@ -364,8 +332,7 @@ export default function DetailNFT() {
                               } of ${totalSupply}`}
                             </span>
                             <span className='price-eth pink-font'>
-                              {web3.utils.fromWei(orderDetail.price, 'ether')}{' '}
-                              {getSymbol(chainId)[orderDetail.token]}
+                              {orderDetail.price} {getSymbol(chainId)[orderDetail.token]}
                             </span>
                             <span className='textmode price-eth'>each</span>
                           </div>
@@ -386,7 +353,6 @@ export default function DetailNFT() {
                         addressToken={addressToken}
                         id={id}
                         chainId={chainId}
-                        sellID={sellID}
                       />
                     </div>
                   </div>
@@ -433,100 +399,119 @@ export default function DetailNFT() {
                     }
                   >
                     <TabPane tab='Owners' key='1'>
-                      {owners.map((owner, index) => (
-                        <div key={index} className='avatar-link-available'>
-                          <div className='avatar-owner'>
-                            <img
-                              src={
-                                !!infoOwners[owner.owner.toLowerCase()]
-                                  ? infoOwners[owner.owner.toLowerCase()].avatar
-                                  : avatarDefault
-                              }
-                              alt='avatar-default'
-                            />
-                          </div>
-                          <div className='link-and-available'>
-                            <Link
-                              to={`/profile/${chainId}/${owner.owner.toLowerCase()}`}
-                              className='owner'
-                            >
-                              {!!infoOwners[owner.owner.toLowerCase()] &&
-                              infoOwners[owner.owner.toLowerCase()].username !== 'Unnamed' ? (
-                                <strong>@{infoOwners[owner.owner.toLowerCase()].username}</strong>
-                              ) : (
-                                <strong>
-                                  {lg
-                                    ? owner.owner
-                                    : `${owner.owner.slice(0, 8)}...${owner.owner.slice(
-                                        owner.owner.length - 6,
-                                        owner.owner.length
-                                      )}`}
-                                </strong>
-                              )}
-                            </Link>
-                            <div className='textmode'>
-                              {owner.value} <span className='text-blur'> no sale of</span>{' '}
-                              {totalSupply} <span className='text-blur '>Available</span>
+                      <Spin
+                        spinning={!owners}
+                        indicator={<LoadingOutlined />}
+                        style={{ minHeight: '50px' }}
+                      >
+                        {!!owners &&
+                          owners.map((owner, index) => (
+                            <div key={index} className='avatar-link-available'>
+                              <div className='avatar-owner'>
+                                <img
+                                  src={
+                                    !!infoOwners[owner.owner.toLowerCase()]
+                                      ? infoOwners[owner.owner.toLowerCase()].avatar
+                                      : avatarDefault
+                                  }
+                                  alt='avatar-default'
+                                />
+                              </div>
+                              <div className='link-and-available'>
+                                <Link
+                                  to={`/profile/${chainId}/${owner.owner.toLowerCase()}`}
+                                  className='owner'
+                                >
+                                  {!!infoOwners[owner.owner.toLowerCase()] &&
+                                  infoOwners[owner.owner.toLowerCase()].username !== 'Unnamed' ? (
+                                    <strong>
+                                      @{infoOwners[owner.owner.toLowerCase()].username}
+                                    </strong>
+                                  ) : (
+                                    <strong>
+                                      {lg
+                                        ? owner.owner
+                                        : `${owner.owner.slice(0, 8)}...${owner.owner.slice(
+                                            owner.owner.length - 6,
+                                            owner.owner.length
+                                          )}`}
+                                    </strong>
+                                  )}
+                                </Link>
+                                <div className='textmode'>
+                                  {owner.amount} <span className='text-blur'> no sale of</span>{' '}
+                                  {totalSupply} <span className='text-blur '>Available</span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      ))}
+                          ))}
+                      </Spin>
                     </TabPane>
                     <TabPane tab='On Sale' key='2'>
-                      {ownersOnSale.map((owner, index) => (
-                        <div key={index} className='avatar-link-available'>
-                          <div className='avatar-owner'>
-                            <img
-                              src={
-                                !!infoOwners[owner.seller.toLowerCase()]
-                                  ? infoOwners[owner.seller.toLowerCase()].avatar
-                                  : avatarDefault
-                              }
-                              alt='avatar-default'
-                            />
-                          </div>
-                          <div className='link-and-available'>
-                            <Link to={`/profile/${chainId}/${owner.seller}`} className='owner'>
-                              {!!infoOwners[owner.seller.toLowerCase()] &&
-                              infoOwners[owner.seller.toLowerCase()].username !== 'Unnamed' ? (
-                                <strong>@{infoOwners[owner.seller.toLowerCase()].username}</strong>
-                              ) : (
-                                <strong>
-                                  {lg
-                                    ? owner.seller
-                                    : `${owner.seller.slice(0, 8)}...${owner.seller.slice(
-                                        owner.seller.length - 6,
-                                        owner.seller.length
-                                      )}`}
-                                </strong>
-                              )}
-                            </Link>
-                            <div className='textmode'>
-                              {!!is1155
-                                ? parseInt(owner.value) - parseInt(owner.soldAmount)
-                                : owner.value}
-                              <span className='text-blur'>/</span>
-                              {totalSupply} <span className='text-blur '>price</span>{' '}
-                              {web3.utils.fromWei(owner.price, 'ether')}{' '}
-                              {getSymbol(chainId)[owner.tokenPayment]}{' '}
-                              <span className='text-blur '>each</span> {''}
-                              {!walletAddress ||
-                              (!!walletAddress &&
-                                owner.seller.toLowerCase() !== walletAddress.toLowerCase()) ? (
-                                <BuySmall
-                                  orderDetail={owner}
-                                  is1155={is1155}
-                                  id={id}
-                                  addressToken={addressToken}
-                                  getOwners1155={getOwners1155}
-                                >
-                                  buy
-                                </BuySmall>
-                              ) : null}
+                      <Spin
+                        spinning={!ownersOnSale}
+                        indicator={<LoadingOutlined />}
+                        style={{ minHeight: '50px' }}
+                      >
+                        {!!ownersOnSale &&
+                          ownersOnSale.map((owner, index) => (
+                            <div key={index} className='avatar-link-available'>
+                              <div className='avatar-owner'>
+                                <img
+                                  src={
+                                    !!infoOwners[owner.seller.toLowerCase()]
+                                      ? infoOwners[owner.seller.toLowerCase()].avatar
+                                      : avatarDefault
+                                  }
+                                  alt='avatar-default'
+                                />
+                              </div>
+                              <div className='link-and-available'>
+                                <Link to={`/profile/${chainId}/${owner.seller}`} className='owner'>
+                                  {!!infoOwners[owner.seller.toLowerCase()] &&
+                                  infoOwners[owner.seller.toLowerCase()].username !== 'Unnamed' ? (
+                                    <strong>
+                                      @{infoOwners[owner.seller.toLowerCase()].username}
+                                    </strong>
+                                  ) : (
+                                    <strong>
+                                      {lg
+                                        ? owner.seller
+                                        : `${owner.seller.slice(0, 8)}...${owner.seller.slice(
+                                            owner.seller.length - 6,
+                                            owner.seller.length
+                                          )}`}
+                                    </strong>
+                                  )}
+                                </Link>
+                                <div className='textmode'>
+                                  {!!is1155
+                                    ? parseInt(owner.amount) - parseInt(owner.soldAmount)
+                                    : owner.amount}
+                                  <span className='text-blur'>/</span>
+                                  {totalSupply} <span className='text-blur '>price</span>{' '}
+                                  {owner.price} {getSymbol(chainId)[owner.tokenPayment]}{' '}
+                                  <span className='text-blur '>each</span> {''}
+                                  {!walletAddress ||
+                                  (!!walletAddress &&
+                                    owner.seller.toLowerCase() !== walletAddress.toLowerCase()) ? (
+                                    <>
+                                      <BuySmall
+                                        orderDetail={owner}
+                                        is1155={is1155}
+                                        id={id}
+                                        addressToken={addressToken}
+                                        getOwners1155={getOwners1155}
+                                      >
+                                        buy
+                                      </BuySmall>
+                                    </>
+                                  ) : null}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      ))}
+                          ))}
+                      </Spin>
                     </TabPane>
                   </Tabs>
                 </div>

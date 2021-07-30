@@ -19,7 +19,6 @@ export default function RenderSwitch({
   addressToken,
   id,
   chainId,
-  sellID,
 }) {
   const { walletAddress } = useSelector((state) => state);
 
@@ -35,13 +34,7 @@ export default function RenderSwitch({
       return (
         <div className='PE'>
           <div className='actions-btn'>
-            <UpdatePrice
-              orderDetail={orderDetail}
-              token={token}
-              is1155={is1155}
-              available={available}
-              getOwners1155={getOwners1155}
-            />
+            <UpdatePrice orderDetail={orderDetail} token={token} is1155={is1155} />
             <div className='cAFwWB' />
             <Cancel orderDetail={orderDetail} getOwners1155={getOwners1155} chainId={chainId} />
           </div>

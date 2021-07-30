@@ -6,10 +6,10 @@ import { balanceOf } from 'utils/helper';
 import './index.scss';
 
 export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout1155 }) {
-  const { web3, chainId, balance, walletAddress } = useSelector((state) => state);
+  const { chainId, balance, walletAddress, web3 } = useSelector((state) => state);
   const [form] = Form.useForm();
   const [totalPayment, setTotalPayment] = useState(
-    !!orderDetail ? parseFloat(web3.utils.fromWei(orderDetail.price, 'ether')) : 0
+    !!orderDetail ? parseFloat(orderDetail.price) : 0
   );
   const [amount, setAmount] = useState(1);
   const [insufficient, setInsufficient] = useState(false);
@@ -17,26 +17,26 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
   const fetchBalance = useCallback(
     async (order) => {
       if (!order) return;
-      if (order.tokenPayment === '0x0000000000000000000000000000000000000000') {
-        if (order.price > parseInt(balance * 1e18)) {
+      if (order.token === '0x0000000000000000000000000000000000000000') {
+        if (order.price > balance) {
           setInsufficient(true);
         } else {
           setInsufficient(false);
         }
       } else {
-        let _tokenBal = await balanceOf(order.tokenPayment, walletAddress);
-        if (order.price > parseInt(_tokenBal)) {
+        let _tokenBal = await balanceOf(order.tokenPayment, walletAddress, web3);
+        if (order.price > web3.utils.fromWei(_tokenBal, 'ether')) {
           setInsufficient(true);
         } else {
           setInsufficient(false);
         }
       }
     },
-    [balance, walletAddress]
+    [balance, walletAddress, web3]
   );
 
   useEffect(() => {
-    if (!!walletAddress && !!orderDetail)
+    if (!!walletAddress && !!orderDetail && !!orderDetail.tokenPayment)
       fetchBalance({
         ...orderDetail,
         amount,
@@ -63,7 +63,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
       amount: value,
       price: parseInt(value) * parseFloat(orderDetail.price),
     });
-    setTotalPayment(parseInt(value) * parseFloat(web3.utils.fromWei(orderDetail.price, 'ether')));
+    setTotalPayment(parseInt(value) * parseFloat(orderDetail.price));
   };
 
   const checkAmount = async (_, value) => {

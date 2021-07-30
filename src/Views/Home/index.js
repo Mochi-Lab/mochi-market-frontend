@@ -14,7 +14,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
-import { getAll } from 'APIs/SellOrder/Gets.js';
+import { getAll, getSellOrderERC1155 } from 'APIs/SellOrder/Gets.js';
 
 export default function Home() {
   const { chainId } = useSelector((state) => state);
@@ -22,17 +22,17 @@ export default function Home() {
   const tags = ['Artwork', '3D', 'Character', 'Art'];
 
   const [loadingNFTs, setLoadingNFTs] = useState();
-  const [listAll, setListAll] = useState([]);
-  const [list1155, setList1155] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
+  const [ordersERC1155, setOrdersERC1155] = useState([]);
 
   const mergeAllCollections = useCallback(async () => {
     let all = await getAll(chainId, 0, 10);
-    setListAll(all);
+    setAllOrders(all);
   }, [chainId]);
 
   const mergeAllCollections1155 = useCallback(async () => {
-    let all = await getAll(chainId, 0, 10);
-    setList1155(all);
+    let orders1155 = await getSellOrderERC1155(chainId, 0, 10);
+    setOrdersERC1155(orders1155);
   }, [chainId]);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function Home() {
               <h2 className='textmode'>New List</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              {listAll.map((nft, i) => (
+              {allOrders.map((nft, i) => (
                 <div className='item-carousel' key={i}>
                   <CardNFTNotSearch token={nft} />
                 </div>
@@ -144,7 +144,7 @@ export default function Home() {
               <h2 className='textmode'>COLLECTIONS 1155</h2>
             </div>
             <Slider className='carousel-new-nfts' {...carouselCard}>
-              {list1155.map((nft, i) => (
+              {ordersERC1155.map((nft, i) => (
                 <div className='item-carousel' key={i}>
                   <CardNFTNotSearch token={nft} />
                 </div>
