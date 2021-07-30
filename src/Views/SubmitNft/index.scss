@@ -1,229 +1,7 @@
-.steps-content {
-  text-align: center;
-  border-radius: 2px;
-  width: 60%;
-}
-
-.img-banner-submit-nft {
-  width: 40%;
-}
-
-.img-banner-submit-nft img {
-  width: 100%;
-  border-radius: 1rem;
-}
-
-.create-step {
-  width: 50% !important;
-  margin: auto !important;
-}
-
-.select-network {
-  color: gray;
-  font-size: 0.6cm;
-}
-
-.get-listed {
-  font-weight: bold;
-  font-size: 1cm;
-}
-
-.steps-action {
-  margin-top: 24px;
-}
-
-.input-address {
-  border-bottom-left-radius: 0 !important;
-  border-top-left-radius: 0 !important;
-  border-bottom-right-radius: 1rem !important;
-  border-top-right-radius: 1rem !important;
-  border-color: #ff0086 !important;
-}
-
-.select-box {
-  margin: auto;
-  width: 20vw;
-}
-
-.select-box > div {
-  margin: 24px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 15px;
-}
-
-.select-box > div:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.23);
-  cursor: pointer;
-}
-
-.create-page {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  align-content: stretch;
-  min-height: 90vh;
-}
-
-.create-page .ant-select-selector {
-  border-bottom-left-radius: 1rem !important;
-  border-top-left-radius: 1rem !important;
-  border-bottom-right-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-  border-color: #ff0086 !important;
-}
-
-.create-page .ant-select-single.ant-select-open .ant-select-selection-item {
-  color: black;
-}
-
-.create-page
-  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-  .ant-select-selector {
-  border-color: #ff0086 !important;
-  border-right-width: 1px !important;
-  outline: 0;
-  box-shadow: 0 0 0 2px rgba(248, 15, 134, 0.23);
-}
-
-.create-page .ant-input:focus,
-.create-page .ant-input-focused {
-  border-color: #ff0086 !important;
-  outline: 0;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-}
-
-.wrap-input-submit {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: stretch;
-}
-
-.btn-submit-nft {
-  margin-top: 1.2rem;
-  font-size: 16px;
-  background-color: #ff0086;
-  border-color: #ff0086;
-  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
-    rgba(17, 17, 26, 0.1) 0px 16px 56px;
-}
-
-.btn-submit-nft:hover,
-.btn-submit-nft:active,
-.btn-submit-nft:focus {
-  background-color: #ff0086;
-  border-color: #ff0086;
-}
-
-.area-submit-nft-user {
-  text-align: start;
-  padding: 0 5rem;
-  padding-right: 0;
-}
-
-.ant-btn.btn-submit-nft {
-  height: auto;
-  padding: 0.3rem 2rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.select-type-nft-submit {
-  height: auto;
-  width: auto !important;
-}
-
-.select-type-nft-submit > div:first-child {
-  border-right: 0px !important;
-}
-
-.input-address.input-accept {
-  border-radius: 1rem !important;
-}
-
-.area-accpet {
-  text-align: start;
-  padding: 0 5rem;
-  margin-top: 2rem;
-}
-.area-accpet .get-listed {
-  margin-bottom: 1rem;
-}
-
-.wrap-box-submit {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  align-content: flex-start;
-}
-
-.dropzone-collection-submit {
-  font-size: larger;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
-  width: 100px;
-  color: #000000;
-  background: #ffffff;
-  border: 1px solid #ff0086;
-  border-radius: 1rem;
-  cursor: pointer;
-  vertical-align: top;
-  overflow: hidden !important;
-  padding: 0.15rem;
-}
-
-.wrap-input-and-button-submit {
-  margin-left: 1rem;
-  width: 70%;
-  max-width: 500px;
-}
-
-.list-not-accept {
-  margin-top: 2rem;
-  .item-accept {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    align-content: stretch;
-    margin: 1rem 0;
-    .logo-collection-accept {
-      img {
-        margin-right: 0.5rem;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-      }
-    }
-    .address-button-accept {
-      button {
-        background-color: #ff0086;
-        border-color: #ff0086;
-        box-shadow: rgba(17, 17,26 , 0.1) 0px 4px 16px, rgba(17, 17, 26 , 0.1) 0px 8px 24px, rgba(17, 17 ,26 , 0.1) 0px 16px 56px;
-        font-weight: bold;
-        color: white;
-        border-radius: 40px;
-      }
-    }
-  }
-  
-}
-
-.modal-overlay {
+.submit-nft-overlay {
   height: calc(100vh - 70px);
   display: flex;
-  .modal-container {
+  .submit-nft-container {
     background: #fafafaaa;
     display: flex;
     flex-direction: column;
@@ -234,14 +12,14 @@
     border: 1px solid transparent;
     border-radius: 10px;
     margin: auto;
-    div.modal-header {
-      .modal-tab-container {
+    div.submit-nft-header {
+      .submit-nft-tab-container {
         border-radius: 0.575rem;
         text-align: center;
         font-weight: bold;
         display: flex;
         height: 40px;
-        .modal-tab {
+        .tab {
           cursor: pointer;
           color: white;
           margin: 2px;
@@ -261,17 +39,13 @@
         }
       }
     }
-    div.modal-body {
+    div.submit-nft-body {
       flex-grow: 1;
-      img.avatar {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-      }
       div.contract-address-input {
         display: flex;
         margin: 12px 0px;
         input.contract-address {
+          transition: all 0.1s ease-out;
           width: 100%;
           line-height: 2.5rem;
           text-align: center;
@@ -288,8 +62,9 @@
         }
       }
       div.avatar-picker-container {
-        padding: 32px 0px;
+        padding: 44px 0px 32px 0px;
         div.avatar-picker {
+          user-select: none;
           margin: auto;
           border-radius: 50%;
           overflow: hidden;
@@ -299,10 +74,18 @@
           background: #dddddd1a;
           outline: none;
           cursor: pointer;
-          img.placeholder {
-            opacity: 0.1;
-            position: relative;
-            top: -5px;
+          img.avatar {
+            width: 200px;
+            height: 200px;
+          }
+          div.avatar {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            opacity: 0.33;
           }
         }
       }
@@ -317,7 +100,7 @@
         }
       }
       div.approve-pending-container div.approve-pending-list {
-        height: 264px;
+        height: 276px;
         overflow: auto;
         border: 2px solid #dddddd;
         border-radius: 8px;
@@ -340,9 +123,6 @@
             background: #f7f7f7;
             * {
               color: #c64488;
-              div.ant-list-item-meta-description {
-                font-weight: 600;
-              }
             }
           }
         }
@@ -354,9 +134,10 @@
         }
       }
     }
-    div.modal-footer {
+    div.submit-nft-footer {
       display: flex;
       button.submit-button {
+        transition: all 0.1s ease-out;
         cursor: pointer;
         align-items: center;
         background: #c64488;

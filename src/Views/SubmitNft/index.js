@@ -10,7 +10,6 @@ import { uploadCollection } from 'APIs/Collections/Post';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import _ from 'lodash';
 import classNames from 'classnames';
-import camera_png from 'Assets/images/camera.png';
 import { NFT_AVATAR_MAX_FILE_SIZE } from 'Constants'
 import './index.scss';
 import store from 'store';
@@ -25,7 +24,8 @@ export default function SubmitNFT() {
   const [files, setFiles] = useState(null);
   const [submitsPending, setSubmitsPending] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("ERC 721")
+  const tabs = ["ERC 721", "ERC 1155", "Approver"];
+  const [activeTab, setActiveTab] = useState(tabs[0])
   const dispatch = useDispatch();
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -107,19 +107,20 @@ export default function SubmitNFT() {
   }
 
   const walletIsApprover = !!adminAddress && walletAddress === adminAddress
+  const activeTabIsApprover = activeTab === "Approver";
 
   return (<>
     <LoadingModal title={content} visible={visible} />
-    <div className="modal-overlay">
-      <div className="modal-container">
-        <div className="modal-header">
-          <div className="modal-tab-container">
+    <div className="submit-nft-overlay">
+      <div className="submit-nft-container">
+        <div className="submit-nft-header">
+          <div className="submit-nft-tab-container">
             {
-              _.map(["ERC 721", "ERC 1155", "Approver"], (tab) => {
+              _.map(tabs, (tab) => {
                 return (
                   <div key={tab} onClick={() => { onActiveTabChange(tab) }} className={
                     classNames(
-                      'modal-tab',
+                      'tab',
                       {
                         active: activeTab === tab,
                         hidden: tab === "Approver" && !walletIsApprover
@@ -131,10 +132,9 @@ export default function SubmitNFT() {
             }
           </div>
         </div>
-        <div className="modal-body">
+        <div className="submit-nft-body">
           {
-            (activeTab === 'ERC 721' || activeTab === 'ERC 1155') && (<>
-            
+            !activeTabIsApprover && (<>
               <div className='avatar-picker-container'>
                 <div {...getRootProps({ className: 'avatar-picker' })}>
                   <input {...getInputProps()} />
@@ -142,9 +142,13 @@ export default function SubmitNFT() {
                   {
                     files
                     ? (
-                        <img className="avatar" src={files.preview} alt="avatar"/>
+                      <img className="avatar" src={files.preview} alt="avatar"/>
                     )
-                    : <img className="avatar placeholder" src={camera_png} alt="avatar" />
+                    : (
+                      <div className="avatar">
+                        📷
+                      </div>
+                    )
                   }
                   </Tooltip>
                 </div>
@@ -155,7 +159,7 @@ export default function SubmitNFT() {
             </>)
           }
           {
-            activeTab === "Approver" && (<>
+            activeTabIsApprover && (<>
               <div className="approve-pending-container">
                 <div className="contract-address-input">
                   <input type="text" className="contract-address" placeholder="Search by Contract Address" value={acceptContractAddress} onChange={(event) => setAcceptContractAddress(event.target.value)} />
@@ -190,14 +194,14 @@ export default function SubmitNFT() {
             </>)
           }
         </div>
-        <div className="modal-footer">
+        <div className="submit-nft-footer">
           {
-            (activeTab === 'ERC 721' || activeTab === 'ERC 1155') && (<>
+            !activeTabIsApprover && (<>
               <button className="submit-button" onClick={register} disabled={!web3.utils.isAddress(contractAddress)}>Submit</button>
             </>)
           }
           {
-            activeTab === 'Approver' && (<>
+            activeTabIsApprover && (<>
               <button className="submit-button" onClick={accept} disabled={!web3.utils.isAddress(acceptContractAddress)}>Approve</button>
             </>)
           }
