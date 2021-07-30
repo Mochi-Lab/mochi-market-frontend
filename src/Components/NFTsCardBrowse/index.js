@@ -13,7 +13,7 @@ import moment from 'moment';
 import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
-import { handleChildClick, getTokenUri } from 'utils/helper';
+import { handleChildClick, getTokenUri, objToString } from 'utils/helper';
 import { BottomScrollListener } from 'react-bottom-scroll-listener';
 
 function NFTsCard({ token, strSearch }) {
@@ -38,7 +38,7 @@ function NFTsCard({ token, strSearch }) {
           token.attributes = !!data.attributes ? data.attributes : null;
 
           setDetailNFT({
-            name: !!data.name ? data.name : 'Unnamed',
+            name: !!data.name ? data.name : 'ID: ' + token.index,
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
@@ -110,6 +110,8 @@ function NFTsCard({ token, strSearch }) {
                         ? moment(
                             attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                           ).format('DD-MM-YYYY')
+                        : typeof attr.value === 'object'
+                        ? objToString(attr.value)
                         : attr.value}
                     </div>
                   ))}

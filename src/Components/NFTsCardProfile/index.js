@@ -11,7 +11,7 @@ import '../NFTsCardBrowse/index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import { handleChildClick, getTokenUri } from 'utils/helper';
+import { handleChildClick, getTokenUri, objToString } from 'utils/helper';
 import moment from 'moment';
 import empty from 'Assets/icons/empty.svg';
 
@@ -37,7 +37,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
           token.attributes = !!data.attributes ? data.attributes : null;
 
           setDetailNFT({
-            name: !!data.name ? data.name : 'Unnamed',
+            name: !!data.name ? data.name : 'ID: ' + token.index,
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
@@ -109,6 +109,8 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                           ? moment(
                               attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                             ).format('DD-MM-YYYY')
+                          : typeof attr.value === 'object'
+                          ? objToString(attr.value)
                           : attr.value}
                       </div>
                     ))}

@@ -1668,15 +1668,12 @@ export const getCollection = (addressToken, _collections) => async (dispatch, ge
     collection = collections[addressToken];
   } else {
     let res;
-
     if (!collections[addressToken]) {
       res = await getCollectionByAddress(addressToken, chainId);
     }
-
     if (!!res && !!res.collection) {
       collection = res.collection;
       if (!collection.name) collection.name = 'Unnamed';
-      if (!res.collection.name) res.collection.name = 'Unnamed';
       collections[addressToken] = res.collection;
       dispatch(setInfoCollections(collections));
     } else {
