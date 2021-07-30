@@ -346,3 +346,11 @@ export const getTokenUri = async (uri) => {
 
   return req;
 };
+
+export const objToString = (obj) => {
+  let str = '';
+  for (const [key, value] of Object.entries(obj)) {
+    str += key + ':' + value + '\n';
+  }
+  return str;
+};

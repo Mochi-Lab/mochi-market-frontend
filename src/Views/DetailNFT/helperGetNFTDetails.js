@@ -42,7 +42,7 @@ export default async function helperGetNFTDetails(
       let req = await getTokenUri(tokenURI);
       const data = req.data;
       setToken({
-        name: !!data.name ? data.name : 'Unnamed',
+        name: !!data.name ? data.name : 'ID: ' + id,
         description: !!data.description ? data.description : '',
         image: !!data.image ? data.image : imgNotFound,
         nameCollection,

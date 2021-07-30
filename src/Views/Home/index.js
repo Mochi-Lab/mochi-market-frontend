@@ -67,6 +67,10 @@ export default function Home() {
       chainId: 56,
     },
     {
+      addressToken: '0xa7a9a8156c24c4b0ca910c3ba842d1f1ac7200ef',
+      chainId: 56,
+    },
+    {
       addressToken: '0x3e629332c51046a17ec236553cb931cf0548b5e1',
       chainId: 56,
     },
@@ -76,6 +80,10 @@ export default function Home() {
     },
     {
       addressToken: '0x85bc2e8aaad5dbc347db49ea45d95486279ed918',
+      chainId: 137,
+    },
+    {
+      addressToken: '0xbca30d6d18f0c5ac15e0be5c9b389d2df207d19e',
       chainId: 137,
     },
   ];

@@ -9,14 +9,13 @@ import abiERC721 from 'Contracts/ERC721.json';
 import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
-import { handleChildClick, getTokenUri } from 'utils/helper';
+import { handleChildClick, getTokenUri, objToString } from 'utils/helper';
 import store from 'store/index';
 import moment from 'moment';
 
 export default function CardCollection({ token, infoCollection }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
-
   useEffect(() => {
     async function fetchDetail() {
       if (!!token) {
@@ -35,7 +34,7 @@ export default function CardCollection({ token, infoCollection }) {
           token.attributes = !!data.attributes ? data.attributes : null;
 
           setDetailNFT({
-            name: !!data.name ? data.name : 'Unnamed',
+            name: !!data.name ? data.name : 'ID: ' + token.index,
             description: !!data.description ? data.description : '',
             image: !!data.image ? data.image : imgNotFound,
           });
@@ -90,6 +89,8 @@ export default function CardCollection({ token, infoCollection }) {
                   ? moment(
                       attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                     ).format('DD-MM-YYYY')
+                  : typeof attr.value === 'object'
+                  ? objToString(attr.value)
                   : attr.value}
               </div>
             ))}
