@@ -537,4 +537,36 @@ html[data-theme='dark'] {
       }
     }
   }
+  .submit-nft-overlay {
+    .submit-nft-container {
+      background: #464646aa;
+      .tab:not(.active) {
+        background: #e4e4e544 !important;
+      }
+      .submit-button:disabled {
+        background: #515151 !important;
+      }
+      .approve-pending-list, div.avatar-picker {
+        border-color: #666 !important;
+      }
+      input.contract-address {
+        background: #00000033;
+        color: white;
+        &:not(:focus) {
+          border-color: #666 !important;
+        }
+      }
+      li.ant-list-item.selected {
+        background-color: #2b2b2b !important;
+      }
+      li.ant-list-item:not(.selected) {
+        * {
+          color: white;
+        }
+        div.ant-list-item-meta-description {
+          color: #d1d1d1;
+        }
+      }
+    }
+  }
 }
