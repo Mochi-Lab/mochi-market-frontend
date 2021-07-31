@@ -12,7 +12,6 @@ const initialState = {
   allowanceToken: 0,
   strSearch: '',
   listNFTsOwner: null,
-  listNFTsOnsale: null,
   verifiedContracts: [],
   infoCollections: {},
   infoUsers: {},
@@ -36,13 +35,6 @@ const initialState = {
 
   //NftList
   acceptedNftsAddress: [],
-
-  //SellOrderList
-  availableSellOrder721: [],
-  availableSellOrder1155: [],
-  convertErc721Tokens: [],
-  convertErc1155Tokens: [],
-  mySellOrder: [],
 
   //CreativeStudio
   userCollections: [],
@@ -106,11 +98,6 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         listNFTsOwner: action.listNFTsOwner,
       };
-    case actions.SET_LIST_NTTS_ONSALE:
-      return {
-        ...state,
-        listNFTsOnsale: action.listNFTsOnsale,
-      };
     case actions.GET_OWNED_ERC721:
       return {
         ...state,
@@ -156,31 +143,7 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         acceptedNftsAddress: action.acceptedNftsAddress,
       };
-    case actions.SET_CONVERT_ERC721:
-      return {
-        ...state,
-        convertErc721Tokens: action.convertErc721Tokens,
-      };
-    case actions.SET_CONVERT_ERC1155:
-      return {
-        ...state,
-        convertErc1155Tokens: action.convertErc1155Tokens,
-      };
-    case actions.SET_AVAILABLE_SELL_ORDER_721:
-      return {
-        ...state,
-        availableSellOrder721: action.availableSellOrder721,
-      };
-    case actions.SET_AVAILABLE_SELL_ORDER_1155:
-      return {
-        ...state,
-        availableSellOrder1155: action.availableSellOrder1155,
-      };
-    case actions.SET_MY_SELL_ORDER:
-      return {
-        ...state,
-        mySellOrder: action.mySellOrder,
-      };
+
     case actions.SET_CREATIVESTUDIO:
       return {
         ...state,

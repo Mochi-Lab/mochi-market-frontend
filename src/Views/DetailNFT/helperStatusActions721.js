@@ -19,6 +19,7 @@ export default async function helperStatusActions721(
       const erc721Instances = await new web3.eth.Contract(ERC721.abi, addressToken);
       let tokenOwner;
       if (sellID === 'null') {
+        setOrderDetail(null);
         tokenOwner = await erc721Instances.methods.ownerOf(id).call();
         setOwners([{ owner: tokenOwner, totalSupply: 1, value: 1 }]);
         let seller = await getSellerByNft(chainId, addressToken, id);
@@ -33,7 +34,7 @@ export default async function helperStatusActions721(
         const order = await getSellOrderBySellId(chainId, sellID);
         if (order.isActive) {
           tokenOwner = order.seller;
-          setOwners([{ owner: tokenOwner, totalSupply: 1, value: 1 }]);
+          setOwners([]);
           setOwnersOnSale([
             {
               seller: tokenOwner,
@@ -55,30 +56,6 @@ export default async function helperStatusActions721(
           return history.push('/404');
         }
       }
-
-      // let isSelling;
-
-      // if (!!walletAddress) {
-      //   isSelling = await sellOrderList.methods
-      //     .checkDuplicateERC721(addressToken, id, walletAddress)
-      //     .call();
-      // }
-
-      // if (walletAddress && isSelling) {
-      //   setStatus(3);
-      // } else if (walletAddress && tokenOwner.toLowerCase() === walletAddress.toLowerCase()) {
-      //   // Check if the token is in the order list?
-      //   let isOnList = await sellOrderList.methods
-      //     .checkDuplicateERC721(addressToken, id, tokenOwner)
-      //     .call();
-      //   isOnList ? setStatus(3) : setStatus(2);
-      // } else {
-      //   let isOnList = await sellOrderList.methods
-      //     .checkDuplicateERC721(addressToken, id, tokenOwner)
-      //     .call();
-
-      //   isOnList || tokenOwner === market._address ? setStatus(1) : setStatus(0);
-      // }
     } catch (error) {
       console.log(error);
       history.push('/404');

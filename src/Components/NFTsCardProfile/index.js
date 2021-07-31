@@ -18,34 +18,33 @@ import { BottomScrollListener } from 'react-bottom-scroll-listener';
 import { getDetailNFT } from 'APIs/NFT/Get';
 
 function NFTsCardProfile({ token, strSearch, onSale }) {
-  const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
+  const { chainId, verifiedContracts } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
-  useEffect(() => {
-    async function fetchDetail() {
-      if (!!token) {
-        try {
-          let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
-          setDetailNFT(nft);
-        } catch (error) {
-          setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
-        }
-      } else {
-        setDetailNFT({ name: '', description: '', image: imgNotFound });
+  const fetchDetail = useCallback(async () => {
+    if (!!token) {
+      try {
+        let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
+        token.nameCollection = (
+          await store.dispatch(getCollection(token.collectionAddress, null))
+        ).collection.name;
+        setDetailNFT(nft);
+      } catch (error) {
+        setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
       }
-      token.nameCollection = (
-        await store.dispatch(getCollection(token.collectionAddress, null))
-      ).collection.name;
+    } else {
+      setDetailNFT({ name: '', description: '', image: imgNotFound });
     }
+  }, [chainId, token]);
+
+  useEffect(() => {
     fetchDetail();
-  }, [token, web3, chainId, infoCollections]);
+  }, [fetchDetail]);
 
   const _strSearch = strSearch.toLowerCase();
   const visible =
-    !!detailNFT &&
-    !!detailNFT.name &&
-    (detailNFT.name.toLocaleLowerCase().includes(_strSearch) ||
-      token.nameCollection.toLocaleLowerCase().includes(_strSearch));
+    !!detailNFT && !!detailNFT.name && detailNFT.name.toLocaleLowerCase().includes(_strSearch);
 
   return detailNFT !== null ? (
     <>
@@ -82,7 +81,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                 }
                 className='card-nft'
               >
-                {!!token.attributes ? (
+                {!!token.attributes && token.attributes.length > 0 ? (
                   <Popover
                     onClick={handleChildClick}
                     placement='bottomLeft'
@@ -123,7 +122,9 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
                         className='link-collection-name'
                         tag='span'
                       >
-                        {token.nameCollection}
+                        {!!detailNFT.nameCollection
+                          ? detailNFT.nameCollection
+                          : token.nameCollection}
                       </Link>
                       {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                         <img src={tick} alt='icon-tick' className='icon-tick' />

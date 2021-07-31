@@ -1,8 +1,6 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
 import IconLoading from 'Components/IconLoading';
-import { setAvailableSellOrder } from 'store/actions';
-import store from 'store/index';
 
 import { lazy, Suspense, useEffect } from 'react';
 import './App.scss';
@@ -22,9 +20,9 @@ const NotFound = lazy(() => import('Views/NotFound'));
 function App() {
   useEffect(() => {
     async function fetchDataInit() {
-      const selectedMode = localStorage.getItem('theme')
-      if(selectedMode !== null) document.querySelector("html").setAttribute('data-theme', selectedMode);
-      await store.dispatch(setAvailableSellOrder());
+      const selectedMode = localStorage.getItem('theme');
+      if (selectedMode !== null)
+        document.querySelector('html').setAttribute('data-theme', selectedMode);
     }
     fetchDataInit();
   }, []);

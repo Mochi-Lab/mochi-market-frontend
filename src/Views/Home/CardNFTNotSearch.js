@@ -21,6 +21,7 @@ export default function CardNFTHome({ token }) {
       if (!!token) {
         try {
           let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
           token.nameCollection = (
             await store.dispatch(getCollection(nft.collectionAddress, null))
           ).collection.name;
@@ -58,7 +59,7 @@ export default function CardNFTHome({ token }) {
           </div>
         }
       >
-        {!!token.attributes && (
+        {!!token.attributes && token.attributes.length > 0 && (
           <Popover
             onClick={handleChildClick}
             placement='bottomLeft'

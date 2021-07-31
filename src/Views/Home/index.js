@@ -19,8 +19,6 @@ import { getAll, getSellOrderERC1155 } from 'APIs/SellOrder/Gets.js';
 export default function Home() {
   const { chainId } = useSelector((state) => state);
 
-  const tags = ['Artwork', '3D', 'Character', 'Art'];
-
   const [loadingNFTs, setLoadingNFTs] = useState();
   const [allOrders, setAllOrders] = useState([]);
   const [ordersERC1155, setOrdersERC1155] = useState([]);
@@ -89,16 +87,6 @@ export default function Home() {
   return (
     <div className='content-home'>
       <BannerSearchHome carouselBanner={carouselBanner} />
-
-      {/* Suggest */}
-      <div className='center'>
-        <p style={{ color: '#A3A3A3' }}>Suggested:</p>
-        {tags.map((tag, index) => (
-          <div key={index} style={{ margin: '0px 10px', cursor: 'pointer' }}>
-            <p className='pink-font'>{tag}</p>
-          </div>
-        ))}
-      </div>
 
       {!!loadingNFTs ? (
         // Loading if done load the first type of token user have, if user select other load other

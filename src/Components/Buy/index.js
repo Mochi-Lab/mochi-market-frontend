@@ -8,7 +8,14 @@ import { balanceOf, allowance } from 'utils/helper';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useHistory } from 'react-router';
 
-export default function Buy({ orderDetail, is1155, id, addressToken, getOwners1155 }) {
+export default function Buy({
+  orderDetail,
+  is1155,
+  id,
+  addressToken,
+  statusActions,
+  getOwners1155,
+}) {
   let history = useHistory();
   const [insufficient, setInsufficient] = useState(false);
   const { balance, chainId, walletAddress, allowanceToken, web3 } = useSelector((state) => state);

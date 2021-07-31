@@ -20,6 +20,10 @@ export default function CardCollection({ token, infoCollection }) {
       if (!!token) {
         try {
           let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
+          token.nameCollection = (
+            await store.dispatch(getCollection(token.collectionAddress, null))
+          ).collection.name;
           setDetailNFT(nft);
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
@@ -27,9 +31,6 @@ export default function CardCollection({ token, infoCollection }) {
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
-      token.nameCollection = (
-        await store.dispatch(getCollection(token.collectionAddress, null))
-      ).collection.name;
     }
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
@@ -59,7 +60,7 @@ export default function CardCollection({ token, infoCollection }) {
           </div>
         }
       >
-        {!!token.attributes && (
+        {!!token.attributes && token.attributes.length > 0 && (
           <Popover
             onClick={handleChildClick}
             placement='bottomLeft'

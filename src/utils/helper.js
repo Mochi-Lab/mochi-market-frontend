@@ -1,3 +1,4 @@
+import { getDetailNFT } from 'APIs/NFT/Get';
 import { getContractAddress } from 'utils/getContractAddress';
 import { getUrlSubgraph } from 'utils/getUrlsSubgraph';
 const ERC20 = require('Contracts/ERC20.json');
@@ -135,16 +136,14 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
   });
 
   let list721Raw = result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
-  let list721 = list721Raw.map(function (nft) {
-    return {
-      collectionAddress: nft.contract.id,
-      symbol: nft.contract.symbol,
-      collections: nft.contract.name,
-      tokenId: nft.tokenID,
-      tokenURI: nft.tokenURI,
-      is1155: false,
-    };
-  });
+  let list721 = Promise.all(
+    list721Raw.map(async function (rawNft) {
+      let nft = await getDetailNFT(chainId, rawNft.contract.id, rawNft.tokenID);
+      if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.tokenID;
+      nft['is1155'] = false;
+      return nft;
+    })
+  );
   return list721;
 }
 
@@ -179,14 +178,11 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
     }, listAddressAccept);
 
     let list1155 = Promise.all(
-      list1155Raw.map(async (nft) => {
-        return {
-          collectionAddress: nft.token.registry.id,
-          tokenId: nft.token.identifier,
-          value: nft.value,
-          totalSupply: nft.token.totalSupply,
-          is1155: true,
-        };
+      list1155Raw.map(async (rawNft) => {
+        let nft = await getDetailNFT(chainId, rawNft.token.registry.id, rawNft.token.identifier);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.token.identifier;
+        nft['is1155'] = true;
+        return nft;
       })
     );
 
@@ -259,15 +255,11 @@ export async function newMintOf721(tokenAddress, chainId) {
       let nftsOf721Raw = !!result.data && !!result.data.data.tokens ? result.data.data.tokens : [];
 
       let nftsOf721 = await Promise.all(
-        nftsOf721Raw.map(async (nft) => {
-          return {
-            collectionAddress: nft.contract.id,
-            symbol: nft.contract.symbol,
-            collections: nft.contract.name,
-            tokenId: nft.tokenID,
-            tokenURI: nft.tokenURI,
-            is1155: false,
-          };
+        nftsOf721Raw.map(async (rawNft) => {
+          let nft = await getDetailNFT(chainId, rawNft.contract.id, rawNft.tokenID);
+          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.tokenID;
+          nft['is1155'] = false;
+          return nft;
         })
       );
       return nftsOf721;
@@ -298,13 +290,11 @@ export async function newMintOf1155(tokenAddress, chainId) {
     let list1155Raw =
       result.data && result.data.data && result.data.data.tokens ? result.data.data.tokens : [];
     let list1155 = Promise.all(
-      list1155Raw.map(async (nft) => {
-        return {
-          collectionAddress: nft.registry.id,
-          tokenId: nft.identifier,
-          totalSupply: nft.totalSupply,
-          is1155: true,
-        };
+      list1155Raw.map(async (rawNft) => {
+        let nft = await getDetailNFT(chainId, rawNft.registry.id, rawNft.identifier);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.identifier;
+        nft['is1155'] = true;
+        return nft;
       })
     );
     return list1155;

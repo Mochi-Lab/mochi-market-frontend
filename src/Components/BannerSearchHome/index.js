@@ -1,63 +1,63 @@
 import cover from 'Assets/banners/cover.png';
-import { SearchOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+// import { SearchOutlined } from '@ant-design/icons';
+// import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-import { setStrSearch } from 'store/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRef, useState, useCallback, useEffect } from 'react';
-import { debounce } from 'lodash';
-import { useLocation } from 'react-router-dom';
+// import { setStrSearch } from 'store/actions';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useRef, useState, useCallback, useEffect } from 'react';
+// import { debounce } from 'lodash';
+// import { useLocation } from 'react-router-dom';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './index.scss';
 
-export default function BannerSearchHome({ carouselBanner, inputSearch }) {
-  const [searchBoxFocused, setSearchBoxFocused] = useState(false);
-  const { strSearch } = useSelector((state) => state);
-  const [textSearch, setTextSearch] = useState('');
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const browse = useRef(null);
-  useEffect(() => {
-    // get search query from home page, and clear on unmount
-    if(location.pathname === '/browse') {
-      setTextSearch(strSearch)
-      return () => {
-        dispatch(setStrSearch(''));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const searchNFT = (event, skipDebounce = false) => {
-    const text = event.target.value;
-    setTextSearch(text);
-    if(location.pathname === '/' && skipDebounce === false) return;
-    if(!skipDebounce) debounceSearchText(text);
-    else dispatch(setStrSearch(text));
-  };
+export default function BannerSearchHome({ carouselBanner /* , inputSearch */ }) {
+  // const [searchBoxFocused, setSearchBoxFocused] = useState(false);
+  // const { strSearch } = useSelector((state) => state);
+  // const [textSearch, setTextSearch] = useState('');
+  // const dispatch = useDispatch();
+  // const location = useLocation();
+  // const browse = useRef(null);
+  // useEffect(() => {
+  //   // get search query from home page, and clear on unmount
+  //   if (location.pathname === '/browse') {
+  //     setTextSearch(strSearch);
+  //     return () => {
+  //       dispatch(setStrSearch(''));
+  //     };
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+  // const searchNFT = (event, skipDebounce = false) => {
+  //   const text = event.target.value;
+  //   setTextSearch(text);
+  //   if (location.pathname === '/' && skipDebounce === false) return;
+  //   if (!skipDebounce) debounceSearchText(text);
+  //   else dispatch(setStrSearch(text));
+  // };
   // eslint-disable-next-line
-  const debounceSearchText = useCallback(
-    debounce((text) => dispatch(setStrSearch(text)), 500),
-    []
-  );
+  // const debounceSearchText = useCallback(
+  //   debounce((text) => dispatch(setStrSearch(text)), 500),
+  //   []
+  // );
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      searchNFT(event, true)
-      if(location.pathname === '/'){
-        browse.current.click();
-      }
-    }
-  };
+  // const handleKeyDown = (event) => {
+  //   if (event.key === 'Enter') {
+  //     searchNFT(event, true);
+  //     if (location.pathname === '/') {
+  //       browse.current.click();
+  //     }
+  //   }
+  // };
 
-  const handleOnFocus = (event) => {
-    setSearchBoxFocused(true);
-  };
+  // const handleOnFocus = (event) => {
+  //   setSearchBoxFocused(true);
+  // };
 
-  const handleOnBlur = (event) => {
-    setSearchBoxFocused(false);
-  };
+  // const handleOnBlur = (event) => {
+  //   setSearchBoxFocused(false);
+  // };
 
   return (
     <div className='banner-search-home'>
@@ -73,7 +73,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
         </div>
       </Slider>
       {/* Search box */}
-      <div className='box-search'>
+      {/* <div className='box-search'>
         <div className='center' style={{ width: '100%', position: 'absolute', top: '-2rem' }}>
           <div className={'hs' + (searchBoxFocused ? ' active' : '')}>
             <div className='search-icon center search-input'>
@@ -92,7 +92,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
             />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

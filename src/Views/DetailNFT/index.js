@@ -44,7 +44,6 @@ export default function DetailNFT() {
   const [totalSupply, setTotalSupply] = useState(1);
   const [showMoreDescription, setShowMoreDescription] = useState(false);
   const [infoOwners, setInfoOwners] = useState({});
-  const [balanceOf, setBalanceOf] = useState(0);
   const [loadingDetailNft, setLoadingDetailNft] = useState(false);
   const [loadingOrderDetail, setLoadingOrderDetail] = useState(false);
 
@@ -84,7 +83,7 @@ export default function DetailNFT() {
 
   // Check status action sell, transfer, cancel and buy
   const statusActions = useCallback(async () => {
-    if (web3 && nftList) {
+    if (web3 && nftList && addressToken) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
       setLoadingOrderDetail(true);
       //  Process ERC1155
@@ -111,9 +110,9 @@ export default function DetailNFT() {
             addressToken,
             id,
             chainId,
-            web3,
-            setBalanceOf,
-            setOwnersOnSale
+            setOwnersOnSale,
+            setAvailable,
+            setOrderDetail
           );
       } else {
         //  Process ERC721
@@ -175,7 +174,7 @@ export default function DetailNFT() {
                     </div>
                     <div className='list-properties'>
                       <div className='items-properties'>
-                        {!!token.attributes
+                        {!!token.attributes && token.attributes.length > 0
                           ? token.attributes.map((attr, i) => (
                               <div className='item-properties' key={i}>
                                 <div className='name-properties'>{attr.trait_type}</div>
@@ -311,7 +310,7 @@ export default function DetailNFT() {
                   {!!walletAddress && sellID === 'null' ? (
                     <p className='info-contract-item'>
                       <span>Balance: </span>
-                      <span>{balanceOf}</span>
+                      <span>{available}</span>
                     </p>
                   ) : (
                     ''
@@ -349,10 +348,10 @@ export default function DetailNFT() {
                         is1155={is1155}
                         available={available}
                         web3={web3}
-                        getOwners1155={getOwners1155}
+                        statusActions={statusActions}
                         addressToken={addressToken}
                         id={id}
-                        chainId={chainId}
+                        getOwners1155={getOwners1155}
                       />
                     </div>
                   </div>
@@ -366,7 +365,7 @@ export default function DetailNFT() {
                     </div>
                     <div className='list-properties'>
                       <div className='items-properties'>
-                        {!!token.attributes
+                        {!!token.attributes && token.attributes.length > 0
                           ? token.attributes.map((attr, i) => (
                               <div className='item-properties' key={i}>
                                 <div className='name-properties'>{attr.trait_type}</div>

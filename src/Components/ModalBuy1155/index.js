@@ -24,7 +24,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
           setInsufficient(false);
         }
       } else {
-        let _tokenBal = await balanceOf(order.tokenPayment, walletAddress, web3);
+        let _tokenBal = await balanceOf(order.token, walletAddress, web3);
         if (order.price > web3.utils.fromWei(_tokenBal, 'ether')) {
           setInsufficient(true);
         } else {
@@ -36,7 +36,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
   );
 
   useEffect(() => {
-    if (!!walletAddress && !!orderDetail && !!orderDetail.tokenPayment)
+    if (!!walletAddress && !!orderDetail && !!orderDetail.token)
       fetchBalance({
         ...orderDetail,
         amount,

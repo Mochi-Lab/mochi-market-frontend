@@ -25,6 +25,10 @@ function NFTsCard({ token, strSearch, collectionName }) {
       if (!!token) {
         try {
           let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
+          token.nameCollection = (
+            await store.dispatch(getCollection(token.collectionAddress, null))
+          ).collection.name;
           setDetailNFT(nft);
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
@@ -32,9 +36,6 @@ function NFTsCard({ token, strSearch, collectionName }) {
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
-      token.nameCollection = (
-        await store.dispatch(getCollection(token.collectionAddress, null))
-      ).collection.name;
     }
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
@@ -83,7 +84,7 @@ function NFTsCard({ token, strSearch, collectionName }) {
               }
               className='card-nft'
             >
-              {!!token.attributes && (
+              {!!token.attributes && token.attributes.length > 0 && (
                 <Popover
                   onClick={handleChildClick}
                   placement='bottomLeft'

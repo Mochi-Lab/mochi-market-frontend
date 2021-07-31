@@ -149,7 +149,7 @@ export default function ViewAll({
       <Layout style={{ minHeight: '100%' }} className='view-all-collection background-mode'>
         <div className='sort-results-collection'>
           <div className='left-sort-results'>
-            <div className='input-search-collections search-nft-in-collection-1 mr-0d5rem'>
+            {/* <div className='input-search-collections search-nft-in-collection-1 mr-0d5rem'>
               <Input
                 placeholder='Search collections '
                 onChange={searchNFTsCollection}
@@ -158,7 +158,7 @@ export default function ViewAll({
                 suffix={<SearchOutlined />}
                 className='style-search-input input-mode-bc textmode '
               />
-            </div>
+            </div> */}
             {!!walletAddress &&
               infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) &&
               ((checkInfoExist && infoCollection.attributesFilter.length <= 0) ||
