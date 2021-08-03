@@ -182,6 +182,8 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
         let nft = await getDetailNFT(chainId, rawNft.token.registry.id, rawNft.token.identifier);
         if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.token.identifier;
         nft['is1155'] = true;
+        nft['value'] = rawNft.value;
+        nft['totalSupply'] = rawNft.token.totalSupply;
         return nft;
       })
     );

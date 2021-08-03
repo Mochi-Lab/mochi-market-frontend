@@ -21,19 +21,20 @@ export default function NFTsFilterBrowse({
   setSelectedToken,
   setSkip,
   setNftsOnSale,
+  tokenPayment,
+  setTokenPayment,
+  typeSort,
+  setTypeSort,
 }) {
   const { chainId } = useSelector((state) => state);
   const [tokenActive, setTokenActive] = useState('');
   const [strSearch, setStrSearch] = useState();
-  const [tokenPayment, setTokenPayment] = useState('0');
-  const [typeSort, setTypeSort] = useState('recentlyListed');
-  const [filterCount, setFilterCount] = useState(0);
 
   useEffect(() => {
     if (!!chainId) {
       setTokenPayment('0');
     }
-  }, [chainId]);
+  }, [chainId, setTokenPayment]);
 
   const selectToken = async (token, index) => {
     if (index === tokenActive) {
@@ -54,8 +55,16 @@ export default function NFTsFilterBrowse({
     setStrSearch(value);
   };
 
-  const _setFilterCount = (count) => {
-    setFilterCount(count);
+  const selectTokenPayment = (_tokenPayment) => {
+    setTokenPayment(_tokenPayment);
+    setSkip(0);
+    setNftsOnSale(null);
+  };
+
+  const selectSortType = (_type) => {
+    setTypeSort(_type);
+    setSkip(0);
+    setNftsOnSale(null);
   };
 
   return (
@@ -145,14 +154,18 @@ export default function NFTsFilterBrowse({
                   <Row className='sort-results'>
                     <Col span='4' className='left-sort-results'>
                       <span className='textmode'>
-                        {`${filterCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
+                        {`${!!collectionsNFT ? collectionsNFT.length : 0}`.replace(
+                          /\B(?=(\d{3})+(?!\d))/g,
+                          ','
+                        )}{' '}
+                        Results
                       </span>
                     </Col>
                     <Col span='20' className='right-sort-results'>
                       <Select
                         size='large'
                         value={tokenPayment}
-                        onChange={(value) => setTokenPayment(value)}
+                        onChange={(value) => selectTokenPayment(value)}
                         className='tokenpayment textmode'
                       >
                         <Option value='0' key='-1' className='text-center'>
@@ -181,20 +194,16 @@ export default function NFTsFilterBrowse({
                         value={typeSort}
                         className='textmode select-sort'
                         size='large'
-                        onChange={(value) => setTypeSort(value)}
+                        onChange={(_typeSort) => selectSortType(_typeSort)}
                       >
-                        <Option value='recentlyListed'>Recently listed</Option>
-                        <Option value='latestCreated'>Latest created</Option>
-                        <Option value='priceAsc'>Price asc</Option>
-                        <Option value='priceDesc'>Price desc</Option>
+                        <Option value=''>Recently listed</Option>
+                        <Option value='1'>Price asc</Option>
+                        <Option value='-1'>Price desc</Option>
                       </Select>
                     </Col>
                   </Row>
                   <NFTsCardBrowse
                     tokens={collectionsNFT}
-                    tokenPayment={tokenPayment}
-                    typeSort={typeSort}
-                    filterCountCallback={_setFilterCount}
                     isEndOfOrderList={isEndOfOrderList}
                     loadingScroll={loadingScroll}
                     fetchExplore={fetchExplore}

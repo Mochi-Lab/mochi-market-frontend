@@ -17,7 +17,7 @@ import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { BottomScrollListener } from 'react-bottom-scroll-listener';
 import { getDetailNFT } from 'APIs/NFT/Get';
 
-function NFTsCardProfile({ token, strSearch, onSale }) {
+function NFTsCardProfile({ token, onSale }) {
   const { chainId, verifiedContracts } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
@@ -42,9 +42,7 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
     fetchDetail();
   }, [fetchDetail]);
 
-  const _strSearch = strSearch.toLowerCase();
-  const visible =
-    !!detailNFT && !!detailNFT.name && detailNFT.name.toLocaleLowerCase().includes(_strSearch);
+  const visible = !!detailNFT && !!detailNFT.name && !!token;
 
   return detailNFT !== null ? (
     <>
@@ -193,7 +191,6 @@ function NFTsCardProfile({ token, strSearch, onSale }) {
 
 export default function ERC721({ tokens, onSale, loadingScroll, fetchExplore, isEndOfOrderList }) {
   const [afterFilter, setafterFilter] = useState(!!tokens ? tokens : []);
-  const { strSearch } = useSelector((state) => state);
 
   const [loadingNFTs, setLoadingNFTs] = useStateWithCallbackLazy(false);
 
@@ -220,7 +217,7 @@ export default function ERC721({ tokens, onSale, loadingScroll, fetchExplore, is
         <BottomScrollListener onBottom={() => paginationCards()}>
           {afterFilter.length > 0 ? (
             afterFilter.map((token, index) => (
-              <NFTsCardProfile key={index} token={token} strSearch={strSearch} onSale={onSale} />
+              <NFTsCardProfile key={index} token={token} onSale={onSale} />
             ))
           ) : (
             <Empty

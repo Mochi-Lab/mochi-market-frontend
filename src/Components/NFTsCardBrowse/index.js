@@ -16,7 +16,7 @@ import LoadingScroll from 'Components/LoadingScroll';
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { getDetailNFT } from 'APIs/NFT/Get';
 
-function NFTsCard({ token, strSearch, collectionName }) {
+function NFTsCard({ token, collectionName }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
@@ -40,12 +40,7 @@ function NFTsCard({ token, strSearch, collectionName }) {
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
 
-  const _strSearch = strSearch.toLowerCase();
-  const visible =
-    !!detailNFT &&
-    !!detailNFT.name &&
-    (detailNFT.name.toLocaleLowerCase().includes(_strSearch) ||
-      token.nameCollection.toLocaleLowerCase().includes(_strSearch));
+  const visible = !!detailNFT && !!detailNFT.name && !!token;
 
   return detailNFT !== null ? (
     <>
@@ -174,61 +169,13 @@ function NFTsCard({ token, strSearch, collectionName }) {
 
 export default function NFTsCardBrowse({
   tokens,
-  tokenPayment,
-  typeSort,
-  filterCountCallback,
   strSearchInCollection,
   fetchExplore,
   isEndOfOrderList,
   loadingScroll,
   collectionName,
 }) {
-  const { strSearch, web3 } = useSelector((state) => state);
-
-  const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
   const [loadingNFTs, setLoadingNFTs] = useStateWithCallbackLazy(false);
-
-  useEffect(() => {
-    filterCountCallback(afterFilter.length);
-  }, [afterFilter.length, filterCountCallback]);
-
-  const sortOrders = useCallback(async () => {
-    var BN = web3.utils.BN;
-    let filterByTokenPayment =
-      tokenPayment === '0' ? tokens : tokens.filter((order) => order.tokenPayment === tokenPayment);
-    switch (typeSort) {
-      case 'recentlyListed':
-        setAfterFilter(filterByTokenPayment);
-        break;
-      case 'latestCreated':
-        setAfterFilter(
-          filterByTokenPayment.sort((a, b) =>
-            a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
-          )
-        );
-        break;
-      case 'priceAsc':
-        setAfterFilter(
-          filterByTokenPayment.sort((a, b) =>
-            !new BN(a.price).gt(new BN(b.price)) ? 1 : new BN(a.price).gt(new BN(b.price)) ? -1 : 0
-          )
-        );
-        break;
-      case 'priceDesc':
-        setAfterFilter(
-          filterByTokenPayment.sort((a, b) =>
-            new BN(a.price).gt(new BN(b.price)) ? 1 : !new BN(a.price).gt(new BN(b.price)) ? -1 : 0
-          )
-        );
-        break;
-      default:
-        break;
-    }
-  }, [tokens, tokenPayment, typeSort, web3]);
-
-  useEffect(() => {
-    if (tokens) sortOrders();
-  }, [tokens, sortOrders]);
 
   const paginationCards = useCallback(
     async (e) => {
@@ -252,7 +199,7 @@ export default function NFTsCardBrowse({
               <NFTsCard
                 key={token.sellId}
                 token={token}
-                strSearch={!!strSearchInCollection ? strSearchInCollection : strSearch}
+                strSearch={strSearchInCollection}
                 collectionName={collectionName}
               />
             ))}

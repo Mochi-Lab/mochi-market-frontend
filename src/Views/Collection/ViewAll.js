@@ -1,5 +1,5 @@
 import { Col, Input, Layout, Row, Select, Modal, Button, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import NFTsCardBrowse from 'Components/NFTsCardBrowse';
@@ -15,6 +15,7 @@ import { updateAttributesFilter } from 'APIs/Collections/Puts';
 import createSignature from 'APIs/createSignature';
 import { verifySignature } from 'APIs/Collections/Post';
 import { showNotification } from 'store/actions';
+import { debounce } from 'lodash';
 
 const { Option } = Select;
 
@@ -33,6 +34,14 @@ export default function ViewAll({
   isEndOfOrderList,
   loadingScroll,
   filterChange,
+  setNftsOnSale,
+  setSkip,
+  tokenPayment,
+  setTokenPayment,
+  typeSort,
+  setTypeSort,
+  strSearch,
+  setStrSearch,
 }) {
   const dispatch = useDispatch();
 
@@ -40,9 +49,6 @@ export default function ViewAll({
   const { addressToken } = useParams();
   let checkInfoExist = !!infoCollection && !!infoCollection.attributesFilter;
 
-  const [tokenPayment, setTokenPayment] = useState('0');
-  const [typeSort, setTypeSort] = useState('recentlyListed');
-  const [strSearch, setStrSearch] = useState();
   const [showFilter, setShowFilter] = useState(true);
   const [modalEditFilter, setModalEditFilter] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -54,6 +60,7 @@ export default function ViewAll({
   );
   const [checkValidator, setCheckValidator] = useState([]);
   const [darkMode, setDarkMode] = useState();
+  const [textSearch, setTextSearch] = useState('');
 
   useEffect(() => {
     let mode = document.querySelector('html').getAttribute('data-theme');
@@ -70,18 +77,7 @@ export default function ViewAll({
     if (!!chainId) {
       setTokenPayment('0');
     }
-  }, [chainId]);
-
-  const _setFilterCount = (count) => {};
-
-  const searchNFTsCollection = (e) => {
-    const { value } = e.target;
-    if (!!value) {
-      setStrSearch(value);
-    } else {
-      setStrSearch('');
-    }
-  };
+  }, [chainId, setTokenPayment]);
 
   const handleOk = async () => {
     if (valueEditFilter.length > 0) {
@@ -144,21 +140,56 @@ export default function ViewAll({
     if (!!viewAll) fetchExplore();
   };
 
+  const selectTokenPayment = (_tokenPayment) => {
+    setTokenPayment(_tokenPayment);
+    setSkip(0);
+    setNftsOnSale(null);
+  };
+
+  const selectSortType = (_type) => {
+    setTypeSort(_type);
+    setSkip(0);
+    setNftsOnSale(null);
+  };
+
+  const searchNFTsCollection = (event, skipDebounce = false) => {
+    const text = event.target.value;
+    setTextSearch(text);
+    if (!skipDebounce) debounceSearchText(text);
+    else {
+      setSkip(0);
+      setNftsOnSale(null);
+      setStrSearch(text);
+    }
+  };
+  // eslint-disable-next-line
+  const debounceSearchText = useCallback(
+    debounce((text) => setStrSearch(text), 500),
+    []
+  );
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      searchNFTsCollection(event, true);
+    }
+  };
+
   return (
     <div className={`${!!viewAll ? 'display-block-view-all' : 'display-none-view-all'}`}>
       <Layout style={{ minHeight: '100%' }} className='view-all-collection background-mode'>
         <div className='sort-results-collection'>
           <div className='left-sort-results'>
-            {/* <div className='input-search-collections search-nft-in-collection-1 mr-0d5rem'>
+            <div className='input-search-collections search-nft-in-collection-1 mr-0d5rem'>
               <Input
                 placeholder='Search collections '
                 onChange={searchNFTsCollection}
+                onKeyDown={handleKeyDown}
                 size='large'
-                value={strSearch}
+                value={textSearch}
                 suffix={<SearchOutlined />}
                 className='style-search-input input-mode-bc textmode '
               />
-            </div> */}
+            </div>
             {!!walletAddress &&
               infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) &&
               ((checkInfoExist && infoCollection.attributesFilter.length <= 0) ||
@@ -172,7 +203,7 @@ export default function ViewAll({
             <Select
               size='large'
               value={tokenPayment}
-              onChange={(value) => setTokenPayment(value)}
+              onChange={(value) => selectTokenPayment(value)}
               className='tokenpayment textmode'
             >
               <Option value='0' key='-1' className='text-center'>
@@ -193,12 +224,11 @@ export default function ViewAll({
               value={typeSort}
               className='textmode select-sort'
               size='large'
-              onChange={(value) => setTypeSort(value)}
+              onChange={(value) => selectSortType(value)}
             >
-              <Option value='recentlyListed'>Recently listed</Option>
-              <Option value='latestCreated'>Latest created</Option>
-              <Option value='priceAsc'>Price asc</Option>
-              <Option value='priceDesc'>Price desc</Option>
+              <Option value=''>Recently listed</Option>
+              <Option value='1'>Price asc</Option>
+              <Option value='-1'>Price desc</Option>
             </Select>
             <span className='textmode link-view-less' onClick={() => setViewAll(false)}>
               View Less
@@ -243,7 +273,6 @@ export default function ViewAll({
                     tokens={nftsOnSale}
                     tokenPayment={tokenPayment}
                     typeSort={typeSort}
-                    filterCountCallback={_setFilterCount}
                     strSearchInCollection={strSearch}
                     fetchExplore={checkLoadMore}
                     isEndOfOrderList={isEndOfOrderList}
@@ -257,7 +286,6 @@ export default function ViewAll({
                 tokens={nftsOnSale}
                 tokenPayment={tokenPayment}
                 typeSort={typeSort}
-                filterCountCallback={_setFilterCount}
                 strSearchInCollection={strSearch}
                 fetchExplore={checkLoadMore}
                 isEndOfOrderList={isEndOfOrderList}

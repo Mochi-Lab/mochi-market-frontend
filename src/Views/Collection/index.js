@@ -49,6 +49,9 @@ export default function Collection() {
   const [skip, setSkip] = useState(0);
   const [isEndOfOrderList, setIsEndOfOrderList] = useState(false);
   const [loadingScroll, setLoadingScroll] = useState(false);
+  const [tokenPayment, setTokenPayment] = useState('0');
+  const [typeSort, setTypeSort] = useState('');
+  const [strSearch, setStrSearch] = useState('');
 
   // Check chainId in route
   useEffect(() => {
@@ -113,7 +116,16 @@ export default function Collection() {
       if (skip > 1) {
         setLoadingScroll(true);
       }
-      let exp = await getSellOrderByAttributes(chainID, addressToken, skip, 20, objectFilter);
+      let exp = await getSellOrderByAttributes(
+        chainID,
+        addressToken,
+        objectFilter,
+        strSearch,
+        tokenPayment,
+        typeSort,
+        skip,
+        20
+      );
       setSkip(skip + 20);
       setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
       if (exp.length < 20) setIsEndOfOrderList(true);
@@ -121,7 +133,7 @@ export default function Collection() {
     } catch (error) {
       console.log({ error });
     }
-  }, [chainID, addressToken, skip, objectFilter]);
+  }, [chainID, addressToken, skip, objectFilter, strSearch, tokenPayment, typeSort]);
 
   useEffect(() => {
     async function loadInitNFTs() {
@@ -136,13 +148,22 @@ export default function Collection() {
 
   const filterChange = useCallback(async () => {
     try {
-      let exp = await getSellOrderByAttributes(chainID, addressToken, 0, 20, objectFilter);
+      let exp = await getSellOrderByAttributes(
+        chainID,
+        addressToken,
+        objectFilter,
+        strSearch,
+        tokenPayment,
+        typeSort,
+        0,
+        20
+      );
       setSkip(0);
       setNftsOnSale(exp);
     } catch (error) {
       console.log({ error });
     }
-  }, [chainID, addressToken, objectFilter]);
+  }, [chainID, addressToken, objectFilter, strSearch, tokenPayment, typeSort]);
 
   const newMintNFT = useCallback(async () => {
     if (nftList) {
@@ -185,12 +206,12 @@ export default function Collection() {
     }
   }, [statusViewAll, handleSetViewAll]);
   useEffect(() => {
-    return unpinFooterOnLoad(!!loadingInfo || !nftsOnSale || !infoCollection || !listNewNFT);
+    return unpinFooterOnLoad(!!loadingInfo || !infoCollection || !listNewNFT);
   }, [loadingNFTs, loadingInfo, nftsOnSale, infoCollection, listNewNFT]);
 
   return (
     <>
-      {!!loadingInfo || !nftsOnSale || !infoCollection || !listNewNFT ? (
+      {!!loadingInfo || !infoCollection || !listNewNFT ? (
         // Loading if done load the first type of token user have, if user select other load other
         <div className='center' style={{ width: '100%', height: '100%' }}>
           <IconLoading className='search-icon' />
@@ -238,6 +259,14 @@ export default function Collection() {
                 isEndOfOrderList={isEndOfOrderList}
                 loadingScroll={loadingScroll}
                 filterChange={filterChange}
+                setNftsOnSale={setNftsOnSale}
+                setSkip={setSkip}
+                tokenPayment={tokenPayment}
+                setTokenPayment={setTokenPayment}
+                typeSort={typeSort}
+                setTypeSort={setTypeSort}
+                strSearch={strSearch}
+                setStrSearch={setStrSearch}
               />
             ) : null}
           </div>

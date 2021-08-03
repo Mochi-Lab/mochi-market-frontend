@@ -36,7 +36,7 @@ export default function CardNFTHome({ token }) {
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
 
-  return !!detailNFT ? (
+  return !!detailNFT && !!token ? (
     <Link
       to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`}
       target='_blank'

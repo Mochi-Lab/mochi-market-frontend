@@ -3,16 +3,16 @@ import { useLocation } from 'react-router';
 import NFTsFilterBrowse from 'Components/NFTsFilterBrowse';
 import BannerSearchHome from 'Components/BannerSearchHome';
 import { carouselBanner } from 'Constants/constantCarousel';
-import { useCallback, useEffect, /*  useRef, */ useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 import Footer from 'Components/Footer';
 import { unpinFooterOnLoad } from 'utils/helper.js';
-import { getAll, getSellOrderByCollection } from 'APIs/SellOrder/Gets';
+import { getCollectionBySearchAndPayment, getAllBySearchAndPayment } from 'APIs/SellOrder/Gets';
 import { getAllCollections } from 'APIs/Collections/Gets';
 
 export default function Browse() {
-  const { chainId, verifiedContracts } = useSelector((state) => state);
+  const { chainId, verifiedContracts, strSearch } = useSelector((state) => state);
 
   const addressToken = new URLSearchParams(useLocation().search).get('addressToken');
 
@@ -23,13 +23,15 @@ export default function Browse() {
   const [loadingNFTs, setLoadingNFTs] = useState();
   const [listCollections, setListCollections] = useState();
   const [selectedToken, setSelectedToken] = useState();
+  const [tokenPayment, setTokenPayment] = useState('0');
+  const [typeSort, setTypeSort] = useState('');
 
-  // const inputSearch = useRef(null);
-  // useEffect(() => {
-  //   if (!!inputSearch) {
-  //     inputSearch.current.focus();
-  //   }
-  // }, []);
+  const inputSearch = useRef(null);
+  useEffect(() => {
+    if (!!inputSearch) {
+      inputSearch.current.focus();
+    }
+  }, []);
 
   const fetchExplore = useCallback(async () => {
     if (!!chainId) {
@@ -39,9 +41,24 @@ export default function Browse() {
         }
         let exp;
         if (!!selectedToken) {
-          exp = await getSellOrderByCollection(chainId, selectedToken, skip, 20);
+          exp = await getCollectionBySearchAndPayment(
+            chainId,
+            selectedToken,
+            strSearch,
+            tokenPayment,
+            typeSort,
+            skip,
+            20
+          );
         } else {
-          exp = await getAll(chainId, skip, 20);
+          exp = await getAllBySearchAndPayment(
+            chainId,
+            strSearch,
+            tokenPayment,
+            typeSort,
+            skip,
+            20
+          );
         }
 
         setSkip(skip + 20);
@@ -52,7 +69,7 @@ export default function Browse() {
         console.log({ error });
       }
     }
-  }, [chainId, skip, selectedToken]);
+  }, [chainId, skip, selectedToken, strSearch, tokenPayment, typeSort]);
 
   useEffect(() => {
     async function loadingInit() {
@@ -91,7 +108,12 @@ export default function Browse() {
   }, [loadingNFTs]);
   return (
     <>
-      <BannerSearchHome carouselBanner={carouselBanner} /*  inputSearch={inputSearch} */ />
+      <BannerSearchHome
+        carouselBanner={carouselBanner}
+        inputSearch={inputSearch}
+        setSkip={setSkip}
+        setNftsOnSale={setNftsOnSale}
+      />
       <div className='container' style={{ width: '100%', height: '100%' }}>
         <NFTsFilterBrowse
           collectionsNFT={nftsOnSale}
@@ -104,6 +126,10 @@ export default function Browse() {
           setSelectedToken={setSelectedToken}
           setSkip={setSkip}
           setNftsOnSale={setNftsOnSale}
+          tokenPayment={tokenPayment}
+          setTokenPayment={setTokenPayment}
+          typeSort={typeSort}
+          setTypeSort={setTypeSort}
         />
       </div>
       <Footer />

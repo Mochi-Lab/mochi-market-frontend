@@ -36,7 +36,7 @@ export default async function helperStatusActions1155Order(
         }
         if (!!sellOrder) {
           setOrderDetail({ ...sellOrder, tokenPayment: sellOrder.token });
-          let listSeller = sellOrder.otherSellOrders;
+          let listSeller = !!sellOrder.otherSellOrders ? sellOrder.otherSellOrders : [];
           listSeller.unshift(sellOrder);
           setOwnersOnSale(listSeller);
         }
