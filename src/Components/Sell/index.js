@@ -11,7 +11,7 @@ import './index.scss';
 
 const { Option } = Select;
 
-export default function Sell({ token, is1155, available, getOwners1155 }) {
+export default function Sell({ token, is1155, available, statusActions }) {
   const dispatch = useDispatch();
   let history = useHistory();
 
@@ -49,27 +49,13 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
         )
       );
       if (!!result.status) {
-        if (!!is1155) {
-          await getOwners1155();
-        }
         setIsModalVisible(false);
         history.push({
           pathname: `/token/${chainId}/${addressToken}/${id}/${result.sellId}`,
         });
       }
     }
-  }, [
-    dispatch,
-    addressToken,
-    id,
-    web3.utils,
-    tokenPayment,
-    is1155,
-    history,
-    form,
-    getOwners1155,
-    chainId,
-  ]);
+  }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form, chainId]);
 
   const confirmSell = useCallback(async () => {
     const values = await form.validateFields();
@@ -197,7 +183,14 @@ export default function Sell({ token, is1155, available, getOwners1155 }) {
                     required
                     name={['amount']}
                     rules={[{ validator: checkAmount }]}
-                    label='Amount'
+                    label={
+                      <span
+                        className='cursor-pointer'
+                        onClick={() => form.setFieldsValue({ amount: parseInt(available) })}
+                      >
+                        Amount: {available}
+                      </span>
+                    }
                     className='input-amount-sell textmode'
                   >
                     <InputNumber

@@ -1,4 +1,5 @@
-import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
+import { getSellerByNft } from 'APIs/SellOrder/Gets';
+import { getAvailableToken1155OfOwner } from 'utils/helper';
 
 export default async function helperStatusActions1155Profile(
   walletAddress,
@@ -6,16 +7,24 @@ export default async function helperStatusActions1155Profile(
   addressToken,
   id,
   chainId,
-  web3,
-  setBalanceOf
+  setOwnersOnSale,
+  setAvailable,
+  setOrderDetail
 ) {
   if (!!chainId && !!id && !!addressToken) {
+    setOrderDetail(null);
     try {
       if (!!walletAddress) {
-        const nft = new web3.eth.Contract(sampleAbiERC1155.abi, addressToken);
-        const balanceOf = await nft.methods.balanceOf(walletAddress, id).call();
-        setBalanceOf(balanceOf);
-        if (balanceOf > 0) {
+        let availableToken = await getAvailableToken1155OfOwner(
+          walletAddress,
+          addressToken,
+          id,
+          chainId
+        );
+        setAvailable(availableToken.balance);
+        let seller = await getSellerByNft(chainId, addressToken, id);
+        setOwnersOnSale(seller.sellOrders);
+        if (availableToken.balance > 0) {
           setStatus(2);
         } else {
           setStatus(0);

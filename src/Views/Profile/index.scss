@@ -10,11 +10,15 @@
 .left-profile .info-user .background-avatar .background-profile img {
   width: 100%;
   border-radius: 1rem;
+  max-height: 210px;
+  object-fit: cover;
 }
 .left-profile .info-user .background-avatar .avatar-profile {
   position: absolute;
   bottom: -20%;
   left: 35%;
+  max-height: 100px;
+  max-width: 100px;
 }
 .left-profile .info-user .background-avatar .avatar-profile {
   width: 30%;
@@ -403,6 +407,36 @@
   margin-left: 0.4rem;
 }
 
+.right-profile .list-item-admin .ant-table {
+  margin: 1rem;
+}
+
+.box-add-admin {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+.is-add-admin {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: center;
+  align-items: stretch;
+}
+
+.box-btn {
+  margin-bottom: 1rem;
+}
+
+.input-add .input-add-address {
+  border-radius: 0.75rem;
+}
+
+.input-add-address {
+  width: 400px;
+}
+
 @media (max-width: 1200px) {
 }
 
@@ -413,6 +447,10 @@
   }
   .left-profile .info-user .address-wallet {
     width: 200px;
+  }
+
+  .input-add-address {
+    width: 100%;
   }
 }
 

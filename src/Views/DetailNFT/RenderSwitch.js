@@ -15,11 +15,10 @@ export default function RenderSwitch({
   is1155,
   available,
   web3,
-  getOwners1155,
+  statusActions,
   addressToken,
   id,
-  chainId,
-  sellID,
+  getOwners1155,
 }) {
   const { walletAddress } = useSelector((state) => state);
 
@@ -39,11 +38,10 @@ export default function RenderSwitch({
               orderDetail={orderDetail}
               token={token}
               is1155={is1155}
-              available={available}
-              getOwners1155={getOwners1155}
+              statusActions={statusActions}
             />
             <div className='cAFwWB' />
-            <Cancel orderDetail={orderDetail} getOwners1155={getOwners1155} chainId={chainId} />
+            <Cancel orderDetail={orderDetail} statusActions={statusActions} />
           </div>
         </div>
       );
@@ -55,7 +53,7 @@ export default function RenderSwitch({
               token={token}
               is1155={is1155}
               available={available}
-              getOwners1155={getOwners1155}
+              statusActions={statusActions}
             />
             <div className='cAFwWB' />
             <Transfer
@@ -63,7 +61,7 @@ export default function RenderSwitch({
               is1155={is1155}
               available={available}
               web3={web3}
-              getOwners1155={getOwners1155}
+              statusActions={statusActions}
             />
           </div>
         </div>
@@ -75,6 +73,7 @@ export default function RenderSwitch({
           is1155={is1155}
           id={id}
           addressToken={addressToken}
+          statusActions={statusActions}
           getOwners1155={getOwners1155}
         />
       );

@@ -12,19 +12,17 @@ const initialState = {
   allowanceToken: 0,
   strSearch: '',
   listNFTsOwner: null,
-  listNFTsOnsale: null,
   verifiedContracts: [],
   infoCollections: {},
   infoUsers: {},
+  infoAdmins: {},
   infoUserLogin: null,
 
   // Erc721
-  erc721Instances: null,
   erc721Tokens: null,
   isLoadingErc721: null,
 
   //Erc1155
-  erc1155Instances: null,
   erc1155Tokens: null,
 
   // Main contracts
@@ -37,13 +35,6 @@ const initialState = {
 
   //NftList
   acceptedNftsAddress: [],
-
-  //SellOrderList
-  availableSellOrder721: [],
-  availableSellOrder1155: [],
-  convertErc721Tokens: [],
-  convertErc1155Tokens: [],
-  mySellOrder: [],
 
   //CreativeStudio
   userCollections: [],
@@ -107,22 +98,6 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         listNFTsOwner: action.listNFTsOwner,
       };
-    case actions.SET_LIST_NTTS_ONSALE:
-      return {
-        ...state,
-        listNFTsOnsale: action.listNFTsOnsale,
-      };
-
-    case actions.INIT_ERC721:
-      return {
-        ...state,
-        erc721Instances: action.erc721Instances,
-      };
-    case actions.INIT_ERC1155:
-      return {
-        ...state,
-        erc1155Instances: action.erc1155Instances,
-      };
     case actions.GET_OWNED_ERC721:
       return {
         ...state,
@@ -168,31 +143,7 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         acceptedNftsAddress: action.acceptedNftsAddress,
       };
-    case actions.SET_CONVERT_ERC721:
-      return {
-        ...state,
-        convertErc721Tokens: action.convertErc721Tokens,
-      };
-    case actions.SET_CONVERT_ERC1155:
-      return {
-        ...state,
-        convertErc1155Tokens: action.convertErc1155Tokens,
-      };
-    case actions.SET_AVAILABLE_SELL_ORDER_721:
-      return {
-        ...state,
-        availableSellOrder721: action.availableSellOrder721,
-      };
-    case actions.SET_AVAILABLE_SELL_ORDER_1155:
-      return {
-        ...state,
-        availableSellOrder1155: action.availableSellOrder1155,
-      };
-    case actions.SET_MY_SELL_ORDER:
-      return {
-        ...state,
-        mySellOrder: action.mySellOrder,
-      };
+
     case actions.SET_CREATIVESTUDIO:
       return {
         ...state,
@@ -250,6 +201,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         infoUsers: action.infoUsers,
+      };
+    case actions.SET_INFO_ADMINS:
+      return {
+        ...state,
+        infoAdmins: action.infoAdmins,
       };
     case actions.SET_INFO_USER_LOGIN:
       return {

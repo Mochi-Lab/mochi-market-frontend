@@ -1,6 +1,6 @@
+import { getDetailNFT } from 'APIs/NFT/Get';
 import { getContractAddress } from 'utils/getContractAddress';
 import { getUrlSubgraph } from 'utils/getUrlsSubgraph';
-const Web3 = require('web3');
 const ERC20 = require('Contracts/ERC20.json');
 const axios = require('axios');
 
@@ -63,16 +63,13 @@ export function convertTimestampToDate(timestamp) {
   return convdataTime;
 }
 
-export const balanceOf = async (tokenAddress, walletAddress) => {
-  const web3 = new Web3(window.ethereum);
-  let balance;
+export const balanceOf = async (tokenAddress, walletAddress, web3) => {
   const erc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
-  balance = await erc20.methods.balanceOf(walletAddress).call();
+  let balance = await erc20.methods.balanceOf(walletAddress).call();
   return balance;
 };
 
-export const allowance = async (tokenAddress, walletAddress, chainId) => {
-  const web3 = new Web3(window.ethereum);
+export const allowance = async (tokenAddress, walletAddress, chainId, web3) => {
   const instaneErc20 = new web3.eth.Contract(ERC20.abi, tokenAddress);
   const contractAddress = getContractAddress(chainId);
   let allowance = await instaneErc20.methods
@@ -139,16 +136,14 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
   });
 
   let list721Raw = result.data && result.data.data.owner ? result.data.data.owner.tokens : [];
-  let list721 = list721Raw.map(function (nft) {
-    return {
-      addressToken: nft.contract.id,
-      symbol: nft.contract.symbol,
-      collections: nft.contract.name,
-      index: nft.tokenID,
-      tokenURI: nft.tokenURI,
-      is1155: false,
-    };
-  });
+  let list721 = Promise.all(
+    list721Raw.map(async function (rawNft) {
+      let nft = await getDetailNFT(chainId, rawNft.contract.id, rawNft.tokenID);
+      if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.tokenID;
+      nft['is1155'] = false;
+      return nft;
+    })
+  );
   return list721;
 }
 
@@ -183,14 +178,13 @@ export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, 
     }, listAddressAccept);
 
     let list1155 = Promise.all(
-      list1155Raw.map(async (nft) => {
-        return {
-          addressToken: nft.token.registry.id,
-          index: nft.token.identifier,
-          value: nft.value,
-          totalSupply: nft.token.totalSupply,
-          is1155: true,
-        };
+      list1155Raw.map(async (rawNft) => {
+        let nft = await getDetailNFT(chainId, rawNft.token.registry.id, rawNft.token.identifier);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.token.identifier;
+        nft['is1155'] = true;
+        nft['value'] = rawNft.value;
+        nft['totalSupply'] = rawNft.token.totalSupply;
+        return nft;
       })
     );
 
@@ -229,7 +223,7 @@ export async function getAllOwnersOf1155(tokenAddress, tokenId, chainId, address
         ownersOf1155Raw.map(async (nft) => {
           return {
             owner: nft.account.id,
-            value: nft.value,
+            amount: nft.value,
             totalSupply,
           };
         })
@@ -263,15 +257,11 @@ export async function newMintOf721(tokenAddress, chainId) {
       let nftsOf721Raw = !!result.data && !!result.data.data.tokens ? result.data.data.tokens : [];
 
       let nftsOf721 = await Promise.all(
-        nftsOf721Raw.map(async (nft) => {
-          return {
-            addressToken: nft.contract.id,
-            symbol: nft.contract.symbol,
-            collections: nft.contract.name,
-            index: nft.tokenID,
-            tokenURI: nft.tokenURI,
-            is1155: false,
-          };
+        nftsOf721Raw.map(async (rawNft) => {
+          let nft = await getDetailNFT(chainId, rawNft.contract.id, rawNft.tokenID);
+          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.tokenID;
+          nft['is1155'] = false;
+          return nft;
         })
       );
       return nftsOf721;
@@ -302,23 +292,58 @@ export async function newMintOf1155(tokenAddress, chainId) {
     let list1155Raw =
       result.data && result.data.data && result.data.data.tokens ? result.data.data.tokens : [];
     let list1155 = Promise.all(
-      list1155Raw.map(async (nft) => {
-        return {
-          addressToken: nft.registry.id,
-          index: nft.identifier,
-          totalSupply: nft.totalSupply,
-          is1155: true,
-        };
+      list1155Raw.map(async (rawNft) => {
+        let nft = await getDetailNFT(chainId, rawNft.registry.id, rawNft.identifier);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.identifier;
+        nft['is1155'] = true;
+        return nft;
       })
     );
     return list1155;
   } else return [];
 }
 
+export async function getAvailableToken1155OfOwner(walletAddress, tokenAddress, tokenId, chainId) {
+  const url = getUrlSubgraph(chainId);
+  if (url.url1155.length > 0) {
+    const result = await axios.post(url.url1155, {
+      query: `{
+        tokens(where: {
+          registry: "${tokenAddress.toLowerCase()}",
+          identifier:"${tokenId}"}) {
+            totalSupply
+            balances(where:{
+              account: "${walletAddress.toLowerCase()}"
+            }) {
+              value
+            }
+          }
+        }`,
+    });
+    let res1155Raw =
+      result.data && result.data.data && result.data.data.tokens
+        ? result.data.data.tokens[0]
+        : { balances: [] };
+    if (res1155Raw.balances.length > 0)
+      return { balance: res1155Raw.balances[0].value, totalSupply: res1155Raw.totalSupply };
+
+    return { balance: 0, totalSupply: 0 };
+  } else return false;
+}
+
 export const checkUrl = (url) => {
   // eslint-disable-next-line
   let regexCheckUrl = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
   return regexCheckUrl.test(url);
+};
+
+export const checkTokenUriOld = (url) => {
+  // chec format stand: https://www.example.com, http://www.example.com/products?id=1&page=2
+  // incorrect: http://invalid.com/perl.cgi/{token}
+
+  // eslint-disable-next-line
+  let regexCheckUri = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+  return regexCheckUri.test(url);
 };
 
 export const handleChildClick = (e) => {

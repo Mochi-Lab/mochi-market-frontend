@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getSymbol } from 'utils/getContractAddress';
 import imgNotFound from 'Assets/notfound.png';
-import sampleAbiERC1155 from 'Contracts/SampleERC1155.json';
-import abiERC721 from 'Contracts/ERC721.json';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 import moment from 'moment';
-
 import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
-import { handleChildClick, getTokenUri, objToString } from 'utils/helper';
+import { handleChildClick, objToString } from 'utils/helper';
 import { BottomScrollListener } from 'react-bottom-scroll-listener';
+import LoadingScroll from 'Components/LoadingScroll';
+import { useStateWithCallbackLazy } from 'use-state-with-callback';
+import { getDetailNFT } from 'APIs/NFT/Get';
 
-function NFTsCard({ token, strSearch }) {
+function NFTsCard({ token, collectionName }) {
   const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
@@ -24,30 +24,15 @@ function NFTsCard({ token, strSearch }) {
     async function fetchDetail() {
       if (!!token) {
         try {
-          let tokenURI;
-          if (token.is1155) {
-            const nft = new web3.eth.Contract(sampleAbiERC1155.abi, token.addressToken);
-            tokenURI = await nft.methods.uri(token.index).call();
-          } else {
-            const nft = new web3.eth.Contract(abiERC721.abi, token.addressToken);
-            tokenURI = await nft.methods.tokenURI(token.index).call();
-          }
-          let req = await getTokenUri(tokenURI);
-          const data = req.data;
-
-          token.attributes = !!data.attributes ? data.attributes : null;
-
-          setDetailNFT({
-            name: !!data.name ? data.name : 'ID: ' + token.index,
-            description: !!data.description ? data.description : '',
-            image: !!data.image ? data.image : imgNotFound,
-          });
+          let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
+          token.nameCollection = (
+            await store.dispatch(getCollection(token.collectionAddress, null))
+          ).collection.name;
+          setDetailNFT(nft);
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }
-        token.nameCollection = (
-          await store.dispatch(getCollection(token.addressToken, null))
-        ).collection.name;
       } else {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
@@ -55,12 +40,7 @@ function NFTsCard({ token, strSearch }) {
     fetchDetail();
   }, [token, web3, chainId, infoCollections]);
 
-  const _strSearch = strSearch.toLowerCase();
-  const visible =
-    !!detailNFT &&
-    !!detailNFT.name &&
-    (detailNFT.name.toLocaleLowerCase().includes(_strSearch) ||
-      token.nameCollection.toLocaleLowerCase().includes(_strSearch));
+  const visible = !!detailNFT && !!detailNFT.name && !!token;
 
   return detailNFT !== null ? (
     <>
@@ -75,7 +55,7 @@ function NFTsCard({ token, strSearch }) {
           xxl={{ span: 6 }}
         >
           <Link
-            to={`/token/${chainId}/${token.addressToken}/${token.index}/${token.sellId}`}
+            to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`}
             target='_blank'
           >
             <Card
@@ -84,12 +64,14 @@ function NFTsCard({ token, strSearch }) {
                 <div className='wrap-cover'>
                   <div
                     className='blurred-background'
-                    style={{ backgroundImage: `url(${detailNFT.image})` }}
+                    style={{
+                      backgroundImage: `url(${!!token.image ? token.image : detailNFT.image})`,
+                    }}
                   />
                   <div className='NFTResource-Wrapper'>
                     <img
-                      alt={`img-nft-${token.index}`}
-                      src={detailNFT.image}
+                      alt={`img-nft-${token.tokenId}`}
+                      src={!!token.image ? token.image : detailNFT.image}
                       className='display-resource-nft'
                     />
                   </div>
@@ -97,7 +79,7 @@ function NFTsCard({ token, strSearch }) {
               }
               className='card-nft'
             >
-              {!!token.attributes && (
+              {!!token.attributes && token.attributes.length > 0 && (
                 <Popover
                   onClick={handleChildClick}
                   placement='bottomLeft'
@@ -123,25 +105,26 @@ function NFTsCard({ token, strSearch }) {
               )}
               {!!token.price && (
                 <div className='price-nft textmode'>
-                  <span>{web3.utils.fromWei(token.price, 'ether')}</span>{' '}
-                  <b>{getSymbol(chainId)[token.tokenPayment]}</b>
+                  <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b>
                 </div>
               )}
               <Row justify='space-between'>
                 <Col className='footer-card-left'>
                   <div className='name-collection'>
                     <Link
-                      to={`/collection/${chainId}/${token.addressToken}`}
+                      to={`/collection/${chainId}/${token.collectionAddress}`}
                       className='link-collection-name'
                       tag='span'
                     >
-                      {token.nameCollection}
+                      {!!collectionName ? collectionName : token.nameCollection}
                     </Link>
-                    {verifiedContracts.includes(token.addressToken.toLocaleLowerCase()) && (
+                    {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) && (
                       <img src={tick} alt='icon-tick' className='icon-tick' />
                     )}{' '}
                   </div>
-                  <div className='name-nft textmode'>{detailNFT.name}</div>
+                  <div className='name-nft textmode'>
+                    {!!token.name ? token.name : detailNFT.name}
+                  </div>
                 </Col>
               </Row>
             </Card>
@@ -186,100 +169,43 @@ function NFTsCard({ token, strSearch }) {
 
 export default function NFTsCardBrowse({
   tokens,
-  tokenPayment,
-  typeSort,
-  filterCountCallback,
   strSearchInCollection,
+  fetchExplore,
+  isEndOfOrderList,
+  loadingScroll,
+  collectionName,
 }) {
-  const { strSearch, web3 } = useSelector((state) => state);
-
-  const [afterFilter, setAfterFilter] = useState(!!tokens ? tokens : []);
-  const [cardsPaginated, setCardsPaginated] = useState({ cards: [], indexEnd: 0 });
-
-  useEffect(() => {
-    filterCountCallback(afterFilter.length);
-  }, [afterFilter.length, filterCountCallback]);
-
-  const sortOrders = useCallback(async () => {
-    var BN = web3.utils.BN;
-    let filterByTokenPayment =
-      tokenPayment === '0' ? tokens : tokens.filter((order) => order.tokenPayment === tokenPayment);
-    switch (typeSort) {
-      case 'recentlyListed':
-        setAfterFilter(filterByTokenPayment);
-        break;
-      case 'latestCreated':
-        setAfterFilter(
-          filterByTokenPayment.sort((a, b) =>
-            a.sortIndex < b.sortIndex ? 1 : a.sortIndex > b.sortIndex ? -1 : 0
-          )
-        );
-        break;
-      case 'priceAsc':
-        setAfterFilter(
-          filterByTokenPayment.sort((a, b) =>
-            !new BN(a.price).gt(new BN(b.price)) ? 1 : new BN(a.price).gt(new BN(b.price)) ? -1 : 0
-          )
-        );
-        break;
-      case 'priceDesc':
-        setAfterFilter(
-          filterByTokenPayment.sort((a, b) =>
-            new BN(a.price).gt(new BN(b.price)) ? 1 : !new BN(a.price).gt(new BN(b.price)) ? -1 : 0
-          )
-        );
-        break;
-      default:
-        break;
-    }
-  }, [tokens, tokenPayment, typeSort, web3]);
-
-  useEffect(() => {
-    if (tokens) sortOrders();
-  }, [tokens, sortOrders]);
-
-  const setPaginationDefault = useCallback(async () => {
-    setCardsPaginated({
-      cards: afterFilter.slice(0, 20),
-      indexEnd: afterFilter.slice(0, 20).length > 0 ? afterFilter.slice(0, 20).length - 1 : 0,
-    });
-  }, [afterFilter]);
-
-  useEffect(() => {
-    if (afterFilter.length > 0) setPaginationDefault();
-  }, [setPaginationDefault, afterFilter, tokens]);
+  const [loadingNFTs, setLoadingNFTs] = useStateWithCallbackLazy(false);
 
   const paginationCards = useCallback(
     async (e) => {
-      let { indexEnd } = cardsPaginated;
-      setCardsPaginated({
-        cards: afterFilter.slice(0, indexEnd + 20),
-        indexEnd:
-          afterFilter.slice(0, indexEnd + 20).length > 0
-            ? afterFilter.slice(0, indexEnd + 20).length - 1
-            : 0,
-      });
+      if (!!tokens && tokens.length > 0 && !!fetchExplore && !isEndOfOrderList && !loadingNFTs) {
+        setLoadingNFTs(true, async () => {
+          setLoadingNFTs(true);
+          if (!loadingNFTs) fetchExplore();
+          setLoadingNFTs(false);
+        });
+      }
     },
-    [afterFilter, cardsPaginated]
+    [fetchExplore, isEndOfOrderList, loadingNFTs, tokens, setLoadingNFTs]
   );
 
   return (
     <div className='explore-nft content-list-nft'>
       <Row justify='start' gutter={[15, 20]} id='row-cards'>
-        <BottomScrollListener onBottom={paginationCards} offset={300}>
-          {!!cardsPaginated.cards ? (
-            cardsPaginated.cards.map((token, index) => (
+        <BottomScrollListener onBottom={() => paginationCards()}>
+          {!!tokens &&
+            tokens.map((token) => (
               <NFTsCard
                 key={token.sellId}
                 token={token}
-                strSearch={!!strSearchInCollection ? strSearchInCollection : strSearch}
+                strSearch={strSearchInCollection}
+                collectionName={collectionName}
               />
-            ))
-          ) : (
-            <></>
-          )}
+            ))}
         </BottomScrollListener>
       </Row>
+      {!!loadingScroll && <LoadingScroll />}
     </div>
   );
 }

@@ -169,12 +169,17 @@
   margin-left: 0.63rem;
   font-size: 0.88rem;
   font-weight: 500;
+  display: inline-block;
+  width: calc(100% - 50px);
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
 }
 
 .icon-collection {
   display: inline-block;
-  width:36px;
-  height:36px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid #fafafa;

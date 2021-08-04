@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { transferNft } from 'store/actions';
 
-export default function Transfer({ token, is1155, available, web3, getOwners1155 }) {
+export default function Transfer({ token, is1155, available, web3, statusActions }) {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -20,7 +20,7 @@ export default function Transfer({ token, is1155, available, web3, getOwners1155
     const values = await form.validateFields();
     if (!!values) {
       await dispatch(transferNft(addressToken, transferTo, id, values.amount, is1155));
-      await getOwners1155();
+      await statusActions();
       setIsModalVisible(false);
     }
   };
@@ -99,7 +99,14 @@ export default function Transfer({ token, is1155, available, web3, getOwners1155
                   <Form.Item
                     name={['amount']}
                     rules={[{ validator: checkAmount }]}
-                    label='Amount'
+                    label={
+                      <span
+                        className='cursor-pointer'
+                        onClick={() => form.setFieldsValue({ amount: parseInt(available) })}
+                      >
+                        Amount: {available}
+                      </span>
+                    }
                     required
                   >
                     <InputNumber

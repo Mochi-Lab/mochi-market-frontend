@@ -51,7 +51,7 @@ const contractAddress = {
     NFTCampaign: '0x23442A5094aC64f1B54D07a199e79738f56bdbfE',
     MochiERC721NFT: '0x3047A0d0dd41F24cBC8f54c512e96c81f990ba76',
     MochiERC1155NFT: '0x26Db9D95e8Be4Acaeee493448f28A9e7c62e7a0C',
-    MOMA: '0x777d20e16C6Bc508d5989e81a6c9B5034a32C6DD',
+    MOMA: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd',
   },
   // Harmony mainet
   1666600000: {
@@ -72,17 +72,17 @@ const contractAddress = {
 const tokensPayment = {
   //Polygon Mainnet
   137: [
-    { address: '0xE3AB61371ECc88534C522922a026f2296116C109', icon: moma, symbol: 'MOMA' },
+    { address: '0xe3ab61371ecc88534c522922a026f2296116c109', icon: moma, symbol: 'MOMA' },
     { address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC' },
   ],
   //BSC Mainnet
   56: [
-    { address: '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E', icon: moma, symbol: 'MOMA' },
+    { address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e', icon: moma, symbol: 'MOMA' },
     { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
   ],
   //BSC Testnet
   97: [
-    { address: '0x777d20e16C6Bc508d5989e81a6c9B5034a32C6DD', icon: moma, symbol: 'MOMA' },
+    { address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd', icon: moma, symbol: 'MOMA' },
     { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
   ],
   1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE' }],
@@ -91,17 +91,17 @@ const tokensPayment = {
 const symbolToken = {
   //Polygon Mainnet
   137: {
-    '0xE3AB61371ECc88534C522922a026f2296116C109': 'MOMA',
+    '0xe3ab61371ecc88534c522922a026f2296116c109': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'MATIC',
   },
   //BSC Mainnet
   56: {
-    '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E': 'MOMA',
+    '0xb72842d6f5fedf91d22d56202802bb9a79c6322e': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
   },
   //BSC Testnet
   97: {
-    '0x777d20e16C6Bc508d5989e81a6c9B5034a32C6DD': 'MOMA',
+    '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
   },
   1666600000: {

@@ -23,3 +23,29 @@ export const updateCollection = async (
     });
   return result;
 };
+
+export const updateAttributesFilter = async (
+  addressAdmin,
+  signature,
+  addressToken,
+  chainId,
+  attributesFilter
+) => {
+  attributesFilter = JSON.stringify(attributesFilter);
+  console.log(typeof attributesFilter);
+  let result = await axios
+    .put(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/update-attributes-filter`, {
+      addressAdmin,
+      signature,
+      addressToken,
+      chainId,
+      attributesFilter,
+    })
+    .then(function (response) {
+      return true;
+    })
+    .catch(function (error) {
+      return false;
+    });
+  return result;
+};

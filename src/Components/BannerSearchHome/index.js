@@ -12,7 +12,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './index.scss';
 
-export default function BannerSearchHome({ carouselBanner, inputSearch }) {
+export default function BannerSearchHome({ carouselBanner, inputSearch, setSkip, setNftsOnSale }) {
   const [searchBoxFocused, setSearchBoxFocused] = useState(false);
   const { strSearch } = useSelector((state) => state);
   const [textSearch, setTextSearch] = useState('');
@@ -21,20 +21,25 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
   const browse = useRef(null);
   useEffect(() => {
     // get search query from home page, and clear on unmount
-    if(location.pathname === '/browse') {
-      setTextSearch(strSearch)
+    if (location.pathname === '/browse') {
+      setTextSearch(strSearch);
       return () => {
         dispatch(setStrSearch(''));
-      }
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
   const searchNFT = (event, skipDebounce = false) => {
     const text = event.target.value;
     setTextSearch(text);
-    if(location.pathname === '/' && skipDebounce === false) return;
-    if(!skipDebounce) debounceSearchText(text);
-    else dispatch(setStrSearch(text));
+    if (location.pathname === '/' && skipDebounce === false) return;
+
+    if (!skipDebounce) debounceSearchText(text);
+    else {
+      setSkip(0);
+      setNftsOnSale(null);
+      dispatch(setStrSearch(text));
+    }
   };
   // eslint-disable-next-line
   const debounceSearchText = useCallback(
@@ -44,8 +49,8 @@ export default function BannerSearchHome({ carouselBanner, inputSearch }) {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      searchNFT(event, true)
-      if(location.pathname === '/'){
+      searchNFT(event, true);
+      if (location.pathname === '/') {
         browse.current.click();
       }
     }

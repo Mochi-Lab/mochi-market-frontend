@@ -13,7 +13,7 @@ import youtube from 'Assets/icons/youtube.svg';
 import facebook from 'Assets/icons/facebook-01.svg';
 import instagram from 'Assets/icons/instagram.svg';
 import medium from 'Assets/icons/medium-01.svg';
-import titok from 'Assets/icons/tiktok.svg';
+import tiktok from 'Assets/icons/tiktok.svg';
 import github from 'Assets/icons/github-01.svg';
 import twitter from 'Assets/icons/twitter-01.svg';
 import telegram from 'Assets/icons/telegram-01.svg';
@@ -542,14 +542,14 @@ export default function Edit({ visible, setvisibleEitdProfile, infoUser, getInfo
                 <div className='title-input-optional'>
                   <div className='label-input'>
                     <div className='icon'>
-                      <img src={titok} alt='icon-title' width='24px' height='24px' />
+                      <img src={tiktok} alt='icon-title' width='24px' height='24px' />
                     </div>
                     <div className='title textmode'>Titok</div>
                   </div>
                 </div>
                 <Form.Item
                   className='input-optional'
-                  name={['titok']}
+                  name={['tiktok']}
                   rules={[{ validator: validateUrl }]}
                 >
                   <Input
@@ -557,7 +557,7 @@ export default function Edit({ visible, setvisibleEitdProfile, infoUser, getInfo
                     size='large'
                     onChange={(e) => {
                       if (checkUrl(e.target.value) || !e.target.value)
-                        setUserInfoNew({ ...userInfoNew, titok: e.target.value });
+                        setUserInfoNew({ ...userInfoNew, tiktok: e.target.value });
                     }}
                   />
                 </Form.Item>

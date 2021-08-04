@@ -11,54 +11,42 @@ import './index.scss';
 const { Content } = Layout;
 const { Option } = Select;
 
-export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addressToken }) {
+export default function NFTsFilterBrowse({
+  collectionsNFT,
+  isLoadingErc721,
+  isEndOfOrderList,
+  loadingScroll,
+  fetchExplore,
+  listCollections,
+  setSelectedToken,
+  setSkip,
+  setNftsOnSale,
+  tokenPayment,
+  setTokenPayment,
+  typeSort,
+  setTypeSort,
+}) {
   const { chainId } = useSelector((state) => state);
-
-  const [selectedTokens, setSelectedTokens] = useState({});
   const [tokenActive, setTokenActive] = useState('');
   const [strSearch, setStrSearch] = useState();
-  const [tokenPayment, setTokenPayment] = useState('0');
-  const [typeSort, setTypeSort] = useState('recentlyListed');
-  const [allOrders, setAllOrders] = useState([]);
-  const [filterCount, setFilterCount] = useState(0);
-
-  useEffect(() => {
-    if (!!addressToken && tokenActive === '') {
-      for (let i = 0; i < collectionsNFT.length; i++) {
-        const collection = collectionsNFT[i];
-        if (collection.addressToken.toLowerCase() === addressToken.toLowerCase()) {
-          setSelectedTokens(collection);
-          setTokenActive(i);
-        }
-      }
-    }
-  }, [addressToken, collectionsNFT, tokenActive]);
 
   useEffect(() => {
     if (!!chainId) {
       setTokenPayment('0');
     }
-  }, [chainId]);
+  }, [chainId, setTokenPayment]);
 
-  useEffect(() => {
-    if (!!collectionsNFT) {
-      setAllOrders(
-        collectionsNFT
-          ? [].concat(
-              ...collectionsNFT.map((collections) => collections.tokens.map((token) => token))
-            )
-          : []
-      );
-    }
-  }, [collectionsNFT]);
-
-  const selectToken = (token, index) => {
+  const selectToken = async (token, index) => {
     if (index === tokenActive) {
-      setSelectedTokens(null);
+      setSelectedToken(null);
       setTokenActive(null);
+      setSkip(0);
+      setNftsOnSale(null);
     } else {
-      setSelectedTokens(token);
+      await setSelectedToken(token.addressToken);
       setTokenActive(index);
+      setSkip(0);
+      setNftsOnSale(null);
     }
   };
 
@@ -67,14 +55,25 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
     setStrSearch(value);
   };
 
-  const _setFilterCount = (count) => {
-    setFilterCount(count);
+  const selectTokenPayment = (_tokenPayment) => {
+    setTokenPayment(_tokenPayment);
+    setSkip(0);
+    setNftsOnSale(null);
+  };
+
+  const selectSortType = (_type) => {
+    setTypeSort(_type);
+    setSkip(0);
+    setNftsOnSale(null);
   };
 
   return (
     <>
       <Layout style={{ minHeight: '100%' }}>
-        <Layout style={{ padding: '1rem' }} className='nfts-filter-browse-container background-mode'>
+        <Layout
+          style={{ padding: '1rem' }}
+          className='nfts-filter-browse-container background-mode'
+        >
           <Content
             className='site-layout-background'
             style={{
@@ -107,15 +106,14 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                         />
                       </div>
                       <div className='list-collections'>
-                        {collectionsNFT
-                          ? collectionsNFT.map((collection, index) => {
+                        {!!listCollections
+                          ? listCollections.map((collection, index) => {
                               if (
-                                ((!!strSearch &&
+                                (!!strSearch &&
                                   collection.name
                                     .toLocaleLowerCase()
                                     .includes(strSearch.toLowerCase())) ||
-                                  !strSearch) &&
-                                collection.tokens.length > 0
+                                !strSearch
                               )
                                 return (
                                   <div
@@ -129,11 +127,19 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                                           <CheckCircleOutlined />
                                         </div>
                                       ) : (
-                                        <img src={collection.avatarToken} alt='logo-collection' />
+                                        <img src={collection.logo} alt='logo-collection' />
                                       )}
                                     </div>
+
                                     <div className='name-collection textmode'>
-                                      {collection.name}
+                                      <a
+                                        href={`/collection/${chainId}/${collection.addressToken}?ViewAll=true`}
+                                        target='_blank'
+                                        rel='noreferrer'
+                                        className='link-collection-name'
+                                      >
+                                        {collection.name}
+                                      </a>
                                     </div>
                                   </div>
                                 );
@@ -148,14 +154,18 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                   <Row className='sort-results'>
                     <Col span='4' className='left-sort-results'>
                       <span className='textmode'>
-                        {`${filterCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Results
+                        {`${!!collectionsNFT ? collectionsNFT.length : 0}`.replace(
+                          /\B(?=(\d{3})+(?!\d))/g,
+                          ','
+                        )}{' '}
+                        Results
                       </span>
                     </Col>
                     <Col span='20' className='right-sort-results'>
                       <Select
                         size='large'
                         value={tokenPayment}
-                        onChange={(value) => setTokenPayment(value)}
+                        onChange={(value) => selectTokenPayment(value)}
                         className='tokenpayment textmode'
                       >
                         <Option value='0' key='-1' className='text-center'>
@@ -184,30 +194,20 @@ export default function NFTsFilterBrowse({ collectionsNFT, isLoadingErc721, addr
                         value={typeSort}
                         className='textmode select-sort'
                         size='large'
-                        onChange={(value) => setTypeSort(value)}
+                        onChange={(_typeSort) => selectSortType(_typeSort)}
                       >
-                        <Option value='recentlyListed'>Recently listed</Option>
-                        <Option value='latestCreated'>Latest created</Option>
-                        <Option value='priceAsc'>Price asc</Option>
-                        <Option value='priceDesc'>Price desc</Option>
+                        <Option value=''>Recently listed</Option>
+                        <Option value='1'>Price asc</Option>
+                        <Option value='-1'>Price desc</Option>
                       </Select>
                     </Col>
                   </Row>
-                  {!!selectedTokens && !!selectedTokens.tokens ? (
-                    <NFTsCardBrowse
-                      tokens={selectedTokens.tokens}
-                      tokenPayment={tokenPayment}
-                      typeSort={typeSort}
-                      filterCountCallback={_setFilterCount}
-                    />
-                  ) : (
-                    <NFTsCardBrowse
-                      tokens={allOrders}
-                      tokenPayment={tokenPayment}
-                      typeSort={typeSort}
-                      filterCountCallback={_setFilterCount}
-                    />
-                  )}
+                  <NFTsCardBrowse
+                    tokens={collectionsNFT}
+                    isEndOfOrderList={isEndOfOrderList}
+                    loadingScroll={loadingScroll}
+                    fetchExplore={fetchExplore}
+                  />
                 </Col>
               </Row>
             )}

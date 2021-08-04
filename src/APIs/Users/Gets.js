@@ -37,3 +37,29 @@ export const getNonce = async (address) => {
     });
   return result;
 };
+
+export const checkAdmin = async (address) => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/check-admin/${address}`)
+    .then(function (response) {
+      return { isAdmin: response.data.isAdmin };
+    })
+    .catch(function (error) {
+      console.log(error);
+      return { isAdmin: null, msg: 'error server' };
+    });
+  return result;
+};
+
+export const getAdminAll = async () => {
+  let result = await axios
+    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/get-admin/all`)
+    .then(function (response) {
+      return { admins: response.data.admins };
+    })
+    .catch(function (error) {
+      console.log(error);
+      return { admins: null, msg: 'error server' };
+    });
+  return result;
+};

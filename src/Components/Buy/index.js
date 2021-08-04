@@ -8,44 +8,51 @@ import { balanceOf, allowance } from 'utils/helper';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useHistory } from 'react-router';
 
-export default function Buy({ orderDetail, is1155, id, addressToken, getOwners1155 }) {
+export default function Buy({
+  orderDetail,
+  is1155,
+  id,
+  addressToken,
+  statusActions,
+  getOwners1155,
+}) {
   let history = useHistory();
   const [insufficient, setInsufficient] = useState(false);
-  const { balance, chainId, walletAddress, allowanceToken } = useSelector((state) => state);
+  const { balance, chainId, walletAddress, allowanceToken, web3 } = useSelector((state) => state);
   const [approvedToken, setApprovedToken] = useState(false);
   const [Checkout1155, setCheckout1155] = useState(false);
   const dispatch = useDispatch();
   const fetchBalance = useCallback(
     async (order) => {
       if (!order) return;
-      if (order.tokenPayment === '0x0000000000000000000000000000000000000000') {
+      if (order.token === '0x0000000000000000000000000000000000000000') {
         setApprovedToken(true);
-        if (order.price > parseInt(balance * 1e18)) {
+        if (order.price > balance) {
           setInsufficient(true);
         } else {
           setInsufficient(false);
         }
       } else {
-        let allowanceToken = await allowance(order.tokenPayment, walletAddress, chainId);
-        let _tokenBal = await balanceOf(order.tokenPayment, walletAddress);
-        if (order.price > parseInt(_tokenBal)) {
+        let allowanceToken = await allowance(order.token, walletAddress, chainId, web3);
+        let _tokenBal = await balanceOf(order.token, walletAddress, web3);
+        if (order.price > web3.utils.fromWei(_tokenBal, 'ether')) {
           setInsufficient(true);
         } else {
           setInsufficient(false);
         }
-        if (order.price <= parseInt(allowanceToken)) {
+        if (order.price <= web3.utils.fromWei(allowanceToken)) {
           setApprovedToken(true);
         } else {
           setApprovedToken(false);
         }
       }
     },
-    [balance, walletAddress, chainId]
+    [balance, walletAddress, chainId, web3]
   );
 
   useEffect(() => {
-    if (!!walletAddress) fetchBalance(orderDetail);
-  }, [fetchBalance, walletAddress, allowanceToken, orderDetail]);
+    if (!!walletAddress && !!orderDetail && !!orderDetail.token) fetchBalance(orderDetail);
+  }, [fetchBalance, walletAddress, allowanceToken, orderDetail, chainId, web3]);
 
   const buy = async (order) => {
     if (!order) return;

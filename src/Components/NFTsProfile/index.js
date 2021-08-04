@@ -6,7 +6,15 @@ import './index.scss';
 
 const { Content } = Layout;
 
-export default function NFTsProfile({ listNFTs, isLoadingErc721, onSale }) {
+export default function NFTsProfile({
+  listNFTs,
+  isLoadingErc721,
+  onSale,
+  loadingScroll,
+  fetchExplore,
+  isEndOfOrderList,
+  loadingNFTs,
+}) {
   return (
     <>
       <Layout style={{ minHeight: '100%' }}>
@@ -24,7 +32,14 @@ export default function NFTsProfile({ listNFTs, isLoadingErc721, onSale }) {
                 <IconLoading />
               </div>
             ) : (
-              <NFTsCardProfile tokens={listNFTs} onSale={onSale} />
+              <NFTsCardProfile
+                tokens={listNFTs}
+                onSale={onSale}
+                loadingScroll={loadingScroll}
+                fetchExplore={fetchExplore}
+                isEndOfOrderList={isEndOfOrderList}
+                loadingNFT={loadingNFTs}
+              />
             )}
           </Content>
         </Layout>
