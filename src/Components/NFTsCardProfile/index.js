@@ -1,190 +1,69 @@
-import { Card, Row, Col, Skeleton, Popover, Empty } from 'antd';
+import { Row, Col, Empty } from 'antd';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getSymbol } from 'utils/getContractAddress';
-import imgNotFound from 'Assets/notfound.png';
 import tick from 'Assets/icons/tick-green.svg';
 import '../NFTsCardBrowse/index.scss';
 import 'Assets/css/common-card-nft.scss';
-import { getCollection } from 'store/actions';
-import store from 'store/index';
-import { handleChildClick, objToString } from 'utils/helper';
-import moment from 'moment';
 import empty from 'Assets/icons/empty.svg';
 import LoadingScroll from 'Components/LoadingScroll';
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { BottomScrollListener } from 'react-bottom-scroll-listener';
-import { getDetailNFT } from 'APIs/NFT/Get';
+import { useNFTDetail, NFTCardLoader, NFTCard } from 'Components/Common/Card';
+import classNames from 'classnames';
 
 function NFTsCardProfile({ token, onSale }) {
   const { chainId, verifiedContracts } = useSelector((state) => state);
-  const [detailNFT, setDetailNFT] = useState(null);
-
-  const fetchDetail = useCallback(async () => {
-    if (!!token) {
-      try {
-        let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
-        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
-        token.nameCollection = (
-          await store.dispatch(getCollection(token.collectionAddress, null))
-        ).collection.name;
-        setDetailNFT(nft);
-      } catch (error) {
-        setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
-      }
-    } else {
-      setDetailNFT({ name: '', description: '', image: imgNotFound });
-    }
-  }, [chainId, token]);
-
-  useEffect(() => {
-    fetchDetail();
-  }, [fetchDetail]);
-
-  const visible = !!detailNFT && !!detailNFT.name && !!token;
-
-  return detailNFT !== null ? (
+  const detailNFT = useNFTDetail(token, chainId);
+  const footerNode = detailNFT && (
     <>
-      {!visible ? null : (
-        <Col
-          className='gutter-row'
-          xs={{ span: 24 }}
-          sm={{ span: 12 }}
-          md={{ span: 12 }}
-          lg={{ span: 8 }}
-        >
-          {!!detailNFT ? (
-            <Link
-              to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${
-                !!token.sellId ? token.sellId : null
-              }`}
-            >
-              <Card
-                hoverable
-                cover={
-                  <div className='wrap-cover'>
-                    <div
-                      className='blurred-background'
-                      style={{ backgroundImage: `url(${detailNFT.image})` }}
-                    />
-                    <div className='NFTResource-Wrapper'>
-                      <img
-                        alt={`img-nft-${token.tokenId}`}
-                        src={detailNFT.image}
-                        className='display-resource-nft'
-                      />
-                    </div>
-                  </div>
-                }
-                className='card-nft'
-              >
-                {!!token.attributes && token.attributes.length > 0 ? (
-                  <Popover
-                    onClick={handleChildClick}
-                    placement='bottomLeft'
-                    content={token.attributes.map((attr, i) => (
-                      <div key={i} onClick={handleChildClick}>
-                        <strong>{attr.trait_type}</strong>:{' '}
-                        {!!attr.display_type &&
-                        attr.display_type.toLowerCase() === 'date' &&
-                        !!moment(attr.value).isValid()
-                          ? moment(
-                              attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
-                            ).format('DD-MM-YYYY')
-                          : typeof attr.value === 'object'
-                          ? objToString(attr.value)
-                          : attr.value}
-                      </div>
-                    ))}
-                  >
-                    <div className='attribs-nft' onClick={handleChildClick}>
-                      Stats
-                    </div>
-                  </Popover>
-                ) : (
-                  <></>
-                )}
-                {!!token.price ? (
-                  <div className='price-nft textmode'>
-                    <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b>
-                  </div>
-                ) : (
-                  <></>
-                )}
-                <Row justify='space-between'>
-                  <Col className={`footer-card-left ${!token.is1155 ? 'fill-width' : ''}`}>
-                    <div className='name-collection'>
-                      <Link
-                        to={`/collection/${chainId}/${token.collectionAddress}`}
-                        className='link-collection-name'
-                        tag='span'
-                      >
-                        {!!detailNFT.nameCollection
-                          ? detailNFT.nameCollection
-                          : token.nameCollection}
-                      </Link>
-                      {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
-                        <img src={tick} alt='icon-tick' className='icon-tick' />
-                      ) : null}{' '}
-                    </div>
-                    <div className='name-nft textmode'>
-                      {!!token.name ? token.name : detailNFT.name}
-                    </div>
-                  </Col>
-                  {!!token.is1155 && !onSale ? (
-                    <Col className='footer-card-right text-right price-nft'>
-                      <div className='title-price'>Available</div>
-                      <div className=''>
-                        {!!token.soldAmount
-                          ? parseInt(token.value) - parseInt(token.soldAmount)
-                          : token.value}{' '}
-                        <span className=''>of</span> {token.totalSupply}{' '}
-                      </div>
-                    </Col>
-                  ) : (
-                    <></>
-                  )}
-                </Row>
-              </Card>
-            </Link>
-          ) : (
-            <Skeleton active round title='123' />
-          )}
+      <Col className={classNames('footer-card-left', {'fill-width': !token.is1155})}>
+        <div className='name-collection'>
+          <Link
+            to={`/collection/${chainId}/${token.collectionAddress}`}
+            className='link-collection-name'
+            tag='span'
+          >
+            {detailNFT.nameCollection || token.nameCollection}
+          </Link>
+          {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
+            <img src={tick} alt='icon-tick' className='icon-tick' />
+          ) : null}{' '}
+        </div>
+        <div className='name-nft textmode'>
+          {!!token.name ? token.name : detailNFT.name}
+        </div>
+      </Col>
+      {!!token.is1155 && !onSale && (
+        <Col className='footer-card-right text-right price-nft'>
+          <div className='title-price'>Available</div>
+          <div className=''>
+            {!!token.soldAmount
+              ? parseInt(token.value) - parseInt(token.soldAmount)
+              : token.value}{' '}
+            <span className=''>of</span> {token.totalSupply}{' '}
+          </div>
         </Col>
       )}
     </>
-  ) : (
+  )
+  return (
     <Col
       className='gutter-row'
       xs={{ span: 24 }}
       sm={{ span: 12 }}
-      md={{ span: 8 }}
+      md={{ span: 12 }}
       lg={{ span: 8 }}
-      xl={{ span: 6 }}
-      xxl={{ span: 6 }}
     >
-      <Card
-        className='card-nft card-nft-content-loader'
-        cover={
-          <div className='wrap-cover'>
-            <div className='NFTResource-Wrapper'>
-              <img
-                className='display-resource-nft'
-                src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-                alt=''
-              />
-            </div>
-          </div>
-        }
-      >
-        <Row justify='space-between'>
-          <Col className='footer-card-left'>
-            <div className='name-collection'>&nbsp;</div>
-            <div className='name-nft'>&nbsp;</div>
-          </Col>
-        </Row>
-      </Card>
+      { detailNFT === null ? <NFTCardLoader /> : (
+        <NFTCard {... {
+          chainId,
+          token,
+          detailNFT,
+          verifiedContracts,
+          footerNode
+        }} />)
+      }
     </Col>
   );
 }
