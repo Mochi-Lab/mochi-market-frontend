@@ -147,6 +147,38 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
   return list721;
 }
 
+export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress, chainId) {
+  const res = await axios.get(
+    `https://api.covalenthq.com/v1/${chainId}/address/${walletAddress}/balances_v2/?&key=${process.env.REACT_APP_CQT_KEY}?&nft=true&match={%22type%22:%22nft%22}`
+  );
+  let listRaw = res.data && res.data.data.items ? res.data.data.items : [];
+  let listRaw721 = [];
+  let listRaw1155 = [];
+  listRaw.forEach((e) => {
+    if (listAddressAccept.includes(e.contract_address)) {
+      if (e.supports_erc.includes('erc721')) {
+        listRaw721.push(e);
+      } else {
+        listRaw1155.push(e);
+      }
+    }
+  });
+  let list721 = [];
+
+  const promises = listRaw721.map(async (rawNft) => {
+    await Promise.all(
+      rawNft.nft_data.map(async (e) => {
+        let nft = await getDetailNFT(chainId, rawNft.contract_address, e.token_id);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + rawNft.tokenID;
+        nft['is1155'] = false;
+        list721.push(nft);
+      })
+    );
+  });
+  await Promise.all(promises);
+  return list721;
+}
+
 export async function listTokensERC115OfOwner(listAddressAccept, walletAddress, chainId) {
   const url = getUrlSubgraph(chainId);
   if (url.url1155.length > 0) {
