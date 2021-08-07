@@ -83,7 +83,7 @@ export default function NFTsFilterBrowse({
             }}
           >
             {/* because isLoadingERC721 will false before start loading so isLoadingErc72 = null may be best option */}
-            {isLoadingErc721 || isLoadingErc721 === null ? (
+            {isLoadingErc721 || isLoadingErc721 === null || !listCollections ? (
               <div className='center' style={{ width: '100%', height: '100%' }}>
                 <IconLoading />
               </div>

@@ -101,7 +101,7 @@
 }
 
 .properties-nft {
-  margin: 1rem;
+  margin: 0.5rem;
   border-radius: 0.75rem;
   border: 0.06rem solid rgb(238, 238, 238);
   overflow: hidden;
@@ -139,14 +139,14 @@
 
 .items-properties {
   width: 100%;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
   max-height: 12.9rem;
   min-height: 7.65rem;
   overflow: auto;
+  margin-left: 1rem;
+  .ant-list-item-meta-description {
+    text-align: end;
+    padding-right: 1rem;
+  }
 }
 .item-properties {
   margin-top: 1rem;

@@ -88,8 +88,10 @@ export default function Browse() {
         let collections = await getAllCollections(chainId);
         let listCollections = await Promise.all(
           collections.map(async (c) => {
-            let collection = (await store.dispatch(getCollection(c.address, null))).collection;
-            if (verifiedContracts.includes(c.address.toLocaleLowerCase())) return collection;
+            if (verifiedContracts.includes(c.address.toLocaleLowerCase())) {
+              let collection = (await store.dispatch(getCollection(c.address, null))).collection;
+              return collection;
+            }
           })
         );
         setListCollections(listCollections.filter((c) => !!c));

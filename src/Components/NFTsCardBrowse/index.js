@@ -15,11 +15,11 @@ import { BottomScrollListener } from 'react-bottom-scroll-listener';
 import LoadingScroll from 'Components/LoadingScroll';
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { getDetailNFT } from 'APIs/NFT/Get';
+import { isArray } from 'lodash';
 
 function NFTsCard({ token, collectionName }) {
-  const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
+  const { chainId, verifiedContracts } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
-
   useEffect(() => {
     async function fetchDetail() {
       if (!!token) {
@@ -37,8 +37,10 @@ function NFTsCard({ token, collectionName }) {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
     }
-    fetchDetail();
-  }, [token, web3, chainId, infoCollections]);
+    if (!detailNFT) {
+      fetchDetail();
+    }
+  }, [token, chainId, detailNFT]);
 
   const visible = !!detailNFT && !!detailNFT.name && !!token;
 
@@ -85,10 +87,12 @@ function NFTsCard({ token, collectionName }) {
                   placement='bottomLeft'
                   content={token.attributes.map((attr, i) => (
                     <div key={i} onClick={handleChildClick}>
-                      <strong>{attr.trait_type}</strong>:
-                      {!!attr.display_type &&
-                      attr.display_type.toLowerCase() === 'date' &&
-                      !!moment(attr.value).isValid()
+                      <strong>{attr.trait_type}</strong>:{' '}
+                      {isArray(attr.value)
+                        ? attr.value.join(', ')
+                        : !!attr.display_type &&
+                          attr.display_type.toLowerCase() === 'date' &&
+                          !!moment(attr.value).isValid()
                         ? moment(
                             attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                           ).format('DD-MM-YYYY')
@@ -176,7 +180,6 @@ export default function NFTsCardBrowse({
   collectionName,
 }) {
   const [loadingNFTs, setLoadingNFTs] = useStateWithCallbackLazy(false);
-
   const paginationCards = useCallback(
     async (e) => {
       if (!!tokens && tokens.length > 0 && !!fetchExplore && !isEndOfOrderList && !loadingNFTs) {

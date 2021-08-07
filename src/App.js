@@ -11,7 +11,6 @@ const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
 const DetailNFT = lazy(() => import('Views/DetailNFT'));
 const SubmitNFT = lazy(() => import('Views/SubmitNft'));
-// const Airdrops = lazy(() => import('Views/Airdrops'));
 const Browse = lazy(() => import('Views/Browse'));
 const Faucet = lazy(() => import('Views/Faucet'));
 const Collection = lazy(() => import('Views/Collection'));

@@ -37,12 +37,8 @@ const initialState = {
   acceptedNftsAddress: [],
 
   //CreativeStudio
-  userCollections: [],
 
   // Campaign - Airdrop
-  nftCampaign: null,
-  listCampaign: [],
-  loadingCampaign: false,
 
   // Notification
   noti: null, // notification = {type:"success/error",message="......"}
@@ -148,26 +144,6 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         creativeStudio: action.creativeStudio,
-      };
-    case actions.SET_USER_COLLECTIONS:
-      return {
-        ...state,
-        userCollections: action.userCollections,
-      };
-    case actions.SET_NFT_CLAIM_TOKEN:
-      return {
-        ...state,
-        nftCampaign: action.nftCampaign,
-      };
-    case actions.FETCH_LIST_CAMPAIGN:
-      return {
-        ...state,
-        listCampaign: action.listCampaign,
-      };
-    case actions.SET_LOADING_CAMPAIGN:
-      return {
-        ...state,
-        loadingCampaign: action.loadingCampaign,
       };
     case actions.LOGOUT:
       return {
