@@ -410,6 +410,12 @@ div.menu-triggerer-container {
   cursor: pointer;
 }
 
+.tree-show-attributes {
+  .ant-tree-title {
+    margin-left: 0.65rem;
+  }
+}
+
 @media (max-width: 992px) {
   .menu-bar {
     height: 60px !important;

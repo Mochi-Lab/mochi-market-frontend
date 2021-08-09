@@ -1,4 +1,4 @@
-import { /* Button,  message, */ Tabs, Grid, Image, Spin } from 'antd';
+import { /* Button,  message, */ Tabs, Grid, Image, Spin, List } from 'antd';
 import { DoubleRightOutlined, DoubleLeftOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +22,7 @@ import tick from 'Assets/icons/tick-green.svg';
 
 import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
-import { objToString } from 'utils/helper';
+import { isArray } from 'lodash';
 
 const { TabPane } = Tabs;
 
@@ -174,26 +174,35 @@ export default function DetailNFT() {
                     </div>
                     <div className='list-properties'>
                       <div className='items-properties'>
-                        {!!token.attributes && token.attributes.length > 0
-                          ? token.attributes.map((attr, i) => (
-                              <div className='item-properties' key={i}>
-                                <div className='name-properties'>{attr.trait_type}</div>
-                                <div className='value-properties textmode'>
-                                  {!!attr.display_type &&
-                                  attr.display_type.toLowerCase() === 'date' &&
-                                  !!moment(attr.value).isValid()
-                                    ? moment(
-                                        attr.value.toString().length < 13
-                                          ? attr.value * 1000
-                                          : attr.value
-                                      ).format('DD-MM-YYYY')
-                                    : typeof attr.value === 'object'
-                                    ? objToString(attr.value)
-                                    : attr.value}
-                                </div>
-                              </div>
-                            ))
-                          : null}
+                        {!!token.attributes && token.attributes.length > 0 ? (
+                          <List
+                            dataSource={token.attributes}
+                            renderItem={(attr, index) => (
+                              <List.Item key={index}>
+                                <List.Item.Meta
+                                  avatar={
+                                    <span className='name-properties'>{attr.trait_type}: </span>
+                                  }
+                                  description={
+                                    isArray(attr.value)
+                                      ? attr.value.join(', ')
+                                      : !!attr.display_type &&
+                                        attr.display_type.toLowerCase() === 'date' &&
+                                        !!moment(attr.value).isValid()
+                                      ? moment(
+                                          attr.value.toString().length < 13
+                                            ? attr.value * 1000
+                                            : attr.value
+                                        ).format('DD-MM-YYYY')
+                                      : typeof attr.value === 'object'
+                                      ? JSON.stringify(attr.value)
+                                      : attr.value
+                                  }
+                                />
+                              </List.Item>
+                            )}
+                          />
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -365,26 +374,35 @@ export default function DetailNFT() {
                     </div>
                     <div className='list-properties'>
                       <div className='items-properties'>
-                        {!!token.attributes && token.attributes.length > 0
-                          ? token.attributes.map((attr, i) => (
-                              <div className='item-properties' key={i}>
-                                <div className='name-properties'>{attr.trait_type}</div>
-                                <div className='value-properties'>
-                                  {!!attr.display_type &&
-                                  attr.display_type.toLowerCase() === 'date' &&
-                                  !!moment(attr.value).isValid()
-                                    ? moment(
-                                        attr.value.toString().length < 13
-                                          ? attr.value * 1000
-                                          : attr.value
-                                      ).format('DD-MM-YYYY')
-                                    : typeof attr.value === 'object'
-                                    ? JSON.stringify(attr.value)
-                                    : attr.value}
-                                </div>
-                              </div>
-                            ))
-                          : null}
+                        {!!token.attributes && token.attributes.length > 0 ? (
+                          <List
+                            dataSource={token.attributes}
+                            renderItem={(attr, index) => (
+                              <List.Item key={index}>
+                                <List.Item.Meta
+                                  avatar={
+                                    <span className='name-properties'>{attr.trait_type}: </span>
+                                  }
+                                  description={
+                                    isArray(attr.value)
+                                      ? attr.value.join(', ')
+                                      : !!attr.display_type &&
+                                        attr.display_type.toLowerCase() === 'date' &&
+                                        !!moment(attr.value).isValid()
+                                      ? moment(
+                                          attr.value.toString().length < 13
+                                            ? attr.value * 1000
+                                            : attr.value
+                                        ).format('DD-MM-YYYY')
+                                      : typeof attr.value === 'object'
+                                      ? JSON.stringify(attr.value)
+                                      : attr.value
+                                  }
+                                />
+                              </List.Item>
+                            )}
+                          />
+                        ) : null}
                       </div>
                     </div>
                   </div>

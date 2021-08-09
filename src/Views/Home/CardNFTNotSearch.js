@@ -11,9 +11,10 @@ import store from 'store/index';
 import { handleChildClick, objToString } from 'utils/helper';
 import moment from 'moment';
 import { getDetailNFT } from 'APIs/NFT/Get';
+import { isArray } from 'lodash';
 
 export default function CardNFTHome({ token }) {
-  const { web3, chainId, verifiedContracts, infoCollections } = useSelector((state) => state);
+  const { web3, chainId, verifiedContracts } = useSelector((state) => state);
   const [detailNFT, setDetailNFT] = useState(null);
 
   useEffect(() => {
@@ -33,8 +34,10 @@ export default function CardNFTHome({ token }) {
         setDetailNFT({ name: '', description: '', image: imgNotFound });
       }
     }
-    fetchDetail();
-  }, [token, web3, chainId, infoCollections]);
+    if (!detailNFT) {
+      fetchDetail();
+    }
+  }, [token, web3, chainId, detailNFT]);
 
   return !!detailNFT && !!token ? (
     <Link
@@ -66,9 +69,11 @@ export default function CardNFTHome({ token }) {
             content={token.attributes.map((attr, i) => (
               <div key={i} onClick={handleChildClick}>
                 <strong>{attr.trait_type}</strong>:{' '}
-                {!!attr.display_type &&
-                attr.display_type.toLowerCase() === 'date' &&
-                !!moment(attr.value).isValid()
+                {isArray(attr.value)
+                  ? attr.value.join(', ')
+                  : !!attr.display_type &&
+                    attr.display_type.toLowerCase() === 'date' &&
+                    !!moment(attr.value).isValid()
                   ? moment(
                       attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                     ).format('DD-MM-YYYY')
