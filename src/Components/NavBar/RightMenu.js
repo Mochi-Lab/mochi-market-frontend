@@ -7,6 +7,7 @@ import avatarDefault from 'Assets/avatar-default.svg';
 import ToggleDarkMode from 'Components/ToggleDarkMode';
 import LogoutWallet from 'Components/Logout';
 import { getContractAddress, getSymbol } from 'utils/getContractAddress';
+import { DEX_URL_BY_CHAIN_ID } from 'Constants';
 
 const SubMenu = Menu.SubMenu;
 
@@ -61,18 +62,16 @@ const RightMenu = ({ onClose }) => {
       {!!getContractAddress(chainId) && chainId === 97 && (
         generateMenuItemForRouteKey('/faucet')
       )}
-      {chainId === 56 && (
-        <Menu.Item key='getMOMA' className="get-moma">
-          <div className='btn-get-moma center'>
+      {DEX_URL_BY_CHAIN_ID[chainId] && (
+        <Menu.Item key='buyMOMA'>
             <a
-              href='https://exchange.pancakeswap.finance/#/swap?outputCurrency=0xB72842D6F5feDf91D22d56202802Bb9A79C6322E'
+              href={DEX_URL_BY_CHAIN_ID[chainId]}
               target='_blank'
               rel='noreferrer'
               className='text-white'
             >
-              Get $MOMA
+              <div class="menu-button">Buy $MOMA</div>
             </a>
-          </div>
         </Menu.Item>
       )}
 
