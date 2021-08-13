@@ -1,6 +1,7 @@
 import { Row, Col } from 'antd';
+import _ from 'lodash';
 import React, { useCallback } from 'react';
-import store from 'store/index';
+import { useSelector } from 'react-redux'
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { BottomScrollListener } from 'react-bottom-scroll-listener';
@@ -8,8 +9,7 @@ import LoadingScroll from 'Components/LoadingScroll';
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import { NFTCardLoader, NFTCardDetail, useDetailNFT } from 'Components/Common/NFTCard'
 
-const NFTsCard = React.memo(({ token, collectionName }) => {
-  const { chainId, verifiedContracts } = store.getState()
+const NFTsCard = React.memo(({ chainId, token, collectionName, verifiedContracts }) => {
   const detailNFT = useDetailNFT(chainId, token);
   return (
     <Col
@@ -24,11 +24,11 @@ const NFTsCard = React.memo(({ token, collectionName }) => {
       {
         detailNFT === null
           ? <NFTCardLoader />
-          : <NFTCardDetail {...{ chainId, token, detailNFT, collectionName, verifiedContracts }} />
+          : <NFTCardDetail {...{ detailNFT, chainId, token, collectionName, verifiedContracts }} />
       }
     </Col>
   );
-})
+}, (_props, props) => _.isEqual(_props, props))
 
 export default function NFTsCardBrowse({
   tokens,
@@ -38,6 +38,8 @@ export default function NFTsCardBrowse({
   collectionName,
 }) {
   const [loadingNFTs, setLoadingNFTs] = useStateWithCallbackLazy(false);
+  // warning: useSelector may cause massive re-render
+  const { chainId, verifiedContracts } = useSelector((state) => state);
   const paginationCards = useCallback(
     async (e) => {
       if (!!tokens && tokens.length > 0 && !!fetchExplore && !isEndOfOrderList && !loadingNFTs) {
@@ -59,8 +61,14 @@ export default function NFTsCardBrowse({
             tokens.map((token) => (
               <NFTsCard
                 key={token.sellId}
-                token={token}
-                collectionName={collectionName}
+                {
+                  ... {
+                    chainId,
+                    token,
+                    collectionName,
+                    verifiedContracts,
+                  }
+                }
               />
             ))}
         </BottomScrollListener>
