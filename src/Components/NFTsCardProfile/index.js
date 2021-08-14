@@ -7,8 +7,6 @@ import imgNotFound from 'Assets/notfound.png';
 import tick from 'Assets/icons/tick-green.svg';
 import '../NFTsCardBrowse/index.scss';
 import 'Assets/css/common-card-nft.scss';
-import { getCollection } from 'store/actions';
-import store from 'store/index';
 import { handleChildClick, objToString } from 'utils/helper';
 import moment from 'moment';
 import empty from 'Assets/icons/empty.svg';
@@ -27,9 +25,6 @@ function NFTsCardProfile({ token, onSale }) {
       try {
         let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
         if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
-        token.nameCollection = (
-          await store.dispatch(getCollection(token.collectionAddress, null))
-        ).collection.name;
         setDetailNFT(nft);
       } catch (error) {
         setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
@@ -125,9 +120,9 @@ function NFTsCardProfile({ token, onSale }) {
                         className='link-collection-name'
                         tag='span'
                       >
-                        {!!detailNFT.nameCollection
-                          ? detailNFT.nameCollection
-                          : token.nameCollection}
+                        {!!detailNFT.collectionName
+                          ? detailNFT.collectionName
+                          : token.collectionName}
                       </Link>
                       {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                         <img src={tick} alt='icon-tick' className='icon-tick' />

@@ -6,9 +6,7 @@ import imgNotFound from 'Assets/notfound.png';
 import { getSymbol } from 'utils/getContractAddress';
 import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
-import { getCollection } from 'store/actions';
 import { handleChildClick, objToString } from 'utils/helper';
-import store from 'store/index';
 import moment from 'moment';
 import { getDetailNFT } from 'APIs/NFT/Get';
 import { isArray } from 'lodash';
@@ -20,12 +18,14 @@ export default function CardCollection({ token, infoCollection }) {
     async function fetchDetail() {
       if (!!token) {
         try {
-          let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
-          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
-          token.nameCollection = (
-            await store.dispatch(getCollection(token.collectionAddress, null))
-          ).collection.name;
-          setDetailNFT(nft);
+          if (!!token.token) {
+            setDetailNFT(token);
+            if (!token.name || token.name === 'Unnamed') token.name = 'ID: ' + token.tokenId;
+          } else {
+            let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
+            if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
+            setDetailNFT(nft);
+          }
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
         }
@@ -43,7 +43,6 @@ export default function CardCollection({ token, infoCollection }) {
       to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${
         !!token.sellId ? token.sellId : 'null'
       }`}
-      target='_blank'
     >
       <Card
         className='collection-card card-nft'
@@ -97,7 +96,7 @@ export default function CardCollection({ token, infoCollection }) {
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
-              {!!infoCollection.name ? infoCollection.name : token.nameCollection}
+              {!!infoCollection.name ? infoCollection.name : token.collectionName}
               {!!token.collectionAddress &&
               verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />

@@ -7,7 +7,7 @@ import EditCollection from './EditCollection';
 import ViewLess from './ViewLess';
 import ViewAll from './ViewAll';
 import DisplayInfoCollection from './DisplayInfoCollection';
-import { setInfoCollections, getCollection } from 'store/actions';
+import { getCollection } from 'store/actions';
 import store from 'store/index';
 import { newMintOf721, newMintOf1155 } from 'utils/helper';
 import { selectChain } from 'Connections/web3Modal.js';
@@ -23,20 +23,14 @@ import 'Assets/css/common-card-nft.scss';
 export default function Collection() {
   let history = useHistory();
 
-  const {
-    chainId,
-    walletAddress,
-    verifiedContracts,
-    infoCollections,
-    nftList,
-    infoAdmins,
-  } = useSelector((state) => state);
+  const { chainId, walletAddress, verifiedContracts, nftList, infoAdmins } = useSelector(
+    (state) => state
+  );
 
   const { chainID, addressToken } = useParams();
   const statusViewAll = new URLSearchParams(useLocation().search).get('ViewAll');
 
   const [visibleEitdCollection, setvisibleEitdCollection] = useState(false);
-  const [collections, setCollections] = useState(infoCollections);
   const [infoCollection, setInfoCollection] = useState();
   const [statusEdit, setStatusEdit] = useState(false);
   const [nftsOnSale, setNftsOnSale] = useState();
@@ -58,29 +52,14 @@ export default function Collection() {
     if (parseInt(chainId) !== parseInt(chainID)) selectChain(chainID, walletAddress);
   }, [walletAddress, chainId, chainID]);
 
-  const getInfoCollection = useCallback(
-    async (collection) => {
-      let _collections;
-      let tokenAddress = addressToken.toLowerCase();
-      if (!!collection) {
-        _collections = collections;
-        _collections[tokenAddress] = collection;
-        setInfoCollection(collection);
-      } else {
-        let res = await store.dispatch(getCollection(tokenAddress, collections));
-        _collections = res.infoCollections;
-        if (infoCollection !== res.collection) {
-          setInfoCollection(res.collection);
-        }
-      }
-      if (_collections[tokenAddress] !== collections[tokenAddress]) {
-        setCollections(_collections);
-        await store.dispatch(setInfoCollections(_collections));
-      }
-      return _collections;
-    },
-    [addressToken, collections, infoCollection]
-  );
+  const getInfoCollection = useCallback(async () => {
+    let tokenAddress = addressToken.toLowerCase();
+    let res = await store.dispatch(getCollection(tokenAddress));
+    if (infoCollection !== res.collection) {
+      setInfoCollection(res.collection);
+    }
+    return res;
+  }, [addressToken, infoCollection]);
 
   useEffect(() => {
     async function loadInfor() {
@@ -185,13 +164,13 @@ export default function Collection() {
   const handleSetViewAll = useCallback(
     async (status) => {
       setViewAll(status);
-      if (!!status) {
+      if (!status) {
         history.push({
-          search: '?ViewAll=true',
+          search: '?ViewAll=false',
         });
       } else {
         history.push({
-          search: '?ViewAll=false',
+          search: '?ViewAll=true',
         });
       }
     },
@@ -199,10 +178,10 @@ export default function Collection() {
   );
 
   useEffect(() => {
-    if (statusViewAll === 'true') {
-      handleSetViewAll(true);
-    } else {
+    if (statusViewAll === 'false') {
       handleSetViewAll(false);
+    } else {
+      handleSetViewAll(true);
     }
   }, [statusViewAll, handleSetViewAll]);
   useEffect(() => {

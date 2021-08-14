@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Popover } from 'antd';
 import imgNotFound from 'Assets/notfound.png';
 import { getCollection } from 'store/actions';
@@ -33,20 +33,25 @@ const __NFTCardLoader = () => {
           <div className='name-nft'>&nbsp;</div>
         </Col>
       </Row>
-    </Card>)
-}
+    </Card>
+  );
+};
 
-export const __NFTCardDetail = ({ chainId, token, detailNFT, collectionName, verifiedContracts }) => {
-  const history = useHistory()
-  const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`
-  const itemUrl = `/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`
+export const __NFTCardDetail = ({
+  chainId,
+  token,
+  detailNFT,
+  collectionName,
+  verifiedContracts,
+}) => {
+  const history = useHistory();
+  const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
+  const itemUrl = `/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`;
   const onClick = (event) => {
     event.preventDefault();
     let eventTarget = event.target;
-    history.push(
-      eventTarget.matches("span.link-collection-name") ? collectionUrl : itemUrl
-    )
-  }
+    history.push(eventTarget.matches('span.link-collection-name') ? collectionUrl : itemUrl);
+  };
   return (
     <a href={itemUrl} onClick={onClick}>
       <Card
@@ -82,12 +87,12 @@ export const __NFTCardDetail = ({ chainId, token, detailNFT, collectionName, ver
                   : !!attr.display_type &&
                     attr.display_type.toLowerCase() === 'date' &&
                     !!moment(attr.value).isValid()
-                    ? moment(
+                  ? moment(
                       attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                     ).format('DD-MM-YYYY')
-                    : typeof attr.value === 'object'
-                      ? objToString(attr.value)
-                      : attr.value}
+                  : typeof attr.value === 'object'
+                  ? objToString(attr.value)
+                  : attr.value}
               </div>
             ))}
           >
@@ -104,49 +109,37 @@ export const __NFTCardDetail = ({ chainId, token, detailNFT, collectionName, ver
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
-              <span
-                className='link-collection-name'
-                tag='span'
-              >
+              <span className='link-collection-name' tag='span'>
                 {collectionName || token.nameCollection}
               </span>
-              {
-                verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) && (
-                  <img src={tick} alt='icon-tick' className='icon-tick' />
-                )
-              }
+              {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) && (
+                <img src={tick} alt='icon-tick' className='icon-tick' />
+              )}
             </div>
-            <div className='name-nft textmode'>
-              {token.name || detailNFT.name}
-            </div>
+            <div className='name-nft textmode'>{token.name || detailNFT.name}</div>
           </Col>
         </Row>
       </Card>
     </a>
-  )
-}
+  );
+};
 
-export const useDetailNFT = (chainId, token,) => {
+export const useDetailNFT = (chainId, token) => {
   const [detailNFT, setDetailNFT] = useState(null);
   useEffect(() => {
     async function fetchDetail() {
       if (!token) return setDetailNFT({ name: '', description: '', image: imgNotFound });
       try {
-        let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
-        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
-        token.nameCollection = (
-          await store.dispatch(getCollection(token.collectionAddress, null))
-        ).collection.name;
-        setDetailNFT(nft);
-      }
-      catch (error) {
+        if (!token.name || token.name === 'Unnamed') token.name = 'ID: ' + token.tokenId;
+        setDetailNFT(token);
+      } catch (error) {
         setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
       }
     }
     fetchDetail();
   }, [chainId, token]);
   return detailNFT;
-}
+};
 
-export const NFTCardLoader = React.memo(__NFTCardLoader)
-export const NFTCardDetail = React.memo(__NFTCardDetail)
+export const NFTCardLoader = React.memo(__NFTCardLoader);
+export const NFTCardDetail = React.memo(__NFTCardDetail);
