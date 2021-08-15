@@ -253,8 +253,13 @@
 
 .tokenpayment {
   border-radius: 1rem !important;
-  width: 125px;
+  min-width: 125px;
   margin: 0.25rem;
+  .icon-tokenpayment {
+    margin-right: 0rem;
+    position: relative;
+    bottom: 1px;
+  }
 }
 .symbol-tokenpayment {
   margin-left: 0.5rem;

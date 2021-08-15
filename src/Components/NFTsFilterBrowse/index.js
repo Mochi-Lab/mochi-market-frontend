@@ -56,6 +56,9 @@ export default function NFTsFilterBrowse({
   };
 
   const selectTokenPayment = (_tokenPayment) => {
+    // 'price sort' will not be enabled if "token payment" is 'all' ( for now )
+    // #TODO : enable cross-token price sorting by convert all to USD
+    if(_tokenPayment === '0') selectSortType('');
     setTokenPayment(_tokenPayment);
     setSkip(0);
     setNftsOnSale(null);
@@ -168,7 +171,7 @@ export default function NFTsFilterBrowse({
                         onChange={(value) => selectTokenPayment(value)}
                         className='tokenpayment textmode'
                       >
-                        <Option value='0' key='-1' className='text-center'>
+                        <Option value='0' key='-1' className='text-center' title=''>
                           All
                         </Option>
                         {!!getTokensPayment(chainId)
@@ -196,9 +199,9 @@ export default function NFTsFilterBrowse({
                         size='large'
                         onChange={(_typeSort) => selectSortType(_typeSort)}
                       >
-                        <Option value=''>Recently listed</Option>
-                        <Option value='1'>Price asc</Option>
-                        <Option value='-1'>Price desc</Option>
+                        <Option value='' title=''>Recently listed</Option>
+                        <Option value='1' disabled={tokenPayment === '0'} title=''>Price asc</Option>
+                        <Option value='-1' disabled={tokenPayment === '0'} title=''>Price desc</Option>
                       </Select>
                     </Col>
                   </Row>
