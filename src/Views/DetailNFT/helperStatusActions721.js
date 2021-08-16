@@ -32,7 +32,8 @@ export default async function helperStatusActions721(
       } else {
         // check if user is owner of token
         const order = await getSellOrderBySellId(chainId, sellID);
-        if (order.isActive) {
+        //checking order is active and correct tokenID
+        if (order.isActive && order.tokenId === id) {
           tokenOwner = order.seller;
           setOwners([]);
           setOwnersOnSale([
