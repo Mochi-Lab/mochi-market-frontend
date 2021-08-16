@@ -57,6 +57,7 @@ export default function CardNFTHome({ token }) {
                 alt={`img-nft-${token.tokenId}`}
                 src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
+                onError={(e) => {e.target.onerror = null; e.target.src= !!token.image ? token.image : detailNFT.image}}
               />
             </div>
           </div>
