@@ -56,13 +56,13 @@ export const __NFTCardDetail = ({ chainId, token, detailNFT, collectionName, ver
             <div
               className='blurred-background'
               style={{
-                backgroundImage: `url(${token.image || detailNFT.image})`,
+                backgroundImage: `url(${token.thumb || detailNFT.image})`,
               }}
             />
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}
-                src={token.image || detailNFT.image}
+                src={token.thumb || detailNFT.image}
                 className='display-resource-nft'
               />
             </div>

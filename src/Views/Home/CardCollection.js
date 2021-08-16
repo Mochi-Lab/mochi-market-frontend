@@ -8,7 +8,6 @@ import store from 'store/index';
 import { useEffect, useState } from 'react';
 
 export default function CardCollection({ addressToken, chainId }) {
-  console.log();
   const { verifiedContracts, nftList } = useSelector((state) => state);
   const [collection, setCollection] = useState({});
   const [is1155, setIs1155] = useState({});

@@ -51,12 +51,12 @@ export default function CardCollection({ token, infoCollection }) {
           <div className='wrap-cover'>
             <div
               className='blurred-background'
-              style={{ backgroundImage: `url(${!!token.image ? token.image : detailNFT.image})` }}
+              style={{ backgroundImage: `url(${!!token.thumb ? token.thumb : detailNFT.image})` }}
             />
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}
-                src={!!token.image ? token.image : detailNFT.image}
+                src={!!token.thumb ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
               />
             </div>
