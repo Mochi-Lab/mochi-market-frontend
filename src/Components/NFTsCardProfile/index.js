@@ -69,12 +69,12 @@ function NFTsCardProfile({ token, onSale }) {
                   <div className='wrap-cover'>
                     <div
                       className='blurred-background'
-                      style={{ backgroundImage: `url(${!!token.thumb ? token.thumb : detailNFT.image})` }}
+                      style={{ backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})` }}
                     />
                     <div className='NFTResource-Wrapper'>
                       <img
-                        alt={`img-nft-${!!token.thumb ? token.thumb : detailNFT.image}`}
-                        src={!!token.thumb ? token.thumb : detailNFT.image}
+                        alt={`img-nft-${token.thumb !== 'none' ? token.thumb : detailNFT.image}`}
+                        src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
                         className='display-resource-nft'
                       />
                     </div>
