@@ -1,12 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import _ from 'lodash';
-import { Card, Row, Col, Popover } from 'antd';
-import { Link } from 'react-router-dom';
+import { Row, Col } from 'antd';
 import { useSelector } from 'react-redux';
-import { getSymbol } from 'utils/getContractAddress';
-import imgNotFound from 'Assets/notfound.png';
-import moment from 'moment';
-import tick from 'Assets/icons/tick-green.svg';
 import './index.scss';
 import 'Assets/css/common-card-nft.scss';
 import { BottomScrollListener } from 'react-bottom-scroll-listener';

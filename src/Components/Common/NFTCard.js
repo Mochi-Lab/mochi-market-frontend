@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Popover } from 'antd';
 import imgNotFound from 'Assets/notfound.png';
-import { getCollection } from 'store/actions';
-import store from 'store/index';
-import { getDetailNFT } from 'APIs/NFT/Get';
 import { useHistory } from 'react-router-dom';
 import { getSymbol } from 'utils/getContractAddress';
 import moment from 'moment';
