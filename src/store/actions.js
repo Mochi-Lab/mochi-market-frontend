@@ -2,13 +2,10 @@ import {
   parseBalance,
   listTokensERC721OfOwner,
   listTokensERC115OfOwner,
-  getTokenUri,
   listTokenERC721OfOwnerCQT,
 } from 'utils/helper';
 import ERC721 from 'Contracts/ERC721.json';
 import ERC1155 from 'Contracts/ERC1155.json';
-import SampleERC721 from 'Contracts/SampleERC721.json';
-import SampleERC1155 from 'Contracts/SampleERC1155.json';
 import AddressesProvider from 'Contracts/AddressesProvider.json';
 import Market from 'Contracts/Market.json';
 import NFTList from 'Contracts/NFTList.json';
@@ -736,68 +733,33 @@ export const setStatusActivity = (activity) => (dispatch) => {
 // Collection
 export const getCollection = (addressToken, _collections) => async (dispatch, getState) => {
   addressToken = addressToken.toLowerCase();
-  const { web3, nftList, chainId, infoCollections } = getState();
+  const { chainId, infoCollections } = getState();
   let collections = !!_collections ? _collections : infoCollections;
   let collection;
+
   if (!!collections[addressToken]) {
     collection = collections[addressToken];
-  } else {
-    let res;
-    if (!collections[addressToken]) {
-      res = await getCollectionByAddress(addressToken, chainId);
-    }
+    return { collection, infoCollections: collections };
+  }
+
+  if (!collections[addressToken]) {
+    let res = await getCollectionByAddress(addressToken, chainId);
+
     if (!!res && !!res.collection) {
       collection = res.collection;
       if (!collection.name) collection.name = 'Unnamed';
       collections[addressToken] = res.collection;
       dispatch(setInfoCollections(collections));
-    } else {
-      if (web3 && nftList) {
-        let nameCollection;
-        let is1155 = await nftList.methods.isERC1155(addressToken).call();
-        let tokenURI;
-        if (!!is1155) {
-          const erc1155Instances = await new web3.eth.Contract(SampleERC1155.abi, addressToken);
-          try {
-            tokenURI = await erc1155Instances.methods.uri().call();
-          } catch (error) {
-            tokenURI = null;
-          }
-          try {
-            nameCollection = await erc1155Instances.methods.name().call();
-          } catch (error) {
-            nameCollection = null;
-          }
-        } else {
-          const erc721Instances = await new web3.eth.Contract(SampleERC721.abi, addressToken);
-          try {
-            nameCollection = await erc721Instances.methods.name().call();
-          } catch (error) {
-            nameCollection = null;
-          }
-        }
+      return { collection, infoCollections: collections };
+    }
 
-        if (!nameCollection && !!tokenURI) {
-          try {
-            let req = await getTokenUri(tokenURI);
-            const data = req.data;
-
-            nameCollection = !!data.name ? data.name : 'Unnamed';
-          } catch (error) {
-            nameCollection = 'Unnamed';
-          }
-        } else if (!nameCollection && !tokenURI) {
-          nameCollection = 'Unnamed';
-        }
-
-        collection = { name: nameCollection, logo: logoCollectionDefault, addressToken, chainId };
-        collections[addressToken] = collection;
-        dispatch(setInfoCollections(collections));
-      }
+    if (!res || !res.collection) {
+      collection = { name: 'Unnamed', logo: logoCollectionDefault, addressToken, chainId };
+      collections[addressToken] = collection;
+      dispatch(setInfoCollections(collections));
+      return { collection, infoCollections: collections };
     }
   }
-
-  return { collection, infoCollections: collections };
 };
 
 // user

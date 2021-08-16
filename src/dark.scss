@@ -533,6 +533,10 @@ html[data-theme='dark'] {
   background-color: #181818 !important;
 }
 
+[data-theme='dark'] .items-properties .ant-list-split .ant-list-item {
+  border-bottom: 1px solid #383232;
+}
+
 @media (max-width: 767px) {
   [data-theme='dark'] .left-profile .info-user {
     background: none;
@@ -586,7 +590,8 @@ html[data-theme='dark'] {
       .submit-button:disabled {
         background: #515151 !important;
       }
-      .approve-pending-list, div.avatar-picker {
+      .approve-pending-list,
+      div.avatar-picker {
         border-color: #666 !important;
       }
       input.contract-address {

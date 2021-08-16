@@ -184,19 +184,22 @@ export default function DetailNFT() {
                                     <span className='name-properties'>{attr.trait_type}: </span>
                                   }
                                   description={
-                                    isArray(attr.value)
-                                      ? attr.value.join(', ')
-                                      : !!attr.display_type &&
-                                        attr.display_type.toLowerCase() === 'date' &&
-                                        !!moment(attr.value).isValid()
-                                      ? moment(
-                                          attr.value.toString().length < 13
-                                            ? attr.value * 1000
-                                            : attr.value
-                                        ).format('DD-MM-YYYY')
-                                      : typeof attr.value === 'object'
-                                      ? JSON.stringify(attr.value)
-                                      : attr.value
+                                    <span className='textmode'>
+                                      {' '}
+                                      {isArray(attr.value)
+                                        ? attr.value.join(', ')
+                                        : !!attr.display_type &&
+                                          attr.display_type.toLowerCase() === 'date' &&
+                                          !!moment(attr.value).isValid()
+                                        ? moment(
+                                            attr.value.toString().length < 13
+                                              ? attr.value * 1000
+                                              : attr.value
+                                          ).format('DD-MM-YYYY')
+                                        : typeof attr.value === 'object'
+                                        ? JSON.stringify(attr.value)
+                                        : attr.value}
+                                    </span>
                                   }
                                 />
                               </List.Item>
@@ -214,7 +217,7 @@ export default function DetailNFT() {
               <div className='info-order-nft'>
                 <div className='collections-nft'>
                   <Link to={`/collection/${chainId}/${addressToken.toLowerCase()}`}>
-                    {token.nameCollection}
+                    {token.collectionName}
                   </Link>
                   {verifiedContracts.includes(addressToken.toLowerCase()) ? (
                     <img src={tick} alt='icon-tick' />

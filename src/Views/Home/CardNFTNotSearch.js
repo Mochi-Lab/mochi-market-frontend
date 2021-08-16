@@ -6,8 +6,6 @@ import imgNotFound from 'Assets/notfound.png';
 import { getSymbol } from 'utils/getContractAddress';
 import tick from 'Assets/icons/tick-green.svg';
 import 'Assets/css/common-card-nft.scss';
-import { getCollection } from 'store/actions';
-import store from 'store/index';
 import { handleChildClick, objToString } from 'utils/helper';
 import moment from 'moment';
 import { getDetailNFT } from 'APIs/NFT/Get';
@@ -23,9 +21,6 @@ export default function CardNFTHome({ token }) {
         try {
           let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
           if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
-          token.nameCollection = (
-            await store.dispatch(getCollection(nft.collectionAddress, null))
-          ).collection.name;
           setDetailNFT(nft);
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
@@ -40,10 +35,7 @@ export default function CardNFTHome({ token }) {
   }, [token, web3, chainId, detailNFT]);
 
   return !!detailNFT && !!token ? (
-    <Link
-      to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`}
-      target='_blank'
-    >
+    <Link to={`/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`}>
       <Card
         className='home-card card-nft'
         cover={
@@ -101,7 +93,7 @@ export default function CardNFTHome({ token }) {
                 className='link-collection-name'
                 tag='span'
               >
-                {!!detailNFT.nameCollection ? detailNFT.nameCollection : token.nameCollection}
+                {!!detailNFT.collectionName ? detailNFT.collectionName : token.collectionName}
               </Link>
               {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) ? (
                 <img src={tick} alt='icon-tick' className='icon-tick' />

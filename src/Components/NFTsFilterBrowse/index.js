@@ -137,7 +137,6 @@ export default function NFTsFilterBrowse({
                                     <div className='name-collection textmode'>
                                       <a
                                         href={`/collection/${chainId}/${collection.addressToken}?ViewAll=true`}
-                                        target='_blank'
                                         rel='noreferrer'
                                         className='link-collection-name'
                                       >
