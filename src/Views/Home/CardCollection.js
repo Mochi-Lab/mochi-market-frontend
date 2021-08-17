@@ -30,6 +30,10 @@ export default function CardCollection({ addressToken, chainId }) {
           cover={<div className='wrap-cover'></div>}
         >
           <div className='div-box-top'>
+            <div
+                className='blurred-background'
+                style={{ backgroundImage: `url(${collection.logo})` }}
+            />
             <img
               alt={`img-collection`}
               src={collection.logo}
