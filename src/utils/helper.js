@@ -2,6 +2,7 @@ import { getDetailNFT } from 'APIs/NFT/Get';
 import { getContractAddress } from 'utils/getContractAddress';
 import { getUrlSubgraph } from 'utils/getUrlsSubgraph';
 const ERC20 = require('Contracts/ERC20.json');
+const ERC721 = require('Contracts/ERC721.json');
 const axios = require('axios');
 
 export function parseBalance(_balanceWei, _decimals) {
@@ -147,24 +148,39 @@ export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, 
   return list721;
 }
 
-export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress, chainId) {
+export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress, chainId, web3) {
   const res = await axios.get(
     `https://api.covalenthq.com/v1/${chainId}/address/${walletAddress}/balances_v2/?&key=${process.env.REACT_APP_CQT_KEY}?&nft=true&match={%22type%22:%22nft%22}`
   );
   let listRaw = res.data && res.data.data.items ? res.data.data.items : [];
   let listRaw721 = [];
   let listRaw1155 = [];
-  listRaw.forEach((e) => {
+  for (let i = 0; i < listRaw.length; i++) {
+    let e = listRaw[i];
     if (listAddressAccept.includes(e.contract_address)) {
       if (e.supports_erc.includes('erc721')) {
         listRaw721.push(e);
-      } else {
+      } else if (e.supports_erc.includes('erc1155')) {
         listRaw1155.push(e);
       }
     }
-  });
+    // Only For Block Creatures
+    if (e.contract_address.toLowerCase() === '0x56536c54abb2d2d2512965af01c98550edb15ef9') {
+      const instance = new web3.eth.Contract(ERC721.abi, e.contract_address);
+      let balance = await instance.methods.balanceOf(walletAddress).call();
+      if (balance > 0) {
+        let nft_data = [];
+        for (let i = 0; i < balance; i++) {
+          let obj = {};
+          obj.token_id = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+          nft_data.push(obj);
+        }
+        e.nft_data = nft_data;
+        listRaw721.push(e);
+      }
+    }
+  }
   let list721 = [];
-
   const promises = listRaw721.map(async (rawNft) => {
     await Promise.all(
       rawNft.nft_data.map(async (e) => {
