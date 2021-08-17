@@ -42,13 +42,14 @@ export default function CardNFTHome({ token }) {
           <div className='wrap-cover'>
             <div
               className='blurred-background'
-              style={{ backgroundImage: `url(${!!token.image ? token.image : detailNFT.image})` }}
+              style={{ backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})` }}
             />
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}
-                src={!!token.image ? token.image : detailNFT.image}
+                src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
+                onError={(e) => {e.target.onerror = null; e.target.src= !!token.image ? token.image : detailNFT.image}}
               />
             </div>
           </div>

@@ -58,14 +58,15 @@ export const __NFTCardDetail = ({
             <div
               className='blurred-background'
               style={{
-                backgroundImage: `url(${token.image || detailNFT.image})`,
+                backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})`,
               }}
             />
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}
-                src={token.image || detailNFT.image}
+                src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
+                onError={(e) => {e.target.onerror = null; e.target.src= !!token.image ? token.image : detailNFT.image}}
               />
             </div>
           </div>

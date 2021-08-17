@@ -373,7 +373,7 @@ export default function DetailNFT() {
                 <div className='properties-nft'>
                   <div className='content-properties'>
                     <div className='title-tab-properties'>
-                      <h3>Properties</h3>
+                      <h3 className='textmode'>Properties</h3>
                     </div>
                     <div className='list-properties'>
                       <div className='items-properties'>
