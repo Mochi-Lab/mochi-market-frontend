@@ -7,6 +7,7 @@ import 'Views/Home/index.scss';
 import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
+import { isArray } from 'lodash';
 
 export default function ViewLess({ infoCollection, nftsOnSale, listNewNFT, setViewAll, viewAll }) {
   return (
@@ -20,26 +21,34 @@ export default function ViewLess({ infoCollection, nftsOnSale, listNewNFT, setVi
             </div>
           </div>
         </div>
-        <Slider className='carousel-new-nfts' {...carouselCard}>
-          {nftsOnSale.map((nft, i) => (
-            <div className='item-carousel' key={i}>
+        {
+          isArray(nftsOnSale) && nftsOnSale.length > 0 && (
+            <Slider className='carousel-new-nfts' {...carouselCard}>
+              {nftsOnSale.map((nft, i) => (
+                <div className='item-carousel' key={i}>
               <CardCollection token={nft} infoCollection={infoCollection} />
             </div>
           ))}
         </Slider>
+          )
+        }
       </div>
 
       <div className='new-nfts'>
         <div className='title-new'>
           <h2 className='textmode'>Newly Created</h2>
         </div>
-        <Slider className='carousel-new-nfts' {...carouselCard}>
-          {listNewNFT.map((nft, i) => (
-            <div className='item-carousel' key={i}>
+        {
+          isArray(listNewNFT) && listNewNFT.length > 0 && (
+            <Slider className='carousel-new-nfts' {...carouselCard}>
+              {listNewNFT.map((nft, i) => (
+                <div className='item-carousel' key={i}>
               <CardCollection token={nft} infoCollection={infoCollection} />
             </div>
           ))}
         </Slider>
+          )
+        }
       </div>
     </div>
   );
