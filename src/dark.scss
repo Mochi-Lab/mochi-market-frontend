@@ -544,6 +544,9 @@ html[data-theme='dark'] {
 }
 
 [data-theme='dark'] {
+  .page.content {
+    background-image: url('Assets/backgrounds/pattern-26_dark.png');
+  }
   .slick-arrow {
     background: #1a1a1a !important;
     border: 1px solid #333;
