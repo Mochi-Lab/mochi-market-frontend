@@ -10,6 +10,7 @@ import { handleChildClick, objToString } from 'utils/helper';
 import moment from 'moment';
 import { getDetailNFT } from 'APIs/NFT/Get';
 import { isArray } from 'lodash';
+import { NFTCardLoader } from 'Components/Common/NFTCard';
 
 export default function CardCollection({ token, infoCollection }) {
   const { web3, chainId, verifiedContracts } = useSelector((state) => state);
@@ -37,6 +38,9 @@ export default function CardCollection({ token, infoCollection }) {
       fetchDetail();
     }
   }, [token, web3, chainId, detailNFT]);
+  
+  // #TODO
+  if (!!detailNFT && !getSymbol(chainId)) return <NFTCardLoader />;
 
   return !!detailNFT ? (
     <Link
