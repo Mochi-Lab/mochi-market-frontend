@@ -75,7 +75,7 @@ export default function NFTsFilterBrowse({
       <Layout style={{ minHeight: '100%' }}>
         <Layout
           style={{ padding: '1rem' }}
-          className='nfts-filter-browse-container background-mode'
+          className='nfts-filter-browse-container'
         >
           <Content
             className='site-layout-background'
