@@ -42,6 +42,7 @@ export const __NFTCardDetail = ({
   verifiedContracts,
 }) => {
   const history = useHistory();
+  if(!getSymbol(chainId)) return <NFTCardLoader />;
   const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
   const itemUrl = `/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`;
   const onClick = (event) => {
