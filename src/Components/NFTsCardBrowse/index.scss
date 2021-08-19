@@ -54,7 +54,9 @@
 }
 
 @media (max-width: 768px) {
-  .content-list-nft .ant-card .ant-card-cover img {
-    height: 35vh;
+  .content-list-nft .ant-card .ant-card-cover {
+    img, div.blurred-background {
+      height: 35vh;
+    }
   }
 }
