@@ -61,6 +61,7 @@ export default function Collection() {
       }
       return res;
     }
+    return null;
   }, [addressToken, chainId, infoCollection]);
 
   useEffect(() => {
