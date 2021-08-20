@@ -53,13 +53,16 @@ export default function Collection() {
   }, [walletAddress, chainId, chainID]);
 
   const getInfoCollection = useCallback(async () => {
-    let tokenAddress = addressToken.toLowerCase();
-    let res = await store.dispatch(getCollection(tokenAddress));
-    if (infoCollection !== res.collection) {
-      setInfoCollection(res.collection);
+    if(!!chainId) {
+      let tokenAddress = addressToken.toLowerCase();
+      let res = await store.dispatch(getCollection(tokenAddress));
+      if (infoCollection !== res.collection) {
+        setInfoCollection(res.collection);
+      }
+      return res;
     }
-    return res;
-  }, [addressToken, infoCollection]);
+    return null;
+  }, [addressToken, chainId, infoCollection]);
 
   useEffect(() => {
     async function loadInfor() {

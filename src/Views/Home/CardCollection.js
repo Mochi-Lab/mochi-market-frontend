@@ -19,8 +19,8 @@ export default function CardCollection({ addressToken, chainId }) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
       setIs1155(is1155);
     }
-    if (!!nftList) fetchCollection();
-  }, [addressToken, nftList]);
+    if (!!chainId && !!nftList) fetchCollection();
+  }, [addressToken, chainId, nftList]);
 
   return !!collection.addressToken ? (
     <div className='item-carousel'>
