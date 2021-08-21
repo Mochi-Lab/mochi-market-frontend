@@ -15,6 +15,7 @@ const Browse = lazy(() => import('Views/Browse'));
 const Faucet = lazy(() => import('Views/Faucet'));
 const Collection = lazy(() => import('Views/Collection'));
 const NotFound = lazy(() => import('Views/NotFound'));
+const Dev = lazy(() => import('Views/Dev'));
 
 function App() {
   useEffect(() => {
@@ -54,6 +55,7 @@ function App() {
                 <Route exact path='/collection/:chainID/:addressToken' component={Collection} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
                 <Route exact path='/faucet' component={Faucet} />
+                { process.env.REACT_APP_ENVIRONMENT === 'development' && <Route exact path='/dev' component={Dev} /> }
                 <Route path='*' component={NotFound} />
               </Switch>
             </div>
