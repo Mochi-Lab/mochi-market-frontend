@@ -40,6 +40,9 @@ export const __NFTCardDetail = ({
   detailNFT,
   collectionName,
   verifiedContracts,
+  cardOptions: {
+    blurredBackground = true
+  } = {}
 }) => {
   const history = useHistory();
   if(!getSymbol(chainId)) return <NFTCardLoader />;
@@ -56,12 +59,14 @@ export const __NFTCardDetail = ({
         hoverable
         cover={
           <div className='wrap-cover'>
-            <div
+            {
+              blurredBackground && <div
               className='blurred-background'
               style={{
                 backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})`,
               }}
             />
+            }
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}

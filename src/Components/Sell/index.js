@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import SellConfirmModal from './SellConfirmModal';
 
 import './index.scss';
 
@@ -19,6 +19,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
 
   const { addressToken, id } = useParams();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalConfirmVisible, setIsModalConfirmVisible] = useState(false);
   const [tokenPayment, setTokenPayment] = useState();
   const [transactionInProgress, setTransactionInProgress] = useState();
 
@@ -38,6 +39,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
   const handleOk = useCallback(async () => {
     const values = await form.validateFields();
     if (!!values && parseFloat(values.price) > 0) {
+      setTransactionInProgress(true);
       const result = await dispatch(
         createSellOrder(
           addressToken,
@@ -48,7 +50,9 @@ export default function Sell({ token, is1155, available, statusActions }) {
           is1155
         )
       );
+      setTransactionInProgress(false);
       if (!!result.status) {
+        setIsModalConfirmVisible(false);
         setIsModalVisible(false);
         history.push({
           pathname: `/token/${chainId}/${addressToken}/${id}/${result.sellId}`,
@@ -57,29 +61,18 @@ export default function Sell({ token, is1155, available, statusActions }) {
     }
   }, [dispatch, addressToken, id, web3.utils, tokenPayment, is1155, history, form, chainId]);
 
-  const confirmSell = useCallback(async () => {
+  const confirmSell = async () => {
     const values = await form.validateFields();
-    if (!!values && parseFloat(values.price) > 0) {
-      let currency = getTokensPayment(chainId).find((item) => item.address === tokenPayment);
-      currency = currency ? currency.symbol : 'MOMA';
-      Modal.confirm({
-        title: 'Confirm placing sell order?',
-        icon: <ExclamationCircleOutlined />,
-        content: `You're going to create a sell order for ${values.price} ${currency}. Are you sure?`,
-        okText: 'Sell',
-        okButtonProps: { className: 'ant-btn ant-btn-primary ant-btn-round ant-btn-lg' },
-        cancelButtonProps: {
-          className: 'ant-btn ant-btn-round ant-btn-lg',
-          disabled: transactionInProgress,
-        },
-        onOk() {
-          setTransactionInProgress(true);
-          return handleOk();
-        },
-        onCancel() {},
-      });
-    }
-  }, [chainId, handleOk, form, tokenPayment, transactionInProgress]);
+    if (!values || !values.price || !values.amount) return;
+    setIsModalVisible(false);
+    setIsModalConfirmVisible(true);
+  }
+  
+  const onCancelConfirmModal = () => {
+    setTransactionInProgress(false);
+    setIsModalVisible(true);
+    setIsModalConfirmVisible(false);
+  }
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -104,6 +97,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
       </div>
 
       <Modal
+        centered
         title={<h3 className='textmode mgb-0'>Sell order</h3>}
         visible={isModalVisible}
         onCancel={handleCancel}
@@ -127,11 +121,9 @@ export default function Sell({ token, is1155, available, statusActions }) {
           <p className='textmode'>{token.name}</p>
         </div>
         <div className='price-des'>
-          <p className='textmode'>Price</p>
-
           <p className='textmode'>Will be on sale until you transfer this item or cancel it.</p>
         </div>
-        <Form form={form} className='input-sell' layout='vertical'>
+        <Form form={form} className='input-sell' layout='vertical' initialValues={{amount: 1}}>
           <Row gutter={[5, 10]}>
             <Col xs={{ span: 24 }} md={{ span: is1155 ? 17 : 24 }}>
               <div className='ant-col ant-form-item-label'>
@@ -176,8 +168,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
                 </Form.Item>
               </Input.Group>
             </Col>
-            {is1155 ? (
-              <Col xs={{ span: 24 }} md={{ span: 7 }}>
+            <Col xs={{ span: 24 }} md={{ span: 7 }} hidden={!is1155}>
                 <Input.Group>
                   <Form.Item
                     required
@@ -202,13 +193,25 @@ export default function Sell({ token, is1155, available, statusActions }) {
                     />
                   </Form.Item>
                 </Input.Group>
-              </Col>
-            ) : (
-              <></>
-            )}
+            </Col>
           </Row>
         </Form>
       </Modal>
+
+      {
+        isModalConfirmVisible && (
+          <SellConfirmModal {...{
+            itemName: token.name,
+            onCancel: onCancelConfirmModal,
+            chainId,
+            form,
+            tokenPayment,
+            transactionInProgress,
+            onConfirm: handleOk,
+            is1155
+          }} />
+        )
+      }
     </>
   );
 }

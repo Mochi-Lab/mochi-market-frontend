@@ -12,6 +12,9 @@ import { NFTCardLoader, NFTCardDetail, useDetailNFT } from 'Components/Common/NF
 const NFTsCard = React.memo(
   ({ chainId, token, collectionName, verifiedContracts }) => {
     const detailNFT = useDetailNFT(chainId, token);
+    const cardOptions = {
+      blurredBackground: false
+    }
     return (
       <Col
         className='gutter-row'
@@ -25,7 +28,7 @@ const NFTsCard = React.memo(
         {detailNFT === null ? (
           <NFTCardLoader />
         ) : (
-          <NFTCardDetail {...{ detailNFT, chainId, token, collectionName, verifiedContracts }} />
+          <NFTCardDetail {...{ detailNFT, chainId, token, collectionName, verifiedContracts, cardOptions }} />
         )}
       </Col>
     );
