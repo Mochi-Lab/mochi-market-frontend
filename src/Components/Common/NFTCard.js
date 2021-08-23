@@ -72,7 +72,11 @@ export const __NFTCardDetail = ({
                 className='display-resource-nft'
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = imgNotFound;
+                  if (e.target.src === detailNFT.image) {
+                    e.target.src = imgNotFound;
+                  } else {
+                    e.target.src = detailNFT.image;
+                  }
                 }}
               />
             </div>
