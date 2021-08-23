@@ -40,12 +40,10 @@ export const __NFTCardDetail = ({
   detailNFT,
   collectionName,
   verifiedContracts,
-  cardOptions: {
-    blurredBackground = true
-  } = {}
+  cardOptions: { blurredBackground = true } = {},
 }) => {
   const history = useHistory();
-  if(!getSymbol(chainId)) return <NFTCardLoader />;
+  if (!getSymbol(chainId)) return <NFTCardLoader />;
   const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
   const itemUrl = `/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`;
   const onClick = (event) => {
@@ -59,20 +57,23 @@ export const __NFTCardDetail = ({
         hoverable
         cover={
           <div className='wrap-cover'>
-            {
-              blurredBackground && <div
-              className='blurred-background'
-              style={{
-                backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})`,
-              }}
-            />
-            }
+            {blurredBackground && (
+              <div
+                className='blurred-background'
+                style={{
+                  backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})`,
+                }}
+              />
+            )}
             <div className='NFTResource-Wrapper'>
               <img
                 alt={`img-nft-${token.tokenId}`}
                 src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
-                onError={(e) => {e.target.onerror = null; e.target.src= !!token.image ? token.image : detailNFT.image}}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = imgNotFound;
+                }}
               />
             </div>
           </div>
