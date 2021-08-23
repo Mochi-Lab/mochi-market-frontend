@@ -9,6 +9,7 @@ import ERC1155 from 'Contracts/ERC1155.json';
 import AddressesProvider from 'Contracts/AddressesProvider.json';
 import Market from 'Contracts/Market.json';
 import NFTList from 'Contracts/NFTList.json';
+import SellOrderList from 'Contracts/SellOrderList.json';
 import ERC20 from 'Contracts/ERC20.json';
 import MOMAabi from 'Contracts/MOMAabi.json';
 import { getContractAddress } from 'utils/getContractAddress';
@@ -52,10 +53,12 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   );
   const market = new web3.eth.Contract(Market.abi, contractAddress.Market);
   const nftList = new web3.eth.Contract(NFTList.abi, contractAddress.NftList);
+  const sellOrderList = new web3.eth.Contract(SellOrderList.abi, contractAddress.SellOrderList);
 
   dispatch(setAddressesProvider(addressesProvider));
   dispatch(setMarket(market));
   dispatch(setNftList(nftList));
+  dispatch(setSellOrderList(sellOrderList));
   dispatch(setAcceptedNftsUser());
   dispatch(setAdminAddress(addressesProvider));
 };
@@ -483,7 +486,6 @@ export const createSellOrder = (nftAddress, tokenId, price, tokenPayment, amount
         }
       }
     }
-
     // Create Sell Order
     dispatch(setStatusActivity(activity));
     await market.methods
@@ -499,7 +501,6 @@ export const createSellOrder = (nftAddress, tokenId, price, tokenPayment, amount
         dispatch(setStatusActivity(activity));
       });
     // Fetch new availableOrderList
-
     let orders = await sellOrderList.methods
       .getAvailableSellOrdersIdListByUser(walletAddress)
       .call();
