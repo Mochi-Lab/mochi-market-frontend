@@ -421,6 +421,23 @@
   }
 }
 
+.btn-refresh {
+  font-size: 16px;
+  background-color: #ff0086;
+  border-color: #ff0086;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+  rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  border-radius: 1rem;
+  margin-left: 0.25rem;
+}
+
+.btn-refresh:hover,
+.btn-refresh:active,
+.btn-refresh:focus {
+  background-color: #ff0086;
+  border-color: #ff0086;
+}
+
 @media (max-width: 992px) {
   .collection-detail {
     display: block;

@@ -25,6 +25,7 @@ export default function ViewAll({
   setViewAll,
   viewAll,
   loadingNFTs,
+  refreshingNFTs,
   setObjectFilter,
   objectFilter,
   activeKeysCollapse,
@@ -230,6 +231,16 @@ export default function ViewAll({
               <Option value='1'>Price asc</Option>
               <Option value='-1'>Price desc</Option>
             </Select>
+            <Button
+                className='btn-refresh'
+                key='update'
+                type='primary'
+                size='large'
+                onClick={() => filterChange()}
+                loading={refreshingNFTs}
+            >
+              Refresh
+            </Button>
             <span className='textmode link-view-less' onClick={() => setViewAll(false)}>
               View Less
             </span>

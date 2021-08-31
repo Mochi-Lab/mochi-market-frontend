@@ -36,6 +36,7 @@ export default function Collection() {
   const [nftsOnSale, setNftsOnSale] = useState();
   const [viewAll, setViewAll] = useState(null);
   const [loadingNFTs, setLoadingNFTs] = useState();
+  const [refreshingNFTs, setRefreshingNFTs] = useState(false);
   const [loadingInfo, setLoadingInfo] = useState();
   const [listNewNFT, setListNewNFT] = useState([]);
   const [objectFilter, setObjectFilter] = useState({});
@@ -130,6 +131,7 @@ export default function Collection() {
 
   const filterChange = useCallback(async () => {
     try {
+      setRefreshingNFTs(true);
       let exp = await getSellOrderByAttributes(
         chainID,
         addressToken,
@@ -141,6 +143,7 @@ export default function Collection() {
         20
       );
       setSkip(0);
+      setRefreshingNFTs(false);
       setNftsOnSale(exp);
     } catch (error) {
       console.log({ error });
@@ -232,6 +235,7 @@ export default function Collection() {
                 setViewAll={handleSetViewAll}
                 viewAll={viewAll}
                 loadingNFTs={loadingNFTs}
+                refreshingNFTs={refreshingNFTs}
                 setObjectFilter={setObjectFilter}
                 objectFilter={objectFilter}
                 activeKeysCollapse={activeKeysCollapse}
