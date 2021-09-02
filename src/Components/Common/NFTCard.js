@@ -7,7 +7,6 @@ import moment from 'moment';
 import tick from 'Assets/icons/tick-green.svg';
 import { handleChildClick, objToString } from 'utils/helper';
 import { isArray } from 'lodash';
-import IconLoading from "../IconLoading";
 import { Spin } from 'antd';
 
 const __NFTCardLoader = () => {
