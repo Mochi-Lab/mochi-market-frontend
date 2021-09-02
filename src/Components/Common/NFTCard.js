@@ -7,6 +7,8 @@ import moment from 'moment';
 import tick from 'Assets/icons/tick-green.svg';
 import { handleChildClick, objToString } from 'utils/helper';
 import { isArray } from 'lodash';
+import IconLoading from "../IconLoading";
+import { Spin } from 'antd';
 
 const __NFTCardLoader = () => {
   return (
@@ -43,14 +45,33 @@ export const __NFTCardDetail = ({
   cardOptions: { blurredBackground = true } = {},
 }) => {
   const history = useHistory();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   if (!getSymbol(chainId)) return <NFTCardLoader />;
   const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
   const itemUrl = `/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`;
+
+
   const onClick = (event) => {
     event.preventDefault();
     let eventTarget = event.target;
     history.push(eventTarget.matches('span.link-collection-name') ? collectionUrl : itemUrl);
   };
+
+  const onImageLoad = () => {
+    setImageLoaded(true)
+  };
+
+  const onImageError = (event) => {
+    event.target.onerror = null;
+    if (event.target.src === detailNFT.image || detailNFT.image === "") {
+      event.target.src = imgNotFound;
+      setImageLoaded(true)
+    } else {
+      event.target.src = detailNFT.image;
+    }
+  };
+
   return (
     <a href={itemUrl} onClick={onClick}>
       <Card
@@ -59,25 +80,24 @@ export const __NFTCardDetail = ({
           <div className='wrap-cover'>
             {blurredBackground && (
               <div
-                className='blurred-background'
+                className={`blurred-background test ${!imageLoaded ? 'opacity-0' : ''}`}
                 style={{
                   backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})`,
                 }}
               />
             )}
-            <div className='NFTResource-Wrapper'>
+            {!imageLoaded && (
+              <div className='center' style={{ width: '100%', height: '100%', position: 'absolute'}}>
+                <Spin />
+              </div>
+            )}
+            <div className={`NFTResource-Wrapper ${!imageLoaded ? 'opacity-0' : ''}`}>
               <img
                 alt={`img-nft-${token.tokenId}`}
                 src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
-                onError={(e) => {
-                  e.target.onerror = null;
-                  if (e.target.src === detailNFT.image) {
-                    e.target.src = imgNotFound;
-                  } else {
-                    e.target.src = detailNFT.image;
-                  }
-                }}
+                onLoad={onImageLoad}
+                onError={onImageError}
               />
             </div>
           </div>
