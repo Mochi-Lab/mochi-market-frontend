@@ -143,7 +143,7 @@ function TypeEnum({ attribute, setObjectFilter, objectFilter, filterChange }) {
               <div className='item-enum'>
                 <Checkbox
                   value={element}
-                  className='backgound-mode'
+                  className='background-mode'
                   onChange={(e) => handleOnChange(e, element)}
                 >
                   <span className='color-text-enum textmode'>{element}</span>
