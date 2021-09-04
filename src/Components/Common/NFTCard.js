@@ -138,7 +138,7 @@ export const __NFTCardDetail = ({
           <Col className='footer-card-left'>
             <div className='name-collection'>
               <span className='link-collection-name' tag='span'>
-                {collectionName || token.nameCollection}
+                {collectionName || token.nameCollection || token.collectionName || detailNFT.collectionName}
               </span>
               {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) && (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
