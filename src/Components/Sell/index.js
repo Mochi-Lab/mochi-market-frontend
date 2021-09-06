@@ -27,9 +27,22 @@ export default function Sell({ token, is1155, available, statusActions }) {
 
   useEffect(() => {
     if (!!chainId) {
-      setTokenPayment(getTokensPayment(chainId)[0].address);
+      let listPayment = getTokensPayment(chainId).filter((token, i) =>
+        (
+          Object.keys(token.collections).length > 0 &&
+          token.collections.hasOwnProperty(addressToken.toLowerCase())
+        ) ||
+        Object.keys(token.collections).length <= 0);
+      let tokenDefault = 0;
+      for (let i = 0; i < listPayment.length; i++) {
+        const token = listPayment[i];
+        if (token.collections[addressToken.toLowerCase()] === 0) {
+          tokenDefault = i;
+        }
+      }
+      setTokenPayment(getTokensPayment(chainId)[tokenDefault].address);
     }
-  }, [chainId]);
+  }, [chainId, addressToken]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -67,7 +80,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
     setIsModalVisible(false);
     setIsModalConfirmVisible(true);
   }
-  
+
   const onCancelConfirmModal = () => {
     setTransactionInProgress(false);
     setIsModalVisible(true);
@@ -123,7 +136,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
         <div className='price-des'>
           <p className='textmode'>Will be on sale until you transfer this item or cancel it.</p>
         </div>
-        <Form form={form} className='input-sell' layout='vertical' initialValues={{amount: 1}}>
+        <Form form={form} className='input-sell' layout='vertical' initialValues={{ amount: 1 }}>
           <Row gutter={[5, 10]}>
             <Col xs={{ span: 24 }} md={{ span: is1155 ? 17 : 24 }}>
               <div className='ant-col ant-form-item-label'>
@@ -140,6 +153,18 @@ export default function Sell({ token, is1155, available, statusActions }) {
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
+                      if (Object.keys(token.collections).length > 0) {
+                        return token.collections.hasOwnProperty(addressToken.toLowerCase()) ? (
+                          <Option value={token.address} key={i}>
+                            <img
+                              className='icon-tokenpayment'
+                              src={token.icon}
+                              alt={token.symbol}
+                            />
+                            <span className='textmode pl-1'>{token.symbol}</span>
+                          </Option>
+                        ) : null;
+                      } else {
                         return (
                           <Option value={token.address} key={i}>
                             <img
@@ -150,7 +175,9 @@ export default function Sell({ token, is1155, available, statusActions }) {
                             <span className='textmode pl-1'>{token.symbol}</span>
                           </Option>
                         );
-                      })
+                      }
+
+                    })
                     : null}
                 </Select>
                 <Form.Item
@@ -169,30 +196,30 @@ export default function Sell({ token, is1155, available, statusActions }) {
               </Input.Group>
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 7 }} hidden={!is1155}>
-                <Input.Group>
-                  <Form.Item
-                    required
-                    name={['amount']}
-                    rules={[{ validator: checkAmount }]}
-                    label={
-                      <span
-                        className='cursor-pointer'
-                        onClick={() => form.setFieldsValue({ amount: parseInt(available) })}
-                      >
-                        Amount: {available}
-                      </span>
-                    }
-                    className='input-amount-sell textmode'
-                  >
-                    <InputNumber
-                      min='1'
-                      size='large'
-                      formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                      placeholder='Amount'
-                      className='textmode'
-                    />
-                  </Form.Item>
-                </Input.Group>
+              <Input.Group>
+                <Form.Item
+                  required
+                  name={['amount']}
+                  rules={[{ validator: checkAmount }]}
+                  label={
+                    <span
+                      className='cursor-pointer'
+                      onClick={() => form.setFieldsValue({ amount: parseInt(available) })}
+                    >
+                      Amount: {available}
+                    </span>
+                  }
+                  className='input-amount-sell textmode'
+                >
+                  <InputNumber
+                    min='1'
+                    size='large'
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    placeholder='Amount'
+                    className='textmode'
+                  />
+                </Form.Item>
+              </Input.Group>
             </Col>
           </Row>
         </Form>
