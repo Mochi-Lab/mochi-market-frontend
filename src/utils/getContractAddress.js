@@ -2,6 +2,7 @@ import bnb from 'Assets/icons/binance-smart-chain-icon.png';
 import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
 import one from 'Assets/one-coin.png';
+import gon from 'Assets/gon-coin.jpg';
 
 import bscTag from 'Assets/logo/bsc.png';
 import polygonTag from 'Assets/logo/polygon.png';
@@ -72,20 +73,28 @@ const contractAddress = {
 const tokensPayment = {
   //Polygon Mainnet
   137: [
-    { address: '0xe3ab61371ecc88534c522922a026f2296116c109', icon: moma, symbol: 'MOMA' },
-    { address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC' },
+    { address: '0xe3ab61371ecc88534c522922a026f2296116c109', icon: moma, symbol: 'MOMA', collections: {} },
+    { address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC', collections: {} },
   ],
   //BSC Mainnet
   56: [
-    { address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e', icon: moma, symbol: 'MOMA' },
-    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
+    { address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e', icon: moma, symbol: 'MOMA', collections: {} },
+    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {} },
+    {
+      address: '0x610f34da19797405a276d26f95bd5c7d8cbbd644', icon: gon, symbol: 'GON', collections:
+      {
+        '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b': 0,
+        '0x821304cb22ed418eee60d55100749ade15c2d0eb': 0,
+        '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e': 0
+      }
+    },
   ],
   //BSC Testnet
   97: [
-    { address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd', icon: moma, symbol: 'MOMA' },
-    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB' },
+    { address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd', icon: moma, symbol: 'MOMA', collections: {} },
+    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {} },
   ],
-  1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE' }],
+  1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE', collections: {} }],
 };
 
 const symbolToken = {
@@ -98,6 +107,7 @@ const symbolToken = {
   56: {
     '0xb72842d6f5fedf91d22d56202802bb9a79c6322e': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
+    '0x610f34da19797405a276d26f95bd5c7d8cbbd644': 'GON',
   },
   //BSC Testnet
   97: {
