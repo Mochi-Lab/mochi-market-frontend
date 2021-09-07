@@ -1,4 +1,4 @@
-import cover from 'Assets/banners/cover.png';
+// import cover from 'Assets/banners/cover.png';
 import mori from 'Assets/banners/banner-mori.png';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
