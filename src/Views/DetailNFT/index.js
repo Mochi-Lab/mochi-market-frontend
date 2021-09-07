@@ -19,7 +19,7 @@ import { getUser, setInfoUsers } from 'store/actions';
 import moment from 'moment';
 import avatarDefault from 'Assets/avatar-profile.png';
 import tick from 'Assets/icons/tick-green.svg';
-
+import { UpdateNFTDetail } from './helperUpdateNFTDetails';
 import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
 import { isArray } from 'lodash';
@@ -163,7 +163,14 @@ export default function DetailNFT() {
               <div className='info-wrap-left'>
                 <div className='expand-img-nft'>
                   <div className='image-label center'>
-                    <Image alt='img-nft' src={token.image} />
+                    {
+                      token.image ? (
+                        <Image alt='img-nft' src={token.image} />
+                      )
+                      : (
+                        <UpdateNFTDetail token={token} setToken={setToken}/>
+                      )
+                    }
                   </div>
                 </div>
 
@@ -230,7 +237,14 @@ export default function DetailNFT() {
                 {!lg ? (
                   <div className='expand-img-nft-mobile'>
                     <div className='image-label center'>
-                      <Image alt='img-nft' src={token.image} />
+                      {
+                        token.image ? (
+                          <Image alt='img-nft' src={token.image} />
+                        )
+                        : (
+                          <UpdateNFTDetail token={token} setToken={setToken}/>
+                        )
+                      }
                     </div>
                   </div>
                 ) : null}
