@@ -12,7 +12,7 @@ import store from 'store/index';
 import { newMintOf721, newMintOf1155 } from 'utils/helper';
 import { selectChain } from 'Connections/web3Modal.js';
 import { unpinFooterOnLoad } from 'utils/helper.js';
-import { getSellOrderByAttributes } from 'APIs/SellOrder/Gets';
+import { getSellOrderByAttributes, getSellOrderByCollection } from 'APIs/SellOrder/Gets';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'Views/Home/index.scss';
@@ -54,7 +54,7 @@ export default function Collection() {
   }, [walletAddress, chainId, chainID]);
 
   const getInfoCollection = useCallback(async () => {
-    if(!!chainId) {
+    if (!!chainId) {
       let tokenAddress = addressToken.toLowerCase();
       let res = await store.dispatch(getCollection(tokenAddress));
       if (infoCollection !== res.collection) {
@@ -99,7 +99,7 @@ export default function Collection() {
       if (skip > 1) {
         setLoadingScroll(true);
       }
-      let exp = await getSellOrderByAttributes(
+      let exp = Object.keys(objectFilter).length > 0 ? await getSellOrderByAttributes(
         chainID,
         addressToken,
         objectFilter,
@@ -108,7 +108,7 @@ export default function Collection() {
         typeSort,
         skip,
         20
-      );
+      ) : await getSellOrderByCollection(chainID, addressToken, skip, 20);
       setSkip(skip + 20);
       setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
       if (exp.length < 20) setIsEndOfOrderList(true);

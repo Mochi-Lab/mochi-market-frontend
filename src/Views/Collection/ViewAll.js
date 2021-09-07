@@ -81,7 +81,7 @@ export default function ViewAll({
   }, [chainId, setTokenPayment]);
 
   const handleOk = async () => {
-    if (valueEditFilter.length > 0) {
+    if (valueEditFilter.length > 0 || Array.isArray(valueEditFilter)) {
       setLoadingUpdate(true);
       const resNonce = await getNonce(walletAddress, addressToken, chainId);
       const signature = await createSignature(web3, walletAddress, resNonce.nonce);
@@ -212,13 +212,13 @@ export default function ViewAll({
               </Option>
               {!!getTokensPayment(chainId)
                 ? getTokensPayment(chainId).map((token, i) => {
-                    return (
-                      <Option value={token.address} key={i} className='option-tokenpayment'>
-                        <img className='icon-tokenpayment' src={token.icon} alt={token.symbol} />
-                        <span className='symbol-tokenpayment'>{token.symbol}</span>
-                      </Option>
-                    );
-                  })
+                  return (
+                    <Option value={token.address} key={i} className='option-tokenpayment'>
+                      <img className='icon-tokenpayment' src={token.icon} alt={token.symbol} />
+                      <span className='symbol-tokenpayment'>{token.symbol}</span>
+                    </Option>
+                  );
+                })
                 : null}
             </Select>
             <Select
@@ -232,12 +232,12 @@ export default function ViewAll({
               <Option value='-1'>Price desc</Option>
             </Select>
             <Button
-                className='btn-refresh'
-                key='update'
-                type='primary'
-                size='large'
-                onClick={() => filterChange()}
-                loading={refreshingNFTs}
+              className='btn-refresh'
+              key='update'
+              type='primary'
+              size='large'
+              onClick={() => filterChange()}
+              loading={refreshingNFTs}
             >
               Refresh
             </Button>
