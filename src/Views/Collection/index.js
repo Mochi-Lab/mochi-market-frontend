@@ -142,7 +142,7 @@ export default function Collection() {
         0,
         20
       );
-      setSkip(0);
+      setSkip(20);
       setRefreshingNFTs(false);
       setNftsOnSale(exp);
     } catch (error) {
