@@ -63,7 +63,7 @@ export default function Browse() {
 
         setSkip(skip + 20);
         setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
-        if (exp.length < 20) setIsEndOfOrderList(true);
+        setIsEndOfOrderList(exp.length < 20);
         setLoadingScroll(false);
       } catch (error) {
         console.log({ error });

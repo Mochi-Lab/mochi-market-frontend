@@ -105,7 +105,7 @@ export default function Collection() {
         setLoadingScroll(true);
       }
 
-      let exp = Object.keys(objectFilter).length > 0 || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
+      let exp = !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
         chainID,
         addressToken,
         objectFilter,
@@ -118,7 +118,7 @@ export default function Collection() {
       setSkip(skip + 20);
 
       await setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
-      if (exp.length < 20) setIsEndOfOrderList(true);
+      setIsEndOfOrderList(exp.length < 20);
       setLoadingScroll(false);
     } catch (error) {
       console.log({ error });
@@ -139,7 +139,7 @@ export default function Collection() {
   const filterChange = useCallback(async () => {
     try {
       setRefreshingNFTs(true);
-      let exp = !isEmpty(objectFilter) || !isEmpty(strSearch) ? await getSellOrderByAttributes(
+      let exp = !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
         chainID,
         addressToken,
         objectFilter,
