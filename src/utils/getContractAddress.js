@@ -73,28 +73,35 @@ const contractAddress = {
 const tokensPayment = {
   //Polygon Mainnet
   137: [
-    { address: '0xe3ab61371ecc88534c522922a026f2296116c109', icon: moma, symbol: 'MOMA', collections: {} },
-    { address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC', collections: {} },
+    { address: '0xe3ab61371ecc88534c522922a026f2296116c109', icon: moma, symbol: 'MOMA', collections: {}, hiddens: [] },
+    { address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC', collections: {}, hiddens: [] },
   ],
   //BSC Mainnet
   56: [
-    { address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e', icon: moma, symbol: 'MOMA', collections: {} },
-    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {} },
+    { address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e', icon: moma, symbol: 'MOMA', collections: {}, hiddens: [] },
+    {
+      address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {},
+      hiddens: [
+        '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b',
+        '0x821304cb22ed418eee60d55100749ade15c2d0eb',
+        '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e',
+      ]
+    },
     {
       address: '0x610f34da19797405a276d26f95bd5c7d8cbbd644', icon: gon, symbol: 'GON', collections:
       {
         '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b': 0,
         '0x821304cb22ed418eee60d55100749ade15c2d0eb': 0,
         '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e': 0
-      }
+      }, hiddens: []
     },
   ],
   //BSC Testnet
   97: [
-    { address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd', icon: moma, symbol: 'MOMA', collections: {} },
-    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {} },
+    { address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd', icon: moma, symbol: 'MOMA', collections: {}, hiddens: [] },
+    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {}, hiddens: [] },
   ],
-  1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE', collections: {} }],
+  1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE', collections: {}, hiddens: [] }],
 };
 
 const symbolToken = {
