@@ -148,7 +148,7 @@ export default function Collection() {
         typeSort,
         0,
         20
-      ) : await getSellOrderByCollection(chainID, addressToken, 0, 20);;
+      ) : await getSellOrderByCollection(chainID, addressToken, 0, 20);
       setLastLoadedSkip(0);
       setSkip(20);
       setRefreshingNFTs(false);

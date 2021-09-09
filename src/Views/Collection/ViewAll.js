@@ -255,11 +255,7 @@ export default function ViewAll({
             />
           </div>
         </div>
-        {loadingNFTs || loadingNFTs === null ? (
-          <div className='center' style={{ width: '100%', height: '100%' }}>
-            <IconLoading />
-          </div>
-        ) : (
+        (
           <>
             {!!showFilter && checkInfoExist && infoCollection.attributesFilter.length > 0 ? (
               <Row>
@@ -277,29 +273,43 @@ export default function ViewAll({
                   />
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
-                  <NFTsCardBrowse
-                    tokens={nftsOnSale}
-                    tokenPayment={tokenPayment}
-                    typeSort={typeSort}
-                    strSearchInCollection={strSearch}
-                    fetchExplore={checkLoadMore}
-                    isEndOfOrderList={isEndOfOrderList}
-                    loadingScroll={loadingScroll}
-                    collectionName={infoCollection.name}
-                  />
+                  {loadingNFTs || loadingNFTs === null ? (
+                    <div className='center' style={{ width: '100%', height: '100%' }}>
+                      <IconLoading />
+                    </div>
+                  ) : (
+                    <NFTsCardBrowse
+                      tokens={nftsOnSale}
+                      tokenPayment={tokenPayment}
+                      typeSort={typeSort}
+                      strSearchInCollection={strSearch}
+                      fetchExplore={checkLoadMore}
+                      isEndOfOrderList={isEndOfOrderList}
+                      loadingScroll={loadingScroll}
+                      collectionName={infoCollection.name}
+                    />
+                  )}
                 </Col>
               </Row>
             ) : (
-              <NFTsCardBrowse
-                tokens={nftsOnSale}
-                tokenPayment={tokenPayment}
-                typeSort={typeSort}
-                strSearchInCollection={strSearch}
-                fetchExplore={checkLoadMore}
-                isEndOfOrderList={isEndOfOrderList}
-                loadingScroll={loadingScroll}
-                collectionName={infoCollection.name}
-              />
+              <>
+                {loadingNFTs || loadingNFTs === null ? (
+                    <div className='center' style={{ width: '100%', height: '100%' }}>
+                      <IconLoading />
+                    </div>
+                ) : (
+                    <NFTsCardBrowse
+                        tokens={nftsOnSale}
+                        tokenPayment={tokenPayment}
+                        typeSort={typeSort}
+                        strSearchInCollection={strSearch}
+                        fetchExplore={checkLoadMore}
+                        isEndOfOrderList={isEndOfOrderList}
+                        loadingScroll={loadingScroll}
+                        collectionName={infoCollection.name}
+                    />
+                )}
+              </>
             )}
           </>
         )}
