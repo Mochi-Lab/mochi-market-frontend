@@ -153,6 +153,9 @@ export default function Sell({ token, is1155, available, statusActions }) {
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
+                      if (token.hiddens.length > 0 && token.hiddens.includes(addressToken.toLowerCase())) {
+                        return null;
+                      }
                       if (Object.keys(token.collections).length > 0) {
                         return token.collections.hasOwnProperty(addressToken.toLowerCase()) ? (
                           <Option value={token.address} key={i}>

@@ -20,7 +20,7 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
   const [tokenPayment, setTokenPayment] = useState();
 
   const [form] = Form.useForm();
-
+  console.log(orderDetail, token);
   useEffect(() => {
     if (!!chainId) {
       setTokenPayment(getTokensPayment(chainId)[0].address);
@@ -91,16 +91,16 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
-                        return (
-                          <Option value={token.address} key={i}>
-                            <img
-                              className='icon-tokenpayment'
-                              src={token.icon}
-                              alt={token.symbol}
-                            />
-                          </Option>
-                        );
-                      })
+                      return (
+                        <Option value={token.address} key={i}>
+                          <img
+                            className='icon-tokenpayment'
+                            src={token.icon}
+                            alt={token.symbol}
+                          />
+                        </Option>
+                      );
+                    })
                     : null}
                 </Select>
                 <Form.Item
