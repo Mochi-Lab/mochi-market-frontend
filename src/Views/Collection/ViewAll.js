@@ -1,5 +1,5 @@
-import { Col, Input, Layout, Row, Select, Modal, Button, message } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
+import { Col, Input, Layout, Row, Select, Modal, Button, message, Tooltip } from 'antd';
+import {useCallback, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import NFTsCardBrowse from 'Components/NFTsCardBrowse';
@@ -15,8 +15,6 @@ import { updateAttributesFilter } from 'APIs/Collections/Puts';
 import createSignature from 'APIs/createSignature';
 import { verifySignature } from 'APIs/Collections/Post';
 import { showNotification } from 'store/actions';
-import { debounce } from 'lodash';
-
 const { Option } = Select;
 
 export default function ViewAll({
@@ -61,7 +59,7 @@ export default function ViewAll({
   );
   const [checkValidator, setCheckValidator] = useState([]);
   const [darkMode, setDarkMode] = useState();
-  const [textSearch, setTextSearch] = useState('');
+  const [textSearchInputValue, setTextSearchInputValue] = useState('');
 
   useEffect(() => {
     let mode = document.querySelector('html').getAttribute('data-theme');
@@ -141,39 +139,31 @@ export default function ViewAll({
     if (!!viewAll) fetchExplore();
   };
 
-  const selectTokenPayment = (_tokenPayment) => {
+  const selectTokenPayment = useCallback(async (_tokenPayment) => {
     setTokenPayment(_tokenPayment);
-    setSkip(0);
-    setNftsOnSale(null);
-  };
-
-  const selectSortType = (_type) => {
-    setTypeSort(_type);
-    setSkip(0);
-    setNftsOnSale(null);
-  };
-
-  const searchNFTsCollection = (event, skipDebounce = false) => {
-    const text = event.target.value;
-    setTextSearch(text);
-    if (!skipDebounce) debounceSearchText(text);
-    else {
+    if(!(_tokenPayment==='0' && typeSort!=='')) {
       setSkip(0);
       setNftsOnSale(null);
-      setStrSearch(text);
     }
-  };
-  // eslint-disable-next-line
-  const debounceSearchText = useCallback(
-    debounce((text) => setStrSearch(text), 500),
-    []
-  );
+  }, [setTokenPayment, typeSort, setNftsOnSale, setSkip]);
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      searchNFTsCollection(event, true);
+  const selectSortType = useCallback((_type) => {
+    setTypeSort(_type);
+    if(!(tokenPayment==='0' && _type!=='')) {
+      setSkip(0);
+      setNftsOnSale(null);
     }
-  };
+  }, [setTypeSort, tokenPayment, setNftsOnSale, setSkip]);
+
+  const searchNFTsCollection = useCallback( async (event) => {
+    if (event.key !== 'Enter') {
+      const text = event.target.value;
+      setTextSearchInputValue(text);
+      setStrSearch(text);
+      return
+    }
+    filterChange()
+  }, [setStrSearch, filterChange]);
 
   return (
     <div className={`${!!viewAll ? 'display-block-view-all' : 'display-none-view-all'}`}>
@@ -182,11 +172,11 @@ export default function ViewAll({
           <div className='left-sort-results'>
             <div className='input-search-collections search-nft-in-collection-1 mr-0d5rem'>
               <Input
-                placeholder='Search collections '
+                placeholder='Search collection'
                 onChange={searchNFTsCollection}
-                onKeyDown={handleKeyDown}
+                onKeyUp={searchNFTsCollection}
                 size='large'
-                value={textSearch}
+                value={textSearchInputValue}
                 suffix={<SearchOutlined />}
                 className='style-search-input input-mode-bc textmode '
               />
@@ -201,42 +191,50 @@ export default function ViewAll({
               )}
           </div>
           <div className='right-sort-results'>
-            <Select
-              size='large'
-              value={tokenPayment}
-              onChange={(value) => selectTokenPayment(value)}
-              className='tokenpayment textmode'
+            <Tooltip
+                visible={tokenPayment==='0' && typeSort!==''}
+                placement='top'
+                title={`To sort by price select token currency below ▼`}
             >
-              <Option value='0' key='-1' className='text-center'>
-                All
-              </Option>
-              {!!getTokensPayment(chainId)
-                ? getTokensPayment(chainId).map((token, i) => {
-                  return (
-                    <Option value={token.address} key={i} className='option-tokenpayment'>
-                      <img className='icon-tokenpayment' src={token.icon} alt={token.symbol} />
-                      <span className='symbol-tokenpayment'>{token.symbol}</span>
-                    </Option>
-                  );
-                })
-                : null}
-            </Select>
+              <Select
+                size='large'
+                value={tokenPayment}
+                onChange={(value) => selectTokenPayment(value)}
+                className='tokenpayment textmode'
+              >
+                <Option value='0' key='-1' className='text-center'>
+                  All
+                </Option>
+                {!!getTokensPayment(chainId)
+                  ? getTokensPayment(chainId).map((token, i) => {
+                    return (
+                      <Option value={token.address} key={i} className='option-tokenpayment'>
+                        <img className='icon-tokenpayment' src={token.icon} alt={token.symbol} />
+                        <span className='symbol-tokenpayment'>{token.symbol}</span>
+                      </Option>
+                    );
+                  })
+                  : null}
+              </Select>
+            </Tooltip>
+
             <Select
-              value={typeSort}
-              className='textmode select-sort'
-              size='large'
-              onChange={(value) => selectSortType(value)}
+                value={typeSort}
+                className='textmode select-sort'
+                size='large'
+                onChange={(value) => selectSortType(value)}
             >
               <Option value=''>Recently listed</Option>
               <Option value='1'>Price asc</Option>
               <Option value='-1'>Price desc</Option>
             </Select>
+
             <Button
               className='btn-refresh'
               key='update'
               type='primary'
               size='large'
-              onClick={() => filterChange()}
+              onClick={filterChange}
               loading={refreshingNFTs}
             >
               Refresh
@@ -250,7 +248,6 @@ export default function ViewAll({
           <div className='input-search-collections'>
             <Input
               placeholder='Search collections '
-              onChange={searchNFTsCollection}
               size='large'
               value={strSearch}
               suffix={<SearchOutlined />}
@@ -258,11 +255,6 @@ export default function ViewAll({
             />
           </div>
         </div>
-        {loadingNFTs || loadingNFTs === null ? (
-          <div className='center' style={{ width: '100%', height: '100%' }}>
-            <IconLoading />
-          </div>
-        ) : (
           <>
             {!!showFilter && checkInfoExist && infoCollection.attributesFilter.length > 0 ? (
               <Row>
@@ -280,32 +272,45 @@ export default function ViewAll({
                   />
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
-                  <NFTsCardBrowse
-                    tokens={nftsOnSale}
-                    tokenPayment={tokenPayment}
-                    typeSort={typeSort}
-                    strSearchInCollection={strSearch}
-                    fetchExplore={checkLoadMore}
-                    isEndOfOrderList={isEndOfOrderList}
-                    loadingScroll={loadingScroll}
-                    collectionName={infoCollection.name}
-                  />
+                  {loadingNFTs || loadingNFTs === null ? (
+                    <div className='center' style={{ width: '100%', height: '100%' }}>
+                      <IconLoading />
+                    </div>
+                  ) : (
+                    <NFTsCardBrowse
+                      tokens={nftsOnSale}
+                      tokenPayment={tokenPayment}
+                      typeSort={typeSort}
+                      strSearchInCollection={strSearch}
+                      fetchExplore={checkLoadMore}
+                      isEndOfOrderList={isEndOfOrderList}
+                      loadingScroll={loadingScroll}
+                      collectionName={infoCollection.name}
+                    />
+                  )}
                 </Col>
               </Row>
             ) : (
-              <NFTsCardBrowse
-                tokens={nftsOnSale}
-                tokenPayment={tokenPayment}
-                typeSort={typeSort}
-                strSearchInCollection={strSearch}
-                fetchExplore={checkLoadMore}
-                isEndOfOrderList={isEndOfOrderList}
-                loadingScroll={loadingScroll}
-                collectionName={infoCollection.name}
-              />
+              <>
+                {loadingNFTs || loadingNFTs === null ? (
+                    <div className='center' style={{ width: '100%', height: '100%' }}>
+                      <IconLoading />
+                    </div>
+                ) : (
+                    <NFTsCardBrowse
+                        tokens={nftsOnSale}
+                        tokenPayment={tokenPayment}
+                        typeSort={typeSort}
+                        strSearchInCollection={strSearch}
+                        fetchExplore={checkLoadMore}
+                        isEndOfOrderList={isEndOfOrderList}
+                        loadingScroll={loadingScroll}
+                        collectionName={infoCollection.name}
+                    />
+                )}
+              </>
             )}
           </>
-        )}
       </Layout>
 
       <Modal

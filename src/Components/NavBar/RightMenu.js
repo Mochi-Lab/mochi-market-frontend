@@ -70,7 +70,7 @@ const RightMenu = ({ onClose }) => {
               rel='noreferrer'
               className='text-white'
             >
-              <div class="menu-button">Buy $MOMA</div>
+              <div className='menu-button'>Buy $MOMA</div>
             </a>
         </Menu.Item>
       )}
