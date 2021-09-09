@@ -255,7 +255,6 @@ export default function ViewAll({
             />
           </div>
         </div>
-        (
           <>
             {!!showFilter && checkInfoExist && infoCollection.attributesFilter.length > 0 ? (
               <Row>
@@ -312,7 +311,6 @@ export default function ViewAll({
               </>
             )}
           </>
-        )}
       </Layout>
 
       <Modal
