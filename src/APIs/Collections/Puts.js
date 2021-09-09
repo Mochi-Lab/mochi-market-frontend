@@ -32,7 +32,6 @@ export const updateAttributesFilter = async (
   attributesFilter
 ) => {
   attributesFilter = JSON.stringify(attributesFilter);
-  console.log(typeof attributesFilter);
   let result = await axios
     .put(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/update-attributes-filter`, {
       addressAdmin,

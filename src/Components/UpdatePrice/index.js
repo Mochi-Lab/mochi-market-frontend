@@ -20,7 +20,6 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
   const [tokenPayment, setTokenPayment] = useState();
 
   const [form] = Form.useForm();
-  console.log(orderDetail, token);
   useEffect(() => {
     if (!!chainId) {
       setTokenPayment(getTokensPayment(chainId)[0].address);
