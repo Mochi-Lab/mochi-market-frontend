@@ -236,7 +236,7 @@ export default function ViewAll({
               key='update'
               type='primary'
               size='large'
-              onClick={() => filterChange()}
+              onClick={filterChange}
               loading={refreshingNFTs}
             >
               Refresh

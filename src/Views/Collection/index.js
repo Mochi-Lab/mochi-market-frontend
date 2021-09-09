@@ -19,6 +19,7 @@ import 'Views/Home/index.scss';
 import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
+import {isEmpty} from "lodash";
 
 export default function Collection() {
   let history = useHistory();
@@ -99,7 +100,8 @@ export default function Collection() {
       if (skip > 1) {
         setLoadingScroll(true);
       }
-      let exp = Object.keys(objectFilter).length > 0 ? await getSellOrderByAttributes(
+
+      let exp = Object.keys(objectFilter).length > 0 || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
         chainID,
         addressToken,
         objectFilter,
@@ -110,13 +112,14 @@ export default function Collection() {
         20
       ) : await getSellOrderByCollection(chainID, addressToken, skip, 20);
       setSkip(skip + 20);
-      setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
+
+      await setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
       if (exp.length < 20) setIsEndOfOrderList(true);
       setLoadingScroll(false);
     } catch (error) {
       console.log({ error });
     }
-  }, [chainID, addressToken, skip, objectFilter, strSearch, tokenPayment, typeSort]);
+  }, [chainID, addressToken, skip, objectFilter, strSearch, tokenPayment, typeSort, setNftsOnSale]);
 
   useEffect(() => {
     async function loadInitNFTs() {
@@ -124,15 +127,15 @@ export default function Collection() {
       await fetchExplore();
       setLoadingNFTs(false);
     }
-    if (!nftsOnSale) {
+    if (chainID && !loadingNFTs && !nftsOnSale) {
       loadInitNFTs();
     }
-  }, [fetchExplore, nftsOnSale]);
+  }, [chainID, fetchExplore, nftsOnSale, loadingNFTs]);
 
   const filterChange = useCallback(async () => {
     try {
       setRefreshingNFTs(true);
-      let exp = await getSellOrderByAttributes(
+      let exp = !isEmpty(objectFilter) || !isEmpty(strSearch) ? await getSellOrderByAttributes(
         chainID,
         addressToken,
         objectFilter,
@@ -141,8 +144,8 @@ export default function Collection() {
         typeSort,
         0,
         20
-      );
-      setSkip(0);
+      ) : await getSellOrderByCollection(chainID, addressToken, 0, 20);;
+      setSkip(20);
       setRefreshingNFTs(false);
       setNftsOnSale(exp);
     } catch (error) {
