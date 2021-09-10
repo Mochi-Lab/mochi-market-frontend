@@ -664,6 +664,8 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
   };
   try {
     dispatch(setStatusActivity(activity));
+    const estimateGasUsed = await market.methods.cancelSellOrder(orderDetail.sellId).estimateGas({ from: walletAddress })
+    console.log("estimateGasUsed = ", estimateGasUsed);
     await market.methods
       .cancelSellOrder(orderDetail.sellId)
       .send({ from: walletAddress })
@@ -677,6 +679,7 @@ export const cancelSellOrder = (orderDetail) => async (dispatch, getState) => {
 
     return true;
   } catch (error) {
+    console.log("error", error);
     error.type = 'error';
     dispatch(showNotification(error));
     dispatch(setStatusActivity({ ...activity, status: 'close' }));
