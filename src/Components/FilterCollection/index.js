@@ -174,7 +174,6 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter, filterChange }) 
     setMax(_max);
 
     if(_min > _max) [_min, _max] = [_max, _min];
-    console.log(_min, _max)
     if(_.isUndefined(_min) && _.isUndefined(_max)) {
       attrs[`${attribute.index}`] = { ...delete attrs[`${attribute.index}`] };
     }
