@@ -20,6 +20,8 @@ import moment from 'moment';
 import avatarDefault from 'Assets/avatar-profile.png';
 import tick from 'Assets/icons/tick-green.svg';
 import { UpdateNFTDetail } from './helperUpdateNFTDetails';
+import { NFTTransactionHistory } from 'Components/NFTTransactionHistory/NFTTransactionHistory';
+
 import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
 import { isArray } from 'lodash';
@@ -546,6 +548,9 @@ export default function DetailNFT() {
                             </div>
                           ))}
                       </Spin>
+                    </TabPane>
+                    <TabPane tab='History' key='3'>
+                      <NFTTransactionHistory chainId={chainID} collectionAddress={addressToken} tokenId={id}/>
                     </TabPane>
                   </Tabs>
                 </div>
