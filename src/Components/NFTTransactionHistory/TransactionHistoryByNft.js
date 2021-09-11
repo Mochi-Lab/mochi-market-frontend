@@ -7,18 +7,19 @@ import { Link } from 'react-router-dom';
 import { getProfileByAddress } from 'APIs/Users/Gets';
 import { getSellOrderHistoryByNft } from 'APIs/SellOrder/Gets';
 
-const Address2UserName = React.memo(({address, chainId}) => {
+export const Address2UserName = React.memo(({address, chainId}) => {
   const [username, setUsername] = useState(getShortAddress(address))
+  const getEllipsisUserName = text => text.length > 16 ? `${text.substr(0, 16)}...` : text;
   useEffect(() => {
     (async () => {
       const {user} = await getProfileByAddress(address);
-      if(user !== null) setUsername(`@${user.username}`);
+      if(user !== null) setUsername(`@${getEllipsisUserName(user.username)}`);
     })();
   }, [chainId, address])
   return <Link target="_blank" to={`/profile/${chainId}/${address.toLowerCase()}`}>{username}</Link>
 })
 
-const getShortAddress = (address) => address.substr(0, 6) + '...' + address.slice(-4);
+export const getShortAddress = (address) => address.substr(0, 4) + '..' + address.slice(-2);
 
 const columnDefs = [
   {
@@ -84,7 +85,7 @@ const createDataSource = (data) => {
           }));
 };
 
-const __NFTTransactionHistory = ({ chainId, collectionAddress, tokenId }) => {
+const __TransactionHistoryByNft = ({ chainId, collectionAddress, tokenId }) => {
 
   const [state, setState] = useState({
     data: null,
@@ -94,7 +95,7 @@ const __NFTTransactionHistory = ({ chainId, collectionAddress, tokenId }) => {
     (async () => {
       let result = await getSellOrderHistoryByNft(chainId, collectionAddress, tokenId);
       const orderList = result.filter(
-        (order) => order.isActive === false || order.buyers.length > 0
+        (order) => order.buyers.length > 0
       );
       setState((state) => ({
         ...state,
@@ -117,6 +118,6 @@ const __NFTTransactionHistory = ({ chainId, collectionAddress, tokenId }) => {
 
 };
 
-const NFTTransactionHistory = React.memo(__NFTTransactionHistory);
+const TransactionHistoryByNft = React.memo(__TransactionHistoryByNft);
 
-export { NFTTransactionHistory }
+export { TransactionHistoryByNft }

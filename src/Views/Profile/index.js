@@ -6,6 +6,7 @@ import {
   DoubleLeftOutlined,
   ShopOutlined,
   WalletOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 import IconCoppy from 'Components/IconCoppy';
 import Edit from './Edit';
@@ -30,6 +31,7 @@ import { selectChain } from 'Connections/web3Modal';
 import TabOwner from './TabOwner';
 import TabOnSale from './TabOnSale';
 import TabAdmins from './TabAdmins';
+import { TransactionHistoryByUser } from 'Components/NFTTransactionHistory/TransactionHistoryByUser';
 
 const { TabPane } = Tabs;
 
@@ -249,6 +251,19 @@ export default function Profile() {
                     <TabOwner address={address} key='2' />
                   </div>
                 </TabPane>
+                <TabPane
+                  tab={
+                    <div className='action-profile'>
+                      <HistoryOutlined />
+                      <strong>History</strong>
+                    </div>
+                  }
+                  key='3'
+                >
+                  <div className="transaction-history">
+                    <TransactionHistoryByUser chainId={chainID} userAddress={address}/>
+                  </div>
+                </TabPane>
                 {!!walletAddress &&
                   walletAddress.toLowerCase() === address.toLowerCase() &&
                   infoAdmins.hasOwnProperty(walletAddress.toString().toLowerCase()) && (
@@ -259,7 +274,7 @@ export default function Profile() {
                           <strong>Admins</strong>
                         </div>
                       }
-                      key='3'
+                      key='4'
                     >
                       <div className='list-nft-owner'>
                         <TabAdmins />

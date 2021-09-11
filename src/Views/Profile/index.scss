@@ -118,6 +118,9 @@
 .right-profile .ant-table {
   border-radius: 1rem;
 }
+div.transaction-history table th, td {
+  border-radius: 0rem !important;
+}
 .right-profile .ant-table-tbody > tr > td {
   border-radius: 1rem;
 }
