@@ -10,6 +10,7 @@ import {
   DatePicker,
   /* , Radio */
 } from 'antd';
+import _ from 'lodash';
 import { ArrowDownOutlined, EditOutlined } from '@ant-design/icons';
 import './styleFilter.scss';
 
@@ -165,17 +166,22 @@ function TypeNumber({ attribute, setObjectFilter, objectFilter, filterChange }) 
 
   const changeMinMax = async (_min, _max) => {
     let attrs = objectFilter;
+
+    if(_.isUndefined(_min) && !_.isUndefined(_max)) _min = attribute.min;
+    if(!_.isUndefined(_min) && _.isUndefined(_max)) _max = attribute.max;
+
     setMin(_min);
     setMax(_max);
-    if (_max === _min) {
+
+    if(_min > _max) [_min, _max] = [_max, _min];
+    if(_.isUndefined(_min) && _.isUndefined(_max)) {
       attrs[`${attribute.index}`] = { ...delete attrs[`${attribute.index}`] };
-    } else {
-      if (typeof _min !== 'undefined') {
-        attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], min: _min };
-      }
-      if (typeof _max !== 'undefined') {
-        attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], max: _max };
-      }
+    }
+    if (!_.isUndefined(_min)) {
+      attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], min: _min };
+    }
+    if (!_.isUndefined(_max)) {
+      attrs[`${attribute.index}`] = { ...attrs[`${attribute.index}`], max: _max };
     }
 
     await setObjectFilter({ ...attrs });
