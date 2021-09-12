@@ -14,7 +14,7 @@ const columnDefs = [
         align: 'center',
         render: (t) => (
             <span title={moment.unix(t).format('DD MMM YYYY HH:mm:ss')}>
-                {moment.unix(t).format('MMM D HH:mm')}
+                {moment.unix(t).format('DD MMM YYYY HH:mm')}
             </span>
         ),
     },
