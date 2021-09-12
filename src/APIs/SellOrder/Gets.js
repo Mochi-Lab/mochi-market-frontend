@@ -180,3 +180,29 @@ export const getAllBySearchAndPayment = async (
     });
   return result;
 };
+
+export const getSellOrderHistoryByNft = async (chainId, collectionAddress, tokenId) => {
+  let result = await axios.get(
+    `${process.env.REACT_APP_SERVER}/sellOrder/historyByNft/${chainId}/${collectionAddress}/${tokenId}`
+  )
+  .then(res => {
+    return res.data;
+  })
+  .catch(err => {
+    return [];
+  })
+  return result;
+}
+
+export const getSellOrderHistoryByUser = async (chainId, userAddress) => {
+  let result = await axios.get(
+    `${process.env.REACT_APP_SERVER}/sellOrder/historyByUser/${chainId}/${userAddress}`
+  )
+  .then(res => {
+    return res.data;
+  })
+  .catch(err => {
+    return [];
+  })
+  return result;
+}
