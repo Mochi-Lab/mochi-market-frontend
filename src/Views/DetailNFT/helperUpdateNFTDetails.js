@@ -16,7 +16,7 @@ export const UpdateNFTDetail = ({ token, setToken }) => {
                         title: 'Your Egg has not been activated',
                         content: (
                             <span>
-                                Please active your egg at
+                                Please activate your egg at
                                 <a href='https://kryptomon.co/' target='_blank' rel='noreferrer'>
                                     kryptomon.co
                                 </a>

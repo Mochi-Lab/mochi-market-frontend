@@ -159,7 +159,7 @@ export default function Collection() {
   }, [chainID, addressToken, objectFilter, strSearch, tokenPayment, typeSort]);
 
   const newMintNFT = useCallback(async () => {
-    if (nftList) {
+    if (!!chainID && nftList) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
       let result;
       if (is1155) {
@@ -172,8 +172,8 @@ export default function Collection() {
   }, [addressToken, chainID, nftList]);
 
   useEffect(() => {
-    newMintNFT();
-  }, [newMintNFT]);
+    if(viewAll !== null && !viewAll) newMintNFT();
+  }, [newMintNFT, viewAll]);
 
   const handleSetViewAll = useCallback(
     async (status) => {
@@ -204,7 +204,7 @@ export default function Collection() {
 
   return (
     <>
-      {!!loadingInfo || !infoCollection || !listNewNFT ? (
+      {!chainId || !!loadingInfo || !infoCollection || !listNewNFT ? (
         // Loading if done load the first type of token user have, if user select other load other
         <div className='center' style={{ width: '100%', height: '100%' }}>
           <IconLoading className='search-icon' />
@@ -227,16 +227,19 @@ export default function Collection() {
               verifiedContracts={verifiedContracts}
               addressToken={addressToken}
             />
-            <ViewLess
-              infoCollection={infoCollection}
-              nftsOnSale={!!nftsOnSale ? nftsOnSale.slice(0, 10) : []}
-              listNewNFT={listNewNFT}
-              setViewAll={handleSetViewAll}
-              viewAll={viewAll}
-              loadingNFTs={loadingNFTs}
-            />
 
-            {viewAll !== null ? (
+            {!viewAll ? (
+              <ViewLess
+                infoCollection={infoCollection}
+                nftsOnSale={!!nftsOnSale ? nftsOnSale.slice(0, 10) : []}
+                listNewNFT={listNewNFT}
+                setViewAll={handleSetViewAll}
+                viewAll={viewAll}
+                loadingNFTs={loadingNFTs}
+              />
+            ) : null}
+
+            {!!viewAll ? (
               <ViewAll
                 infoCollection={infoCollection}
                 nftsOnSale={!!nftsOnSale ? nftsOnSale : []}
