@@ -362,7 +362,6 @@
 
 .view-all-collection {
   margin-top: 2rem;
-  padding: 1rem;
   border-radius: 1rem;
 }
 
@@ -438,6 +437,29 @@
   border-color: #ff0086;
 }
 
+
+.btn-history {
+  border-radius: 1rem;
+  border: 1px solid #585858;
+  color: #000;
+  &:hover, &:active, &:focus {
+    color: #000;
+  }
+}
+
+[data-theme='dark'] {
+  .btn-history {
+    color: white;
+    background: #262626;
+
+    &:hover, &:active, &:focus {
+      border: 1px solid #fff;
+    }
+  }
+}
+
+
+
 @media (max-width: 992px) {
   .collection-detail {
     display: block;
@@ -501,11 +523,11 @@
   }
 
   .sort-results-collection .left-sort-results {
-    width: 30%;
+    display: none;
   }
 
   .sort-results-collection .right-sort-results {
-    width: 70%;
+    width: 100%;
   }
 
   .search-nft-in-collection-1 {

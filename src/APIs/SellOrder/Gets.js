@@ -183,7 +183,7 @@ export const getAllBySearchAndPayment = async (
 
 export const getSellOrderHistoryByNft = async (chainId, collectionAddress, tokenId) => {
   let result = await axios.get(
-    `${process.env.REACT_APP_SERVER}/sellOrder/historyByNft/${chainId}/${collectionAddress}/${tokenId}`
+    `${process.env.REACT_APP_SERVER}/sellOrder/historyByNft/${chainId}/${collectionAddress}` + (tokenId ? `/${tokenId}` : '')
   )
   .then(res => {
     return res.data;

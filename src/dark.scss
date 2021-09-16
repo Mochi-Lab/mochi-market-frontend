@@ -524,6 +524,10 @@ html[data-theme='dark'] {
   color: #ededed94 !important;
 }
 
+[data-theme='dark'] .ant-modal-title {
+  color: #ededed94 !important;
+}
+
 [data-theme='dark'] .type-number .ant-slider .ant-slider-track {
   background-color: #1890ff !important;
 }
