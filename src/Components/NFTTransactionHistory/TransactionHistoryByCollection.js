@@ -5,22 +5,7 @@ import moment from 'moment';
 import { getSymbol } from 'utils/getContractAddress';
 import { Link } from 'react-router-dom';
 import { getSellOrderHistoryByNft } from 'APIs/SellOrder/Gets';
-
-export const Address2UserName = React.memo(({address, chainId}) => {
-  const [username, setUsername] = useState(getShortAddress(address))
-  // const getEllipsisUserName = text => text.length > 16 ? `${text.substr(0, 16)}...` : text;
-  useEffect(() => {
-    (async () => {
-      setUsername(getShortAddress(address));
-      //** TODO for some time do not use this part **
-      // const {user} = await getProfileByAddress(address);
-      // if(user !== null) setUsername(`@${getEllipsisUserName(user.username)}`);
-    })();
-  }, [chainId, address])
-  return <Link target="_blank" to={`/profile/${chainId}/${address.toLowerCase()}`}>{username}</Link>
-})
-
-export const getShortAddress = (address) => address.substr(0, 4) + '..' + address.slice(-2);
+import { Address2UserName } from "./TransactionHistoryByNft"
 
 const columnDefs = [
   {
@@ -90,6 +75,8 @@ const createDataSource = (data) => {
       transactionList.push(transaction)
     });
   });
+
+
   return transactionList
           .sort((x, y) => (x.time > y.time ? -1 : x.time < y.time ? 1 : 0))
           .map((transaction, index) => ({
