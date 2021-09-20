@@ -1,5 +1,5 @@
-// import cover from 'Assets/banners/cover.png';
-import mori from 'Assets/banners/banner-mori.png';
+import cover from 'Assets/banners/cover.png';
+// import mori from 'Assets/banners/banner-mori.png';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
@@ -68,7 +68,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch, setSkip,
   return (
     <div className='banner-search-home'>
       <Slider {...carouselBanner} className='carousel-banner-home'>
-        {/* <div className='home-banner' height='241px'>
+        <div className='home-banner' height='241px'>
           <img src={cover} alt='cover' height='241px' />
           <div className='banner-content center'>
             <div>
@@ -76,8 +76,8 @@ export default function BannerSearchHome({ carouselBanner, inputSearch, setSkip,
               <p className='fontRoboto new-eco'>Creativity is contagious. Pass it on.</p>
             </div>
           </div>
-        </div> */}
-        <div className='home-banner' height='241px'>
+        </div>
+        {/* <div className='home-banner' height='241px'>
           <img src={mori} alt='mori' height='241px' />
           <div className='banner-content center'>
             <div>
@@ -92,7 +92,7 @@ export default function BannerSearchHome({ carouselBanner, inputSearch, setSkip,
               </a>
             </div>
           </div>
-        </div>
+        </div> */}
       </Slider>
       {/* Search box */}
       <div className='box-search'>
