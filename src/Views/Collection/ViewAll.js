@@ -1,4 +1,4 @@
-import { Col, Input, Layout, Row, Select, Modal, Button, message, Tooltip } from 'antd';
+import { Col, Input, Layout, Row, Select, Modal, Button, message, Tooltip, Space } from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import NFTsCardBrowse from 'Components/NFTsCardBrowse';
 import { getTokensPayment } from 'utils/getContractAddress';
 import './index.scss';
 import 'Components/NFTsFilterBrowse/index.scss';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, HistoryOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import IconLoading from 'Components/IconLoading';
 import FilterCollection from 'Components/FilterCollection';
 import Editor from '@monaco-editor/react';
@@ -15,6 +15,7 @@ import { updateAttributesFilter } from 'APIs/Collections/Puts';
 import createSignature from 'APIs/createSignature';
 import { verifySignature } from 'APIs/Collections/Post';
 import { showNotification } from 'store/actions';
+import {TransactionHistoryByCollection} from "../../Components/NFTTransactionHistory/TransactionHistoryByCollection";
 const { Option } = Select;
 
 export default function ViewAll({
@@ -49,6 +50,7 @@ export default function ViewAll({
   let checkInfoExist = !!infoCollection && !!infoCollection.attributesFilter;
 
   const [showFilter, setShowFilter] = useState(true);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [modalEditFilter, setModalEditFilter] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [valueEditFilter, setValueEditFilter] = useState(
@@ -101,6 +103,7 @@ export default function ViewAll({
           dispatch(showNotification(noti));
           setLoadingUpdate(false);
           setModalEditFilter(false);
+          setShowHistoryModal(false);
         } else {
           let noti = {};
           noti.type = 'error';
@@ -229,6 +232,7 @@ export default function ViewAll({
               <Option value='-1'>Price desc</Option>
             </Select>
 
+            <Space size="small">
             <Button
               className='btn-refresh'
               key='update'
@@ -239,6 +243,17 @@ export default function ViewAll({
             >
               Refresh
             </Button>
+
+            <Button
+                className='btn-history'
+                size='large'
+                key='update'
+                onClick={() => setShowHistoryModal(true)}
+            >
+              <HistoryOutlined /> Recently Sold
+            </Button>
+            </Space>
+
             <span className='textmode link-view-less' onClick={() => setViewAll(false)}>
               View Less
             </span>
@@ -247,8 +262,10 @@ export default function ViewAll({
         <div className='search-nft-in-collection-2'>
           <div className='input-search-collections'>
             <Input
-              placeholder='Search collections '
+              placeholder='Search collection'
               size='large'
+              onChange={searchNFTsCollection}
+              onKeyUp={searchNFTsCollection}
               value={strSearch}
               suffix={<SearchOutlined />}
               className='style-search-input input-mode-bc textmode'
@@ -312,6 +329,32 @@ export default function ViewAll({
             )}
           </>
       </Layout>
+
+      <Modal title={`Recently sold items in ${infoCollection.name}`}
+             footer={null}
+             className={"textmode"}
+             width={"90%"}
+             visible={showHistoryModal}
+             destroyOnClose={true}
+             closable={true}
+             onCancel={() => setShowHistoryModal(false)}
+      >
+        <TransactionHistoryByCollection chainId={chainId} collectionAddress={addressToken} />
+        <div style={{ textAlign: "center", margin: "1rem"}}>
+
+          <Button
+              className='btn-refresh'
+              key='update'
+              type='primary'
+              size='large'
+              onClick={() => setShowHistoryModal(false)}
+          >
+            <CloseCircleOutlined />
+            Close
+          </Button>
+
+        </div>
+      </Modal>
 
       <Modal
         title={
