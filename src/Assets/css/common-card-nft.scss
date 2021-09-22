@@ -43,6 +43,10 @@
     color: white !important;
     padding: 0 0.5rem 0 0.5rem;
     z-index: 3;
+
+    @media only screen and (max-width: 600px) {
+      font-size: 1rem;
+    }
   }
 
   .attribs-nft {
@@ -50,6 +54,15 @@
     right: auto;
     left: -1px;
     border-radius: 5px 0 5px 0;
+  }
+
+  .attribs-extra-info {
+    @extend .price-nft;
+    right: auto;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    border-radius: 0 0 0 0;
   }
 
   .display-resource-nft {
