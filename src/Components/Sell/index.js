@@ -97,11 +97,13 @@ export default function Sell({ token, is1155, available, statusActions }) {
   const checkAmount = async (_, value) => {
     if (!value) {
       return Promise.reject(new Error('Enter amount'));
-    } else if (parseInt(value) > parseInt(available)) {
-      return Promise.reject(new Error('Not enough amount'));
-    } else {
-      return Promise.resolve();
     }
+    // float checking
+    if(!/^\d+$/.test(value)) return Promise.reject(new Error('Invalid amount')); 
+    if (parseInt(value) > parseInt(available)) {
+      return Promise.reject(new Error('Not enough amount'));
+    }
+    return Promise.resolve();
   };
 
   return (

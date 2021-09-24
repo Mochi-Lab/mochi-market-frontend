@@ -37,6 +37,7 @@ const FeeDetail = ({ tokenPayment, chainId, sellPrice, sellAmount }) => {
             / You will get {profit} {currency}
           </span>
         )}
+        <div hidden={currency === "MOMA"}>To get lower fee, use MOMA as a payment method</div>
       </div>
     </div>
   );
