@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Popover } from 'antd';
 import imgNotFound from 'Assets/notfound.png';
 import { useHistory } from 'react-router-dom';

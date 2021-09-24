@@ -244,14 +244,14 @@ export default function ViewAll({
               Refresh
             </Button>
 
-            <Button
-                className='btn-history'
-                size='large'
-                key='update'
-                onClick={() => setShowHistoryModal(true)}
-            >
-              <HistoryOutlined /> Recently Sold
-            </Button>
+            {/*<Button*/}
+            {/*    className='btn-history'*/}
+            {/*    size='large'*/}
+            {/*    key='update'*/}
+            {/*    onClick={() => setShowHistoryModal(true)}*/}
+            {/*>*/}
+            {/*  <HistoryOutlined /> Recently Sold*/}
+            {/*</Button>*/}
             </Space>
 
             <span className='textmode link-view-less' onClick={() => setViewAll(false)}>

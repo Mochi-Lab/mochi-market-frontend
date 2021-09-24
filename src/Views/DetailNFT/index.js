@@ -185,6 +185,15 @@ export default function DetailNFT() {
                       <div className='items-properties'>
                         {!!token.attributes && token.attributes.length > 0 ? (
                           <List
+                              grid={{
+                                gutter: 16,
+                                xs: 2,
+                                sm: 2,
+                                md: 3,
+                                lg: 3,
+                                xl: 3,
+                                xxl: 3,
+                              }}
                             dataSource={token.attributes}
                             renderItem={(attr, index) => (
                               <List.Item key={index}>
