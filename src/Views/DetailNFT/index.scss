@@ -95,7 +95,7 @@
   -webkit-box-align: center;
   align-items: center;
   position: relative;
-  height: 32rem;
+  height: 22rem;
   background-color: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
@@ -138,17 +138,34 @@
 
 .items-properties {
   width: 100%;
-  max-height: 12.9rem;
-  min-height: 7.65rem;
-  overflow: auto;
-  margin-left: 1rem;
-  .ant-list-item-meta-description {
-    text-align: end;
-    padding-right: 1rem;
+  overflow: hidden;
+
+  .ant-list-split .ant-list-item {
+    border-bottom: 1px solid #383232;
   }
+
+  .ant-row {
+    align-items: center;
+  }
+
+  .ant-list-item-meta {
+    align-items: center;
+
+    &-description {
+      overflow: hidden;
+      text-align: end;
+      text-overflow: ellipsis;
+    }
+
+    &-avatar {
+      margin: 0;
+      max-width: 80%;
+    }
+  }
+
 }
 .item-properties {
-  margin-top: 1rem;
+  margin-top: 11rem;
   margin-right: 1rem;
   margin-bottom: 0.5rem;
   width: 10.5rem;
@@ -565,9 +582,6 @@
   }
   .purchase-nft {
     height: auto;
-  }
-  .items-properties {
-    max-height: 14rem;
   }
 }
 

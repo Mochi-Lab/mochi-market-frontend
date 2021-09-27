@@ -536,8 +536,8 @@ html[data-theme='dark'] {
   background-color: #181818 !important;
 }
 
-[data-theme='dark'] .items-properties .ant-list-split .ant-list-item {
-  border-bottom: 1px solid #383232;
+[data-theme='dark'] .items-properties .ant-list-item-meta-description {
+  color: #ededed94 !important;
 }
 
 @media (max-width: 767px) {

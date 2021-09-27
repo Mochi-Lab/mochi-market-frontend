@@ -45,6 +45,20 @@ export const __NFTCardDetail = ({
 }) => {
   const history = useHistory();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [customExtraInfo, setCustomExtraInfo] = useState("");
+
+  useEffect( () => {
+    if(token && detailNFT) {
+      switch(token.collectionAddress) {
+        case "0xc33d69a337b796a9f0f7588169cd874c3987bde9": setCustomExtraInfo(`Gen ${detailNFT.attributes[13].value}`); break;
+        case "0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e": setCustomExtraInfo(`Lv ${detailNFT.attributes[7].value} ${'★'.repeat(detailNFT.attributes[3].value)}`); break;
+        case "0x821304cb22ed418eee60d55100749ade15c2d0eb": setCustomExtraInfo(`${'★'.repeat(detailNFT.attributes[2].value)}`); break;
+        default: setCustomExtraInfo('')
+      }
+    }
+    else
+      setCustomExtraInfo("")
+  }, [token, detailNFT]);
 
   if (!getSymbol(chainId)) return <NFTCardLoader />;
   const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
@@ -98,6 +112,12 @@ export const __NFTCardDetail = ({
                 onLoad={onImageLoad}
                 onError={onImageError}
               />
+
+              {customExtraInfo !== "" && (
+                <div className='attribs-extra-info'>
+                  {customExtraInfo}
+                </div>
+              )}
             </div>
           </div>
         }
