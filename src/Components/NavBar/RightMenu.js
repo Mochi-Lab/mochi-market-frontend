@@ -56,6 +56,16 @@ const RightMenu = ({ onClose }) => {
     <Menu selectable={false} mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
       {generateMenuItemForRouteKey('/browse')}
       {generateMenuItemForRouteKey('/submit-Nfts')}
+      <Menu.Item key='bridge'>
+        <a
+          href='https://nftbridge.mochi.market/'
+          target='_blank'
+          rel='noreferrer'
+          className='text-white'
+        >
+          <div className='menu-button'>NFT Bridge</div>
+        </a>
+      </Menu.Item>
       {!!walletAddress && (
         generateMenuItemForRouteKey('/profile')
       )}
