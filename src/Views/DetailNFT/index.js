@@ -25,6 +25,7 @@ import { TransactionHistoryByNft } from 'Components/NFTTransactionHistory/Transa
 import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
 import { isArray } from 'lodash';
+import RenderExtraMetadata from "./DetailsNftOrder/helperExtraMetadata";
 
 const { TabPane } = Tabs;
 
@@ -229,44 +230,7 @@ export default function DetailNFT() {
                   </div>
                 </div>
 
-                {token.extraMetadata && <div className='properties-nft'>
-                  <div className='content-properties'>
-                    <div className='title-tab-properties'>
-                      <h3 className='textmode'>Extra Metadata</h3>
-                    </div>
-                    <div className='list-properties'>
-                      <div className='items-properties'>
-                        <p className={'text-mode'}>This data is based on Kryptomon Whitepaper.</p>
-                            <List
-                                grid={{
-                                  gutter: 16,
-                                  xs: 2,
-                                  sm: 2,
-                                  md: 3,
-                                  lg: 3,
-                                  xl: 3,
-                                  xxl: 3,
-                                }}
-                                dataSource={token.extraMetadata}
-                                renderItem={(attr, index) => (
-                                    <List.Item key={index}>
-                                      <List.Item.Meta
-                                          avatar={
-                                            <span className='name-properties'>{attr.trait_type}: </span>
-                                          }
-                                          description={
-                                            <span className='textmode'>
-                                     {attr.value}
-                                    </span>
-                                          }
-                                      />
-                                    </List.Item>
-                                )}
-                            />
-                      </div>
-                    </div>
-                  </div>
-                </div>}
+                {token.extraMetadata && <RenderExtraMetadata addressToken={addressToken} metadata={token.extraMetadata} />}
               </div>
             ) : null}
 
@@ -473,6 +437,7 @@ export default function DetailNFT() {
                       </div>
                     </div>
                   </div>
+                  {token.extraMetadata && <RenderExtraMetadata addressToken={addressToken} metadata={token.extraMetadata} />}
                 </div>
               ) : null}
               <div className='list-owners-and-orders'>
