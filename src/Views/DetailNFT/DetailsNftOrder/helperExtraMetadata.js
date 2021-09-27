@@ -9,9 +9,10 @@ export default function RenderExtraMetadata({
     const toExclude = ["Affection", "Laziness", "Braveness", "Constitution", "Hunger", "Instinct", "Smart", "Generation", "Crazyness", "Color"]
     metadata = metadata.filter(i => !toExclude.includes(i.trait_type))
     metadata = metadata.map(i => {
-        if(i.trait_type === "Sex") i.value = i.value <= 5 ? "Female" : "Male"
+        if(i.trait_type === "Sex" && !isNaN(i.value)) i.value = i.value <= 5 ? "Female" : "Male"
         return i
     })
+
     const talents = metadata.filter(i => i.trait_type.endsWith("Talent") || i.trait_type.endsWith("Genes"))
     const attributes = metadata.filter(i => !talents.includes(i))
 
