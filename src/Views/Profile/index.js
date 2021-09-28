@@ -32,6 +32,7 @@ import TabOwner from './TabOwner';
 import TabOnSale from './TabOnSale';
 import TabAdmins from './TabAdmins';
 import { TransactionHistoryByUser } from 'Components/NFTTransactionHistory/TransactionHistoryByUser';
+import {Helmet} from "react-helmet";
 
 const { TabPane } = Tabs;
 
@@ -75,6 +76,10 @@ export default function Profile() {
         getInfoUser={getInfoUser}
       />
       <div className='page-profile'>
+        (!!address && {<Helmet>
+          <title>{`User ${!!infoUser && !!infoUser.username ? infoUser.username : address} - Mochi Market`}</title>
+          <meta name="description" content={`User ${!!infoUser && !!infoUser.username ? infoUser.username : address} in NFT on Mochi Market - Multi-Chain NFT Market`} />
+        </Helmet>})
         <Row gutter={[32, 32]}>
           <Col xs={{ span: 24 }} md={{ span: 8 }} xl={{ span: 6 }}>
             <div style={{ position: 'relative' }}>

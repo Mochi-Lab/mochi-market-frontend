@@ -26,6 +26,7 @@ import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
 import { isArray } from 'lodash';
 import RenderExtraMetadata from "./DetailsNftOrder/helperExtraMetadata";
+import {Helmet} from "react-helmet";
 
 const { TabPane } = Tabs;
 
@@ -162,6 +163,10 @@ export default function DetailNFT() {
       <div className='body-page'>
         {!!token && !loadingDetailNft ? (
           <div className='detail-main'>
+            <Helmet>
+              <title>{token.name} - {token.collectionName} - Mochi Market</title>
+              <meta name="description" content={`${token.name} from ${token.collectionName} collection in NFT on Mochi Market - Multi-Chain NFT Market`} />
+            </Helmet>
             {lg ? (
               <div className='info-wrap-left'>
                 <div className='expand-img-nft'>

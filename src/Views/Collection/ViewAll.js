@@ -16,6 +16,7 @@ import createSignature from 'APIs/createSignature';
 import { verifySignature } from 'APIs/Collections/Post';
 import { showNotification } from 'store/actions';
 import {TransactionHistoryByCollection} from "../../Components/NFTTransactionHistory/TransactionHistoryByCollection";
+import {Helmet} from "react-helmet";
 const { Option } = Select;
 
 export default function ViewAll({
@@ -170,6 +171,10 @@ export default function ViewAll({
 
   return (
     <div className={`${!!viewAll ? 'display-block-view-all' : 'display-none-view-all'}`}>
+      <Helmet>
+        <title>{infoCollection.name} - Mochi Market</title>
+        <meta name="description" content={`${infoCollection.name} collection on Mochi Market - Multi-Chain NFT Market`} />
+      </Helmet>
       <Layout style={{ minHeight: '100%' }} className='view-all-collection background-mode'>
         <div className='sort-results-collection'>
           <div className='left-sort-results'>
