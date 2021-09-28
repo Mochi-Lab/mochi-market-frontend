@@ -7,9 +7,12 @@ export default function RenderExtraMetadata({
   if(addressToken.toLowerCase() === "0xc33d69a337b796a9f0f7588169cd874c3987bde9") {
 
     const toExclude = ["Affection", "Laziness", "Braveness", "Constitution", "Hunger", "Instinct", "Smart", "Generation", "Crazyness", "Color"]
+    const skinTypes = ["FEATHER", "SKIN", "SCALE", "SHORT HAIRS", "LONG HAIRS"]
+
     metadata = metadata.filter(i => !toExclude.includes(i.trait_type))
     metadata = metadata.map(i => {
         if(i.trait_type === "Sex" && !isNaN(i.value)) i.value = i.value <= 5 ? "Female" : "Male"
+        if(i.trait_type === "Skin Type" && !isNaN(i.value) && i.value < skinTypes.length) i.value = skinTypes[i.value]
         return i
     })
 
