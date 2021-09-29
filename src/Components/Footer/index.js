@@ -3,7 +3,6 @@ import logo from 'Assets/images/logo.png';
 import tele from 'Assets/icons/telegram.svg';
 import twitter from 'Assets/icons/twitter.svg';
 import medium from 'Assets/icons/medium.svg';
-import discord from 'Assets/icons/discord.svg';
 
 export default function Footer() {
   return (
@@ -42,11 +41,6 @@ export default function Footer() {
             <div className='icon-item'>
               <a href='https://mochi-market.medium.com/' target='_blank' rel='noreferrer'>
                 <img src={medium} alt='medium' />
-              </a>
-            </div>
-            <div className='icon-item'>
-              <a href='https://discord.gg/ZHq7arVS' target='_blank' rel='noreferrer'>
-                <img src={discord} alt='discord' />
               </a>
             </div>
           </div>

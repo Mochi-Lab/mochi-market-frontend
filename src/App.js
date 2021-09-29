@@ -6,6 +6,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import './App.scss';
 import Notification from 'Components/Notification';
 import StatusActivity from 'Components/StatusActivity';
+import {Helmet} from "react-helmet";
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -29,6 +30,12 @@ function App() {
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Mochi Market</title>
+        <link rel="canonical" href="https://app.mochi.market/" />
+        <meta name="description" content="Mochi Market - Multi-Chain NFT Market" />
+      </Helmet>
       <BrowserRouter>
         <div className='page content'>
           <Notification />
