@@ -1,4 +1,5 @@
 import { getSellerByNft, getSellOrderBySellId } from 'APIs/SellOrder/Gets';
+import { getDetailNFT } from 'APIs/NFT/Get';
 import ERC721 from 'Contracts/ERC721.json';
 
 export default async function helperStatusActions721(
@@ -54,7 +55,9 @@ export default async function helperStatusActions721(
             setStatus(1);
           }
         } else {
-          return history.push('/404');
+          const nftData = await getDetailNFT(chainId,addressToken,id)
+          const sellId = nftData.sellId ? nftData.sellId : null
+          return history.push(`/token/${chainId}/${addressToken}/${id}/${sellId}`);
         }
       }
     } catch (error) {

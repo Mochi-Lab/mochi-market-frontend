@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import { getSellOrderBySellId } from 'APIs/SellOrder/Gets';
+import { getDetailNFT } from "../../../APIs/NFT/Get";
 import { getAvailableToken1155OfOwner } from 'utils/helper';
 
 export default async function helperStatusActions1155Order(
@@ -41,7 +42,9 @@ export default async function helperStatusActions1155Order(
           setOwnersOnSale(listSeller);
         }
       } else {
-        return history.push('/404');
+        const nftData = await getDetailNFT(chainId,addressToken,id)
+        const sellId = nftData.sellId ? nftData.sellId : null
+        return history.push(`/token/${chainId}/${addressToken}/${id}/${sellId}`);
       }
     } catch (error) {
       console.log(error);
