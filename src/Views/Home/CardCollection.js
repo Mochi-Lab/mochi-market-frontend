@@ -13,14 +13,17 @@ export default function CardCollection({ addressToken, chainId }) {
   const [is1155, setIs1155] = useState({});
 
   useEffect(() => {
+    let isMounted = true;
     async function fetchCollection() {
       let res = await store.dispatch(getCollection(addressToken));
-      setCollection(res.collection);
+      if (isMounted) setCollection(res.collection);
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
-      setIs1155(is1155);
+      if (isMounted) setIs1155(is1155);
     }
     if (!!chainId && !!nftList) fetchCollection();
+    return () => { isMounted = false };
   }, [addressToken, chainId, nftList]);
+
 
   return !!collection.addressToken ? (
     <div className='item-carousel'>

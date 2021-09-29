@@ -105,7 +105,7 @@ export const selectChain = async (chainId, walletAddress) => {
 
 // Switch for chains is not ETH
 export const injectNetworkNoEthereum = async (chainId) => {
-  await window.ethereum.request({
+  if(!!chainId) await window.ethereum.request({
     method: 'wallet_addEthereumChain',
     params: paramsSwitchNetwork[chainId],
   });
@@ -135,6 +135,7 @@ export const disconnectWeb3Modal = async () => {
 
 export const connectWeb3Modal = async () => {
   const { chainId } = store.getState();
+  if(!chainId) return;
 
   injectNetworkNoEthereum(chainId);
 
