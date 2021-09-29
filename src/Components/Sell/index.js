@@ -6,6 +6,7 @@ import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
 import SellConfirmModal from './SellConfirmModal';
+import FeeDetail from './FeeDetail';
 
 import './index.scss';
 
@@ -21,6 +22,8 @@ export default function Sell({ token, is1155, available, statusActions }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalConfirmVisible, setIsModalConfirmVisible] = useState(false);
   const [tokenPayment, setTokenPayment] = useState();
+  const [sellPrice, setSellPrice] = useState(null);
+  const [sellAmount, setSellAmount] = useState(1);
   const [transactionInProgress, setTransactionInProgress] = useState();
 
   const [form] = Form.useForm();
@@ -94,11 +97,13 @@ export default function Sell({ token, is1155, available, statusActions }) {
   const checkAmount = async (_, value) => {
     if (!value) {
       return Promise.reject(new Error('Enter amount'));
-    } else if (parseInt(value) > parseInt(available)) {
-      return Promise.reject(new Error('Not enough amount'));
-    } else {
-      return Promise.resolve();
     }
+    // float checking
+    if(!/^\d+$/.test(value)) return Promise.reject(new Error('Invalid amount')); 
+    if (parseInt(value) > parseInt(available)) {
+      return Promise.reject(new Error('Not enough amount'));
+    }
+    return Promise.resolve();
   };
 
   return (
@@ -189,6 +194,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
                   style={{ width: '60%' }}
                 >
                   <InputNumber
+                    onChange={setSellPrice}
                     min='0.1'
                     size='large'
                     className='search-style'
@@ -220,12 +226,14 @@ export default function Sell({ token, is1155, available, statusActions }) {
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     placeholder='Amount'
                     className='textmode'
+                    onChange={(value) => { setSellAmount(available >= value ? value : null) }}
                   />
                 </Form.Item>
               </Input.Group>
             </Col>
           </Row>
         </Form>
+        <FeeDetail tokenPayment={tokenPayment} chainId={chainId} sellPrice={sellPrice} sellAmount={sellAmount}/>
       </Modal>
 
       {
