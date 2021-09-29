@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
-
+import _ from 'lodash';
 // #TODO improve calculate & display decimal value
 
 const prettyPrintFeeLevel = (fee) => {
@@ -10,7 +10,13 @@ const prettyPrintFeeLevel = (fee) => {
   return feeFloat.replace(/0+$/, '').replace(/\.$/, '') + '%';
 };
 
-const FeeDetail = ({ tokenPayment, chainId, sellPrice, sellAmount }) => {
+const updatePaymentToken = (setTokenPayment, chainId, currency) => {
+  const tokenInfo = getTokensPayment(chainId).find((item) => item.symbol === currency);
+  if (tokenInfo === undefined) return;
+  setTokenPayment(tokenInfo.address);
+};
+
+const FeeDetail = ({ tokenPayment, setTokenPayment, chainId, sellPrice, sellAmount }) => {
   const { market } = useSelector((state) => state);
   const currency = getTokensPayment(chainId).find((item) => item.address === tokenPayment).symbol;
   const [fee, setFee] = useState(null);
@@ -25,19 +31,29 @@ const FeeDetail = ({ tokenPayment, chainId, sellPrice, sellAmount }) => {
 
   useEffect(() => {
     if ([fee, sellPrice, sellAmount].includes(null)) return;
-    setProfit(sellPrice * sellAmount * (1 - fee[0] / fee[1]));
+    const profit = sellPrice * sellAmount * (1 - fee[0] / fee[1]);
+    const _profit = _.trimEnd(profit.toFixed(4), '0');
+    setProfit(_profit.replace(/\.$/, ''));
   }, [sellPrice, sellAmount, fee]);
 
   return fee === null ? null : (
-    <div>
-      <div>
-        <span>Fee {prettyPrintFeeLevel(fee)} </span>
-        {[sellPrice, sellAmount].includes(null) ? null : (
-          <span>
-            / You will get {profit} {currency}
-          </span>
-        )}
-        <div hidden={currency === "MOMA"}>To get lower fee, use MOMA as a payment method</div>
+    <div className='textmode'>
+      <span>Fee {prettyPrintFeeLevel(fee)} </span>
+      {[sellPrice, sellAmount].includes(null) ? null : (
+        <span>
+          | You will get {profit} {currency}
+        </span>
+      )}
+      <div hidden={currency === 'MOMA'}>
+        <span
+          onClick={() => {
+            updatePaymentToken(setTokenPayment, chainId, 'MOMA');
+          }}
+          className='use-moma'
+        >
+          Use MOMA{' '}
+        </span>
+        as a payment method to get lower fee
       </div>
     </div>
   );
