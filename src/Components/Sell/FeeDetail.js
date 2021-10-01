@@ -16,11 +16,19 @@ const updatePaymentToken = (setTokenPayment, chainId, currency) => {
   setTokenPayment(tokenInfo.address);
 };
 
-const FeeDetail = ({ tokenPayment, setTokenPayment, chainId, sellPrice, sellAmount }) => {
+const FeeDetail = ({ tokenPayment, setTokenPayment, chainId, sellPrice, sellAmount, prices }) => {
   const { market } = useSelector((state) => state);
   const currency = getTokensPayment(chainId).find((item) => item.address === tokenPayment).symbol;
   const [fee, setFee] = useState(null);
   const [profit, setProfit] = useState(null);
+  const [calculatedPrice, setCalculatedPrice] = useState(null);
+
+  useEffect(() => {
+    if(!profit || !prices || !prices[currency.toLowerCase()]) return;
+    let calcPrice = profit * prices[currency.toLowerCase()]['usd']
+    calcPrice = calcPrice.toFixed(2);
+    setCalculatedPrice(calcPrice)
+  }, [chainId, prices, profit, currency]);
 
   useEffect(() => {
     setFee(() => null);
@@ -34,15 +42,16 @@ const FeeDetail = ({ tokenPayment, setTokenPayment, chainId, sellPrice, sellAmou
     const profit = sellPrice * sellAmount * (1 - fee[0] / fee[1]);
     const _profit = _.trimEnd(profit.toFixed(4), '0');
     setProfit(_profit.replace(/\.$/, ''));
-  }, [sellPrice, sellAmount, fee]);
+  }, [sellPrice, sellAmount, fee, prices]);
 
   return fee === null ? null : (
     <div className='textmode'>
-      <span>Fee {prettyPrintFeeLevel(fee)} </span>
+      Fee {prettyPrintFeeLevel(fee)}
       {[sellPrice, sellAmount].includes(null) ? null : (
-        <span>
-          | You will get {profit} {currency}
-        </span>
+          <>
+            <span> | You will get {profit} {currency}</span>
+            <span hidden={!calculatedPrice}> | ~{calculatedPrice}$</span>
+          </>
       )}
       <div hidden={currency === 'MOMA'}>
         <span

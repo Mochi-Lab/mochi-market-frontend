@@ -6,6 +6,7 @@ import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
 import SellConfirmModal from './SellConfirmModal';
+import { getPrices } from 'APIs/Price/Get';
 import FeeDetail from './FeeDetail';
 
 import './index.scss';
@@ -25,6 +26,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
   const [sellPrice, setSellPrice] = useState(null);
   const [sellAmount, setSellAmount] = useState(1);
   const [transactionInProgress, setTransactionInProgress] = useState();
+  const [prices, setPrices] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -46,6 +48,13 @@ export default function Sell({ token, is1155, available, statusActions }) {
       setTokenPayment(getTokensPayment(chainId)[tokenDefault].address);
     }
   }, [chainId, addressToken]);
+
+  useEffect(() => {
+    if(!chainId || prices) return
+    (async () => {
+      setPrices(await getPrices(chainId));
+    })();
+  }, [chainId, prices]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -99,7 +108,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
       return Promise.reject(new Error('Enter amount'));
     }
     // float checking
-    if(!/^\d+$/.test(value)) return Promise.reject(new Error('Invalid amount')); 
+    if(!/^\d+$/.test(value)) return Promise.reject(new Error('Invalid amount'));
     if (parseInt(value) > parseInt(available)) {
       return Promise.reject(new Error('Not enough amount'));
     }
@@ -233,7 +242,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
             </Col>
           </Row>
         </Form>
-        <FeeDetail tokenPayment={tokenPayment} setTokenPayment={setTokenPayment} chainId={chainId} sellPrice={sellPrice} sellAmount={sellAmount}/>
+        <FeeDetail tokenPayment={tokenPayment} setTokenPayment={setTokenPayment} chainId={chainId} sellPrice={sellPrice} sellAmount={sellAmount} prices={prices}/>
       </Modal>
 
       {
@@ -246,7 +255,8 @@ export default function Sell({ token, is1155, available, statusActions }) {
             tokenPayment,
             transactionInProgress,
             onConfirm: handleOk,
-            is1155
+            is1155,
+            prices
           }} />
         )
       }
