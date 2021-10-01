@@ -233,7 +233,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
             </Col>
           </Row>
         </Form>
-        <FeeDetail tokenPayment={tokenPayment} chainId={chainId} sellPrice={sellPrice} sellAmount={sellAmount}/>
+        <FeeDetail tokenPayment={tokenPayment} setTokenPayment={setTokenPayment} chainId={chainId} sellPrice={sellPrice} sellAmount={sellAmount}/>
       </Modal>
 
       {
