@@ -50,11 +50,11 @@ export default function Sell({ token, is1155, available, statusActions }) {
   }, [chainId, addressToken]);
 
   useEffect(() => {
-    if(!chainId || prices) return
+    if(!chainId || prices || !isModalVisible) return
     (async () => {
       setPrices(await getPrices(chainId));
     })();
-  }, [chainId, prices]);
+  }, [chainId, prices, isModalVisible]);
 
   const showModal = () => {
     setIsModalVisible(true);

@@ -3,12 +3,12 @@ import axios from 'axios';
 export const getPrices = async (chainId) => {
 
   const currencies = {
-    56: ['binancecoin', 'mochi-market'],
+    56: ['binancecoin', 'mochi-market', 'dragon-warrior'],
     97: ['binancecoin', 'mochi-market'],
     137: ['matic-network', 'mochi-market']
   }
   const mapped_currencies = {
-    56: ['bnb', 'moma'],
+    56: ['bnb', 'moma', 'gon'],
     97: ['bnb', 'moma'],
     137: ['matic', 'moma']
   }
