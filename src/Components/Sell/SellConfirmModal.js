@@ -11,7 +11,8 @@ const SellConfirmModal = ({
     form,
     tokenPayment,
     transactionInProgress,
-    is1155
+    is1155,
+    prices
 }) => {
 
     const { price, amount } = form.getFieldValue();
@@ -21,6 +22,7 @@ const SellConfirmModal = ({
         timeLeft: hasWarning ? PUT_SELL_ORDER_WARNING_TIME : PUT_SELL_ORDER_TIME,
         intervalId: 0
     });
+    const [calculatedPrice, setCalculatedPrice] = useState(null);
 
     useEffect(() => {
         const _intervalId = setInterval(() => {
@@ -39,10 +41,17 @@ const SellConfirmModal = ({
     }, [])
 
     useEffect(() => {
+        if(!prices || !prices[currency.toLowerCase()]) return;
+        let calcPrice = price * prices[currency.toLowerCase()]['usd']
+        calcPrice = calcPrice.toFixed(2);
+        setCalculatedPrice(calcPrice)
+    }, [chainId, prices, price]);
+
+    useEffect(() => {
         if(state.timeLeft > 0) return;
         clearInterval(state.intervalId);
     }, [state]);
-    
+
     return (
         <Modal
             maskClosable={false}
@@ -69,6 +78,13 @@ const SellConfirmModal = ({
         >
             <span className='textmode text-base'>
                 Price: <span className="text-eb2f96">{price} {currency}</span><br/>
+                {/*{*/}
+                {/*    calculatedPrice && (*/}
+                {/*        <>*/}
+                {/*            Estimated value: <span className="text-eb2f96">{calculatedPrice} $</span><br/>*/}
+                {/*        </>*/}
+                {/*    )*/}
+                {/*}*/}
                 {
                     is1155 && (
                         <>
