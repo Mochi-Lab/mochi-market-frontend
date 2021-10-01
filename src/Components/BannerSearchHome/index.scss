@@ -17,52 +17,11 @@
   }
 }
 
-.search-icon {
-  font-size: 1.15rem;
-}
 
 .home-search {
   height: 3rem;
   width: 33vw;
-  border: 0;
-  border-radius: 0px 16px 16px 0px;
   font-size: 1.15rem;
-  outline: none;
-}
-
-/* TODO : darkmode */
-
-.hs {
-  display: flex;
-  transition: all 0.3s;
-  border-radius: 25px;
-  .search-input {
-    box-shadow: none;
-    -webkit-appearance: none;
-    border: 1px solid #c3c3c3;
-    border-radius: 0px 25px 25px 0px;
-    transition: all 0.3s;
-  }
-  &.active,
-  &:hover {
-    .search-input {
-      border-color: #eb2f96;
-    }
-  }
-  div.search-icon.search-input {
-    height: 3rem;
-    width: 3rem;
-    border-radius: 25px 0px 0px 25px;
-    background: #ffffff;
-    border-right: none;
-  }
-  input.search-input.home-search {
-    border-left: none;
-  }
-}
-
-.hs.active {
-  box-shadow: 0px 0px 0px 3px #eb2f961f;
 }
 
 .mc-mk {
@@ -84,47 +43,6 @@
 
 .banner-search-home {
   margin-bottom: 2rem;
-}
-
-.mori-banner {
-  font-weight: 900;
-  line-height: 70px;
-  font-size: 64px;
-  font-style: normal;
-  text-align: center;
-  color: #6edc22;
-  -webkit-text-stroke-width: 4px;
-  -webkit-text-stroke-color: #285a47;
-}
-
-.button-join-mori {
-  margin: 0 auto;
-  background: #42c107;
-  mix-blend-mode: normal;
-  border: 3px solid #d5fdc3;
-  box-sizing: border-box;
-  box-shadow: inset 0px 6px 36px #e9ffce;
-  border-radius: 51px;
-  font-family: 'Rubik Mono One', sans-serif;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 40px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  padding: 0.5rem 1.25rem;
-
-  color: #ffffff;
-
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16);
-}
-
-.link-warp-button {
-  cursor: pointer;
-  button {
-    cursor: pointer;
-  }
 }
 
 @media (max-width: 992px) {

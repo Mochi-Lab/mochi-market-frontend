@@ -192,6 +192,20 @@ html[data-theme='dark'] {
 [data-theme='dark'] .ant-picker-suffix {
   color: #fafafa !important;
 }
+
+[data-theme='dark'] .banner-search-home {
+  .home-collection-search-container {
+    border-color: #cccccc66;
+    background: #1f1f1f;
+  }
+  .ant-select-selector {
+    * {
+      color: white;
+      background: transparent !important;
+    }
+  }
+}
+
 [data-theme='dark'] .ant-select:not(.ant-select-customize-input) .ant-select-selector {
   border: 1px solid #585858;
 }
@@ -200,6 +214,9 @@ html[data-theme='dark'] {
 }
 [data-theme='dark'] .ant-input-affix-wrapper:hover {
   border: 1px solid #b7b7b7;
+}
+[data-theme='dark'] .banner-search-home .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border: none !important;
 }
 
 [data-theme='dark'] .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
@@ -343,19 +360,6 @@ html[data-theme='dark'] {
   background: #585858;
 }
 
-[data-theme='dark'] .banner-search-home .box-search .hs {
-  .search-input {
-    background-color: #343434 !important;
-    border-color: #585858;
-    color: white;
-  }
-  &.active,
-  &:hover {
-    .search-input {
-      border-color: #3d3d3d;
-    }
-  }
-}
 
 [data-theme='dark'] .banner-search-home .box-search .hs.active {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25) !important;

@@ -1,0 +1,35 @@
+.home-collection-search-container {
+  border-radius: 1.5rem;
+  border: 2px solid #ccc;
+  background: #fafafa;
+  overflow: hidden;
+  &.active {
+    box-shadow: 0 0 0 3px #cccccc33;
+  }
+}
+
+.home-collection-search {
+  button {
+    border-color: transparent;
+    height: 3rem !important;
+    width: 3rem !important;
+  }
+  input {
+    height: 3rem;
+    padding-right: 0;
+    padding-left: 1.5rem;
+  }
+  input,
+  button {
+    -webkit-appearance: none;
+    background: #fafafa !important;
+    border-color: transparent !important;
+  }
+  *,
+  *:focus,
+  *:active,
+  *:hover,
+  *::after {
+    box-shadow: none !important;
+  }
+}
