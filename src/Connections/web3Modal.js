@@ -19,6 +19,7 @@ const rpcSupport = {
   56: 'https://bsc-dataseed.binance.org/',
   137: 'https://rpc-mainnet.maticvigil.com/',
   1666600000: 'https://api.harmony.one',
+  1287: 'https://rpc.testnet.moonbeam.network',
 };
 
 const providerOptions = {
@@ -87,6 +88,19 @@ const paramsSwitchNetwork = {
       blockExplorerUrls: ['https://explorer.pops.one/#/'],
     },
   ],
+  1287: [
+    {
+      chainId: '0x507',
+      chainName: 'Moonbase',
+      nativeCurrency: {
+        name: 'DEV',
+        symbol: 'DEV',
+        decimals: 18,
+      },
+      rpcUrls: ['https://rpc.testnet.moonbeam.network'],
+      blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network/'],
+    },
+  ],
 };
 
 export const selectChain = async (chainId, walletAddress) => {
@@ -105,10 +119,11 @@ export const selectChain = async (chainId, walletAddress) => {
 
 // Switch for chains is not ETH
 export const injectNetworkNoEthereum = async (chainId) => {
-  if(!!chainId) await window.ethereum.request({
-    method: 'wallet_addEthereumChain',
-    params: paramsSwitchNetwork[chainId],
-  });
+  if (!!chainId)
+    await window.ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: paramsSwitchNetwork[chainId],
+    });
 };
 
 // Switch for chains in ecosystems of Ethereum
@@ -135,7 +150,7 @@ export const disconnectWeb3Modal = async () => {
 
 export const connectWeb3Modal = async () => {
   const { chainId } = store.getState();
-  if(!chainId) return;
+  if (!chainId) return;
 
   injectNetworkNoEthereum(chainId);
 

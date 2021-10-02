@@ -18,6 +18,10 @@ const urlsSubgraph = {
     url1155: '',
     url721: '',
   },
+  1287: {
+    url1155: '',
+    url721: '',
+  },
 };
 
 export const getUrlSubgraph = (_chainId) => {
