@@ -123,10 +123,12 @@ export async function listTokensERC721OfOwnerEnums(
   nftList
 ) {
   let list721AddressAccept = [];
-  for (let i = 0; i < listAddressAccept.length; i++) {
-    let is1155 = await nftList.methods.isERC1155(listAddressAccept[i]).call();
-    if (!is1155) list721AddressAccept.push(listAddressAccept[i]);
-  }
+  await Promise.all(
+    listAddressAccept.map(async (e) => {
+      let is1155 = await nftList.methods.isERC1155(e).call();
+      if (!is1155) list721AddressAccept.push(e);
+    })
+  );
   let listRaw721 = [];
   for (let i = 0; i < list721AddressAccept.length; i++) {
     let e = { contract_address: list721AddressAccept[i], nft_data: '' };
