@@ -164,8 +164,8 @@ const tokensPayment = {
   1287: [
     {
       address: '0x0000000000000000000000000000000000000000',
-      icon: one,
-      symbol: 'ONE',
+      icon: movr,
+      symbol: 'MOVR',
       collections: {},
       hiddens: [],
     },

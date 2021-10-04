@@ -202,16 +202,15 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
         acceptedNftsAddress,
         walletAddress,
         chainId,
-        web3,
-        nftList
+        web3
       );
     } else if (parseInt(chainId) === 1287) {
-      console.log('test');
       erc721Tokens = await listTokensERC721OfOwnerEnums(
         acceptedNftsAddress,
         walletAddress,
         chainId,
-        web3
+        web3,
+        nftList
       );
     } else {
       erc721Tokens = await listTokensERC721OfOwner(acceptedNftsAddress, walletAddress, chainId);
