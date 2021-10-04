@@ -115,7 +115,6 @@ const rootReducer = (state = initialState, action) => {
         addressesProvider: action.addressesProvider,
       };
     case actions.SET_NFTLIST:
-      console.log('change', action.nftList);
       return {
         ...state,
         nftList: action.nftList,

@@ -215,7 +215,7 @@ export const listChainsSupport = [
   { chainId: 137, name: 'Polygon', icon: polygon /* Polygon Mainnet*/ },
   { chainId: 97, name: 'BSC-Testnet', icon: bnb /*BSC Testnet*/ },
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
-  { chainId: 1287, name: 'Moonbase', icon: movr /*BSC Testnet*/ },
+  { chainId: 1287, name: 'Moonbase', icon: movr /*Moonbase Testnet*/ },
 ];
 
 const logoChainsTags = {

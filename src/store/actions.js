@@ -190,13 +190,11 @@ export const GET_OWNED_ERC1155 = 'GET_OWNED_ERC1155';
 export const SET_LIST_NTTS_OWNER = 'SET_LIST_NTTS_OWNER';
 export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
   const { acceptedNftsAddress, chainId, web3, nftList } = getState();
-  console.log(acceptedNftsAddress, chainId, web3, nftList);
   if (!!walletAddress && !!chainId) {
     // Start loading
     dispatch(setLoadingErc721(true));
     let listNFTsOwner = [];
     let erc721Tokens;
-    console.log(parseInt(chainId));
     if (parseInt(chainId) === 56) {
       erc721Tokens = await listTokenERC721OfOwnerCQT(
         acceptedNftsAddress,
