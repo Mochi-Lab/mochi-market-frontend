@@ -39,7 +39,6 @@ export const deleteFileInIpfs = async (hash) => {
       },
     })
     .then(function (res) {
-      console.log('res: ', res);
       return true;
     })
     .catch(function (e) {
