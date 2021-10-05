@@ -29,6 +29,12 @@ export const web3Default = {
     name: 'Harmony',
     explorer: 'https://explorer.pops.one/#/tx/',
   },
+  // Moonbase
+  1287: {
+    web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc.testnet.moonbeam.network')),
+    name: 'Moonbase',
+    explorer: 'https://moonbase-blockscout.testnet.moonbeam.network/',
+  },
 };
 
 export const defaultChainId = 56;

@@ -3,10 +3,12 @@ import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
 import one from 'Assets/one-coin.png';
 import gon from 'Assets/gon-coin.jpg';
+import movr from 'Assets/logo/moonriver.png';
 
 import bscTag from 'Assets/logo/bsc.png';
 import polygonTag from 'Assets/logo/polygon.png';
 import harmonyTag from 'Assets/logo/harmony.png';
+import movrTag from 'Assets/logo/moonriver.png';
 
 const contractAddress = {
   //Polygon Mainnet
@@ -68,40 +70,106 @@ const contractAddress = {
     MarketAdmin: '0x6a24414449Bc450c8aC835A82615bD5c51C83110',
     MOMA: '',
   },
+  1287: {
+    AddressesProvider: '0xcBF96C691703C0575F2745beAC80Ed3B0FE4457B',
+    NftList: '0xfc602f74249aca10496c0dB881495511a753B7ca',
+    Vault: '0xFCcFf3E4a7682DbbB5cf7b23928517F0B832aa57',
+    SellOrderList: '0xDBe900E26f6084d6432A32f17a03AAFA23c602F1',
+    ExchangeOrderList: '0x8ea7A4dc5B83EA603e43c2A3afCe77c9026C078e',
+    CreativeStudio: '0x7c0be8De5c08b9FDF69AfF5e5A446Dd16B95843e',
+    Market: '0x3642492b2557049B8f7B2836952EF15Ef4949dC3',
+    MochiERC721NFT: '0xec95eb03364A7D8A1efb06076d8e610032742C59',
+    MochiERC1155NFT: '0xeD16C75897E031b4291F05B6F1b0EA7dB81BB211',
+    MarketAdmin: '0x6BD98658EeD1B4411bdF485DcE4D31e6087A14b6',
+    MOMA: '',
+  },
 };
 
 const tokensPayment = {
   //Polygon Mainnet
   137: [
-    { address: '0xe3ab61371ecc88534c522922a026f2296116c109', icon: moma, symbol: 'MOMA', collections: {}, hiddens: [] },
-    { address: '0x0000000000000000000000000000000000000000', icon: polygon, symbol: 'MATIC', collections: {}, hiddens: [] },
+    {
+      address: '0xe3ab61371ecc88534c522922a026f2296116c109',
+      icon: moma,
+      symbol: 'MOMA',
+      collections: {},
+      hiddens: [],
+    },
+    {
+      address: '0x0000000000000000000000000000000000000000',
+      icon: polygon,
+      symbol: 'MATIC',
+      collections: {},
+      hiddens: [],
+    },
   ],
   //BSC Mainnet
   56: [
-    { address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e', icon: moma, symbol: 'MOMA', collections: {}, hiddens: [] },
     {
-      address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {},
+      address: '0xb72842d6f5fedf91d22d56202802bb9a79c6322e',
+      icon: moma,
+      symbol: 'MOMA',
+      collections: {},
+      hiddens: [],
+    },
+    {
+      address: '0x0000000000000000000000000000000000000000',
+      icon: bnb,
+      symbol: 'BNB',
+      collections: {},
       hiddens: [
         '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b',
         '0x821304cb22ed418eee60d55100749ade15c2d0eb',
         '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e',
-      ]
+      ],
     },
     {
-      address: '0x610f34da19797405a276d26f95bd5c7d8cbbd644', icon: gon, symbol: 'GON', collections:
-      {
+      address: '0x610f34da19797405a276d26f95bd5c7d8cbbd644',
+      icon: gon,
+      symbol: 'GON',
+      collections: {
         '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b': 0,
         '0x821304cb22ed418eee60d55100749ade15c2d0eb': 0,
-        '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e': 0
-      }, hiddens: []
+        '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e': 0,
+      },
+      hiddens: [],
     },
   ],
   //BSC Testnet
   97: [
-    { address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd', icon: moma, symbol: 'MOMA', collections: {}, hiddens: [] },
-    { address: '0x0000000000000000000000000000000000000000', icon: bnb, symbol: 'BNB', collections: {}, hiddens: [] },
+    {
+      address: '0x777d20e16c6bc508d5989e81a6c9b5034a32c6dd',
+      icon: moma,
+      symbol: 'MOMA',
+      collections: {},
+      hiddens: [],
+    },
+    {
+      address: '0x0000000000000000000000000000000000000000',
+      icon: bnb,
+      symbol: 'BNB',
+      collections: {},
+      hiddens: [],
+    },
   ],
-  1666600000: [{ address: '0x0000000000000000000000000000000000000000', icon: one, symbol: 'ONE', collections: {}, hiddens: [] }],
+  1666600000: [
+    {
+      address: '0x0000000000000000000000000000000000000000',
+      icon: one,
+      symbol: 'ONE',
+      collections: {},
+      hiddens: [],
+    },
+  ],
+  1287: [
+    {
+      address: '0x0000000000000000000000000000000000000000',
+      icon: movr,
+      symbol: 'MOVR',
+      collections: {},
+      hiddens: [],
+    },
+  ],
 };
 
 const symbolToken = {
@@ -124,6 +192,9 @@ const symbolToken = {
   1666600000: {
     '0x0000000000000000000000000000000000000000': 'ONE',
   },
+  1287: {
+    '0x0000000000000000000000000000000000000000': 'MOVR',
+  },
 };
 
 const infoChains = {
@@ -135,6 +206,8 @@ const infoChains = {
   97: { name: 'BSC-Testnet', icon: bnb },
   // Harmony mainet
   // 1666600000: { name: 'Harmony', icon: one },
+  // Moonbase
+  1287: { name: 'Moonbase', icon: movr },
 };
 
 export const listChainsSupport = [
@@ -142,6 +215,7 @@ export const listChainsSupport = [
   { chainId: 137, name: 'Polygon', icon: polygon /* Polygon Mainnet*/ },
   { chainId: 97, name: 'BSC-Testnet', icon: bnb /*BSC Testnet*/ },
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
+  { chainId: 1287, name: 'Moonbase', icon: movr /*Moonbase Testnet*/ },
 ];
 
 const logoChainsTags = {
@@ -153,6 +227,8 @@ const logoChainsTags = {
   97: { name: 'BSC-Testnet', logo: bscTag },
   // Harmony mainet
   1666600000: { name: 'Harmony', logo: harmonyTag },
+  // Moonbase
+  1287: { name: 'Moonbase', icon: movrTag },
 };
 
 export const getContractAddress = (_chainId) => {

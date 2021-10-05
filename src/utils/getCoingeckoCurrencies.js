@@ -16,7 +16,13 @@ const coingeckoMappings = {
     currencies: ['matic-network', 'mochi-market'],
     mapped_currencies: ['matic', 'moma'],
     vs_currencies: ['matic-network', 'usd'],
-  }
+  },
+  //Moonbase
+  1287: {
+    currencies: ['moonriver'],
+    mapped_currencies: ['moonriver'],
+    vs_currencies: ['moonriver', 'usd'],
+  },
 };
 
 export const getCoingeckoCurrencies = (_chainId) => {

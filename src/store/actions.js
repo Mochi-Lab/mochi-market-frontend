@@ -3,6 +3,7 @@ import {
   listTokensERC721OfOwner,
   listTokensERC115OfOwner,
   listTokenERC721OfOwnerCQT,
+  listTokensERC721OfOwnerEnums,
 } from 'utils/helper';
 import ERC721 from 'Contracts/ERC721.json';
 import ERC1155 from 'Contracts/ERC1155.json';
@@ -54,7 +55,6 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
   const market = new web3.eth.Contract(Market.abi, contractAddress.Market);
   const nftList = new web3.eth.Contract(NFTList.abi, contractAddress.NftList);
   const sellOrderList = new web3.eth.Contract(SellOrderList.abi, contractAddress.SellOrderList);
-
   dispatch(setAddressesProvider(addressesProvider));
   dispatch(setMarket(market));
   dispatch(setNftList(nftList));
@@ -189,8 +189,7 @@ export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
 export const GET_OWNED_ERC1155 = 'GET_OWNED_ERC1155';
 export const SET_LIST_NTTS_OWNER = 'SET_LIST_NTTS_OWNER';
 export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
-  const { acceptedNftsAddress, chainId, web3 } = getState();
-
+  const { acceptedNftsAddress, chainId, web3, nftList } = getState();
   if (!!walletAddress && !!chainId) {
     // Start loading
     dispatch(setLoadingErc721(true));
@@ -202,6 +201,14 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
         walletAddress,
         chainId,
         web3
+      );
+    } else if (parseInt(chainId) === 1287) {
+      erc721Tokens = await listTokensERC721OfOwnerEnums(
+        acceptedNftsAddress,
+        walletAddress,
+        chainId,
+        web3,
+        nftList
       );
     } else {
       erc721Tokens = await listTokensERC721OfOwner(acceptedNftsAddress, walletAddress, chainId);

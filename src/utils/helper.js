@@ -115,6 +115,51 @@ export async function listERC721OfOwner(token, walletAddress, addressMarket) {
   }
 }
 
+export async function listTokensERC721OfOwnerEnums(
+  listAddressAccept,
+  walletAddress,
+  chainId,
+  web3,
+  nftList
+) {
+  let list721AddressAccept = [];
+  await Promise.all(
+    listAddressAccept.map(async (e) => {
+      let is1155 = await nftList.methods.isERC1155(e).call();
+      if (!is1155) list721AddressAccept.push(e);
+    })
+  );
+  let listRaw721 = [];
+  for (let i = 0; i < list721AddressAccept.length; i++) {
+    let e = { contract_address: list721AddressAccept[i], nft_data: '' };
+    const instance = new web3.eth.Contract(ERC721.abi, list721AddressAccept[i]);
+    let balance = await instance.methods.balanceOf(walletAddress).call();
+    if (balance > 0) {
+      let nft_data = [];
+      for (let i = 0; i < balance; i++) {
+        let obj = {};
+        obj.token_id = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+        nft_data.push(obj);
+      }
+      e.nft_data = nft_data;
+      listRaw721.push(e);
+    }
+  }
+  let list721 = [];
+  const promises = listRaw721.map(async (rawNft) => {
+    await Promise.all(
+      rawNft.nft_data.map(async (e) => {
+        let nft = await getDetailNFT(chainId, rawNft.contract_address, e.token_id);
+        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
+        nft['is1155'] = false;
+        list721.push(nft);
+      })
+    );
+  });
+  await Promise.all(promises);
+  return list721;
+}
+
 export async function listTokensERC721OfOwner(listAddressAccept, walletAddress, chainId) {
   let strListAddressAccept = listAddressAccept.map((address) => `"${address}"`).join(',');
   const url = getUrlSubgraph(chainId);
