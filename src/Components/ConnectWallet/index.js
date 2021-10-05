@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function ConnectWallet() {
-  const { walletAddress } = useSelector((state) => state);
+  const { walletAddress, chainId } = useSelector((state) => state);
 
   useEffect(() => {
     if (localStorage.getItem(CONNECTID)) {
       connectWeb3Modal();
     }
-  }, []);
+  }, [chainId]);
 
   const connect = () => {
     connectWeb3Modal();

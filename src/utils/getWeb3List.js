@@ -31,10 +31,12 @@ export const web3Default = {
   },
 };
 
-// export const networkDefault = 137;
-export const networkDefault = !!localStorage.getItem('chainId')
-  ? parseInt(localStorage.getItem('chainId'))
-  : 56;
+export const defaultChainId = 56;
+
+export const networkDefault = (() => {
+  const savedChainId = Number.parseInt(localStorage.getItem('chainId'));
+  return savedChainId > 0 && web3Default[savedChainId] ? savedChainId : defaultChainId;
+})();
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];
