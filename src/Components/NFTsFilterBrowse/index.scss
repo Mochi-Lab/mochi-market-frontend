@@ -149,7 +149,6 @@
 }
 
 .list-collections {
-  height: calc(100% - 5rem);
   margin-top: 1rem;
   overflow-y: auto;
   cursor: pointer;
@@ -202,7 +201,6 @@
 }
 
 .search-collections {
-  height: 40vh;
   transition: all 0.15s ease 0s;
   margin-top: 1rem;
   position: relative;

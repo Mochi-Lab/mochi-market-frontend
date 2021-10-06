@@ -11,7 +11,6 @@ import { getCollection } from 'store/actions';
 import store from 'store/index';
 import { newMintOf721, newMintOf1155 } from 'utils/helper';
 import { selectChain } from 'Connections/web3Modal.js';
-import { unpinFooterOnLoad } from 'utils/helper.js';
 import { getSellOrderByAttributes, getSellOrderByCollection } from 'APIs/SellOrder/Gets';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -198,9 +197,6 @@ export default function Collection() {
       handleSetViewAll(true);
     }
   }, [statusViewAll, handleSetViewAll]);
-  useEffect(() => {
-    return unpinFooterOnLoad(!!loadingInfo || !infoCollection || !listNewNFT);
-  }, [loadingNFTs, loadingInfo, nftsOnSale, infoCollection, listNewNFT]);
 
   return (
     <>

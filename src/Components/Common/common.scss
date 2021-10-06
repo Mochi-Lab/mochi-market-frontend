@@ -1,0 +1,16 @@
+.div-loader {
+  animation: ant-skeleton-loading 1.4s ease infinite;
+  background: linear-gradient(
+    90deg,
+    rgba(190, 190, 190, 0.2) 25%,
+    rgba(129, 129, 129, 0.24) 37%,
+    rgba(190, 190, 190, 0.2) 63%
+  );
+  background-size: 400% 100%;
+  height: 6rem;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  position: relative;
+}
