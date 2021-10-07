@@ -26,7 +26,7 @@ const initialState = {
   erc1155Tokens: null,
 
   // usdtValues
-  coingeckoPrices: {},
+  coingeckoPrices: null,
 
   // Main contracts
   addressesProvider: null,

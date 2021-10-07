@@ -832,16 +832,8 @@ export const getCoingeckoPrices = () => async (dispatch, getState) => {
   const { coingeckoPrices } = getState();
 
   if(!chainId) return []
-  if(!!coingeckoPrices && coingeckoPrices[chainId]) return coingeckoPrices[chainId]
-
-  let prices = {};
-  prices[chainId] = await getPrices(chainId);
-  if(prices && prices[chainId]) {
-    console.log('prices', prices)
-  }
-  else {
-    console.log('dupa prices');
-  }
+  if(!!coingeckoPrices) return coingeckoPrices
+  await dispatch(setCoingeckoPrices({}));
+  let prices = await getPrices(chainId);
   dispatch(setCoingeckoPrices(prices));
-
 };

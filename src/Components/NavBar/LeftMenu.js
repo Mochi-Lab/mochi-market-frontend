@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Grid, Col, Menu, Dropdown } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
-import { setWeb3, setChainId } from 'store/actions';
+import {setWeb3, setChainId, getCoingeckoPrices} from 'store/actions';
 import store from 'store/index';
 import { networkDefault, getWeb3List } from 'utils/getWeb3List';
 import { getInfoChain, listChainsSupport } from 'utils/getContractAddress';
@@ -28,6 +28,10 @@ export default function LeftNar() {
       setInfoChain(getInfoChain(chainId));
     }
   }, [chainId]);
+
+  useEffect( () => {
+    if(!!chainId) store.dispatch(getCoingeckoPrices());
+  }, [chainId])
 
   useEffect(() => {
     const setWeb3Default = async () => {
