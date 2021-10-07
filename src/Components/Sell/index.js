@@ -6,7 +6,9 @@ import { createSellOrder } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTokensPayment } from 'utils/getContractAddress';
 import SellConfirmModal from './SellConfirmModal';
-import { getPrices } from 'APIs/Price/Get';
+import store from 'store/index';
+import { getCoingeckoPrices } from 'store/actions';
+
 import FeeDetail from './FeeDetail';
 
 import './index.scss';
@@ -52,7 +54,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
   useEffect(() => {
     if(!chainId || prices || !isModalVisible) return
     (async () => {
-      setPrices(await getPrices(chainId));
+      setPrices(await store.dispatch(getCoingeckoPrices(chainId)));
     })();
   }, [chainId, prices, isModalVisible]);
 

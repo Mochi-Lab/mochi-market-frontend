@@ -8,6 +8,8 @@ import tick from 'Assets/icons/tick-green.svg';
 import { handleChildClick, objToString } from 'utils/helper';
 import { isArray } from 'lodash';
 import { Spin } from 'antd';
+import store from 'store/index';
+import { getCoingeckoPrices } from 'store/actions';
 
 const __NFTCardLoader = () => {
   return (

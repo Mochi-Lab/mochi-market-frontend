@@ -25,6 +25,9 @@ const initialState = {
   //Erc1155
   erc1155Tokens: null,
 
+  // usdtValues
+  coingeckoPrices: {},
+
   // Main contracts
   addressesProvider: null,
   nftList: null,
@@ -187,6 +190,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         infoUserLogin: action.infoUserLogin,
+      };
+    case actions.SET_COINGECKO_PRICES:
+      return {
+        ...state,
+        coingeckoPrices: action.coingeckoPrices,
       };
     default:
       return state;
