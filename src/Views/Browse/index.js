@@ -7,7 +7,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 import Footer from 'Components/Footer';
-import { unpinFooterOnLoad } from 'utils/helper.js';
 import { getCollectionBySearchAndPayment, getAllBySearchAndPayment } from 'APIs/SellOrder/Gets';
 import { getAllCollections } from 'APIs/Collections/Gets';
 
@@ -105,9 +104,6 @@ export default function Browse() {
     loadAllCollections();
   }, [loadAllCollections]);
 
-  useEffect(() => {
-    return unpinFooterOnLoad(loadingNFTs || loadingNFTs === null);
-  }, [loadingNFTs]);
   return (
     <>
       <BannerSearchHome

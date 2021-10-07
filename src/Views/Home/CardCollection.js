@@ -6,10 +6,11 @@ import 'Assets/css/common-card-nft.scss';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
 import { useEffect, useState } from 'react';
+import { CarouselCollectionItem } from 'Components/Common/CarouselLoader'
 
 export default function CardCollection({ addressToken, chainId }) {
   const { verifiedContracts, nftList } = useSelector((state) => state);
-  const [collection, setCollection] = useState({});
+  const [collection, setCollection] = useState(null);
   const [is1155, setIs1155] = useState({});
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function CardCollection({ addressToken, chainId }) {
     return () => { isMounted = false };
   }, [addressToken, chainId, nftList]);
 
+  if(collection === null) return <CarouselCollectionItem />
 
   return !!collection.addressToken ? (
     <div className='item-carousel'>

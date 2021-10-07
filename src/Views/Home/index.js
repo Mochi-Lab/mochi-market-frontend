@@ -1,14 +1,13 @@
 import { useSelector } from 'react-redux';
 
 import Slider from 'react-slick';
-import IconLoading from 'Components/IconLoading';
 import BannerSearchHome from 'Components/BannerSearchHome';
 import { carouselBanner, carouselCard } from 'Constants/constantCarousel';
 import Footer from 'Components/Footer';
 import CardNFTNotSearch from './CardNFTNotSearch.js';
 import CardCollection from './CardCollection.js';
 import { useCallback, useEffect, useState } from 'react';
-import { unpinFooterOnLoad } from 'utils/helper.js';
+import { CarouselLoader, CarouselCollectionLoader } from 'Components/Common/CarouselLoader';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -19,9 +18,8 @@ import { getAll, getSellOrderERC1155 } from 'APIs/SellOrder/Gets.js';
 export default function Home() {
   const { chainId } = useSelector((state) => state);
 
-  const [loadingNFTs, setLoadingNFTs] = useState();
-  const [allOrders, setAllOrders] = useState([]);
-  const [ordersERC1155, setOrdersERC1155] = useState([]);
+  const [allOrders, setAllOrders] = useState(null);
+  const [ordersERC1155, setOrdersERC1155] = useState(null);
 
   const mergeAllCollections = useCallback(async () => {
     let all = await getAll(chainId, 0, 10);
@@ -35,19 +33,13 @@ export default function Home() {
 
   useEffect(() => {
     async function loadNFTs() {
-      setLoadingNFTs(true);
       await mergeAllCollections();
       await mergeAllCollections1155();
-      setLoadingNFTs(false);
     }
     if (!!chainId) {
       loadNFTs();
     }
   }, [mergeAllCollections, mergeAllCollections1155, chainId]);
-
-  useEffect(() => {
-    return unpinFooterOnLoad(!!loadingNFTs);
-  }, [loadingNFTs]);
 
   const listHotCollections = [
     {
@@ -106,42 +98,38 @@ export default function Home() {
       addressToken: '0xbca30d6d18f0c5ac15e0be5c9b389d2df207d19e',
       chainId: 137,
     },
-  ];
+  ].filter((c) => +chainId === +c.chainId);
 
   return (
     <div className='content-home'>
       <BannerSearchHome carouselBanner={carouselBanner} />
-
-      {!!loadingNFTs ? (
-        // Loading if done load the first type of token user have, if user select other load other
-        <div className='center' style={{ width: '100%', height: '100%' }}>
-          <IconLoading className='search-icon' />
-        </div>
-      ) : (
-        <div className='container'>
-          <div className='new-nfts'>
-            <div className='title-new'>
-              <h2 className='textmode'>Hot Collections</h2>
-            </div>
-            <Slider className='carousel-new-nfts' {...carouselCard}>
-              {listHotCollections.map((collection, index) =>
-                parseInt(collection.chainId) === parseInt(chainId) ? (
-                  <CardCollection
-                    key={index}
-                    addressToken={collection.addressToken}
-                    chainId={collection.chainId}
-                  />
-                ) : (
-                  ''
-                )
-              )}
-            </Slider>
+      <div className='container'>
+        <div className='new-nfts'>
+          <div className='title-new'>
+            <h2 className='textmode'>Hot Collections</h2>
           </div>
+          {chainId === null ? (
+            <CarouselCollectionLoader />
+          ) : (
+            <Slider className='carousel-new-nfts' {...carouselCard}>
+              {listHotCollections.map((collection, index) => (
+                <CardCollection
+                  key={index}
+                  addressToken={collection.addressToken}
+                  chainId={collection.chainId}
+                />
+              ))}
+            </Slider>
+          )}
+        </div>
 
-          <div className='new-nfts'>
-            <div className='title-new'>
-              <h2 className='textmode'>New List</h2>
-            </div>
+        <div className='new-nfts'>
+          <div className='title-new'>
+            <h2 className='textmode'>New Listing</h2>
+          </div>
+          {allOrders === null ? (
+            <CarouselLoader />
+          ) : (
             <Slider className='carousel-new-nfts' {...carouselCard}>
               {allOrders.map((nft, i) => (
                 <div className='item-carousel' key={i}>
@@ -149,12 +137,16 @@ export default function Home() {
                 </div>
               ))}
             </Slider>
-          </div>
+          )}
+        </div>
 
-          <div className='new-nfts'>
-            <div className='title-new'>
-              <h2 className='textmode'>COLLECTIONS 1155</h2>
-            </div>
+        <div className='new-nfts'>
+          <div className='title-new'>
+            <h2 className='textmode'>COLLECTIONS 1155</h2>
+          </div>
+          {ordersERC1155 === null ? (
+            <CarouselLoader />
+          ) : (
             <Slider className='carousel-new-nfts' {...carouselCard}>
               {ordersERC1155.map((nft, i) => (
                 <div className='item-carousel' key={i}>
@@ -162,9 +154,9 @@ export default function Home() {
                 </div>
               ))}
             </Slider>
-          </div>
+          )}
         </div>
-      )}
+      </div>
       <Footer />
     </div>
   );
