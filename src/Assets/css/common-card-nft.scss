@@ -49,6 +49,14 @@
     }
   }
 
+  .price-nft-usdt {
+    font-size: 0.825rem;
+    position: absolute;
+    right: 0.125rem;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+    top: 1.5rem;
+  }
+
   .attribs-nft {
     @extend .price-nft;
     right: auto;

@@ -8,6 +8,7 @@ import tick from 'Assets/icons/tick-green.svg';
 import { handleChildClick, objToString } from 'utils/helper';
 import { isArray } from 'lodash';
 import { Spin } from 'antd';
+import {useSelector} from "react-redux";
 
 const __NFTCardLoader = () => {
   return (
@@ -45,7 +46,9 @@ export const __NFTCardDetail = ({
 }) => {
   const history = useHistory();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [usdtValue, setUsdtValue] = useState(0);
   const [customExtraInfo, setCustomExtraInfo] = useState("");
+  const { coingeckoPrices } = useSelector((state) => state);
 
   useEffect( () => {
     if(token && detailNFT) {
@@ -59,6 +62,17 @@ export const __NFTCardDetail = ({
     else
       setCustomExtraInfo("")
   }, [token, detailNFT]);
+
+  useEffect(() => {
+    if(!coingeckoPrices) return
+    const symbol = getSymbol(chainId)[token.token].toLowerCase();
+    if(!coingeckoPrices[symbol] || !coingeckoPrices[symbol].usd) return
+
+    let value = coingeckoPrices[symbol].usd || 0
+    value = token.price * value;
+    value = value.toFixed(2)
+    setUsdtValue(value)
+  }, [coingeckoPrices])
 
   if (!getSymbol(chainId)) return <NFTCardLoader />;
   const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
@@ -151,8 +165,13 @@ export const __NFTCardDetail = ({
         )}
         {!!token.price && (
           <div className='price-nft textmode'>
-            <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b>
+            <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b> <br/>
           </div>
+        )}
+        {!!token.price && !!usdtValue && (
+            <div className='price-nft-usdt textmode'>
+              <span>~${usdtValue}</span>
+            </div>
         )}
         <Row justify='space-between'>
           <Col className='footer-card-left'>

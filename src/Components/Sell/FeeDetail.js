@@ -16,12 +16,13 @@ const updatePaymentToken = (setTokenPayment, chainId, currency) => {
   setTokenPayment(tokenInfo.address);
 };
 
-const FeeDetail = ({ tokenPayment, setTokenPayment, chainId, sellPrice, sellAmount, prices }) => {
+const FeeDetail = ({ tokenPayment, setTokenPayment, chainId, sellPrice, sellAmount }) => {
   const { market } = useSelector((state) => state);
   const currency = getTokensPayment(chainId).find((item) => item.address === tokenPayment).symbol;
   const [fee, setFee] = useState(null);
   const [profit, setProfit] = useState(null);
   const [calculatedPrice, setCalculatedPrice] = useState(null);
+  const prices = useSelector((state) => state.coingeckoPrices);
 
   useEffect(() => {
     if(!profit || !prices || !prices[currency.toLowerCase()]) return;

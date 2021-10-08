@@ -17,6 +17,7 @@ import { getContractAddress } from 'utils/getContractAddress';
 import { getWeb3List } from 'utils/getWeb3List';
 import { getCollectionByAddress } from 'APIs/Collections/Gets';
 import { getProfileByAddress, getAdminAll } from 'APIs/Users/Gets';
+import { getPrices } from 'APIs/Price/Get';
 import logoCollectionDefault from 'Assets/logo-mochi.png';
 import avatarDefault from 'Assets/avatar-profile.png';
 
@@ -183,6 +184,11 @@ export const setInfoAdmins = (infoAdmins) => (dispatch) => {
 export const SET_INFO_USER_LOGIN = 'SET_INFO_USER_LOGIN';
 export const setInfoUserLogin = (infoUserLogin) => (dispatch) => {
   dispatch({ type: SET_INFO_USER_LOGIN, infoUserLogin });
+};
+
+export const SET_COINGECKO_PRICES = 'SET_COINGECKO_PRICES';
+export const setCoingeckoPrices = (coingeckoPrices) => (dispatch) => {
+  dispatch({ type: SET_COINGECKO_PRICES, coingeckoPrices });
 };
 
 export const GET_OWNED_ERC721 = 'GET_OWNED_ERC721';
@@ -818,4 +824,16 @@ export const getAllAdmins = () => async (dispatch, getState) => {
   } else {
     dispatch(setInfoAdmins({}));
   }
+};
+
+// prices
+export const getCoingeckoPrices = () => async (dispatch, getState) => {
+  const { chainId } = getState();
+  const { coingeckoPrices } = getState();
+
+  if(!chainId) return []
+  if(!!coingeckoPrices) return coingeckoPrices
+  await dispatch(setCoingeckoPrices({}));
+  let prices = await getPrices(chainId);
+  dispatch(setCoingeckoPrices(prices));
 };
