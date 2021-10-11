@@ -48,6 +48,10 @@
   overflow: hidden;
   height: auto;
   font-weight: inherit;
+
+  &.no-nowrap {
+    white-space: pre-wrap;
+  }
 }
 
 .detail-owner {
@@ -98,6 +102,7 @@
   height: 22rem;
   background-color: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  overflow: hidden;
 }
 
 .properties-nft {
@@ -538,6 +543,7 @@
   -webkit-box-align: center;
   align-items: center;
   position: relative;
+  overflow: hidden;
 }
 
 .detail-page .ant-image-mask:hover {

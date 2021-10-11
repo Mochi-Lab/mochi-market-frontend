@@ -27,6 +27,7 @@ import { selectChain } from 'Connections/web3Modal';
 import { isArray } from 'lodash';
 import RenderExtraMetadata from "./DetailsNftOrder/helperExtraMetadata";
 import {Helmet} from "react-helmet";
+import ReactPlayer from 'react-player';
 
 const { TabPane } = Tabs;
 
@@ -172,24 +173,26 @@ export default function DetailNFT() {
                 <div className='expand-img-nft'>
                   <div className='image-label center'>
                     {
-                      token.image ? (
-                        <Image alt='img-nft' src={token.image} />
-                      )
-                      : (
-                        <UpdateNFTDetail token={token} setToken={setToken}/>
-                      )
+                      token.video ?
+                        <ReactPlayer url={token.video}
+                                   loop={true}
+                                   muted={true}
+                                   playing={true}
+                                   controls={true}
+                        />
+                      : (token.image ? <Image alt='img-nft' src={token.image} /> : <UpdateNFTDetail token={token} setToken={setToken}/>)
                     }
                   </div>
                 </div>
 
-                <div className='properties-nft'>
-                  <div className='content-properties'>
-                    <div className='title-tab-properties'>
-                      <h3 className='textmode'>Properties</h3>
-                    </div>
-                    <div className='list-properties'>
-                      <div className='items-properties'>
-                        {!!token.attributes && token.attributes.length > 0 ? (
+                {!!token.attributes && token.attributes.length > 0 ? (
+                  <div className='properties-nft'>
+                    <div className='content-properties'>
+                      <div className='title-tab-properties'>
+                        <h3 className='textmode'>Properties</h3>
+                      </div>
+                      <div className='list-properties'>
+                        <div className='items-properties'>
                           <List
                               grid={{
                                 gutter: 16,
@@ -229,11 +232,11 @@ export default function DetailNFT() {
                               </List.Item>
                             )}
                           />
-                        ) : null}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
 
                 {token.extraMetadata && <RenderExtraMetadata addressToken={addressToken} metadata={token.extraMetadata} />}
               </div>
@@ -257,12 +260,14 @@ export default function DetailNFT() {
                   <div className='expand-img-nft-mobile'>
                     <div className='image-label center'>
                       {
-                        token.image ? (
-                          <Image alt='img-nft' src={token.image} />
-                        )
-                        : (
-                          <UpdateNFTDetail token={token} setToken={setToken}/>
-                        )
+                       token.video ?
+                            <ReactPlayer url={token.video}
+                                         loop={true}
+                                         muted={true}
+                                         playing={true}
+                                         controls={true}
+                            />
+                            : (token.image ? <Image alt='img-nft' src={token.image} /> : <UpdateNFTDetail token={token} setToken={setToken}/>)
                       }
                     </div>
                   </div>
