@@ -30,60 +30,68 @@ const RightMenu = ({ onClose }) => {
     }, 3000);
   };
 
-  const generateMenuItemForRouteKey = routeKey => {
-    const pathName = location.pathname
+  const generateMenuItemForRouteKey = (routeKey) => {
+    const pathName = location.pathname;
     const routeMap = {
-      "/browse": "Browse",
-      "/submit-Nfts": "Submit NFTs",
-      "/profile": "Profile",
-      "/faucet": "Faucet",
-    }
-    let linkClassName = "menu-button"
-    let menuClassName = ''
-    let walletProfilePath = `/profile/${chainId}/${walletAddress}`
+      '/browse': 'Browse',
+      '/profile': 'Profile',
+      '/faucet': 'Faucet',
+    };
+    let linkClassName = 'menu-button';
+    let menuClassName = '';
+    let walletProfilePath = `/profile/${chainId}/${walletAddress}`;
     if (routeKey === pathName || (routeKey === '/profile' && walletProfilePath === pathName)) {
       linkClassName += ' active';
-      menuClassName = 'ant-menu-selected ant-menu-item-selected'
+      menuClassName = 'ant-menu-selected ant-menu-item-selected';
     }
     return (
       <Menu.Item key={routeKey} className={menuClassName}>
-        <Link to={routeKey === '/profile' ? walletProfilePath : routeKey} onClick={onClose}><div className={linkClassName}>{routeMap[routeKey]}</div></Link>
+        <Link to={routeKey === '/profile' ? walletProfilePath : routeKey} onClick={onClose}>
+          <div className={linkClassName}>{routeMap[routeKey]}</div>
+        </Link>
       </Menu.Item>
-    )
-  }
+    );
+  };
 
   return (
     <Menu selectable={false} mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
       {generateMenuItemForRouteKey('/browse')}
-      {generateMenuItemForRouteKey('/submit-Nfts')}
+      {chainId === 97 && (
+        <Menu.Item key='bridge'>
+          <a
+            href='https://nftbridge.mochi.market/'
+            target='_blank'
+            rel='noreferrer'
+            className='text-white'
+          >
+            <div className='menu-button'>NFT Bridge</div>
+          </a>
+        </Menu.Item>
+      )}
+      {!!walletAddress && generateMenuItemForRouteKey('/profile')}
+      {!!getContractAddress(chainId) && chainId === 97 && generateMenuItemForRouteKey('/faucet')}
       {
-        chainId === 97 && <Menu.Item key='bridge'>
-        <a
-          href='https://nftbridge.mochi.market/'
-          target='_blank'
-          rel='noreferrer'
-          className='text-white'
-        >
-          <div className='menu-button'>NFT Bridge</div>
-        </a>
+        <Menu.Item key='buyMOMA'>
+          <a
+            href='https://forms.gle/E4dpZRG4NJWUPtjo8'
+            target='_blank'
+            rel='noreferrer'
+            className='text-white'
+          >
+            <div className='menu-button'>Submit NFTs</div>
+          </a>
         </Menu.Item>
       }
-      {!!walletAddress && (
-        generateMenuItemForRouteKey('/profile')
-      )}
-      {!!getContractAddress(chainId) && chainId === 97 && (
-        generateMenuItemForRouteKey('/faucet')
-      )}
       {DEX_URL_BY_CHAIN_ID[chainId] && (
         <Menu.Item key='buyMOMA'>
-            <a
-              href={DEX_URL_BY_CHAIN_ID[chainId]}
-              target='_blank'
-              rel='noreferrer'
-              className='text-white'
-            >
-              <div className='menu-button'>Buy $MOMA</div>
-            </a>
+          <a
+            href={DEX_URL_BY_CHAIN_ID[chainId]}
+            target='_blank'
+            rel='noreferrer'
+            className='text-white'
+          >
+            <div className='menu-button'>Buy $MOMA</div>
+          </a>
         </Menu.Item>
       )}
 
@@ -178,7 +186,7 @@ const RightMenu = ({ onClose }) => {
         </SubMenu>
       )}
       {!shortAddress && (
-        <Menu.Item key='connect-wallet' className="connect-wallet">
+        <Menu.Item key='connect-wallet' className='connect-wallet'>
           <div onClick={onClose}>
             <ConnectWallet />
           </div>
