@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const uploadCollection = async (chainId, addressToken, addressSubmit, collection) => {
   let result = await axios
-    .post(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/`, {
+    .post(`${process.env.REACT_APP_SERVER_URL}/collectionInfo/`, {
       chainId,
       addressToken,
       addressSubmit,
@@ -19,7 +19,7 @@ export const uploadCollection = async (chainId, addressToken, addressSubmit, col
 
 export const verifySignature = async (chainId, addressToken, addressSubmit, signature) => {
   let result = await axios
-    .post(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/verify-signature`, {
+    .post(`${process.env.REACT_APP_SERVER_URL}/collectionInfo/verify-signature`, {
       chainId,
       addressToken,
       addressSubmit,

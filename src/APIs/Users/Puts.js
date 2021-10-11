@@ -4,7 +4,7 @@ export const changeRole = async (addressAdmin, signature, addressUpdate, role) =
   addressAdmin = addressAdmin.toLowerCase();
   addressUpdate = addressUpdate.toLowerCase();
   let result = await axios
-    .put(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/update-role`, {
+    .put(`${process.env.REACT_APP_SERVER_URL}/user/update-role`, {
       addressAdmin,
       signature,
       addressUpdate,

@@ -22,7 +22,7 @@ export const getSellOrderByAttributes = async (
   let result = await axios
     .get(
       `${
-        process.env.REACT_APP_SERVER
+        process.env.REACT_APP_SERVER_URL
       }/sellOrder/filterByAttributes/${chainId}/${addressToken}/${strSearch}?skip=${skip}&limit=${page}${
         tokenPayment !== '0' ? `&token=${tokenPayment}` : ''
       }${!!typeSort ? `&asc=${typeSort}` : ''}${filterStr}`
@@ -39,7 +39,7 @@ export const getSellOrderByAttributes = async (
 export const getSellOrderByCollection = async (chainId, addressToken, skip, page) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_SERVER}/sellOrder/byCollection/${chainId}/${addressToken}?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_SERVER_URL}/sellOrder/byCollection/${chainId}/${addressToken}?skip=${skip}&limit=${page}`
     )
     .then(function (response) {
       return response.data;
@@ -62,7 +62,7 @@ export const getCollectionBySearchAndPayment = async (
   let result = await axios
     .get(
       `${
-        process.env.REACT_APP_SERVER
+        process.env.REACT_APP_SERVER_URL
       }/sellOrder/byCollection/${chainId}/${addressToken}/${searchStr}?skip=${skip}&limit=${page}${
         tokenPayment !== '0' ? `&token=${tokenPayment}` : ''
       }${!!typeSort ? `&asc=${typeSort}` : ''}`
@@ -80,7 +80,7 @@ export const getSellOrderByUser = async (chainId, walletAddress, skip, page) => 
   let result = await axios
     .get(
       `${
-        process.env.REACT_APP_SERVER
+        process.env.REACT_APP_SERVER_URL
       }/sellOrder/byUser/${chainId}/${walletAddress.toLowerCase()}?skip=${skip}&limit=${page}`
     )
     .then(function (response) {
@@ -94,7 +94,7 @@ export const getSellOrderByUser = async (chainId, walletAddress, skip, page) => 
 
 export const getSellOrderBySellId = async (chainId, sellId) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER}/sellOrder/bySellId/${chainId}/${sellId}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/sellOrder/bySellId/${chainId}/${sellId}`)
     .then(function (response) {
       return response.data;
     })
@@ -107,7 +107,7 @@ export const getSellOrderBySellId = async (chainId, sellId) => {
 export const getSellOrderERC1155 = async (chainId, skip, page) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_SERVER}/sellOrder/byType/erc1155/${chainId}?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_SERVER_URL}/sellOrder/byType/erc1155/${chainId}?skip=${skip}&limit=${page}`
     )
     .then(function (response) {
       return response.data;
@@ -121,7 +121,7 @@ export const getSellOrderERC1155 = async (chainId, skip, page) => {
 export const getSellOrderERC721 = async (chainId, skip, page) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_SERVER}/sellOrder/byType/erc721/${chainId}?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_SERVER_URL}/sellOrder/byType/erc721/${chainId}?skip=${skip}&limit=${page}`
     )
     .then(function (response) {
       return response.data;
@@ -134,7 +134,9 @@ export const getSellOrderERC721 = async (chainId, skip, page) => {
 
 export const getSellerByNft = async (chainId, addressToken, tokenId) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER}/sellOrder/byNft/${chainId}/${addressToken}/${tokenId}`)
+    .get(
+      `${process.env.REACT_APP_SERVER_URL}/sellOrder/byNft/${chainId}/${addressToken}/${tokenId}`
+    )
     .then(function (response) {
       return response.data;
     })
@@ -146,7 +148,7 @@ export const getSellerByNft = async (chainId, addressToken, tokenId) => {
 
 export const getAll = async (chainId, skip, page) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER}/sellOrder/${chainId}?skip=${skip}&limit=${page}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/sellOrder/${chainId}?skip=${skip}&limit=${page}`)
     .then(function (response) {
       return response.data;
     })
@@ -167,7 +169,7 @@ export const getAllBySearchAndPayment = async (
   let result = await axios
     .get(
       `${
-        process.env.REACT_APP_SERVER
+        process.env.REACT_APP_SERVER_URL
       }/sellOrder/${chainId}/${searchStr}?skip=${skip}&limit=${page}${
         tokenPayment !== '0' ? `&token=${tokenPayment}` : ''
       }${!!typeSort ? `&asc=${typeSort}` : ''}`
@@ -184,7 +186,7 @@ export const getAllBySearchAndPayment = async (
 export const getSellOrderHistoryByNft = async (chainId, collectionAddress, tokenId) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_SERVER}/sellOrder/historyByNft/${chainId}/${collectionAddress}` +
+      `${process.env.REACT_APP_SERVER_URL}/sellOrder/historyByNft/${chainId}/${collectionAddress}` +
         (tokenId ? `/${tokenId}` : '')
     )
     .then((res) => {
@@ -198,7 +200,7 @@ export const getSellOrderHistoryByNft = async (chainId, collectionAddress, token
 
 export const getSellOrderHistoryByUser = async (chainId, userAddress) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER}/sellOrder/historyByUser/${chainId}/${userAddress}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/sellOrder/historyByUser/${chainId}/${userAddress}`)
     .then((res) => {
       return res.data;
     })

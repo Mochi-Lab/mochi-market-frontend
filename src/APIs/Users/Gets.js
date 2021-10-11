@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getProfileByAddress = async (address) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/${address}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/user/${address}`)
     .then(function (response) {
       return { user: response.data.user };
     })
@@ -14,7 +14,7 @@ export const getProfileByAddress = async (address) => {
 
 export const checkUsernameExists = async (username) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/exists/${username}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/user/exists/${username}`)
     .then(function (response) {
       return { status: response.data.status };
     })
@@ -27,7 +27,7 @@ export const checkUsernameExists = async (username) => {
 
 export const getNonce = async (address) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/nonce/${address}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/user/nonce/${address}`)
     .then(function (response) {
       return { nonce: response.data.nonce };
     })
@@ -40,7 +40,7 @@ export const getNonce = async (address) => {
 
 export const checkAdmin = async (address) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/check-admin/${address}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/user/check-admin/${address}`)
     .then(function (response) {
       return { isAdmin: response.data.isAdmin };
     })
@@ -53,7 +53,7 @@ export const checkAdmin = async (address) => {
 
 export const getAdminAll = async () => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/get-admin/all`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/user/get-admin/all`)
     .then(function (response) {
       return { admins: response.data.admins };
     })
