@@ -8,7 +8,8 @@ import tick from 'Assets/icons/tick-green.svg';
 import { handleChildClick, objToString } from 'utils/helper';
 import { isArray } from 'lodash';
 import { Spin } from 'antd';
-import {useSelector} from "react-redux";
+import { useSelector } from 'react-redux';
+import _, { nth } from 'lodash';
 
 const __NFTCardLoader = () => {
   return (
@@ -47,37 +48,67 @@ export const __NFTCardDetail = ({
   const history = useHistory();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [usdtValue, setUsdtValue] = useState(0);
-  const [customExtraInfo, setCustomExtraInfo] = useState("");
+  const [customExtraInfo, setCustomExtraInfo] = useState('');
   const { coingeckoPrices } = useSelector((state) => state);
 
-  useEffect( () => {
-    if(token && detailNFT) {
-      switch(token.collectionAddress) {
-        case "0xc33d69a337b796a9f0f7588169cd874c3987bde9": setCustomExtraInfo(`Gen ${detailNFT.attributes[13].value}`); break;
-        case "0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e": setCustomExtraInfo(`Lv ${detailNFT.attributes[7].value} ${'★'.repeat(detailNFT.attributes[3].value)}`); break;
-        case "0x821304cb22ed418eee60d55100749ade15c2d0eb": setCustomExtraInfo(`${'★'.repeat(detailNFT.attributes[2].value)}`); break;
-        default: setCustomExtraInfo('')
-      }
-    }
-    else
-      setCustomExtraInfo("")
+  const getCustomExtraInfoText = (token, nftDetail) => {
+    const attributes = _.get(nftDetail, 'attributes');
+    if (!attributes) return '';
+    const extraInfoMapByToken = {
+      '0xc33d69a337b796a9f0f7588169cd874c3987bde9': [
+        {
+          index: 13,
+          name: 'Gen',
+        },
+      ],
+      '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e': [
+        {
+          index: 7,
+          name: 'Lv',
+        },
+        {
+          index: 3,
+          name: '★',
+        },
+      ],
+      '0x821304cb22ed418eee60d55100749ade15c2d0eb': [
+        {
+          index: 2,
+          name: '★',
+        },
+      ],
+    };
+    const collectionAddress = _.get(token, 'collectionAddress');
+    const extraInfoMap = _.get(extraInfoMapByToken, collectionAddress);
+    if (!extraInfoMap) return '';
+    return extraInfoMap
+      .map(({ index, name }) => {
+        const attr = nth(attributes, index);
+        return attr ? `${name} ${attr.value}` : null;
+      })
+      .filter(Boolean)
+      .join(' ');
+  };
+
+  useEffect(() => {
+    const _customExtraInfo = getCustomExtraInfoText(token, detailNFT);
+    if (_customExtraInfo !== customExtraInfo) setCustomExtraInfo(_customExtraInfo);
   }, [token, detailNFT]);
 
   useEffect(() => {
-    if(!coingeckoPrices) return
+    if (!coingeckoPrices) return;
     const symbol = getSymbol(chainId)[token.token].toLowerCase();
-    if(!coingeckoPrices[symbol] || !coingeckoPrices[symbol].usd) return
+    if (!coingeckoPrices[symbol] || !coingeckoPrices[symbol].usd) return;
 
-    let value = coingeckoPrices[symbol].usd || 0
+    let value = coingeckoPrices[symbol].usd || 0;
     value = token.price * value;
-    value = value.toFixed(2)
-    setUsdtValue(value)
-  }, [coingeckoPrices])
+    value = value.toFixed(2);
+    setUsdtValue(value);
+  }, [coingeckoPrices]);
 
   if (!getSymbol(chainId)) return <NFTCardLoader />;
   const collectionUrl = `/collection/${chainId}/${token.collectionAddress}`;
   const itemUrl = `/token/${chainId}/${token.collectionAddress}/${token.tokenId}/${token.sellId}`;
-
 
   const onClick = (event) => {
     event.preventDefault();
@@ -86,14 +117,14 @@ export const __NFTCardDetail = ({
   };
 
   const onImageLoad = () => {
-    setImageLoaded(true)
+    setImageLoaded(true);
   };
 
   const onImageError = (event) => {
     event.target.onerror = null;
-    if (event.target.src === detailNFT.image || detailNFT.image === "") {
+    if (event.target.src === detailNFT.image || detailNFT.image === '') {
       event.target.src = imgNotFound;
-      setImageLoaded(true)
+      setImageLoaded(true);
     } else {
       event.target.src = detailNFT.image;
     }
@@ -114,7 +145,10 @@ export const __NFTCardDetail = ({
               />
             )}
             {!imageLoaded && (
-              <div className='center' style={{ width: '100%', height: '100%', position: 'absolute'}}>
+              <div
+                className='center'
+                style={{ width: '100%', height: '100%', position: 'absolute' }}
+              >
                 <Spin />
               </div>
             )}
@@ -127,10 +161,8 @@ export const __NFTCardDetail = ({
                 onError={onImageError}
               />
 
-              {customExtraInfo !== "" && (
-                <div className='attribs-extra-info'>
-                  {customExtraInfo}
-                </div>
+              {customExtraInfo !== '' && (
+                <div className='attribs-extra-info'>{customExtraInfo}</div>
               )}
             </div>
           </div>
@@ -165,19 +197,22 @@ export const __NFTCardDetail = ({
         )}
         {!!token.price && (
           <div className='price-nft textmode'>
-            <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b> <br/>
+            <span>{token.price}</span> <b>{getSymbol(chainId)[token.token]}</b> <br />
           </div>
         )}
         {!!token.price && !!usdtValue && (
-            <div className='price-nft-usdt textmode'>
-              <span>~${usdtValue}</span>
-            </div>
+          <div className='price-nft-usdt textmode'>
+            <span>~${usdtValue}</span>
+          </div>
         )}
         <Row justify='space-between'>
           <Col className='footer-card-left'>
             <div className='name-collection'>
               <span className='link-collection-name' tag='span'>
-                {collectionName || token.nameCollection || token.collectionName || detailNFT.collectionName}
+                {collectionName ||
+                  token.nameCollection ||
+                  token.collectionName ||
+                  detailNFT.collectionName}
               </span>
               {verifiedContracts.includes(token.collectionAddress.toLocaleLowerCase()) && (
                 <img src={tick} alt='icon-tick' className='icon-tick' />
