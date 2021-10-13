@@ -71,7 +71,7 @@ const RightMenu = ({ onClose }) => {
       {!!walletAddress && generateMenuItemForRouteKey('/profile')}
       {!!getContractAddress(chainId) && chainId === 97 && generateMenuItemForRouteKey('/faucet')}
       {
-        <Menu.Item key='buyMOMA'>
+        <Menu.Item key='SubmitNFT'>
           <a
             href='https://forms.gle/E4dpZRG4NJWUPtjo8'
             target='_blank'

@@ -135,13 +135,13 @@ export default function Collection() {
     }
   }, [chainID, fetchExplore, nftsOnSale, loadingNFTs]);
 
-  const filterChange = useCallback(async () => {
+  const filterChange = useCallback(async (forceEmptyObjectFilter = false) => {
     try {
       setRefreshingNFTs(true);
-      let exp = !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
+      let exp = forceEmptyObjectFilter || !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
         chainID,
         addressToken,
-        objectFilter,
+        forceEmptyObjectFilter ? {} : objectFilter,
         strSearch,
         tokenPayment,
         typeSort,

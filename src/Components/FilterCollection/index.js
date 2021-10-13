@@ -44,7 +44,8 @@ export default function FilterCollection({
               setTimeout(async () => {
                 await setShowFilter(true);
                 await setObjectFilter({});
-              }, 10);
+                await filterChange(true);
+              }, 0);
             }
           }}
         >
