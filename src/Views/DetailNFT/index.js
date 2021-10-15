@@ -251,7 +251,7 @@ export default function DetailNFT() {
                 </div>
                 <div className='detail-title'>
                   <h1 className='text-title textmode'>{token.name}</h1>
-                  <Share token={token} />
+                  <Share token={token}  additionalButtons={<UpdateNFTDetail token={token} setToken={setToken}/>}/>
                 </div>
                 {!lg ? (
                   <div className='expand-img-nft-mobile'>

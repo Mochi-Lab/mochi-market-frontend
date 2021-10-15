@@ -50,13 +50,12 @@ export const UpdateNFTDetail = ({ token, setToken }) => {
                     borderRadius: '1rem',
                     borderColor: 'transparent',
                     color: 'white',
-                    background: '#1890ff',
+                    background: '#ff0086',
                 }}
                 onClick={updateNFTDetail}
-                loading={loading}
                 disabled={loading}
             >
-                <span>{loading ? 'updating detail' : 'update detail'}</span>
+                <span>{loading ? 'Updating Metadata ...' : 'Update NFT Metadata'}</span>
             </Button>
         </>
     );
