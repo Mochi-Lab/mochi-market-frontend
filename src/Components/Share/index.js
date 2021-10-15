@@ -1,9 +1,9 @@
-import { ShareAltOutlined, TwitterOutlined } from '@ant-design/icons';
+import { MoreOutlined, TwitterOutlined } from '@ant-design/icons';
 import { Button, Popconfirm } from 'antd';
 import { useState } from 'react';
 import './index.scss';
 
-export default function Share({ token }) {
+export default function Share({ token, additionalButtons }) {
   const [text] = useState(`Yoo! look what I found! ${token.name}`);
 
   const shareTwitter = () => {
@@ -19,13 +19,19 @@ export default function Share({ token }) {
       placement='bottomRight'
       title={
         <div>
-          <h3>Share this collectible</h3>
+          <h3 className={'textmode'}>Share this collectible</h3>
           <Button
             shape='circle'
             icon={<TwitterOutlined />}
             size='large'
             onClick={() => shareTwitter()}
           />
+          <hr/>
+          {!!additionalButtons && <div>
+              <h3 className={'textmode'}>Other</h3>
+              {additionalButtons}
+            </div>
+          }
         </div>
       }
       style={{ height: '40px', borderRadius: '30px' }}
@@ -34,7 +40,7 @@ export default function Share({ token }) {
       icon={<></>}
     >
       <div>
-        <Button shape='circle' icon={<ShareAltOutlined />} size='large' />
+        <Button shape='circle' icon={<MoreOutlined />} size='large' />
       </div>
     </Popconfirm>
   );
