@@ -34,10 +34,10 @@ export const UpdateNFTDetail = ({ token, setToken }) => {
                 address: collectionAddress,
             });
             const updatedDetail = result.data;
-            if(updatedDetail.image === token.image) return setLoading(false);
             setToken({
                 ...updatedDetail
             });
+            setLoading(false);
         } catch (err) {
             setLoading(false);
             message.error(`${err.message}`);
