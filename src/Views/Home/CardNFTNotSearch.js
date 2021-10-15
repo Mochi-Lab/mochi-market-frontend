@@ -21,6 +21,11 @@ export default function CardNFTHome({ token }) {
         try {
           let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
           if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
+
+          if(nft.collectionAddress === '0xc33d69a337b796a9f0f7588169cd874c3987bde9' && nft.image) {
+            nft.image = nft.image.replaceAll('gif', 'png');
+          }
+
           setDetailNFT(nft);
         } catch (error) {
           setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });

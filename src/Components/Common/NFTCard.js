@@ -233,6 +233,12 @@ export const useDetailNFT = (chainId, token) => {
       if (!token) return setDetailNFT({ name: '', description: '', image: imgNotFound });
       try {
         if (!token.name || token.name === 'Unnamed') token.name = 'ID: ' + token.tokenId;
+
+        // temporary fix for Kryptomon huge images
+        if(token.collectionAddress === '0xc33d69a337b796a9f0f7588169cd874c3987bde9' && token.image && token.image.endsWith('.gif')) {
+          token.image = token.image.replaceAll('gif', 'png');
+        }
+
         setDetailNFT(token);
       } catch (error) {
         setDetailNFT({ name: 'Unnamed', description: '', image: imgNotFound });
