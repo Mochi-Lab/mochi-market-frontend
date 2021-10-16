@@ -658,6 +658,7 @@ export const updatePrice = (sellId, newPrice) => async (dispatch, getState) => {
     // Fetch new availableOrderList
     activity = { ...activity, status: 'success', duration: 15000 };
     dispatch(setStatusActivity(activity));
+    return true;
   } catch (error) {
     error.type = 'error';
     dispatch(showNotification(error));
