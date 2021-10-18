@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const updateProfile = async (user) => {
   let result = await axios
-    .post(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/`, { user })
+    .post(`${process.env.REACT_APP_SERVER_URL}/user/`, { user })
     .then(function (response) {
       return true;
     })
@@ -14,7 +14,7 @@ export const updateProfile = async (user) => {
 
 export const verifySignature = async (address, signature) => {
   let result = await axios
-    .post(`${process.env.REACT_APP_SERVER_PROFILE_URL}/user/verify-signature`, {
+    .post(`${process.env.REACT_APP_SERVER_URL}/user/verify-signature`, {
       address,
       signature,
     })

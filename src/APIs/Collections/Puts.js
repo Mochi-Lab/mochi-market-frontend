@@ -8,7 +8,7 @@ export const updateCollection = async (
   collection
 ) => {
   let result = await axios
-    .put(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/`, {
+    .put(`${process.env.REACT_APP_SERVER_URL}/collectionInfo/`, {
       addressSubmit,
       signature,
       addressToken,
@@ -33,7 +33,7 @@ export const updateAttributesFilter = async (
 ) => {
   attributesFilter = JSON.stringify(attributesFilter);
   let result = await axios
-    .put(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/update-attributes-filter`, {
+    .put(`${process.env.REACT_APP_SERVER_URL}/collectionInfo/update-attributes-filter`, {
       addressAdmin,
       signature,
       addressToken,

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getCollectionByAddress = async (address, chainId) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/${address}/${chainId}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/collectionInfo/${address}/${chainId}`)
     .then(function (response) {
       return { collection: response.data.collection };
     })
@@ -15,7 +15,7 @@ export const getCollectionByAddress = async (address, chainId) => {
 export const getNonce = async (addressSubmit, addressToken, chainId) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_SERVER_PROFILE_URL}/collection/nonce/${addressSubmit}/${addressToken}/${chainId}`
+      `${process.env.REACT_APP_SERVER_URL}/collectionInfo/nonce/${addressSubmit}/${addressToken}/${chainId}`
     )
     .then(function (response) {
       return { nonce: response.data.nonce };
@@ -28,7 +28,7 @@ export const getNonce = async (addressSubmit, addressToken, chainId) => {
 
 export const getAllCollections = async (chainId) => {
   let result = await axios
-    .get(`${process.env.REACT_APP_SERVER}/collection/${chainId}`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/collection/${chainId}`)
     .then(function (response) {
       return response.data.collections;
     })
