@@ -12,7 +12,7 @@ const { Option } = Select;
 
 export default function UpdatePrice({ orderDetail, token, is1155, statusActions }) {
   const dispatch = useDispatch();
-
+  const [currentPrice, setCurrentPrice] = useState(!!orderDetail ? orderDetail.price : undefined);
   const { web3, chainId } = useSelector((state) => state);
 
   const { sellID } = useParams();
@@ -33,9 +33,10 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
   const handleOk = useCallback(async () => {
     const values = await form.validateFields();
     if (!!values && parseFloat(values.price) > 0) {
-      await dispatch(updatePrice(sellID, web3.utils.toWei(values.price.toString(), 'ether')));
+      const success = await dispatch(updatePrice(sellID, web3.utils.toWei(values.price.toString(), 'ether')));
       await statusActions();
       setIsModalVisible(false);
+      if(success) setCurrentPrice(values.price);
     }
   }, [dispatch, web3.utils, sellID, form, statusActions]);
 
@@ -73,7 +74,15 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
 
           <p className='textmode'>Will be on sale until you transfer this item or cancel it.</p>
         </div>
-        <Form form={form} className='input-sell' layout='vertical'>
+        <Form
+          form={form}
+          className='input-sell'
+          layout='vertical'
+          initialValues={{
+            price: !!orderDetail ? orderDetail.price : 0,
+            amount: !!orderDetail ? orderDetail.amount : 0,
+          }}
+        >
           <Row gutter={[5, 10]}>
             <Col xs={{ span: 24 }} md={{ span: is1155 ? 17 : 24 }}>
               <div className='ant-col ant-form-item-label'>
@@ -90,28 +99,35 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
-                      return (
-                        <Option value={token.address} key={i}>
-                          <img
-                            className='icon-tokenpayment'
-                            src={token.icon}
-                            alt={token.symbol}
-                          />
-                        </Option>
-                      );
-                    })
+                        return (
+                          <Option value={token.address} key={i}>
+                            <img
+                              className='icon-tokenpayment'
+                              src={token.icon}
+                              alt={token.symbol}
+                            />
+                          </Option>
+                        );
+                      })
                     : null}
                 </Select>
                 <Form.Item
                   name={['price']}
-                  rules={[{ required: true, message: 'Enter price' }]}
+                  rules={[
+                    { required: true, message: 'Enter price' },
+                    () => ({
+                      validator(_, value) {
+                        if (value != currentPrice) return Promise.resolve();
+                        return Promise.reject(new Error('Price is not changed'));
+                      },
+                    }),
+                  ]}
                   className='input-price'
                 >
                   <InputNumber
                     min='0.1'
                     size='large'
                     className='search-style'
-                    defaultValue={!!orderDetail ? orderDetail.price : 0}
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     placeholder='Set Price'
                   />
@@ -130,7 +146,6 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
                     <InputNumber
                       min='1'
                       size='large'
-                      defaultValue={!!orderDetail ? orderDetail.amount : 0}
                       formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       placeholder='Amount'
                       disabled
