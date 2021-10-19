@@ -28,7 +28,7 @@ export const UpdateNFTDetail = ({ token, setToken }) => {
           return setLoading(false);
         }
       }
-      const result = await axios.post(`${process.env.REACT_APP_SERVER}/nft/updateNft`, {
+      const result = await axios.post(`${process.env.REACT_APP_SERVER_URL}/nft/updateNft`, {
         chainId,
         tokenId,
         address: collectionAddress,
