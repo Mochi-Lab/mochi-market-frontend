@@ -19,6 +19,7 @@ export default function TabOnSale({ address }) {
           setLoadingScroll(true);
         }
         let exp = await getSellOrderByUser(chainId, address, skip, 20);
+        console.log(nftsOnSale, exp, 'ownmer');
         setSkip(skip + 20);
         setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
         if (exp.length < 20) setIsEndOfOrderList(true);
@@ -35,6 +36,7 @@ export default function TabOnSale({ address }) {
       await fetchOnSale();
       setloadingGetOnSale(false);
     }
+    console.log(nftsOnSale, chainId, address);
     if (!nftsOnSale) {
       loadingInit();
     }

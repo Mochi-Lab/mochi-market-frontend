@@ -25,7 +25,7 @@ function NFTsCardProfile({ token, onSale }) {
       try {
         let nft = await getDetailNFT(chainId, token.collectionAddress, token.tokenId);
         if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + token.tokenId;
-        if(nft.collectionAddress === '0xc33d69a337b796a9f0f7588169cd874c3987bde9' && nft.image) {
+        if (nft.collectionAddress === '0xc33d69a337b796a9f0f7588169cd874c3987bde9' && nft.image) {
           nft.image = token.image.replaceAll('gif', 'png');
         }
         setDetailNFT(nft);

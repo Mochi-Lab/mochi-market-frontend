@@ -18,7 +18,7 @@ import 'Views/Home/index.scss';
 import './index.scss';
 import 'Views/Profile/index.scss';
 import 'Assets/css/common-card-nft.scss';
-import {isEmpty} from "lodash";
+import { isEmpty } from 'lodash';
 
 export default function Collection() {
   let history = useHistory();
@@ -97,32 +97,45 @@ export default function Collection() {
 
   const fetchExplore = useCallback(async () => {
     try {
-      if(!!skip && lastLoadedSkip === skip) return;
+      if (!!skip && lastLoadedSkip === skip) return;
       setLastLoadedSkip(skip);
 
       if (skip > 1) {
         setLoadingScroll(true);
       }
 
-      let exp = !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
-        chainID,
-        addressToken,
-        objectFilter,
-        strSearch,
-        tokenPayment,
-        typeSort,
-        skip,
-        20
-      ) : await getSellOrderByCollection(chainID, addressToken, skip, 20);
+      let exp =
+        !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== ''
+          ? await getSellOrderByAttributes(
+              chainID,
+              addressToken,
+              objectFilter,
+              strSearch,
+              tokenPayment,
+              typeSort,
+              skip,
+              20
+            )
+          : await getSellOrderByCollection(chainID, addressToken, skip, 20);
       setSkip(skip + 20);
-
+      console.log(nftsOnSale, exp, 'onsale');
       await setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
       setIsEndOfOrderList(exp.length < 20);
       setLoadingScroll(false);
     } catch (error) {
       console.log({ error });
     }
-  }, [chainID, addressToken, skip, lastLoadedSkip, objectFilter, strSearch, tokenPayment, typeSort, setNftsOnSale]);
+  }, [
+    chainID,
+    addressToken,
+    skip,
+    lastLoadedSkip,
+    objectFilter,
+    strSearch,
+    tokenPayment,
+    typeSort,
+    setNftsOnSale,
+  ]);
 
   useEffect(() => {
     async function loadInitNFTs() {
@@ -135,27 +148,37 @@ export default function Collection() {
     }
   }, [chainID, fetchExplore, nftsOnSale, loadingNFTs]);
 
-  const filterChange = useCallback(async (forceEmptyObjectFilter = false) => {
-    try {
-      setRefreshingNFTs(true);
-      let exp = forceEmptyObjectFilter || !isEmpty(objectFilter) || !isEmpty(strSearch) || tokenPayment !== '0' || typeSort !== '' ? await getSellOrderByAttributes(
-        chainID,
-        addressToken,
-        forceEmptyObjectFilter ? {} : objectFilter,
-        strSearch,
-        tokenPayment,
-        typeSort,
-        0,
-        20
-      ) : await getSellOrderByCollection(chainID, addressToken, 0, 20);
-      setLastLoadedSkip(0);
-      setSkip(20);
-      setRefreshingNFTs(false);
-      setNftsOnSale(exp);
-    } catch (error) {
-      console.log({ error });
-    }
-  }, [chainID, addressToken, objectFilter, strSearch, tokenPayment, typeSort]);
+  const filterChange = useCallback(
+    async (forceEmptyObjectFilter = false) => {
+      try {
+        setRefreshingNFTs(true);
+        let exp =
+          forceEmptyObjectFilter ||
+          !isEmpty(objectFilter) ||
+          !isEmpty(strSearch) ||
+          tokenPayment !== '0' ||
+          typeSort !== ''
+            ? await getSellOrderByAttributes(
+                chainID,
+                addressToken,
+                forceEmptyObjectFilter ? {} : objectFilter,
+                strSearch,
+                tokenPayment,
+                typeSort,
+                0,
+                20
+              )
+            : await getSellOrderByCollection(chainID, addressToken, 0, 20);
+        setLastLoadedSkip(0);
+        setSkip(20);
+        setRefreshingNFTs(false);
+        setNftsOnSale(exp);
+      } catch (error) {
+        console.log({ error });
+      }
+    },
+    [chainID, addressToken, objectFilter, strSearch, tokenPayment, typeSort]
+  );
 
   const newMintNFT = useCallback(async () => {
     if (!!chainID && nftList) {
@@ -171,7 +194,7 @@ export default function Collection() {
   }, [addressToken, chainID, nftList]);
 
   useEffect(() => {
-    if(viewAll !== null && !viewAll) newMintNFT();
+    if (viewAll !== null && !viewAll) newMintNFT();
   }, [newMintNFT, viewAll]);
 
   const handleSetViewAll = useCallback(
