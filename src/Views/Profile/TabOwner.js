@@ -16,7 +16,7 @@ export default function TabOwner({ address }) {
   }, [address]);
 
   useEffect(() => {
-    if (!!chainId && !!address) {
+    if (!!chainId && !!address && !loadingGetOwner && !listNFTsOwner) {
       fetchOwner();
     }
   }, [fetchOwner, address, chainId, walletAddress]);

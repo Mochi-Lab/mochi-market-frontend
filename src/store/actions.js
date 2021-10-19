@@ -3,6 +3,8 @@ import {
   listTokensERC721OfOwner,
   listTokensERC115OfOwner,
   listTokenERC721OfOwnerCQT,
+  listTokenERC721OfOwnerMochi,
+  listTokensERC115OfOwnerMochi,
   listTokensERC721OfOwnerEnums,
 } from 'utils/helper';
 import ERC721 from 'Contracts/ERC721.json';
@@ -202,7 +204,7 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
     let listNFTsOwner = [];
     let erc721Tokens;
     if (parseInt(chainId) === 56) {
-      erc721Tokens = await listTokenERC721OfOwnerCQT(
+      erc721Tokens = await listTokenERC721OfOwnerMochi(
         acceptedNftsAddress,
         walletAddress,
         chainId,
@@ -220,7 +222,7 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
       erc721Tokens = await listTokensERC721OfOwner(acceptedNftsAddress, walletAddress, chainId);
     }
 
-    let erc1155Tokens = await listTokensERC115OfOwner(acceptedNftsAddress, walletAddress, chainId);
+    let erc1155Tokens = await listTokensERC115OfOwnerMochi(acceptedNftsAddress, walletAddress, chainId);
 
     listNFTsOwner = erc721Tokens.concat(erc1155Tokens);
 
