@@ -318,8 +318,10 @@ export async function listTokensfOwnerMochiGraph(listAddressAccept, walletAddres
           let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
           if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
           nft['is1155'] = type === 'erc1155';
-          nft['value'] = type === 'erc1155' ? e.Balance : 1;
-          // nft['totalSupply'] = rawNft.token.totalSupply;
+          if(type === 'erc1155') {
+            nft['value'] = e.Balance;
+            nft['totalSupply'] = e.Supply;
+          }
           listNfts.push(nft);
         })
     );
