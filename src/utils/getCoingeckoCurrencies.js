@@ -1,14 +1,14 @@
 const coingeckoMappings = {
   //BSC Mainnet
   56: {
-    currencies: ['binancecoin', 'mochi-market', 'dragon-warrior'],
-    mapped_currencies: ['bnb', 'moma', 'gon'],
+    currencies: ['binancecoin', 'mochi-market'],
+    mapped_currencies: ['bnb', 'moma'],
     vs_currencies: ['bnb', 'usd'],
   },
   //BSC Testnet
   97: {
-    currencies: ['binancecoin', 'mochi-market', 'dragon-warrior'],
-    mapped_currencies: ['bnb', 'moma', 'gon'],
+    currencies: ['binancecoin', 'mochi-market'],
+    mapped_currencies: ['bnb', 'moma'],
     vs_currencies: ['bnb', 'usd'],
   },
   //Polygon

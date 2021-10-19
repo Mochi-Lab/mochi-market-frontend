@@ -46,24 +46,12 @@ export default function Home() {
       addressToken: '0xC33d69a337B796A9f0F7588169cd874C3987BDE9',
       chainId: 56,
     },
-    // {
-    //   addressToken: '0x33f57e616a1fe22e276fa600b92f6e37c3e85df2',
-    //   chainId: 56,
-    // },
+    {
+      addressToken: '0x891D36718bF26c7389487366BeeCCa04bb42b680',
+      chainId: 56,
+    },
     {
       addressToken: '0xc2027db8c0d68bfd60ff394e47dc210fc9e1407a',
-      chainId: 56,
-    },
-    {
-      addressToken: '0x0Cb3Eedae5E0Eb6A3BAE7bADe59da1671019BB6e',
-      chainId: 56,
-    },
-    {
-      addressToken: '0x821304Cb22Ed418EEe60D55100749Ade15c2D0eb',
-      chainId: 56,
-    },
-    {
-      addressToken: '0x7a339DBd8881dd8435A2bA0C537D7Eccd905710B',
       chainId: 56,
     },
     {

@@ -33,10 +33,12 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
   const handleOk = useCallback(async () => {
     const values = await form.validateFields();
     if (!!values && parseFloat(values.price) > 0) {
-      const success = await dispatch(updatePrice(sellID, web3.utils.toWei(values.price.toString(), 'ether')));
+      const success = await dispatch(
+        updatePrice(sellID, web3.utils.toWei(values.price.toString(), 'ether'))
+      );
       await statusActions();
       setIsModalVisible(false);
-      if(success) setCurrentPrice(values.price);
+      if (success) setCurrentPrice(values.price);
     }
   }, [dispatch, web3.utils, sellID, form, statusActions]);
 
@@ -117,7 +119,7 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
                     { required: true, message: 'Enter price' },
                     () => ({
                       validator(_, value) {
-                        if (value != currentPrice) return Promise.resolve();
+                        if (value !== currentPrice) return Promise.resolve();
                         return Promise.reject(new Error('Price is not changed'));
                       },
                     }),
