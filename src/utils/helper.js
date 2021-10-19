@@ -301,45 +301,29 @@ export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress
   return list721;
 }
 
-export async function listTokenERC721OfOwnerMochi(listAddressAccept, walletAddress, chainId, web3) {
-  const res = await axios.get(
-      `https://graph.mochi.market/erc721/byOwner/${walletAddress}`
-  );
-  let listRaw = res.data || [];
-  let list721 = [];
-  await Promise.all(
-      listRaw.map(async (e) => {
-        e.contract_address = e.Address
-        e.token_id = e.TokenID
-        let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
-        if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
-        nft['is1155'] = false;
-        list721.push(nft);
-      })
-  );
-  return list721;
-}
+export async function listTokensfOwnerMochiGraph(listAddressAccept, walletAddress, chainId, type = 'erc721') {
+    type = type.toLowerCase();
+    if(!['erc721', 'erc1155'].includes(type)) return [];
 
-export async function listTokensERC115OfOwnerMochi(listAddressAccept, walletAddress, chainId) {
     const res = await axios.get(
-        `https://graph.mochi.market/erc1155/byOwner/${walletAddress}`
+        `https://graph.mochi.market/${type}/byOwner/${walletAddress}`
     );
 
     let listRaw = res.data || [];
-    let list1155 = [];
+    let listNfts = [];
     await Promise.all(
         listRaw.map(async (e) => {
           e.contract_address = e.Address
           e.token_id = e.TokenID
           let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
           if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
-          nft['is1155'] = true;
-          nft['value'] = e.Balance;
+          nft['is1155'] = type === 'erc1155';
+          nft['value'] = type === 'erc1155' ? e.Balance : 1;
           // nft['totalSupply'] = rawNft.token.totalSupply;
-          list1155.push(nft);
+          listNfts.push(nft);
         })
     );
-    return list1155;
+    return listNfts;
 
 }
 
