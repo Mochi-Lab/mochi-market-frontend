@@ -203,13 +203,7 @@ export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress
   for (let i = 0; i < listRaw.length; i++) {
     let e = listRaw[i];
     if (listAddressAccept.includes(e.contract_address)) {
-      if (
-        e.supports_erc.includes('erc721') &&
-        // != dragonwarrior - warrior
-        e.contract_address.toLowerCase() !== '0x821304cb22ed418eee60d55100749ade15c2d0eb' &&
-        // != dragonwarrior - dragon
-        e.contract_address.toLowerCase() !== '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e'
-      ) {
+      if (e.supports_erc.includes('erc721')) {
         listRaw721.push(e);
       } else if (e.supports_erc.includes('erc1155')) {
         listRaw1155.push(e);
@@ -218,59 +212,6 @@ export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress
     if (
       // Only For Block Creatures
       e.contract_address.toLowerCase() === '0x56536c54abb2d2d2512965af01c98550edb15ef9'
-    ) {
-      const instance = new web3.eth.Contract(ERC721.abi, e.contract_address);
-      let balance = await instance.methods.balanceOf(walletAddress).call();
-      if (balance > 0) {
-        let nft_data = [];
-        for (let i = 0; i < balance; i++) {
-          let obj = {};
-          obj.token_id = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
-          nft_data.push(obj);
-        }
-        e.nft_data = nft_data;
-        listRaw721.push(e);
-      }
-    }
-    if (
-      // Dragonwarrior - lucky card
-      e.contract_address.toLowerCase() === '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b'
-    ) {
-      const instance = new web3.eth.Contract(ERC721.abi, e.contract_address);
-      let balance = await instance.methods.balanceOf(walletAddress).call();
-      if (balance > 0) {
-        let nft_data = [];
-        for (let i = 0; i < balance; i++) {
-          let obj = {};
-          obj.token_id = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
-          nft_data.push(obj);
-        }
-        e.nft_data = nft_data;
-        listRaw721.push(e);
-      }
-    }
-
-    if (
-      // Dragonwarrior -dragon
-      e.contract_address.toLowerCase() === '0x821304cb22ed418eee60d55100749ade15c2d0eb'
-    ) {
-      const instance = new web3.eth.Contract(ERC721.abi, e.contract_address);
-      let balance = await instance.methods.balanceOf(walletAddress).call();
-      if (balance > 0) {
-        let nft_data = [];
-        for (let i = 0; i < balance; i++) {
-          let obj = {};
-          obj.token_id = await instance.methods.tokenOfOwnerByIndex(walletAddress, i).call();
-          nft_data.push(obj);
-        }
-        e.nft_data = nft_data;
-        listRaw721.push(e);
-      }
-    }
-
-    if (
-      // Dragonwarrior -warrior
-      e.contract_address.toLowerCase() === '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e'
     ) {
       const instance = new web3.eth.Contract(ERC721.abi, e.contract_address);
       let balance = await instance.methods.balanceOf(walletAddress).call();

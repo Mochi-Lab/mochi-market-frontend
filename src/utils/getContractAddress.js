@@ -2,7 +2,6 @@ import bnb from 'Assets/icons/binance-smart-chain-icon.png';
 import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
 import one from 'Assets/one-coin.png';
-import gon from 'Assets/gon-coin.jpg';
 import movr from 'Assets/logo/moonriver.png';
 
 import bscTag from 'Assets/logo/bsc.png';
@@ -122,17 +121,6 @@ const tokensPayment = {
         '0x821304cb22ed418eee60d55100749ade15c2d0eb',
         '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e',
       ],
-    },
-    {
-      address: '0x610f34da19797405a276d26f95bd5c7d8cbbd644',
-      icon: gon,
-      symbol: 'GON',
-      collections: {
-        '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b': 0,
-        '0x821304cb22ed418eee60d55100749ade15c2d0eb': 0,
-        '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e': 0,
-      },
-      hiddens: [],
     },
   ],
   //BSC Testnet
