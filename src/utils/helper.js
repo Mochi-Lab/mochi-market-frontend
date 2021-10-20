@@ -301,12 +301,12 @@ export async function listTokenERC721OfOwnerCQT(listAddressAccept, walletAddress
   return list721;
 }
 
-export async function listTokensfOwnerMochiGraph(listAddressAccept, walletAddress, chainId, type = 'erc721') {
+export async function listTokensfOwnerMochiGraph(listAddressAccept, walletAddress, chainId, type, skip = 0, limit = 20) {
     type = type.toLowerCase();
     if(!['erc721', 'erc1155'].includes(type)) return [];
 
     const res = await axios.get(
-        `https://graph.mochi.market/${type}/byOwner/${walletAddress}`
+        `https://graph.mochi.market/${type}/byOwner/${walletAddress}?skip=${skip}&limit=${limit}`
     );
 
     let listRaw = res.data || [];

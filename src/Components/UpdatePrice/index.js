@@ -117,7 +117,7 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
                     { required: true, message: 'Enter price' },
                     () => ({
                       validator(_, value) {
-                        if (value != currentPrice) return Promise.resolve();
+                        if (value !== currentPrice) return Promise.resolve();
                         return Promise.reject(new Error('Price is not changed'));
                       },
                     }),

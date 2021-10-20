@@ -1,8 +1,6 @@
 import {
   parseBalance,
   listTokensERC721OfOwner,
-  listTokensERC115OfOwner,
-  listTokenERC721OfOwnerCQT,
   listTokensfOwnerMochiGraph,
   listTokensERC721OfOwnerEnums,
 } from 'utils/helper';
@@ -206,7 +204,10 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
       erc721Tokens = await listTokensfOwnerMochiGraph(
         acceptedNftsAddress,
         walletAddress,
-        chainId
+        chainId,
+        'erc721',
+        0,
+        20
       );
     } else if (parseInt(chainId) === 1287) {
       erc721Tokens = await listTokensERC721OfOwnerEnums(
@@ -220,7 +221,8 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
       erc721Tokens = await listTokensERC721OfOwner(acceptedNftsAddress, walletAddress, chainId);
     }
 
-    let erc1155Tokens = await listTokensfOwnerMochiGraph(acceptedNftsAddress, walletAddress, chainId, 'erc1155');
+    let erc1155Tokens = await listTokensfOwnerMochiGraph(acceptedNftsAddress, walletAddress, chainId, 'erc1155',0,
+        20);
 
     listNFTsOwner = erc721Tokens.concat(erc1155Tokens);
 
