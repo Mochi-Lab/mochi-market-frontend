@@ -118,7 +118,6 @@ export default function Collection() {
             )
           : await getSellOrderByCollection(chainID, addressToken, skip, 20);
       setSkip(skip + 20);
-      console.log(nftsOnSale, exp, 'onsale');
       await setNftsOnSale((nftsOnSale) => (!!nftsOnSale ? [...nftsOnSale, ...exp] : [...exp]));
       setIsEndOfOrderList(exp.length < 20);
       setLoadingScroll(false);

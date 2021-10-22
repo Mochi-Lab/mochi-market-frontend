@@ -218,7 +218,9 @@ export default function ERC721({ tokens, onSale, loadingScroll, fetchExplore, is
       if (!!tokens && tokens.length > 0 && !!fetchExplore && !isEndOfOrderList && !loadingNFTs) {
         setLoadingNFTs(true, async () => {
           setLoadingNFTs(true);
-          if (!loadingNFTs) fetchExplore();
+          if (!loadingNFTs) {
+            fetchExplore();
+          }
           setLoadingNFTs(false);
         });
       }

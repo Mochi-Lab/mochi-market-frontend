@@ -2,9 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import NFTsProfile from 'Components/NFTsProfile';
 import { getNFTsOfOwner } from 'store/actions';
-import { getDetailNFT, getListNFTsOwner } from 'APIs/NFT/Get';
+import { getListNFTsOwner } from 'APIs/NFT/Get';
 import store from 'store/index';
-import { noop } from 'lodash';
 
 export default function TabOwner({ address }) {
   let { chainId } = useSelector((state) => state);
@@ -12,52 +11,54 @@ export default function TabOwner({ address }) {
   const [loadingGetOwner, setloadingGetOwner] = useState(false);
   const [loadingScroll, setLoadingScroll] = useState(false);
   const [nftsOwner, setNftsOwner] = useState();
-  const [skip, setSkip] = useState(0);
-  const [isEndOfOrderList, setIsEndOfOrderList] = useState(false);
+  const [skip721, setSkip721] = useState(0);
+  const [skip1155, setSkip1155] = useState(0);
+  const [isEndOf721, setIsEndOf721] = useState(false);
+  const [isEndOf1155, setIsEndOf1155] = useState(false);
   chainId = +chainId;
   const fetchOwner = useCallback(async () => {
-    console.log(`address, skip, chainId`, address, skip, chainId);
-    if (!chainId || isEndOfOrderList) return;
+    if (!chainId || (isEndOf721 && isEndOf1155)) return;
     try {
-      if (skip > 1) {
+      if (skip721 + skip1155 > 1) {
         setLoadingScroll(true);
       }
-      let listRaw721 = await getListNFTsOwner(address, skip, 20);
-      let exp = await Promise.all(
-        listRaw721.map(async (e) => {
-          let nft = await getDetailNFT(chainId, e.Address, e.TokenID);
-          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.TokenID;
-          nft['is1155'] = false;
-          return nft;
-        })
-      );
-      setNftsOwner((nftsOwner) => (!!nftsOwner ? [...nftsOwner, ...exp] : [...exp]));
-      setSkip((c) => c + 20);
-      if (exp.length < 20) setIsEndOfOrderList(true);
+      if (!isEndOf721) {
+        let exp721 = await getListNFTsOwner(chainId, address, skip721, 20, 'erc721');
+        setNftsOwner((nftsOwner) => (!!nftsOwner ? [...nftsOwner, ...exp721] : [...exp721]));
+        setSkip721((c) => c + 20);
+        if (exp721.length < 20) setIsEndOf721(true);
+      }
+
+      if (!isEndOf1155) {
+        let exp1155 = await getListNFTsOwner(chainId, address, skip1155, 20, 'erc1155');
+        setNftsOwner((nftsOwner) => (!!nftsOwner ? [...nftsOwner, ...exp1155] : [...exp1155]));
+        setSkip1155((c) => c + 20);
+        if (exp1155.length < 20) setIsEndOf1155(true);
+      }
+
       setLoadingScroll(false);
     } catch (error) {
       console.log({ error });
     }
-  }, [address, skip, chainId, isEndOfOrderList]);
+  }, [address, skip721, skip1155, chainId, isEndOf721, isEndOf1155]);
 
   useEffect(() => {
-    async function loadingInit() {
+    async function loadingInitBSC() {
       setloadingGetOwner(true);
       await fetchOwner();
       setloadingGetOwner(false);
     }
     if (!nftsOwner) {
-      loadingInit();
+      loadingInitBSC();
     }
   }, [fetchOwner, nftsOwner, chainId, address]);
-
   return (
     <NFTsProfile
       listNFTs={nftsOwner}
       isLoadingErc721={loadingGetOwner}
       loadingScroll={loadingScroll}
       fetchExplore={fetchOwner}
-      isEndOfOrderList={isEndOfOrderList}
+      isEndOfOrderList={isEndOf721 && isEndOf1155}
       onSale={false}
       loadingNFT={loadingGetOwner}
     />
