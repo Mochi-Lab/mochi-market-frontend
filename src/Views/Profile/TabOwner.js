@@ -20,6 +20,8 @@ export default function TabOwner({ address }) {
   const [skip1155, setSkip1155] = useState(0);
   const [isEndOf721, setIsEndOf721] = useState(false);
   const [isEndOf1155, setIsEndOf1155] = useState(false);
+  const [lastLoadedSkip1155, setLastLoadedSkip1155] = useState(-1);
+  const [lastLoadedSkip721, setLastLoadedSkip721] = useState(-1);
   chainId = +chainId;
   const fetchOwner = useCallback(async () => {
     if (!chainId) return;
@@ -30,20 +32,22 @@ export default function TabOwner({ address }) {
         if (skip721 + skip1155 > 1) {
           setLoadingScroll(true);
         }
-        if (!isEndOf721) {
+        if (!isEndOf721 && lastLoadedSkip721 !== skip721) {
+          setLastLoadedSkip721(skip721);
+
           let exp721 = await getListNFTsOwner(chainId, address, skip721, 20, 'erc721');
           setNftsOwner((nftsOwner) => (!!nftsOwner ? [...nftsOwner, ...exp721] : [...exp721]));
           setSkip721((c) => c + 20);
           if (exp721.length < 20) setIsEndOf721(true);
         }
+        if (!isEndOf1155 && lastLoadedSkip1155 !== skip1155) {
+          setLastLoadedSkip1155(skip1155);
 
-        if (!isEndOf1155) {
           let exp1155 = await getListNFTsOwner(chainId, address, skip1155, 20, 'erc1155');
           setNftsOwner((nftsOwner) => (!!nftsOwner ? [...nftsOwner, ...exp1155] : [...exp1155]));
           setSkip1155((c) => c + 20);
           if (exp1155.length < 20) setIsEndOf1155(true);
         }
-
         setLoadingScroll(false);
       } catch (error) {
         console.log({ error });
@@ -71,7 +75,16 @@ export default function TabOwner({ address }) {
       setNftsOwner(erc721Tokens.concat(erc1155Tokens));
       setloadingGetOwner(false);
     }
-  }, [address, skip721, skip1155, chainId, isEndOf721, isEndOf1155]);
+  }, [
+    address,
+    skip721,
+    skip1155,
+    chainId,
+    isEndOf721,
+    isEndOf1155,
+    lastLoadedSkip1155,
+    lastLoadedSkip721,
+  ]);
 
   useEffect(() => {
     async function loadingInit() {
