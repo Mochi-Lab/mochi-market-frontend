@@ -9,7 +9,7 @@ import ViewAll from './ViewAll';
 import DisplayInfoCollection from './DisplayInfoCollection';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import { newMintOf721, newMintOf1155 } from 'utils/helper';
+import { getListNewNFTs } from 'APIs/NFT/Get';
 import { selectChain } from 'Connections/web3Modal.js';
 import { getSellOrderByAttributes, getSellOrderByCollection } from 'APIs/SellOrder/Gets';
 import 'slick-carousel/slick/slick.css';
@@ -184,10 +184,11 @@ export default function Collection() {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
       let result;
       if (is1155) {
-        result = await newMintOf1155(addressToken, chainID);
+        result = await getListNewNFTs(chainID, addressToken, 0, 20, 'erc1155');
       } else {
-        result = await newMintOf721(addressToken, chainID);
+        result = await getListNewNFTs(chainID, addressToken, 0, 20, 'erc721');
       }
+      console.log('re', result);
       setListNewNFT(result);
     }
   }, [addressToken, chainID, nftList]);
