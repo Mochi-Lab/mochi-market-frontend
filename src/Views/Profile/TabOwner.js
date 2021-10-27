@@ -23,13 +23,16 @@ export default function TabOwner({ address }) {
   const [lastLoadedSkip1155, setLastLoadedSkip1155] = useState(-1);
   const [lastLoadedSkip721, setLastLoadedSkip721] = useState(-1);
   chainId = +chainId;
+
   const fetchOwner = useCallback(async () => {
     if (!chainId) return;
+    if (!address) return;
+    if (loadingScroll) return;
     if (chainId === 56) {
       //BSC mainnet
       if (!chainId || (isEndOf721 && isEndOf1155)) return;
       try {
-        if (skip721 + skip1155 > 1) {
+        if (skip721 >= 0 || skip1155 >= 0) {
           setLoadingScroll(true);
         }
         if (!isEndOf721 && lastLoadedSkip721 !== skip721) {
