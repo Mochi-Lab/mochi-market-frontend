@@ -87,6 +87,11 @@ export default function TabOwner({ address }) {
     isEndOf1155,
     lastLoadedSkip1155,
     lastLoadedSkip721,
+    loadingScroll,
+    acceptedNftsAddress,
+    nftList,
+    walletAddress,
+    web3
   ]);
 
   useEffect(() => {
