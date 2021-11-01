@@ -3,6 +3,7 @@ import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
 import one from 'Assets/one-coin.png';
 import movr from 'Assets/logo/moonriver.png';
+import eightbit from 'Assets/logo/8bit.png';
 
 import bscTag from 'Assets/logo/bsc.png';
 import polygonTag from 'Assets/logo/polygon.png';
@@ -116,11 +117,14 @@ const tokensPayment = {
       icon: bnb,
       symbol: 'BNB',
       collections: {},
-      hiddens: [
-        '0x7a339dbd8881dd8435a2ba0c537d7eccd905710b',
-        '0x821304cb22ed418eee60d55100749ade15c2d0eb',
-        '0x0cb3eedae5e0eb6a3bae7bade59da1671019bb6e',
-      ],
+      hiddens: [],
+    },
+    {
+      address: '0x8f661bd044b8799fde621079e4a48171848ad614',
+      icon: eightbit,
+      symbol: '8bit',
+      collections: {},
+      hiddens: [],
     },
   ],
   //BSC Testnet
