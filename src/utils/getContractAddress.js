@@ -122,7 +122,7 @@ const tokensPayment = {
     {
       address: '0x8f661bd044b8799fde621079e4a48171848ad614',
       icon: eightbit,
-      symbol: '8bit',
+      symbol: '8BIT',
       collections: {},
       hiddens: [],
     },
@@ -174,7 +174,7 @@ const symbolToken = {
   56: {
     '0xb72842d6f5fedf91d22d56202802bb9a79c6322e': 'MOMA',
     '0x0000000000000000000000000000000000000000': 'BNB',
-    '0x610f34da19797405a276d26f95bd5c7d8cbbd644': 'GON',
+    '0x8f661bd044b8799fde621079e4a48171848ad614': '8BIT',
   },
   //BSC Testnet
   97: {
