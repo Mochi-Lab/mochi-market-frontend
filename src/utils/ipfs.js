@@ -2,12 +2,10 @@ import axios from 'axios';
 
 export const uploadFileToIpfs = async (data) => {
   try {
-    const uploadedData = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', data, {
+    const uploadedData = await axios.post(`${process.env.REACT_APP_SERVER_URL}/ipfs/upload`, data, {
       maxBodyLength: 'Infinity',
       headers: {
         'Content-Type': `multipart/form-data`,
-        pinata_api_key: process.env.REACT_APP_API_KEY,
-        pinata_secret_api_key: process.env.REACT_APP_API_SECRET,
       },
     });
     return uploadedData.data.IpfsHash;
@@ -18,11 +16,8 @@ export const uploadFileToIpfs = async (data) => {
 
 export const uploadJsonToIpfs = async (data) => {
   try {
-    const uploadedData = await axios.post('https://api.pinata.cloud/pinning/pinJSONToIPFS', data, {
-      headers: {
-        pinata_api_key: process.env.REACT_APP_API_KEY,
-        pinata_secret_api_key: process.env.REACT_APP_API_SECRET,
-      },
+    const uploadedData = await axios.post(`${process.env.REACT_APP_SERVER_URL}/ipfs/upload-json`, {
+      data,
     });
     return uploadedData.data.IpfsHash;
   } catch (error) {
@@ -31,19 +26,12 @@ export const uploadJsonToIpfs = async (data) => {
 };
 
 export const deleteFileInIpfs = async (hash) => {
-  const result = await axios
-    .delete(`https://api.pinata.cloud/pinning/unpin/${hash}`, {
-      headers: {
-        pinata_api_key: process.env.REACT_APP_API_KEY,
-        pinata_secret_api_key: process.env.REACT_APP_API_SECRET,
-      },
-    })
-    .then(function (res) {
-      return true;
-    })
-    .catch(function (e) {
-      console.log('error:', e);
-      return false;
-    });
-  return result;
+  try {
+    const result = await axios.post(`${process.env.REACT_APP_SERVER_URL}/ipfs/update`, { hash });
+
+    return result.data.result;
+  } catch (err) {
+    console.log({ err });
+    return false;
+  }
 };
