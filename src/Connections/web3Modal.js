@@ -19,7 +19,7 @@ const rpcSupport = {
   56: 'https://bsc-dataseed.binance.org/',
   137: 'https://rpc-mainnet.maticvigil.com/',
   1666600000: 'https://api.harmony.one',
-  1287: 'https://rpc.testnet.moonbeam.network',
+  1285: 'https://rpc.moonriver.moonbeam.network',
 };
 
 const providerOptions = {
@@ -88,17 +88,17 @@ const paramsSwitchNetwork = {
       blockExplorerUrls: ['https://explorer.pops.one/#/'],
     },
   ],
-  1287: [
+  1285: [
     {
-      chainId: '0x507',
-      chainName: 'Moonbase',
+      chainId: '0x505',
+      chainName: 'Moonriver',
       nativeCurrency: {
-        name: 'DEV',
-        symbol: 'DEV',
+        name: 'MOVR',
+        symbol: 'MOVR',
         decimals: 18,
       },
-      rpcUrls: ['https://rpc.testnet.moonbeam.network'],
-      blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network/'],
+      rpcUrls: ['https://rpc.moonriver.moonbeam.network'],
+      blockExplorerUrls: ['https://blockscout.moonriver.moonbeam.network/'],
     },
   ],
 };
