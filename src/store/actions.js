@@ -208,7 +208,7 @@ export const getNFTsOfOwner = (walletAddress) => async (dispatch, getState) => {
         chainId,
         web3
       );
-    } else if (parseInt(chainId) === 1287) {
+    } else if (parseInt(chainId) === 1285) {
       erc721Tokens = await listTokensERC721OfOwnerEnums(
         acceptedNftsAddress,
         walletAddress,
@@ -832,8 +832,8 @@ export const getCoingeckoPrices = () => async (dispatch, getState) => {
   const { chainId } = getState();
   const { coingeckoPrices } = getState();
 
-  if(!chainId) return []
-  if(!!coingeckoPrices) return coingeckoPrices
+  if (!chainId) return [];
+  if (!!coingeckoPrices) return coingeckoPrices;
   await dispatch(setCoingeckoPrices({}));
   let prices = await getPrices(chainId);
   dispatch(setCoingeckoPrices(prices));

@@ -30,10 +30,12 @@ export const web3Default = {
     explorer: 'https://explorer.pops.one/#/tx/',
   },
   // Moonbase
-  1287: {
-    web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc.testnet.moonbeam.network')),
-    name: 'Moonbase',
-    explorer: 'https://moonbase-blockscout.testnet.moonbeam.network/',
+  1285: {
+    web3Default: new Web3(
+      new Web3.providers.HttpProvider('https://rpc.moonriver.moonbeam.network')
+    ),
+    name: 'Moonriver',
+    explorer: 'https://blockscout.moonriver.moonbeam.network/',
   },
 };
 

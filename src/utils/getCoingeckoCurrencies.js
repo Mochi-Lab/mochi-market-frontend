@@ -18,7 +18,7 @@ const coingeckoMappings = {
     vs_currencies: ['matic-network', 'usd'],
   },
   //Moonbase
-  1287: {
+  1285: {
     currencies: ['moonriver'],
     mapped_currencies: ['moonriver'],
     vs_currencies: ['moonriver', 'usd'],

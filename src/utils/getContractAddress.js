@@ -70,16 +70,16 @@ const contractAddress = {
     MarketAdmin: '0x6a24414449Bc450c8aC835A82615bD5c51C83110',
     MOMA: '',
   },
-  1287: {
-    AddressesProvider: '0xcBF96C691703C0575F2745beAC80Ed3B0FE4457B',
-    NftList: '0xfc602f74249aca10496c0dB881495511a753B7ca',
-    Vault: '0xFCcFf3E4a7682DbbB5cf7b23928517F0B832aa57',
-    SellOrderList: '0xDBe900E26f6084d6432A32f17a03AAFA23c602F1',
-    ExchangeOrderList: '0x8ea7A4dc5B83EA603e43c2A3afCe77c9026C078e',
+  1285: {
+    AddressesProvider: '0xF4Bdd04BA1872d6290D78c178c1AD95581f28B12',
+    NftList: '0x722914310b1C536bDAd99f0CEf78A6f86374918F',
+    Vault: '0xC3dfFF07e61DCbe790C6c33762d11a3BFCf553AB',
+    SellOrderList: '0xC154dDE0Bfb17aDEC133C402328894b9443bc6c8',
+    ExchangeOrderList: '0xaf3c8bF4e213e586b31e69D9aF28b4836D7ec76c',
     CreativeStudio: '0x7c0be8De5c08b9FDF69AfF5e5A446Dd16B95843e',
-    Market: '0x3642492b2557049B8f7B2836952EF15Ef4949dC3',
-    MochiERC721NFT: '0xec95eb03364A7D8A1efb06076d8e610032742C59',
-    MochiERC1155NFT: '0xeD16C75897E031b4291F05B6F1b0EA7dB81BB211',
+    Market: '0x923E13952840cb66Eb3bbF32245b422a1cA360F2',
+    MochiERC721NFT: '',
+    MochiERC1155NFT: '',
     MarketAdmin: '0x6BD98658EeD1B4411bdF485DcE4D31e6087A14b6',
     MOMA: '',
   },
@@ -153,7 +153,7 @@ const tokensPayment = {
       hiddens: [],
     },
   ],
-  1287: [
+  1285: [
     {
       address: '0x0000000000000000000000000000000000000000',
       icon: movr,
@@ -184,7 +184,7 @@ const symbolToken = {
   1666600000: {
     '0x0000000000000000000000000000000000000000': 'ONE',
   },
-  1287: {
+  1285: {
     '0x0000000000000000000000000000000000000000': 'MOVR',
   },
 };
@@ -199,7 +199,7 @@ const infoChains = {
   // Harmony mainet
   // 1666600000: { name: 'Harmony', icon: one },
   // Moonbase
-  1287: { name: 'Moonbase', icon: movr },
+  1285: { name: 'Moonriver', icon: movr },
 };
 
 export const listChainsSupport = [
@@ -207,7 +207,7 @@ export const listChainsSupport = [
   { chainId: 137, name: 'Polygon', icon: polygon /* Polygon Mainnet*/ },
   { chainId: 97, name: 'BSC-Testnet', icon: bnb /*BSC Testnet*/ },
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
-  { chainId: 1287, name: 'Moonbase', icon: movr /*Moonbase Testnet*/ },
+  { chainId: 1285, name: 'Moonriver', icon: movr /*Moonriver Testnet*/ },
 ];
 
 const logoChainsTags = {
@@ -220,7 +220,7 @@ const logoChainsTags = {
   // Harmony mainet
   1666600000: { name: 'Harmony', logo: harmonyTag },
   // Moonbase
-  1287: { name: 'Moonbase', icon: movrTag },
+  1285: { name: 'Moonriver', icon: movrTag },
 };
 
 export const getContractAddress = (_chainId) => {
