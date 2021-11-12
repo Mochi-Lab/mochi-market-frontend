@@ -20,7 +20,7 @@ export default function RenderSwitch({
   id,
   getOwners1155,
 }) {
-  const { walletAddress } = useSelector((state) => state);
+  const { walletAddress, acceptedNftsAddress } = useSelector((state) => state);
 
   useInterval(() => {
     if (!!walletAddress) {
@@ -49,12 +49,13 @@ export default function RenderSwitch({
       return (
         <div className='PE'>
           <div className='actions-btn'>
-            <Sell
+            {acceptedNftsAddress.includes(addressToken.toLowerCase()) && <Sell
               token={token}
               is1155={is1155}
               available={available}
               statusActions={statusActions}
-            />
+            />}
+
             <div className='cAFwWB' />
             <Transfer
               token={token}
