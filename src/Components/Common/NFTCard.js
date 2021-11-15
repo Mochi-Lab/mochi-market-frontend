@@ -77,6 +77,12 @@ export const __NFTCardDetail = ({
           name: '★',
         },
       ],
+      '0x891d36718bf26c7389487366beecca04bb42b680': [
+        {
+          index: 0,
+          name: '',
+        },
+      ],
     };
     const collectionAddress = _.get(token, 'collectionAddress');
     const extraInfoMap = _.get(extraInfoMapByToken, collectionAddress);

@@ -10,6 +10,7 @@ export default async function helperGetNFTDetails(chainId, addressToken, id, set
       let nameCollection = (await store.dispatch(getCollection(addressToken, null))).collection
         .name;
       nft['nameCollection'] = nameCollection;
+      if(nft.video && nft.video.endsWith('.png')) delete nft.video;
       setToken(nft);
     } catch (error) {
       setToken({
