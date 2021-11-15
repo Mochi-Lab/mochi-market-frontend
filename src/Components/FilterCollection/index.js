@@ -117,10 +117,12 @@ function TypeEnum({ attribute, setObjectFilter, objectFilter, filterChange }) {
       if (!!objectFilter[`${attribute.index}`]) {
         let attrs = objectFilter;
         attrs[`${attribute.index}`] = [...attrs[`${attribute.index}`], element];
+        attrs[`${attribute.trait_type}`] = attrs[`${attribute.index}`];
         setObjectFilter({ ...attrs });
       } else {
         let attrs = objectFilter;
         attrs[`${attribute.index}`] = [element];
+        attrs[`${attribute.trait_type}`] = attrs[`${attribute.index}`];
         setObjectFilter({ ...attrs });
       }
     } else {
@@ -131,6 +133,7 @@ function TypeEnum({ attribute, setObjectFilter, objectFilter, filterChange }) {
         traitTypes.splice(index, 1);
       }
       attrs[`${attribute.index}`] = traitTypes;
+      attrs[`${attribute.trait_type}`] = attrs[`${attribute.index}`];
       setObjectFilter({ ...attrs });
     }
     await filterChange();
