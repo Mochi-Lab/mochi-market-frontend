@@ -15,11 +15,6 @@ export const getDetailNFT = async (chainId, addressToken, tokenId) => {
 export const getListNFTsByOwner = async (chainId, addressToken, skip = 0, page = 20, type) => {
   const prefix = chainId === 137 ? '/polygon': '';
 
-  const subEndpoints = {
-      owner: 'byOwner',
-      new: 'newlyCreated'
-  }
-
   let result = await axios
     .get(
       `${process.env.REACT_APP_NFT_DATA}${prefix}/${type}/byOwner/${addressToken}?skip=${skip}&limit=${page}`
