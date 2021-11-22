@@ -12,11 +12,17 @@ export const getDetailNFT = async (chainId, addressToken, tokenId) => {
   return result;
 };
 
-//BSC only
-export const getListNFTsOwner = async (chainId, addressToken, skip = 0, page = 20, type) => {
+export const getListNFTsByOwner = async (chainId, addressToken, skip = 0, page = 20, type) => {
+  const prefix = chainId === 137 ? '/polygon': '';
+
+  const subEndpoints = {
+      owner: 'byOwner',
+      new: 'newlyCreated'
+  }
+
   let result = await axios
     .get(
-      `${process.env.REACT_APP_NFT_DATA}/${type}/byOwner/${addressToken}?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_NFT_DATA}${prefix}/${type}/byOwner/${addressToken}?skip=${skip}&limit=${page}`
     )
     .then(async function (response) {
       type = type.toLowerCase();
@@ -45,34 +51,37 @@ export const getListNFTsOwner = async (chainId, addressToken, skip = 0, page = 2
   return result;
 };
 
-export const getListNewNFTs = async (chainId, addressToken, skip = 0, page = 20, type) => {
-  let result = await axios
-    .get(
-      `${process.env.REACT_APP_NFT_DATA}/${type}/${addressToken}/newlyCreated?skip=${skip}&limit=${page}`
-    )
-    .then(async function (response) {
-      type = type.toLowerCase();
-      if (!['erc721', 'erc1155'].includes(type)) return [];
-      let listRaw = response.data || [];
-      let listNfts = [];
-      await Promise.all(
-        listRaw.map(async (e) => {
-          e.contract_address = e.Address;
-          e.token_id = e.TokenID;
-          let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
-          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
-          nft['is1155'] = type === 'erc1155';
-          if (type === 'erc1155') {
-            nft['value'] = e.Balance;
-            nft['totalSupply'] = e.Supply;
-          }
-          listNfts.push(nft);
+export const getListNFTsByNewlyCreated = async (chainId, addressToken, skip = 0, page = 20, type) => {
+    chainId = +chainId
+    const prefix = chainId === 137 ? '/polygon': '';
+
+    let result = await axios
+        .get(
+            `${process.env.REACT_APP_NFT_DATA}${prefix}/${type}/${addressToken}/newlyCreated?skip=${skip}&limit=${page}`
+        )
+        .then(async function (response) {
+            type = type.toLowerCase();
+            if (!['erc721', 'erc1155'].includes(type)) return [];
+            let listRaw = response.data || [];
+            let listNfts = [];
+            await Promise.all(
+                listRaw.map(async (e) => {
+                    e.contract_address = e.Address;
+                    e.token_id = e.TokenID;
+                    let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
+                    if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
+                    nft['is1155'] = type === 'erc1155';
+                    if (type === 'erc1155') {
+                        nft['value'] = e.Balance;
+                        nft['totalSupply'] = e.Supply;
+                    }
+                    listNfts.push(nft);
+                })
+            );
+            return listNfts;
         })
-      );
-      return listNfts;
-    })
-    .catch(function (error) {
-      return [];
-    });
-  return result;
+        .catch(function (error) {
+            return [];
+        });
+    return result;
 };

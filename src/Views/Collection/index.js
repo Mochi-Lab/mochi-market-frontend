@@ -9,7 +9,7 @@ import ViewAll from './ViewAll';
 import DisplayInfoCollection from './DisplayInfoCollection';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import { getListNewNFTs } from 'APIs/NFT/Get';
+import { getListNFTsByNewlyCreated } from 'APIs/NFT/Get';
 import { selectChain } from 'Connections/web3Modal.js';
 import { getSellOrderByAttributes, getSellOrderByCollection } from 'APIs/SellOrder/Gets';
 import 'slick-carousel/slick/slick.css';
@@ -180,15 +180,10 @@ export default function Collection() {
   );
 
   const newMintNFT = useCallback(async () => {
+    if(!chainID || !addressToken) return;
     if (!!chainID && nftList) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
-      let result;
-      if (is1155) {
-        result = await getListNewNFTs(chainID, addressToken, 0, 20, 'erc1155');
-      } else {
-        result = await getListNewNFTs(chainID, addressToken, 0, 20, 'erc721');
-      }
-      console.log('re', result);
+      let result = await getListNFTsByNewlyCreated(chainID, addressToken, 0, 20, is1155 ? 'erc1155' : 'erc721', );
       setListNewNFT(result);
     }
   }, [addressToken, chainID, nftList]);
