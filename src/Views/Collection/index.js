@@ -9,7 +9,7 @@ import ViewAll from './ViewAll';
 import DisplayInfoCollection from './DisplayInfoCollection';
 import { getCollection } from 'store/actions';
 import store from 'store/index';
-import { getListNFTsByNewlyCreated } from 'APIs/NFT/Get';
+import { getMochiGraphListNFTs } from 'APIs/NFT/Get';
 import { selectChain } from 'Connections/web3Modal.js';
 import { getSellOrderByAttributes, getSellOrderByCollection } from 'APIs/SellOrder/Gets';
 import 'slick-carousel/slick/slick.css';
@@ -183,7 +183,7 @@ export default function Collection() {
     if(!chainID || !addressToken) return;
     if (!!chainID && nftList) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
-      let result = await getListNFTsByNewlyCreated(chainID, addressToken, 0, 20, is1155 ? 'erc1155' : 'erc721', );
+      let result = await getMochiGraphListNFTs(chainID, addressToken, 0, 20, is1155 ? 'erc1155' : 'erc721', 'new');
       setListNewNFT(result);
     }
   }, [addressToken, chainID, nftList]);
