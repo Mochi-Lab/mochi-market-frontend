@@ -188,7 +188,6 @@ export default function Collection() {
       } else {
         result = await getListNewNFTs(chainID, addressToken, 0, 20, 'erc721');
       }
-      console.log('re', result);
       setListNewNFT(result);
     }
   }, [addressToken, chainID, nftList]);

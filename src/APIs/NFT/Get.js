@@ -16,7 +16,7 @@ export const getDetailNFT = async (chainId, addressToken, tokenId) => {
 export const getListNFTsOwner = async (chainId, addressToken, skip = 0, page = 20, type) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_NFT_DATA}/${type}/byOwner/${addressToken}?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_NFT_DATA}/${chainId}/${type}/byOwner/${addressToken}?skip=${skip}&limit=${page}`
     )
     .then(async function (response) {
       type = type.toLowerCase();
@@ -48,7 +48,7 @@ export const getListNFTsOwner = async (chainId, addressToken, skip = 0, page = 2
 export const getListNewNFTs = async (chainId, addressToken, skip = 0, page = 20, type) => {
   let result = await axios
     .get(
-      `${process.env.REACT_APP_NFT_DATA}/${type}/${addressToken}/newlyCreated?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_NFT_DATA}/${chainId}/${type}/${addressToken}/newlyCreated?skip=${skip}&limit=${page}`
     )
     .then(async function (response) {
       type = type.toLowerCase();
