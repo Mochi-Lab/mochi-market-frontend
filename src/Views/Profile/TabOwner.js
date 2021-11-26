@@ -6,7 +6,7 @@ import {
   listTokensERC115OfOwner,
   listTokensERC721OfOwnerEnums,
 } from 'utils/helper';
-import {getMochiGraphListNFTs} from 'APIs/NFT/Get';
+import { getMochiGraphListNFTs } from 'APIs/NFT/Get';
 import { getMochiGraphSupport } from 'utils/getContractAddress';
 
 export default function TabOwner({ address }) {
@@ -23,7 +23,7 @@ export default function TabOwner({ address }) {
   const [isEndOf1155, setIsEndOf1155] = useState(false);
   const [lastLoadedSkip1155, setLastLoadedSkip1155] = useState(-1);
   const [lastLoadedSkip721, setLastLoadedSkip721] = useState(-1);
-  const [mochiGraphEnabled, setMochiGraphEnabled] = useState(false);
+  const [mochiGraphEnabled, setMochiGraphEnabled] = useState(null);
   chainId = +chainId;
 
   const fetchOwner = useCallback(async () => {
@@ -31,6 +31,8 @@ export default function TabOwner({ address }) {
     if (!address) return;
     if (!walletAddress) return;
     if (loadingScroll) return;
+    if (mochiGraphEnabled === null) return;
+
     if (mochiGraphEnabled) {
       if (!chainId || (isEndOf721 && isEndOf1155)) return;
       try {
@@ -58,6 +60,7 @@ export default function TabOwner({ address }) {
         console.log({ error });
       }
     } else {
+      console.log(chainId)
       setloadingGetOwner(true);
       let erc721Tokens;
       if (parseInt(chainId) === 1287) {
