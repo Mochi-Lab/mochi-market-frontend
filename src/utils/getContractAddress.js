@@ -203,11 +203,11 @@ const infoChains = {
 };
 
 export const listChainsSupport = [
-  { chainId: 56, name: 'BSC', icon: bnb /*BSC Mainnet*/ },
-  { chainId: 137, name: 'Polygon', icon: polygon /* Polygon Mainnet*/ },
-  { chainId: 97, name: 'BSC-Testnet', icon: bnb /*BSC Testnet*/ },
+  { chainId: 56, name: 'BSC', icon: bnb, mochiGraphEnabled: true /*BSC Mainnet*/ },
+  { chainId: 137, name: 'Polygon', icon: polygon, mochiGraphEnabled: true /* Polygon Mainnet*/ },
+  { chainId: 97, name: 'BSC-Testnet', icon: bnb, mochiGraphEnabled: true /*BSC Testnet*/ },
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
-  { chainId: 1285, name: 'Moonriver', icon: movr /*Moonriver Testnet*/ },
+  { chainId: 1285, name: 'Moonriver', icon: movr, mochiGraphEnabled: false /*Moonriver Testnet*/ },
 ];
 
 const logoChainsTags = {
@@ -237,4 +237,8 @@ export const getInfoChain = (_chainId) => {
 };
 export const getLogoChainsTags = (_chainId) => {
   return logoChainsTags[_chainId];
+};
+
+export const getMochiGraphSupport = (_chainId) => {
+  return listChainsSupport.filter(x => x.chainId === _chainId)[0].mochiGraphEnabled || false;
 };

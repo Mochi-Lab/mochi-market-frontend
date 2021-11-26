@@ -12,67 +12,41 @@ export const getDetailNFT = async (chainId, addressToken, tokenId) => {
   return result;
 };
 
-//BSC only
-export const getListNFTsOwner = async (chainId, addressToken, skip = 0, page = 20, type) => {
+export const getMochiGraphListNFTs = async (chainId, addressToken, skip = 0, page = 20, type = 'erc721', subendpoint = 'owner') => {
+  const subendpoints = {
+      owner: 'nft/owner',
+      new: 'newlyCreated/collection'
+  }
+
   let result = await axios
     .get(
-      `${process.env.REACT_APP_NFT_DATA}/${chainId}/${type}/byOwner/${addressToken}?skip=${skip}&limit=${page}`
+      `${process.env.REACT_APP_NFT_DATA}/${chainId}/${type}/${subendpoints[subendpoint]}/${addressToken}?skip=${skip}&limit=${page}`
     )
-    .then(async function (response) {
-      type = type.toLowerCase();
-      if (!['erc721', 'erc1155'].includes(type)) return [];
-      let listRaw = response.data || [];
-      let listNfts = [];
-      await Promise.all(
-        listRaw.map(async (e) => {
-          e.contract_address = e.Address;
-          e.token_id = e.TokenID;
-          let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
-          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
-          nft['is1155'] = type === 'erc1155';
-          if (type === 'erc1155') {
-            nft['value'] = e.Balance;
-            nft['totalSupply'] = e.Supply;
-          }
-          listNfts.push(nft);
-        })
-      );
-      return listNfts;
-    })
+    .then(r => processResponse(r, type, chainId))
     .catch(function (error) {
       return [];
     });
   return result;
 };
 
-export const getListNewNFTs = async (chainId, addressToken, skip = 0, page = 20, type) => {
-  let result = await axios
-    .get(
-      `${process.env.REACT_APP_NFT_DATA}/${chainId}/${type}/${addressToken}/newlyCreated?skip=${skip}&limit=${page}`
-    )
-    .then(async function (response) {
-      type = type.toLowerCase();
-      if (!['erc721', 'erc1155'].includes(type)) return [];
-      let listRaw = response.data || [];
-      let listNfts = [];
-      await Promise.all(
+async function processResponse (response, type, chainId) {
+    type = type.toLowerCase();
+    if (!['erc721', 'erc1155'].includes(type)) return [];
+    let listRaw = response.data || [];
+    let listNfts = [];
+    await Promise.all(
         listRaw.map(async (e) => {
-          e.contract_address = e.Address;
-          e.token_id = e.TokenID;
-          let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
-          if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
-          nft['is1155'] = type === 'erc1155';
-          if (type === 'erc1155') {
-            nft['value'] = e.Balance;
-            nft['totalSupply'] = e.Supply;
-          }
-          listNfts.push(nft);
+            e.contract_address = e.Address;
+            e.token_id = e.TokenID;
+            let nft = await getDetailNFT(chainId, e.contract_address, e.token_id);
+            if (!nft.name || nft.name === 'Unnamed') nft.name = 'ID: ' + e.token_id;
+            nft['is1155'] = type === 'erc1155';
+            if (type === 'erc1155') {
+                nft['value'] = e.Balance;
+                nft['totalSupply'] = e.Supply;
+            }
+            listNfts.push(nft);
         })
-      );
-      return listNfts;
-    })
-    .catch(function (error) {
-      return [];
-    });
-  return result;
-};
+    );
+    return listNfts;
+}
