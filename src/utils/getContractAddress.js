@@ -3,12 +3,14 @@ import polygon from 'Assets/icons/polygon-icon.png';
 import moma from 'Assets/logo-mochi.png';
 import one from 'Assets/one-coin.png';
 import movr from 'Assets/logo/moonriver.png';
+import sdn from 'Assets/logo/sdn.png';
 import eightbit from 'Assets/logo/8bit.png';
 
 import bscTag from 'Assets/logo/bsc.png';
 import polygonTag from 'Assets/logo/polygon.png';
 import harmonyTag from 'Assets/logo/harmony.png';
 import movrTag from 'Assets/logo/moonriver.png';
+import sdnTag from 'Assets/logo/sdn.png';
 
 const contractAddress = {
   //Polygon Mainnet
@@ -78,6 +80,19 @@ const contractAddress = {
     ExchangeOrderList: '0xaf3c8bF4e213e586b31e69D9aF28b4836D7ec76c',
     CreativeStudio: '0x7c0be8De5c08b9FDF69AfF5e5A446Dd16B95843e',
     Market: '0x923E13952840cb66Eb3bbF32245b422a1cA360F2',
+    MochiERC721NFT: '',
+    MochiERC1155NFT: '',
+    MarketAdmin: '0x6BD98658EeD1B4411bdF485DcE4D31e6087A14b6',
+    MOMA: '',
+  },
+  336: {
+    AddressesProvider: '0xF4Bdd04BA1872d6290D78c178c1AD95581f28B12',
+    NftList: '0x722914310b1C536bDAd99f0CEf78A6f86374918F',
+    Vault: '0xC3dfFF07e61DCbe790C6c33762d11a3BFCf553AB',
+    SellOrderList: '0xC154dDE0Bfb17aDEC133C402328894b9443bc6c8',
+    ExchangeOrderList: '0xaf3c8bF4e213e586b31e69D9aF28b4836D7ec76c',
+    CreativeStudio: '0x7c0be8De5c08b9FDF69AfF5e5A446Dd16B95843e',
+    Market: '0x602332522f85c2fC29603F1e26Ff4A0A9B390FF2',
     MochiERC721NFT: '',
     MochiERC1155NFT: '',
     MarketAdmin: '0x6BD98658EeD1B4411bdF485DcE4D31e6087A14b6',
@@ -162,6 +177,15 @@ const tokensPayment = {
       hiddens: [],
     },
   ],
+  336: [
+    {
+      address: '0x0000000000000000000000000000000000000000',
+      icon: sdn,
+      symbol: 'SDN',
+      collections: {},
+      hiddens: [],
+    },
+  ],
 };
 
 const symbolToken = {
@@ -187,6 +211,9 @@ const symbolToken = {
   1285: {
     '0x0000000000000000000000000000000000000000': 'MOVR',
   },
+  336: {
+    '0x0000000000000000000000000000000000000000': 'SDN',
+  },
 };
 
 const infoChains = {
@@ -200,6 +227,8 @@ const infoChains = {
   // 1666600000: { name: 'Harmony', icon: one },
   // Moonbase
   1285: { name: 'Moonriver', icon: movr },
+  //sdn
+  336: { name: 'Shiden', icon: sdn },
 };
 
 export const listChainsSupport = [
@@ -208,6 +237,7 @@ export const listChainsSupport = [
   { chainId: 97, name: 'BSC-Testnet', icon: bnb, mochiGraphEnabled: true /*BSC Testnet*/ },
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
   { chainId: 1285, name: 'Moonriver', icon: movr, mochiGraphEnabled: false /*Moonriver Testnet*/ },
+  { chainId: 336, name: 'Shiden', icon: sdn, mochiGraphEnabled: false /*Moonriver Testnet*/ },
 ];
 
 const logoChainsTags = {
@@ -221,6 +251,8 @@ const logoChainsTags = {
   1666600000: { name: 'Harmony', logo: harmonyTag },
   // Moonbase
   1285: { name: 'Moonriver', icon: movrTag },
+  // Shiden
+  336: { name: 'Shiden', icon: sdnTag },
 };
 
 export const getContractAddress = (_chainId) => {
@@ -240,5 +272,5 @@ export const getLogoChainsTags = (_chainId) => {
 };
 
 export const getMochiGraphSupport = (_chainId) => {
-  return listChainsSupport.filter(x => x.chainId === _chainId)[0].mochiGraphEnabled || false;
+  return listChainsSupport.filter((x) => x.chainId === _chainId)[0].mochiGraphEnabled || false;
 };
