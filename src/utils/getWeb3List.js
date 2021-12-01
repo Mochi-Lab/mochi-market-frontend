@@ -37,6 +37,11 @@ export const web3Default = {
     name: 'Moonriver',
     explorer: 'https://blockscout.moonriver.moonbeam.network/',
   },
+  336: {
+    web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc.shiden.astar.network:8545')),
+    name: 'Shiden',
+    explorer: 'https://blockscout.com/shiden/',
+  },
 };
 
 export const defaultChainId = 56;
