@@ -60,11 +60,11 @@ export default function TabOwner({ address }) {
         console.log({ error });
       }
     } else {
-      console.log(chainId)
       setloadingGetOwner(true);
       let erc721Tokens;
-      if (parseInt(chainId) === 1287) {
-        //Moonriver
+      let erc1155Tokens;
+      if (parseInt(chainId) === 1285 || parseInt(chainId) === 336) {
+        //Moonriver and Shiden
         erc721Tokens = await listTokensERC721OfOwnerEnums(
           acceptedNftsAddress,
           walletAddress,
@@ -74,12 +74,8 @@ export default function TabOwner({ address }) {
         );
       } else {
         erc721Tokens = await listTokensERC721OfOwner(acceptedNftsAddress, walletAddress, chainId);
+        erc1155Tokens = await listTokensERC115OfOwner(acceptedNftsAddress, walletAddress, chainId);
       }
-      let erc1155Tokens = await listTokensERC115OfOwner(
-        acceptedNftsAddress,
-        walletAddress,
-        chainId
-      );
       setNftsOwner(erc721Tokens.concat(erc1155Tokens));
       setloadingGetOwner(false);
     }
@@ -97,7 +93,7 @@ export default function TabOwner({ address }) {
     acceptedNftsAddress,
     nftList,
     walletAddress,
-    web3
+    web3,
   ]);
 
   useEffect(() => {
@@ -112,8 +108,8 @@ export default function TabOwner({ address }) {
   }, [fetchOwner, nftsOwner, chainId, address]);
 
   useEffect(() => {
-    if(!chainId) return
-    setMochiGraphEnabled(getMochiGraphSupport(chainId))
+    if (!chainId) return;
+    setMochiGraphEnabled(getMochiGraphSupport(chainId));
   }, [chainId]);
 
   if (mochiGraphEnabled) {
