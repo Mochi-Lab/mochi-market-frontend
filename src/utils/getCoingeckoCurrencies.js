@@ -23,6 +23,12 @@ const coingeckoMappings = {
     mapped_currencies: ['moonriver'],
     vs_currencies: ['moonriver', 'usd'],
   },
+  //SDN
+  336: {
+    currencies: ['shiden-network'],
+    mapped_currencies: ['shiden-network'],
+    vs_currencies: ['shiden-network', 'usd'],
+  },
 };
 
 export const getCoingeckoCurrencies = (_chainId) => {

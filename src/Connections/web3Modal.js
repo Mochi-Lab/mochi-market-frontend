@@ -20,6 +20,7 @@ const rpcSupport = {
   137: 'https://rpc-mainnet.maticvigil.com/',
   1666600000: 'https://api.harmony.one',
   1285: 'https://rpc.moonriver.moonbeam.network',
+  336: 'https://rpc.shiden.astar.network:8545',
 };
 
 const providerOptions = {
@@ -99,6 +100,19 @@ const paramsSwitchNetwork = {
       },
       rpcUrls: ['https://rpc.moonriver.moonbeam.network'],
       blockExplorerUrls: ['https://blockscout.moonriver.moonbeam.network/'],
+    },
+  ],
+  336: [
+    {
+      chainId: '0x150',
+      chainName: 'Shiden',
+      nativeCurrency: {
+        name: 'SDN',
+        symbol: 'SDN',
+        decimals: 18,
+      },
+      rpcUrls: ['https://rpc.shiden.astar.network:8545'],
+      blockExplorerUrls: ['https://blockscout.com/shiden/'],
     },
   ],
 };
