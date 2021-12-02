@@ -63,7 +63,7 @@ export default function TabOwner({ address }) {
       setloadingGetOwner(true);
       let erc721Tokens;
       let erc1155Tokens;
-      if (parseInt(chainId) === 1285 || parseInt(chainId) === 336) {
+      if (parseInt(chainId) === 1285) {
         //Moonriver and Shiden
         erc721Tokens = await listTokensERC721OfOwnerEnums(
           acceptedNftsAddress,

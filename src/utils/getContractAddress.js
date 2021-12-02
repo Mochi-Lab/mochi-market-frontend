@@ -237,7 +237,7 @@ export const listChainsSupport = [
   { chainId: 97, name: 'BSC-Testnet', icon: bnb, mochiGraphEnabled: true /*BSC Testnet*/ },
   // { chainId: 1666600000, name: 'Harmony', icon: one /*BSC Testnet*/ },
   { chainId: 1285, name: 'Moonriver', icon: movr, mochiGraphEnabled: false /*Moonriver Testnet*/ },
-  { chainId: 336, name: 'Shiden', icon: sdn, mochiGraphEnabled: false /*Moonriver Testnet*/ },
+  { chainId: 336, name: 'Shiden', icon: sdn, mochiGraphEnabled: true /*Shiden Testnet*/ },
 ];
 
 const logoChainsTags = {
