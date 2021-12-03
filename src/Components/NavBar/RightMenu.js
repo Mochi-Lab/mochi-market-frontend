@@ -55,6 +55,16 @@ const RightMenu = ({ onClose }) => {
 
   return (
     <Menu selectable={false} mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
+      <Menu.Item key='buyMOMA'>
+        <a
+          href='https://farm.mochi.market/'
+          target='_blank'
+          rel='noreferrer'
+          className='text-white'
+        >
+          <div className='menu-button'>Farming</div>
+        </a>
+      </Menu.Item>
       {generateMenuItemForRouteKey('/browse')}
       {chainId === 97 && (
         <Menu.Item key='bridge'>
