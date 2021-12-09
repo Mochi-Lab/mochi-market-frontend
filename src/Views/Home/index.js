@@ -94,6 +94,10 @@ export default function Home() {
       addressToken: '0xbca30d6d18f0c5ac15e0be5c9b389d2df207d19e',
       chainId: 137,
     },
+    {
+      addressToken: '0xa88fab4c14b94e656d8b0162bb269189912c5e42',
+      chainId: 336,
+    },
   ].filter((c) => +chainId === +c.chainId);
 
   return (
