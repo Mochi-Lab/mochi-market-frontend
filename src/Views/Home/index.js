@@ -43,6 +43,10 @@ export default function Home() {
 
   const listHotCollections = [
     {
+      addressToken: '0x57a2422FD8997424ebCFd8777d2B71e4BB5D8E9C',
+      chainId: 56,
+    },
+    {
       addressToken: '0xC33d69a337B796A9f0F7588169cd874C3987BDE9',
       chainId: 56,
     },
