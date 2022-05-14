@@ -6,7 +6,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import './App.scss';
 import Notification from 'Components/Notification';
 import StatusActivity from 'Components/StatusActivity';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -17,6 +17,7 @@ const Faucet = lazy(() => import('Views/Faucet'));
 const Collection = lazy(() => import('Views/Collection'));
 const NotFound = lazy(() => import('Views/NotFound'));
 const Dev = lazy(() => import('Views/Dev'));
+const Presale = lazy(() => import('Views/Presale'));
 
 function App() {
   useEffect(() => {
@@ -62,7 +63,8 @@ function App() {
                 <Route exact path='/collection/:chainID/:addressToken' component={Collection} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
                 <Route exact path='/faucet' component={Faucet} />
-                { process.env.REACT_APP_ENVIRONMENT === 'development' && <Route exact path='/dev' component={Dev} /> }
+                {process.env.REACT_APP_ENVIRONMENT === 'development' && <Route exact path='/dev' component={Dev} />}
+                <Route path='/presale/:chainID' component={Presale} />
                 <Route path='*' component={NotFound} />
               </Switch>
             </div>

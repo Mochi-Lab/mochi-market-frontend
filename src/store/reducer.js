@@ -39,10 +39,6 @@ const initialState = {
   //NftList
   acceptedNftsAddress: [],
 
-  //CreativeStudio
-
-  // Campaign - Airdrop
-
   // Notification
   noti: null, // notification = {type:"success/error",message="......"}
   // Status activitys
