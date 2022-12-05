@@ -43,66 +43,82 @@ export default function Home() {
 
   const listHotCollections = [
     {
+      // Mochi Super Heroes
       addressToken: '0x57a2422FD8997424ebCFd8777d2B71e4BB5D8E9C',
       chainId: 56,
     },
     {
+      // Kryptomon
       addressToken: '0xC33d69a337B796A9f0F7588169cd874C3987BDE9',
       chainId: 56,
     },
     {
+      // Kryptomon v2
       addressToken: '0x04B0f7d5CB2CE4688497f2525748FB7A9aFFa394',
       chainId: 56,
     },
     {
+      // Bluca
       addressToken: '0x891D36718bF26c7389487366BeeCCa04bb42b680',
       chainId: 56,
     },
     {
+      // 8bit NFT Space
       addressToken: '0xc2027db8c0d68bfd60ff394e47dc210fc9e1407a',
       chainId: 56,
     },
     {
+      // Rune.Game Item
       addressToken: '0xe97a1b9f5d4b849f0d78f58adb7dd91e90e0fb40',
       chainId: 56,
     },
     {
+      // Noft
       addressToken: '0x301817312598f8f48cb7d898d659ca4a4d457ad8',
       chainId: 56,
     },
     {
+      // Block Creature
       addressToken: '0x56536c54abb2d2d2512965af01c98550edb15ef9',
       chainId: 56,
     },
     {
+      // Pepemon
       addressToken: '0x0AC1bd198DB93d7EC428b698DCEf2E43DBcea7D1',
       chainId: 56,
     },
     {
+      // Faraland
       addressToken: '0xa7a9a8156c24c4b0ca910c3ba842d1f1ac7200ef',
       chainId: 56,
     },
     {
+      // FEAR
       addressToken: '0x3e629332c51046a17ec236553cb931cf0548b5e1',
       chainId: 56,
     },
     {
+      // Battle Racers
       addressToken: '0x7f8d8f602c37999385f370b11c6075d53ae94f52',
       chainId: 137,
     },
     {
+      // Cometh 1155
       addressToken: '0xc0cee8f3799be895e8f53ee97ab66d7581017b5f',
       chainId: 137,
     },
     {
+      // Cometh 721
       addressToken: '0x85bc2e8aaad5dbc347db49ea45d95486279ed918',
       chainId: 137,
     },
     {
+      // Cometh Game Items (CGI)
       addressToken: '0xbca30d6d18f0c5ac15e0be5c9b389d2df207d19e',
       chainId: 137,
     },
     {
+      // Shiden Mochi Super Heroes
       addressToken: '0xa88fab4c14b94e656d8b0162bb269189912c5e42',
       chainId: 336,
     },

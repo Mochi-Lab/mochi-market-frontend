@@ -55,7 +55,7 @@ const RightMenu = ({ onClose }) => {
 
   return (
     <Menu selectable={false} mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
-      <Menu.Item key='buyMOMA'>
+      <Menu.Item key='farmMOMA'>
         <a
           href='https://farm.mochi.market/'
           target='_blank'
