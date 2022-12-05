@@ -58,7 +58,7 @@ const BannerSearchBox = ({ inputSearch, setSkip, setNftsOnSale }) => {
 
   useEffect(() => {
     (async () => {
-      if (location.pathname !== '/' || contractList.length > 0) return;
+      if (!chainId || location.pathname !== '/' || contractList.length > 0) return;
       const collections = await getAllCollections(chainId);
       setContractList(collections);
     })();

@@ -27,6 +27,7 @@ export const getNonce = async (addressSubmit, addressToken, chainId) => {
 };
 
 export const getAllCollections = async (chainId) => {
+  if (!chainId) return [];
   let result = await axios
     .get(`${process.env.REACT_APP_SERVER_URL}/collection/${chainId}`)
     .then(function (response) {
