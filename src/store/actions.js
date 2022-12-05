@@ -768,6 +768,7 @@ export const getCollection = (addressToken, _collections) => async (dispatch, ge
     if (!!res && !!res.collection) {
       collection = res.collection;
       if (!collection.name) collection.name = 'Unnamed';
+      if (collection.logo.includes('storage.mochi.market')) collection.logo = logoCollectionDefault;
       collections[addressToken] = res.collection;
       dispatch(setInfoCollections(collections));
       return { collection, infoCollections: collections };
