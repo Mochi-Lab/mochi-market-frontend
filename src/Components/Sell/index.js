@@ -29,12 +29,12 @@ export default function Sell({ token, is1155, available, statusActions }) {
 
   useEffect(() => {
     if (!!chainId) {
-      let listPayment = getTokensPayment(chainId).filter((token, i) =>
-        (
-          Object.keys(token.collections).length > 0 &&
-          token.collections.hasOwnProperty(addressToken.toLowerCase())
-        ) ||
-        Object.keys(token.collections).length <= 0);
+      let listPayment = getTokensPayment(chainId).filter(
+        (token, i) =>
+          (Object.keys(token.collections).length > 0 &&
+            token.collections.hasOwnProperty(addressToken.toLowerCase())) ||
+          Object.keys(token.collections).length <= 0
+      );
       let tokenDefault = 0;
       for (let i = 0; i < listPayment.length; i++) {
         const token = listPayment[i];
@@ -81,13 +81,13 @@ export default function Sell({ token, is1155, available, statusActions }) {
     if (!values || !values.price || !values.amount) return;
     setIsModalVisible(false);
     setIsModalConfirmVisible(true);
-  }
+  };
 
   const onCancelConfirmModal = () => {
     setTransactionInProgress(false);
     setIsModalVisible(true);
     setIsModalConfirmVisible(false);
-  }
+  };
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -98,7 +98,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
       return Promise.reject(new Error('Enter amount'));
     }
     // float checking
-    if(!/^\d+$/.test(value)) return Promise.reject(new Error('Invalid amount'));
+    if (!/^\d+$/.test(value)) return Promise.reject(new Error('Invalid amount'));
     if (parseInt(value) > parseInt(available)) {
       return Promise.reject(new Error('Not enough amount'));
     }
@@ -116,7 +116,7 @@ export default function Sell({ token, is1155, available, statusActions }) {
       <Modal
         centered
         title={<h3 className='textmode mgb-0'>Sell order</h3>}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={[
           <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>
@@ -157,34 +157,36 @@ export default function Sell({ token, is1155, available, statusActions }) {
                 >
                   {!!getTokensPayment(chainId)
                     ? getTokensPayment(chainId).map((token, i) => {
-                      if (token.hiddens.length > 0 && token.hiddens.includes(addressToken.toLowerCase())) {
-                        return null;
-                      }
-                      if (Object.keys(token.collections).length > 0) {
-                        return token.collections.hasOwnProperty(addressToken.toLowerCase()) ? (
-                          <Option value={token.address} key={i}>
-                            <img
-                              className='icon-tokenpayment'
-                              src={token.icon}
-                              alt={token.symbol}
-                            />
-                            <span className='textmode pl-1'>{token.symbol}</span>
-                          </Option>
-                        ) : null;
-                      } else {
-                        return (
-                          <Option value={token.address} key={i}>
-                            <img
-                              className='icon-tokenpayment'
-                              src={token.icon}
-                              alt={token.symbol}
-                            />
-                            <span className='textmode pl-1'>{token.symbol}</span>
-                          </Option>
-                        );
-                      }
-
-                    })
+                        if (
+                          token.hiddens.length > 0 &&
+                          token.hiddens.includes(addressToken.toLowerCase())
+                        ) {
+                          return null;
+                        }
+                        if (Object.keys(token.collections).length > 0) {
+                          return token.collections.hasOwnProperty(addressToken.toLowerCase()) ? (
+                            <Option value={token.address} key={i}>
+                              <img
+                                className='icon-tokenpayment'
+                                src={token.icon}
+                                alt={token.symbol}
+                              />
+                              <span className='textmode pl-1'>{token.symbol}</span>
+                            </Option>
+                          ) : null;
+                        } else {
+                          return (
+                            <Option value={token.address} key={i}>
+                              <img
+                                className='icon-tokenpayment'
+                                src={token.icon}
+                                alt={token.symbol}
+                              />
+                              <span className='textmode pl-1'>{token.symbol}</span>
+                            </Option>
+                          );
+                        }
+                      })
                     : null}
                 </Select>
                 <Form.Item
@@ -225,19 +227,27 @@ export default function Sell({ token, is1155, available, statusActions }) {
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     placeholder='Amount'
                     className='textmode'
-                    onChange={(value) => { setSellAmount(available >= value ? value : null) }}
+                    onChange={(value) => {
+                      setSellAmount(available >= value ? value : null);
+                    }}
                   />
                 </Form.Item>
               </Input.Group>
             </Col>
           </Row>
         </Form>
-        <FeeDetail tokenPayment={tokenPayment} setTokenPayment={setTokenPayment} chainId={chainId} sellPrice={sellPrice} sellAmount={sellAmount} />
+        <FeeDetail
+          tokenPayment={tokenPayment}
+          setTokenPayment={setTokenPayment}
+          chainId={chainId}
+          sellPrice={sellPrice}
+          sellAmount={sellAmount}
+        />
       </Modal>
 
-      {
-        isModalConfirmVisible && (
-          <SellConfirmModal {...{
+      {isModalConfirmVisible && (
+        <SellConfirmModal
+          {...{
             itemName: token.name,
             onCancel: onCancelConfirmModal,
             chainId,
@@ -245,10 +255,10 @@ export default function Sell({ token, is1155, available, statusActions }) {
             tokenPayment,
             transactionInProgress,
             onConfirm: handleOk,
-            is1155
-          }} />
-        )
-      }
+            is1155,
+          }}
+        />
+      )}
     </>
   );
 }

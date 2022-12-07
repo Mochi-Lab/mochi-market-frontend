@@ -22,13 +22,13 @@ export default function NavBar() {
     const hideDrawerOnWindowResize = () => {
       // mobile menu should be closed on desktop display mode
       let windowInnerWidth = window.innerWidth;
-      if(windowInnerWidth > 992) onClose();
-    }
-    window.addEventListener("resize", hideDrawerOnWindowResize);
+      if (windowInnerWidth > 992) onClose();
+    };
+    window.addEventListener('resize', hideDrawerOnWindowResize);
     return () => {
-      window.removeEventListener("resize", hideDrawerOnWindowResize);
-    }
-  }, [])
+      window.removeEventListener('resize', hideDrawerOnWindowResize);
+    };
+  }, []);
 
   return (
     <nav className='menu-bar'>
@@ -53,10 +53,10 @@ export default function NavBar() {
           placement='right'
           closable={false}
           onClose={onClose}
-          visible={visible}
-          className="menu-bar-drawer"
+          open={visible}
+          className='menu-bar-drawer'
         >
-          <RightMenu onClose={onClose}/>
+          <RightMenu onClose={onClose} />
         </Drawer>
       </div>
       <img src={navbar} className='narbar-image' alt='navbar' />

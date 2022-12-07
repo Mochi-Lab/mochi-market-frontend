@@ -20,7 +20,7 @@ export default function LoadingModal({ title, visible }) {
           Pending
         </p>
       }
-      visible={isModalVisible}
+      open={isModalVisible}
       footer={<div />}
       centered
       width={300}

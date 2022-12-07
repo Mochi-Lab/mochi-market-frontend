@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Grid, Col, Menu, Dropdown } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
-import {setWeb3, setChainId, getCoingeckoPrices} from 'store/actions';
+import { setWeb3, setChainId, getCoingeckoPrices } from 'store/actions';
 import store from 'store/index';
 import { networkDefault, getWeb3List } from 'utils/getWeb3List';
 import { getInfoChain, listChainsSupport } from 'utils/getContractAddress';
@@ -29,9 +29,9 @@ export default function LeftNar() {
     }
   }, [chainId]);
 
-  useEffect( () => {
-    if(!!chainId) store.dispatch(getCoingeckoPrices());
-  }, [chainId])
+  useEffect(() => {
+    if (!!chainId) store.dispatch(getCoingeckoPrices());
+  }, [chainId]);
 
   useEffect(() => {
     const setWeb3Default = async () => {
@@ -55,8 +55,8 @@ export default function LeftNar() {
   return (
     <Col span={md ? 40 : 25}>
       <Dropdown
-        placement='bottomCenter'
-        overlay={
+        placement='bottom'
+        menu={
           <Menu className='dropdown-select-chain'>
             <Menu.ItemGroup title='Select Network' className='textmode'>
               {listChainsSupport.map((info, i) => (

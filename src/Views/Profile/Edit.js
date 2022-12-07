@@ -163,7 +163,7 @@ export default function Edit({ visible, setvisibleEitdProfile, infoUser, getInfo
           Edit your Profile
         </p>
       }
-      visible={visible}
+      open={visible}
       footer={[
         <Button
           className='btn-update-profile'

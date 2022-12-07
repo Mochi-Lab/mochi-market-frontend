@@ -28,7 +28,7 @@ export default function LogoutWallet() {
 
       <Modal
         centered
-        visible={isModalVisible}
+        open={isModalVisible}
         title={[
           <h2 key='title' className='textmode mgb-0'>
             Your wallet

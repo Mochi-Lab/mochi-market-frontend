@@ -136,7 +136,7 @@ export default function EditCollection({
           Edit Collection
         </p>
       }
-      visible={visible}
+      open={visible}
       footer={[
         <Button
           className='btn-update-profile'

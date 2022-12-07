@@ -53,9 +53,35 @@ const RightMenu = ({ onClose }) => {
     );
   };
 
-  return (
-    <Menu selectable={false} mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
-      <Menu.Item key='farmMOMA'>
+  const generateMenuItemForRouteKey2 = (routeKey) => {
+    const pathName = location.pathname;
+    const routeMap = {
+      '/browse': 'Browse',
+      '/profile': 'Profile',
+      '/faucet': 'Faucet',
+    };
+    let linkClassName = 'menu-button';
+    let menuClassName = '';
+    let walletProfilePath = `/profile/${chainId}/${walletAddress}`;
+    if (routeKey === pathName || (routeKey === '/profile' && walletProfilePath === pathName)) {
+      linkClassName += ' active';
+      menuClassName = 'ant-menu-selected ant-menu-item-selected';
+    }
+    return {
+      key: routeKey,
+      className: menuClassName,
+      label: (
+        <Link to={routeKey === '/profile' ? walletProfilePath : routeKey} onClick={onClose}>
+          <div className={linkClassName}>{routeMap[routeKey]}</div>
+        </Link>
+      ),
+    };
+  };
+
+  const menuItems = [
+    {
+      key: 'farmMOMA',
+      label: (
         <a
           href='https://farm.mochi.market/'
           target='_blank'
@@ -64,82 +90,65 @@ const RightMenu = ({ onClose }) => {
         >
           <div className='menu-button'>Farming</div>
         </a>
-      </Menu.Item>
-      {generateMenuItemForRouteKey('/browse')}
-      {chainId === 97 && (
-        <Menu.Item key='bridge'>
-          <a
-            href='https://nftbridge.mochi.market/'
-            target='_blank'
-            rel='noreferrer'
-            className='text-white'
-          >
-            <div className='menu-button'>NFT Bridge</div>
-          </a>
-        </Menu.Item>
-      )}
-      {!!walletAddress && generateMenuItemForRouteKey('/profile')}
-      {!!getContractAddress(chainId) && chainId === 97 && generateMenuItemForRouteKey('/faucet')}
-      {
-        <Menu.Item key='SubmitNFT'>
-          <a
-            href='https://forms.gle/E4dpZRG4NJWUPtjo8'
-            target='_blank'
-            rel='noreferrer'
-            className='text-white'
-          >
-            <div className='menu-button'>Submit NFTs</div>
-          </a>
-        </Menu.Item>
-      }
-      {DEX_URL_BY_CHAIN_ID[chainId] && (
-        <Menu.Item key='buyMOMA'>
-          <a
-            href={DEX_URL_BY_CHAIN_ID[chainId]}
-            target='_blank'
-            rel='noreferrer'
-            className='text-white'
-          >
-            <div className='menu-button'>Buy $MOMA</div>
-          </a>
-        </Menu.Item>
-      )}
-
-      {shortAddress && (
-        <SubMenu
-          key='sub1'
-          title={
-            <div className='balance-create background-mode center'>
-              <div style={{ paddingLeft: '2px' }}>
-                <div className='center' style={{ display: 'flex' }}>
-                  <img
-                    className='nav-avatar'
-                    src={!!infoUserLogin ? infoUserLogin.avatar : avatarDefault}
-                    alt='avatar'
-                  />
-                  <p
-                    className='textmode'
-                    style={{ margin: '0px 10px 0px 10px', color: '#4F4F4F', fontWeight: 'normal' }}
-                  >
-                    {!!getContractAddress(chainId) && getContractAddress(chainId).MOMA.length > 0
-                      ? moma.toString().slice(0, 5)
-                      : balance.toString().slice(0, 5)}
-                  </p>
-                  <p className='pink-font' style={{ margin: '0px 5px' }}>
-                    {!!getContractAddress(chainId) && getContractAddress(chainId).MOMA.length > 0
-                      ? 'MOMA'
-                      : getSymbol(chainId)['0x0000000000000000000000000000000000000000']}
-                  </p>
-                </div>
-              </div>
-            </div>
-          }
+      ),
+    },
+    generateMenuItemForRouteKey2('/browse'),
+  ];
+  if (chainId === 97)
+    menuItems.push({
+      key: 'bridge',
+      label: (
+        <a
+          href='https://nftbridge.mochi.market/'
+          target='_blank'
+          rel='noreferrer'
+          className='text-white'
         >
-          <Menu.Item
-            key='setting:4'
-            style={{ width: '240px', height: '80px', cursor: 'pointer' }}
-            disabled
-          >
+          <div className='menu-button'>NFT Bridge</div>
+        </a>
+      ),
+    });
+
+  if (!!walletAddress) menuItems.push(generateMenuItemForRouteKey2('/profile'));
+  if (!!getContractAddress(chainId) && chainId === 97)
+    menuItems.push(generateMenuItemForRouteKey('/faucet'));
+  menuItems.push({
+    key: 'SubmitNFT',
+    label: (
+      <a
+        href='https://forms.gle/E4dpZRG4NJWUPtjo8'
+        target='_blank'
+        rel='noreferrer'
+        className='text-white'
+      >
+        <div className='menu-button'>Submit NFTs</div>
+      </a>
+    ),
+  });
+
+  if (DEX_URL_BY_CHAIN_ID[chainId])
+    menuItems.push({
+      key: 'buyMOMA',
+      label: (
+        <a
+          href={DEX_URL_BY_CHAIN_ID[chainId]}
+          target='_blank'
+          rel='noreferrer'
+          className='text-white'
+        >
+          <div className='menu-button'>Buy $MOMA</div>
+        </a>
+      ),
+    });
+
+  if (shortAddress) {
+    let submenuItems = [
+      {
+        key: 'setting:4',
+        style: { width: '240px', height: '80px', cursor: 'pointer' },
+        disabled: true,
+        label: (
+          <div>
             <strong>
               <h3 className='nav-textmode'>
                 {!!infoUserLogin ? `@${infoUserLogin.username}` : 'Unnamed'}
@@ -184,32 +193,83 @@ const RightMenu = ({ onClose }) => {
                 </span>
               </div>
             </div>
-          </Menu.Item>
-          <Menu.Item key='setting:3'>
-            <Link to={`/profile/${chainId}/${walletAddress}`}>
-              <strong className='nav-textmode'>Profile</strong>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key='setting:2'>
-            <LogoutWallet />
-          </Menu.Item>
-        </SubMenu>
-      )}
-      {!shortAddress && (
-        <Menu.Item key='connect-wallet' className='connect-wallet'>
-          <div onClick={onClose}>
-            <ConnectWallet />
           </div>
-        </Menu.Item>
-      )}
-      <Menu.Item key='setting:1' disabled>
-        <div style={{ cursor: 'pointer' }} className='justifyContent'>
-          <div>
-            <ToggleDarkMode />
+        ),
+      },
+      {
+        key: 'setting:3',
+        label: (
+          <Link to={`/profile/${chainId}/${walletAddress}`}>
+            <strong className='nav-textmode'>Profile</strong>
+          </Link>
+        ),
+      },
+      {
+        key: 'setting:2',
+        label: <LogoutWallet />,
+      },
+    ];
+
+    menuItems.push({
+      key: 'sub1',
+      label: (
+        <div className='balance-create background-mode center'>
+          <div style={{ paddingLeft: '2px' }}>
+            <div className='center' style={{ display: 'flex' }}>
+              <img
+                className='nav-avatar'
+                src={!!infoUserLogin ? infoUserLogin.avatar : avatarDefault}
+                alt='avatar'
+              />
+              <p
+                className='textmode'
+                style={{ margin: '0px 10px 0px 10px', color: '#4F4F4F', fontWeight: 'normal' }}
+              >
+                {!!getContractAddress(chainId) && getContractAddress(chainId).MOMA.length > 0
+                  ? moma.toString().slice(0, 5)
+                  : balance.toString().slice(0, 5)}
+              </p>
+              <p className='pink-font' style={{ margin: '0px 5px' }}>
+                {!!getContractAddress(chainId) && getContractAddress(chainId).MOMA.length > 0
+                  ? 'MOMA'
+                  : getSymbol(chainId)['0x0000000000000000000000000000000000000000']}
+              </p>
+            </div>
           </div>
         </div>
-      </Menu.Item>
-    </Menu>
+      ),
+      children: submenuItems,
+    });
+  } else {
+    menuItems.push({
+      key: 'connect-wallet',
+      className: 'connect-wallet',
+      label: (
+        <div onClick={onClose}>
+          <ConnectWallet />
+        </div>
+      ),
+    });
+  }
+
+  menuItems.push({
+    key: 'setting:1',
+    disabled: true,
+    label: (
+      <div style={{ cursor: 'pointer' }} className='justifyContent'>
+        <div>
+          <ToggleDarkMode />
+        </div>
+      </div>
+    ),
+  });
+
+  return (
+    <Menu
+      selectable={false}
+      mode={screen.md && screen.lg ? 'horizontal' : 'inline'}
+      items={menuItems}
+    ></Menu>
   );
 };
 

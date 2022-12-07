@@ -227,7 +227,7 @@ export default function FormCreateCampaign({ disabledDate }) {
       ) : null}
 
       <Modal
-        visible={showModalCreate}
+        open={showModalCreate}
         width={600}
         title={<h3 className='textmode'>Create Airdrop</h3>}
         onOk={() => setShowModalCreate(false)}

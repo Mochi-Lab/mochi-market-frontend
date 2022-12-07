@@ -61,7 +61,7 @@ export default function Transfer({ token, is1155, available, web3, statusActions
       </div>
       <Modal
         title={<h3 className='textmode mgb-0'>Transfer</h3>}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={[
           <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>

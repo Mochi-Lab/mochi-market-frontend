@@ -64,9 +64,9 @@ export default function CreateERC1155() {
 
   return (
     <div className='center create-pt'>
-      {isLoading ? <LoadingModal title={'Upload Image'} visible={true} /> : <></>}
+      {isLoading ? <LoadingModal title={'Upload Image'} open={true} /> : <></>}
       <div className='my-collection'>
-        <LoadingModal title={'Create NFT'} visible={visible} />
+        <LoadingModal title={'Create NFT'} open={visible} />
         <Breadcrumb>
           <Breadcrumb.Item>
             <Link to='/'>Home</Link>

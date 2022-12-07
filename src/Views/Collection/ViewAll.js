@@ -1,5 +1,5 @@
 import { Col, Input, Layout, Row, Select, Modal, Button, message, Tooltip, Space } from 'antd';
-import {useCallback, useEffect, useState} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import NFTsCardBrowse from 'Components/NFTsCardBrowse';
@@ -15,8 +15,8 @@ import { updateAttributesFilter } from 'APIs/Collections/Puts';
 import createSignature from 'APIs/createSignature';
 import { verifySignature } from 'APIs/Collections/Post';
 import { showNotification } from 'store/actions';
-import {TransactionHistoryByCollection} from "../../Components/NFTTransactionHistory/TransactionHistoryByCollection";
-import {Helmet} from "react-helmet";
+import { TransactionHistoryByCollection } from '../../Components/NFTTransactionHistory/TransactionHistoryByCollection';
+import { Helmet } from 'react-helmet';
 const { Option } = Select;
 
 export default function ViewAll({
@@ -143,37 +143,49 @@ export default function ViewAll({
     if (!!viewAll) fetchExplore();
   };
 
-  const selectTokenPayment = useCallback(async (_tokenPayment) => {
-    setTokenPayment(_tokenPayment);
-    if(!(_tokenPayment==='0' && typeSort!=='')) {
-      setSkip(0);
-      setNftsOnSale(null);
-    }
-  }, [setTokenPayment, typeSort, setNftsOnSale, setSkip]);
+  const selectTokenPayment = useCallback(
+    async (_tokenPayment) => {
+      setTokenPayment(_tokenPayment);
+      if (!(_tokenPayment === '0' && typeSort !== '')) {
+        setSkip(0);
+        setNftsOnSale(null);
+      }
+    },
+    [setTokenPayment, typeSort, setNftsOnSale, setSkip]
+  );
 
-  const selectSortType = useCallback((_type) => {
-    setTypeSort(_type);
-    if(!(tokenPayment==='0' && _type!=='')) {
-      setSkip(0);
-      setNftsOnSale(null);
-    }
-  }, [setTypeSort, tokenPayment, setNftsOnSale, setSkip]);
+  const selectSortType = useCallback(
+    (_type) => {
+      setTypeSort(_type);
+      if (!(tokenPayment === '0' && _type !== '')) {
+        setSkip(0);
+        setNftsOnSale(null);
+      }
+    },
+    [setTypeSort, tokenPayment, setNftsOnSale, setSkip]
+  );
 
-  const searchNFTsCollection = useCallback( async (event) => {
-    if (event.key !== 'Enter') {
-      const text = event.target.value;
-      setTextSearchInputValue(text);
-      setStrSearch(text);
-      return
-    }
-    filterChange()
-  }, [setStrSearch, filterChange]);
+  const searchNFTsCollection = useCallback(
+    async (event) => {
+      if (event.key !== 'Enter') {
+        const text = event.target.value;
+        setTextSearchInputValue(text);
+        setStrSearch(text);
+        return;
+      }
+      filterChange();
+    },
+    [setStrSearch, filterChange]
+  );
 
   return (
     <div className={`${!!viewAll ? 'display-block-view-all' : 'display-none-view-all'}`}>
       <Helmet>
         <title>{infoCollection.name} - Mochi Market</title>
-        <meta name="description" content={`${infoCollection.name} collection on Mochi Market - Multi-Chain NFT Market`} />
+        <meta
+          name='description'
+          content={`${infoCollection.name} collection on Mochi Market - Multi-Chain NFT Market`}
+        />
       </Helmet>
       <Layout style={{ minHeight: '100%' }} className='view-all-collection background-mode'>
         <div className='sort-results-collection'>
@@ -200,9 +212,9 @@ export default function ViewAll({
           </div>
           <div className='right-sort-results'>
             <Tooltip
-                visible={tokenPayment==='0' && typeSort!==''}
-                placement='top'
-                title={`To sort by price select token currency below ▼`}
+              open={tokenPayment === '0' && typeSort !== ''}
+              placement='top'
+              title={`To sort by price select token currency below ▼`}
             >
               <Select
                 size='large'
@@ -215,48 +227,48 @@ export default function ViewAll({
                 </Option>
                 {!!getTokensPayment(chainId)
                   ? getTokensPayment(chainId).map((token, i) => {
-                    return (
-                      <Option value={token.address} key={i} className='option-tokenpayment'>
-                        <img className='icon-tokenpayment' src={token.icon} alt={token.symbol} />
-                        <span className='symbol-tokenpayment'>{token.symbol}</span>
-                      </Option>
-                    );
-                  })
+                      return (
+                        <Option value={token.address} key={i} className='option-tokenpayment'>
+                          <img className='icon-tokenpayment' src={token.icon} alt={token.symbol} />
+                          <span className='symbol-tokenpayment'>{token.symbol}</span>
+                        </Option>
+                      );
+                    })
                   : null}
               </Select>
             </Tooltip>
 
             <Select
-                value={typeSort}
-                className='textmode select-sort'
-                size='large'
-                onChange={(value) => selectSortType(value)}
+              value={typeSort}
+              className='textmode select-sort'
+              size='large'
+              onChange={(value) => selectSortType(value)}
             >
               <Option value=''>Recently listed</Option>
               <Option value='1'>Price asc</Option>
               <Option value='-1'>Price desc</Option>
             </Select>
 
-            <Space size="small">
-            <Button
-              className='btn-refresh'
-              key='update'
-              type='primary'
-              size='large'
-              onClick={filterChange}
-              loading={refreshingNFTs}
-            >
-              Refresh
-            </Button>
+            <Space size='small'>
+              <Button
+                className='btn-refresh'
+                key='update'
+                type='primary'
+                size='large'
+                onClick={filterChange}
+                loading={refreshingNFTs}
+              >
+                Refresh
+              </Button>
 
-            {/*<Button*/}
-            {/*    className='btn-history'*/}
-            {/*    size='large'*/}
-            {/*    key='update'*/}
-            {/*    onClick={() => setShowHistoryModal(true)}*/}
-            {/*>*/}
-            {/*  <HistoryOutlined /> Recently Sold*/}
-            {/*</Button>*/}
+              {/*<Button*/}
+              {/*    className='btn-history'*/}
+              {/*    size='large'*/}
+              {/*    key='update'*/}
+              {/*    onClick={() => setShowHistoryModal(true)}*/}
+              {/*>*/}
+              {/*  <HistoryOutlined /> Recently Sold*/}
+              {/*</Button>*/}
             </Space>
 
             <span className='textmode link-view-less' onClick={() => setViewAll(false)}>
@@ -277,87 +289,86 @@ export default function ViewAll({
             />
           </div>
         </div>
-          <>
-            {!!showFilter && checkInfoExist && infoCollection.attributesFilter.length > 0 ? (
-              <Row>
-                <Col xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 5 }}>
-                  <FilterCollection
-                    setShowFilter={setShowFilter}
-                    setObjectFilter={setObjectFilter}
-                    objectFilter={objectFilter}
-                    activeKeysCollapse={activeKeysCollapse}
-                    setActiveKeysCollapse={setActiveKeysCollapse}
-                    attributesFilter={checkInfoExist ? infoCollection.attributesFilter : []}
-                    getInfoCollection={getInfoCollection}
-                    setModalEditFilter={setModalEditFilter}
-                    filterChange={filterChange}
-                  />
-                </Col>
-                <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
-                  {loadingNFTs || loadingNFTs === null ? (
-                    <div className='center' style={{ width: '100%', height: '100%' }}>
-                      <IconLoading />
-                    </div>
-                  ) : (
-                    <NFTsCardBrowse
-                      tokens={nftsOnSale}
-                      tokenPayment={tokenPayment}
-                      typeSort={typeSort}
-                      strSearchInCollection={strSearch}
-                      fetchExplore={checkLoadMore}
-                      isEndOfOrderList={isEndOfOrderList}
-                      loadingScroll={loadingScroll}
-                      collectionName={infoCollection.name}
-                    />
-                  )}
-                </Col>
-              </Row>
-            ) : (
-              <>
+        <>
+          {!!showFilter && checkInfoExist && infoCollection.attributesFilter.length > 0 ? (
+            <Row>
+              <Col xs={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 6 }} xxl={{ span: 5 }}>
+                <FilterCollection
+                  setShowFilter={setShowFilter}
+                  setObjectFilter={setObjectFilter}
+                  objectFilter={objectFilter}
+                  activeKeysCollapse={activeKeysCollapse}
+                  setActiveKeysCollapse={setActiveKeysCollapse}
+                  attributesFilter={checkInfoExist ? infoCollection.attributesFilter : []}
+                  getInfoCollection={getInfoCollection}
+                  setModalEditFilter={setModalEditFilter}
+                  filterChange={filterChange}
+                />
+              </Col>
+              <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 18 }} xxl={{ span: 19 }}>
                 {loadingNFTs || loadingNFTs === null ? (
-                    <div className='center' style={{ width: '100%', height: '100%' }}>
-                      <IconLoading />
-                    </div>
+                  <div className='center' style={{ width: '100%', height: '100%' }}>
+                    <IconLoading />
+                  </div>
                 ) : (
-                    <NFTsCardBrowse
-                        tokens={nftsOnSale}
-                        tokenPayment={tokenPayment}
-                        typeSort={typeSort}
-                        strSearchInCollection={strSearch}
-                        fetchExplore={checkLoadMore}
-                        isEndOfOrderList={isEndOfOrderList}
-                        loadingScroll={loadingScroll}
-                        collectionName={infoCollection.name}
-                    />
+                  <NFTsCardBrowse
+                    tokens={nftsOnSale}
+                    tokenPayment={tokenPayment}
+                    typeSort={typeSort}
+                    strSearchInCollection={strSearch}
+                    fetchExplore={checkLoadMore}
+                    isEndOfOrderList={isEndOfOrderList}
+                    loadingScroll={loadingScroll}
+                    collectionName={infoCollection.name}
+                  />
                 )}
-              </>
-            )}
-          </>
+              </Col>
+            </Row>
+          ) : (
+            <>
+              {loadingNFTs || loadingNFTs === null ? (
+                <div className='center' style={{ width: '100%', height: '100%' }}>
+                  <IconLoading />
+                </div>
+              ) : (
+                <NFTsCardBrowse
+                  tokens={nftsOnSale}
+                  tokenPayment={tokenPayment}
+                  typeSort={typeSort}
+                  strSearchInCollection={strSearch}
+                  fetchExplore={checkLoadMore}
+                  isEndOfOrderList={isEndOfOrderList}
+                  loadingScroll={loadingScroll}
+                  collectionName={infoCollection.name}
+                />
+              )}
+            </>
+          )}
+        </>
       </Layout>
 
-      <Modal title={`Recently sold items in ${infoCollection.name}`}
-             footer={null}
-             className={"textmode"}
-             width={"90%"}
-             visible={showHistoryModal}
-             destroyOnClose={true}
-             closable={true}
-             onCancel={() => setShowHistoryModal(false)}
+      <Modal
+        title={`Recently sold items in ${infoCollection.name}`}
+        footer={null}
+        className={'textmode'}
+        width={'90%'}
+        open={showHistoryModal}
+        destroyOnClose={true}
+        closable={true}
+        onCancel={() => setShowHistoryModal(false)}
       >
         <TransactionHistoryByCollection chainId={chainId} collectionAddress={addressToken} />
-        <div style={{ textAlign: "center", margin: "1rem"}}>
-
+        <div style={{ textAlign: 'center', margin: '1rem' }}>
           <Button
-              className='btn-refresh'
-              key='update'
-              type='primary'
-              size='large'
-              onClick={() => setShowHistoryModal(false)}
+            className='btn-refresh'
+            key='update'
+            type='primary'
+            size='large'
+            onClick={() => setShowHistoryModal(false)}
           >
             <CloseCircleOutlined />
             Close
           </Button>
-
         </div>
       </Modal>
 
@@ -367,7 +378,7 @@ export default function ViewAll({
             Edit Filter
           </p>
         }
-        visible={modalEditFilter}
+        open={modalEditFilter}
         footer={[
           <Button
             className='btn-update-profile'

@@ -56,7 +56,7 @@ export default function UpdatePrice({ orderDetail, token, is1155, statusActions 
 
       <Modal
         title={<h3 className='textmode mgb-0'>Update Price</h3>}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={[
           <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>

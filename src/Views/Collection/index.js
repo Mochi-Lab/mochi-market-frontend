@@ -180,10 +180,17 @@ export default function Collection() {
   );
 
   const newMintNFT = useCallback(async () => {
-    if(!chainID || !addressToken) return;
+    if (!chainID || !addressToken) return;
     if (!!chainID && nftList) {
       let is1155 = await nftList.methods.isERC1155(addressToken).call();
-      let result = await getMochiGraphListNFTs(chainID, addressToken, 0, 20, is1155 ? 'erc1155' : 'erc721', 'new');
+      let result = await getMochiGraphListNFTs(
+        chainID,
+        addressToken,
+        0,
+        20,
+        is1155 ? 'erc1155' : 'erc721',
+        'new'
+      );
       setListNewNFT(result);
     }
   }, [addressToken, chainID, nftList]);
@@ -226,7 +233,7 @@ export default function Collection() {
       ) : (
         <div className='collection-detail'>
           <EditCollection
-            visible={visibleEitdCollection}
+            open={visibleEitdCollection}
             setvisibleEitdCollection={setvisibleEitdCollection}
             infoCollection={infoCollection}
             getInfoCollection={getInfoCollection}

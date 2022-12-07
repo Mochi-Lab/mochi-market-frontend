@@ -127,7 +127,7 @@ export default function ERC721Collections({ collectionId, setCollectionId, setIs
 
   return (
     <>
-      <LoadingModal title={'Deploying Collection'} visible={isDeploying} />
+      <LoadingModal title={'Deploying Collection'} open={isDeploying} />
       <div className='choose'>
         {!!userCollections ? (
           userCollections.map((userCollection) =>
@@ -174,7 +174,7 @@ export default function ERC721Collections({ collectionId, setCollectionId, setIs
             Collection
           </p>
         }
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={
           walletAddress

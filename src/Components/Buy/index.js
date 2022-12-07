@@ -81,7 +81,7 @@ export default function Buy({
       {!!walletAddress ? (
         <div className='gSzfBw'>
           <ModalBuy1155
-            visible={Checkout1155}
+            open={Checkout1155}
             orderDetail={orderDetail}
             buy={buy}
             insufficient={insufficient}

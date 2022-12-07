@@ -83,7 +83,7 @@ export default function ModalBuy1155({ visible, orderDetail, buy, setCheckout115
           Checkout
         </p>
       }
-      visible={visible}
+      open={visible}
       footer={[
         <Button key='cancel' shape='round' size='large' onClick={() => handleCancel()}>
           Cancel

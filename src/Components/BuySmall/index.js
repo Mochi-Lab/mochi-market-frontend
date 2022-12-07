@@ -75,7 +75,7 @@ export default function BuySmall({ orderDetail, is1155, id, addressToken, getOwn
       {!!walletAddress ? (
         <>
           <ModalBuy1155
-            visible={Checkout1155}
+            open={Checkout1155}
             orderDetail={orderDetail}
             buy={buy}
             insufficient={insufficient}

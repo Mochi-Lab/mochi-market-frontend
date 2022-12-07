@@ -132,7 +132,7 @@ export default function ModalDetailCampaign({
 
   return (
     <Modal
-      visible={showModalDetail}
+      open={showModalDetail}
       width={700}
       title={[
         <div className='title-airdrop-avatar textmode' key='title-airdrop-avatar'>

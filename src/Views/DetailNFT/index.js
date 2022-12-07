@@ -25,11 +25,9 @@ import { TransactionHistoryByNft } from 'Components/NFTTransactionHistory/Transa
 import './index.scss';
 import { selectChain } from 'Connections/web3Modal';
 import { isArray } from 'lodash';
-import RenderExtraMetadata from "./DetailsNftOrder/helperExtraMetadata";
-import {Helmet} from "react-helmet";
+import RenderExtraMetadata from './DetailsNftOrder/helperExtraMetadata';
+import { Helmet } from 'react-helmet';
 import ReactPlayer from 'react-player';
-
-const { TabPane } = Tabs;
 
 const { useBreakpoint } = Grid;
 
@@ -159,29 +157,157 @@ export default function DetailNFT() {
     getInfoOwners();
   }, [getInfoOwners]);
 
+  const panelItems = [
+    {
+      key: '1',
+      label: 'Owners',
+      children: (
+        <Spin spinning={!owners} indicator={<LoadingOutlined />} style={{ minHeight: '50px' }}>
+          {!!owners &&
+            owners.map((owner, index) => (
+              <div key={index} className='avatar-link-available'>
+                <div className='avatar-owner'>
+                  <img
+                    src={
+                      !!infoOwners[owner.owner.toLowerCase()]
+                        ? infoOwners[owner.owner.toLowerCase()].avatar
+                        : avatarDefault
+                    }
+                    alt='avatar-default'
+                  />
+                </div>
+                <div className='link-and-available'>
+                  <Link to={`/profile/${chainId}/${owner.owner.toLowerCase()}`} className='owner'>
+                    {!!infoOwners[owner.owner.toLowerCase()] &&
+                    infoOwners[owner.owner.toLowerCase()].username !== 'Unnamed' ? (
+                      <strong>@{infoOwners[owner.owner.toLowerCase()].username}</strong>
+                    ) : (
+                      <strong>
+                        {lg
+                          ? owner.owner
+                          : `${owner.owner.slice(0, 8)}...${owner.owner.slice(
+                              owner.owner.length - 6,
+                              owner.owner.length
+                            )}`}
+                      </strong>
+                    )}
+                  </Link>
+                  <div className='textmode'>
+                    {owner.amount} <span className='text-blur'> no sale of</span> {totalSupply}{' '}
+                    <span className='text-blur '>Available</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+        </Spin>
+      ),
+    },
+    {
+      key: '2',
+      label: 'On Sale',
+      children: (
+        <Spin
+          spinning={!ownersOnSale}
+          indicator={<LoadingOutlined />}
+          style={{ minHeight: '50px' }}
+        >
+          {!!ownersOnSale &&
+            ownersOnSale.map((owner, index) => (
+              <div key={index} className='avatar-link-available'>
+                <div className='avatar-owner'>
+                  <img
+                    src={
+                      !!infoOwners[owner.seller.toLowerCase()]
+                        ? infoOwners[owner.seller.toLowerCase()].avatar
+                        : avatarDefault
+                    }
+                    alt='avatar-default'
+                  />
+                </div>
+                <div className='link-and-available'>
+                  <Link to={`/profile/${chainId}/${owner.seller}`} className='owner'>
+                    {!!infoOwners[owner.seller.toLowerCase()] &&
+                    infoOwners[owner.seller.toLowerCase()].username !== 'Unnamed' ? (
+                      <strong>@{infoOwners[owner.seller.toLowerCase()].username}</strong>
+                    ) : (
+                      <strong>
+                        {lg
+                          ? owner.seller
+                          : `${owner.seller.slice(0, 8)}...${owner.seller.slice(
+                              owner.seller.length - 6,
+                              owner.seller.length
+                            )}`}
+                      </strong>
+                    )}
+                  </Link>
+                  <div className='textmode'>
+                    {!!is1155 ? parseInt(owner.amount) - parseInt(owner.soldAmount) : owner.amount}
+                    <span className='text-blur'>/</span>
+                    {totalSupply} <span className='text-blur '>price</span> {owner.price}{' '}
+                    {getSymbol(chainId)[owner.tokenPayment]}{' '}
+                    <span className='text-blur '>each</span> {''}
+                    {!walletAddress ||
+                    (!!walletAddress &&
+                      owner.seller.toLowerCase() !== walletAddress.toLowerCase()) ? (
+                      <>
+                        <BuySmall
+                          orderDetail={owner}
+                          is1155={is1155}
+                          id={id}
+                          addressToken={addressToken}
+                          getOwners1155={getOwners1155}
+                        >
+                          buy
+                        </BuySmall>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </Spin>
+      ),
+    },
+    {
+      key: '3',
+      label: 'History',
+      children: (
+        <TransactionHistoryByNft chainId={chainID} collectionAddress={addressToken} tokenId={id} />
+      ),
+    },
+  ];
+
   return (
     <div className='detail-page center'>
       <div className='body-page'>
         {!!token && !loadingDetailNft ? (
           <div className='detail-main'>
             <Helmet>
-              <title>{token.name} - {token.collectionName} - Mochi Market</title>
-              <meta name="description" content={`${token.name} from ${token.collectionName} collection in NFT on Mochi Market - Multi-Chain NFT Market`} />
+              <title>
+                {token.name} - {token.collectionName} - Mochi Market
+              </title>
+              <meta
+                name='description'
+                content={`${token.name} from ${token.collectionName} collection in NFT on Mochi Market - Multi-Chain NFT Market`}
+              />
             </Helmet>
             {lg ? (
               <div className='info-wrap-left'>
                 <div className='expand-img-nft'>
                   <div className='image-label center'>
-                    {
-                      token.video ?
-                        <ReactPlayer url={token.video}
-                                   loop={true}
-                                   muted={true}
-                                   playing={true}
-                                   controls={true}
-                        />
-                      : (token.image ? <Image alt='img-nft' src={token.image} /> : <UpdateNFTDetail token={token} setToken={setToken}/>)
-                    }
+                    {token.video ? (
+                      <ReactPlayer
+                        url={token.video}
+                        loop={true}
+                        muted={true}
+                        playing={true}
+                        controls={true}
+                      />
+                    ) : token.image ? (
+                      <Image alt='img-nft' src={token.image} />
+                    ) : (
+                      <UpdateNFTDetail token={token} setToken={setToken} />
+                    )}
                   </div>
                 </div>
 
@@ -194,15 +320,15 @@ export default function DetailNFT() {
                       <div className='list-properties'>
                         <div className='items-properties'>
                           <List
-                              grid={{
-                                gutter: 16,
-                                xs: 2,
-                                sm: 2,
-                                md: 3,
-                                lg: 3,
-                                xl: 3,
-                                xxl: 3,
-                              }}
+                            grid={{
+                              gutter: 16,
+                              xs: 2,
+                              sm: 2,
+                              md: 3,
+                              lg: 3,
+                              xl: 3,
+                              xxl: 3,
+                            }}
                             dataSource={token.attributes}
                             renderItem={(attr, index) => (
                               <List.Item key={index}>
@@ -238,7 +364,9 @@ export default function DetailNFT() {
                   </div>
                 ) : null}
 
-                {token.extraMetadata && <RenderExtraMetadata addressToken={addressToken} metadata={token.extraMetadata} />}
+                {token.extraMetadata && (
+                  <RenderExtraMetadata addressToken={addressToken} metadata={token.extraMetadata} />
+                )}
               </div>
             ) : null}
 
@@ -254,21 +382,27 @@ export default function DetailNFT() {
                 </div>
                 <div className='detail-title'>
                   <h1 className='text-title textmode'>{token.name}</h1>
-                  <Share token={token}  additionalButtons={<UpdateNFTDetail token={token} setToken={setToken}/>}/>
+                  <Share
+                    token={token}
+                    additionalButtons={<UpdateNFTDetail token={token} setToken={setToken} />}
+                  />
                 </div>
                 {!lg ? (
                   <div className='expand-img-nft-mobile'>
                     <div className='image-label center'>
-                      {
-                       token.video ?
-                            <ReactPlayer url={token.video}
-                                         loop={true}
-                                         muted={true}
-                                         playing={true}
-                                         controls={true}
-                            />
-                            : (token.image ? <Image alt='img-nft' src={token.image} /> : <UpdateNFTDetail token={token} setToken={setToken}/>)
-                      }
+                      {token.video ? (
+                        <ReactPlayer
+                          url={token.video}
+                          loop={true}
+                          muted={true}
+                          playing={true}
+                          controls={true}
+                        />
+                      ) : token.image ? (
+                        <Image alt='img-nft' src={token.image} />
+                      ) : (
+                        <UpdateNFTDetail token={token} setToken={setToken} />
+                      )}
                     </div>
                   </div>
                 ) : null}
@@ -447,7 +581,12 @@ export default function DetailNFT() {
                       </div>
                     </div>
                   </div>
-                  {token.extraMetadata && <RenderExtraMetadata addressToken={addressToken} metadata={token.extraMetadata} />}
+                  {token.extraMetadata && (
+                    <RenderExtraMetadata
+                      addressToken={addressToken}
+                      metadata={token.extraMetadata}
+                    />
+                  )}
                 </div>
               ) : null}
               <div className='list-owners-and-orders'>
@@ -456,126 +595,8 @@ export default function DetailNFT() {
                     defaultActiveKey={
                       Number.isInteger(parseInt(sellID)) && sellID !== 'null' ? '2' : '1'
                     }
-                  >
-                    <TabPane tab='Owners' key='1'>
-                      <Spin
-                        spinning={!owners}
-                        indicator={<LoadingOutlined />}
-                        style={{ minHeight: '50px' }}
-                      >
-                        {!!owners &&
-                          owners.map((owner, index) => (
-                            <div key={index} className='avatar-link-available'>
-                              <div className='avatar-owner'>
-                                <img
-                                  src={
-                                    !!infoOwners[owner.owner.toLowerCase()]
-                                      ? infoOwners[owner.owner.toLowerCase()].avatar
-                                      : avatarDefault
-                                  }
-                                  alt='avatar-default'
-                                />
-                              </div>
-                              <div className='link-and-available'>
-                                <Link
-                                  to={`/profile/${chainId}/${owner.owner.toLowerCase()}`}
-                                  className='owner'
-                                >
-                                  {!!infoOwners[owner.owner.toLowerCase()] &&
-                                  infoOwners[owner.owner.toLowerCase()].username !== 'Unnamed' ? (
-                                    <strong>
-                                      @{infoOwners[owner.owner.toLowerCase()].username}
-                                    </strong>
-                                  ) : (
-                                    <strong>
-                                      {lg
-                                        ? owner.owner
-                                        : `${owner.owner.slice(0, 8)}...${owner.owner.slice(
-                                            owner.owner.length - 6,
-                                            owner.owner.length
-                                          )}`}
-                                    </strong>
-                                  )}
-                                </Link>
-                                <div className='textmode'>
-                                  {owner.amount} <span className='text-blur'> no sale of</span>{' '}
-                                  {totalSupply} <span className='text-blur '>Available</span>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                      </Spin>
-                    </TabPane>
-                    <TabPane tab='On Sale' key='2'>
-                      <Spin
-                        spinning={!ownersOnSale}
-                        indicator={<LoadingOutlined />}
-                        style={{ minHeight: '50px' }}
-                      >
-                        {!!ownersOnSale &&
-                          ownersOnSale.map((owner, index) => (
-                            <div key={index} className='avatar-link-available'>
-                              <div className='avatar-owner'>
-                                <img
-                                  src={
-                                    !!infoOwners[owner.seller.toLowerCase()]
-                                      ? infoOwners[owner.seller.toLowerCase()].avatar
-                                      : avatarDefault
-                                  }
-                                  alt='avatar-default'
-                                />
-                              </div>
-                              <div className='link-and-available'>
-                                <Link to={`/profile/${chainId}/${owner.seller}`} className='owner'>
-                                  {!!infoOwners[owner.seller.toLowerCase()] &&
-                                  infoOwners[owner.seller.toLowerCase()].username !== 'Unnamed' ? (
-                                    <strong>
-                                      @{infoOwners[owner.seller.toLowerCase()].username}
-                                    </strong>
-                                  ) : (
-                                    <strong>
-                                      {lg
-                                        ? owner.seller
-                                        : `${owner.seller.slice(0, 8)}...${owner.seller.slice(
-                                            owner.seller.length - 6,
-                                            owner.seller.length
-                                          )}`}
-                                    </strong>
-                                  )}
-                                </Link>
-                                <div className='textmode'>
-                                  {!!is1155
-                                    ? parseInt(owner.amount) - parseInt(owner.soldAmount)
-                                    : owner.amount}
-                                  <span className='text-blur'>/</span>
-                                  {totalSupply} <span className='text-blur '>price</span>{' '}
-                                  {owner.price} {getSymbol(chainId)[owner.tokenPayment]}{' '}
-                                  <span className='text-blur '>each</span> {''}
-                                  {!walletAddress ||
-                                  (!!walletAddress &&
-                                    owner.seller.toLowerCase() !== walletAddress.toLowerCase()) ? (
-                                    <>
-                                      <BuySmall
-                                        orderDetail={owner}
-                                        is1155={is1155}
-                                        id={id}
-                                        addressToken={addressToken}
-                                        getOwners1155={getOwners1155}
-                                      >
-                                        buy
-                                      </BuySmall>
-                                    </>
-                                  ) : null}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                      </Spin>
-                    </TabPane>
-                    <TabPane tab='History' key='3'>
-                      <TransactionHistoryByNft chainId={chainID} collectionAddress={addressToken} tokenId={id}/>
-                    </TabPane>
-                  </Tabs>
+                    items={panelItems}
+                  ></Tabs>
                 </div>
               </div>
             </div>

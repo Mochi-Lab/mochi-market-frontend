@@ -124,7 +124,7 @@ export default function ERC1155Collections({ collectionId, setCollectionId, setI
 
   return (
     <>
-      <LoadingModal title={'Deploying Collection'} visible={isDeploying} />
+      <LoadingModal title={'Deploying Collection'} open={isDeploying} />
       <div className='choose'>
         <div className={'box input-mode-bc'} onClick={showModal}>
           <strong className='textmode'>Create</strong>
@@ -172,7 +172,7 @@ export default function ERC1155Collections({ collectionId, setCollectionId, setI
             Collection
           </p>
         }
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={
           walletAddress
