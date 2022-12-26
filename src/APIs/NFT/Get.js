@@ -5,16 +5,6 @@ export const getDetailNFT = async (chainId, addressToken, tokenId) => {
     .get(`${process.env.REACT_APP_SERVER_URL}/nft/${chainId}/${addressToken}/${tokenId}`)
     .then(function (response) {
       let nft = response.data;
-      if (nft.collectionAddress === '0x57a2422fd8997424ebcfd8777d2b71e4bb5d8e9c')
-        nft.image =
-          process.env.REACT_APP_SERVER_URL +
-          '/collections/' +
-          nft.chainId +
-          '/' +
-          nft.collectionAddress +
-          '/' +
-          nft.tokenId +
-          '.png';
       return nft;
     })
     .catch(function (error) {
