@@ -107,7 +107,7 @@ function NFTsCardProfile({ token, onSale }) {
                           ? moment(
                               attr.value.toString().length < 13 ? attr.value * 1000 : attr.value
                             ).format('DD-MM-YYYY')
-                          : typeof attr.value === 'object'
+                          : typeof attr.value === 'object' && !!attr.value
                           ? objToString(attr.value)
                           : attr.value}
                       </div>
