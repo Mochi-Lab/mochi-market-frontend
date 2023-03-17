@@ -52,29 +52,17 @@ export default function LeftNar() {
   };
 
   const { md } = useBreakpoint();
+  const items = listChainsSupport.map((info, i) => ({
+    label: info.name,
+    key: i,
+    className: 'textMode',
+    onClick: () => switchNetworks(info.chainId),
+  }));
+
   return (
     <Col span={md ? 40 : 25}>
-      <Dropdown
-        placement='bottom'
-        menu={
-          <Menu className='dropdown-select-chain'>
-            <Menu.ItemGroup title='Select Network' className='textmode'>
-              {listChainsSupport.map((info, i) => (
-                <Menu.Item
-                  key={i}
-                  className='textmode'
-                  onClick={() => switchNetworks(info.chainId)}
-                >
-                  <img className='network_icon' src={info.icon} alt={`${info.name} Icon`}></img>
-                  {info.name}
-                </Menu.Item>
-              ))}
-            </Menu.ItemGroup>
-          </Menu>
-        }
-        trigger={['click']}
-      >
-        <div className='dropdown_network_header'>
+      <Dropdown placement='bottom' menu={{ items }} trigger={['click']}>
+        <div className='dropdown_network_header' onClick={(e) => e.preventDefault()}>
           <div className='flex flex-max'>
             <img
               className='sidebar-menu-network-icon'
@@ -88,8 +76,6 @@ export default function LeftNar() {
           </div>
         </div>
       </Dropdown>
-
-      <></>
     </Col>
   );
 }
