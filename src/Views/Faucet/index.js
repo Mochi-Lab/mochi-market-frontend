@@ -47,7 +47,7 @@ export default function Faucet() {
             disabled={!statusFaucet}
             loading={loadingFaucet}
           >
-            Send me 30 MOMA <ArrowRightOutlined />
+            Send me 3000 MOMA <ArrowRightOutlined />
           </Button>
         </>
       ) : (

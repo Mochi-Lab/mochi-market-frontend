@@ -30,29 +30,6 @@ const RightMenu = ({ onClose }) => {
     }, 3000);
   };
 
-  const generateMenuItemForRouteKey = (routeKey) => {
-    const pathName = location.pathname;
-    const routeMap = {
-      '/browse': 'Browse',
-      '/profile': 'Profile',
-      '/faucet': 'Faucet',
-    };
-    let linkClassName = 'menu-button';
-    let menuClassName = '';
-    let walletProfilePath = `/profile/${chainId}/${walletAddress}`;
-    if (routeKey === pathName || (routeKey === '/profile' && walletProfilePath === pathName)) {
-      linkClassName += ' active';
-      menuClassName = 'ant-menu-selected ant-menu-item-selected';
-    }
-    return (
-      <Menu.Item key={routeKey} className={menuClassName}>
-        <Link to={routeKey === '/profile' ? walletProfilePath : routeKey} onClick={onClose}>
-          <div className={linkClassName}>{routeMap[routeKey]}</div>
-        </Link>
-      </Menu.Item>
-    );
-  };
-
   const generateMenuItemForRouteKey2 = (routeKey) => {
     const pathName = location.pathname;
     const routeMap = {
@@ -94,24 +71,10 @@ const RightMenu = ({ onClose }) => {
     },
     generateMenuItemForRouteKey2('/browse'),
   ];
-  if (chainId === 97)
-    menuItems.push({
-      key: 'bridge',
-      label: (
-        <a
-          href='https://nftbridge.mochi.market/'
-          target='_blank'
-          rel='noreferrer'
-          className='text-white'
-        >
-          <div className='menu-button'>NFT Bridge</div>
-        </a>
-      ),
-    });
 
   if (!!walletAddress) menuItems.push(generateMenuItemForRouteKey2('/profile'));
   if (!!getContractAddress(chainId) && chainId === 97)
-    menuItems.push(generateMenuItemForRouteKey('/faucet'));
+    menuItems.push(generateMenuItemForRouteKey2('/faucet'));
   menuItems.push({
     key: 'SubmitNFT',
     label: (
