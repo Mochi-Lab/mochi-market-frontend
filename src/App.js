@@ -6,7 +6,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import './App.scss';
 import Notification from 'Components/Notification';
 import StatusActivity from 'Components/StatusActivity';
-import {Helmet} from "react-helmet";
+import { Helmet } from 'react-helmet';
 
 const Home = lazy(() => import('Views/Home'));
 const Profile = lazy(() => import('Views/Profile'));
@@ -31,10 +31,10 @@ function App() {
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
       <Helmet>
-        <meta charSet="utf-8" />
+        <meta charSet='utf-8' />
         <title>Mochi Market</title>
-        <link rel="canonical" href="https://app.mochi.market/" />
-        <meta name="description" content="Mochi Market - Multi-Chain NFT Market" />
+        <link rel='canonical' href='https://app.mochi.market/' />
+        <meta name='description' content='Mochi Market - Multi-Chain NFT Market' />
       </Helmet>
       <BrowserRouter>
         <div className='page content'>
@@ -61,8 +61,10 @@ function App() {
                 />
                 <Route exact path='/collection/:chainID/:addressToken' component={Collection} />
                 {/* <Route exact path='/airdrops' component={Airdrops} /> */}
-                <Route exact path='/faucet' component={Faucet} />
-                { process.env.REACT_APP_ENVIRONMENT === 'development' && <Route exact path='/dev' component={Dev} /> }
+                {/* <Route exact path='/faucet' component={Faucet} /> */}
+                {/* {process.env.REACT_APP_ENVIRONMENT === 'development' && (
+                  <Route exact path='/dev' component={Dev} />
+                )} */}
                 <Route path='*' component={NotFound} />
               </Switch>
             </div>

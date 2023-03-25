@@ -282,7 +282,7 @@ export default function DetailNFT() {
       <div className='body-page'>
         {!!token && !loadingDetailNft ? (
           <div className='detail-main'>
-            <Helmet>
+            {/* <Helmet>
               <title>
                 {token.name} - {token.collectionName} - Mochi Market
               </title>
@@ -290,7 +290,7 @@ export default function DetailNFT() {
                 name='description'
                 content={`${token.name} from ${token.collectionName} collection in NFT on Mochi Market - Multi-Chain NFT Market`}
               />
-            </Helmet>
+            </Helmet> */}
             {lg ? (
               <div className='info-wrap-left'>
                 <div className='expand-img-nft'>
