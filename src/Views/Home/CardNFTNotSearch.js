@@ -47,7 +47,7 @@ export default function CardNFTHome({ token }) {
           <div
             className='blurred-background'
             style={{
-              backgroundImage: `url(${token.thumb !== 'none' ? token.thumb : detailNFT.image})`,
+              backgroundImage: `url(${token.thumb !== 'none' && !token.thumb.includes('covalent') ? token.thumb : detailNFT.image})`,
             }}
           />
           <div className='NFTResource-Wrapper'>
@@ -56,7 +56,7 @@ export default function CardNFTHome({ token }) {
             >
               <img
                 alt={`img-nft-${token.tokenId}`}
-                src={token.thumb !== 'none' ? token.thumb : detailNFT.image}
+                src={token.thumb !== 'none' && !token.thumb.includes('covalent') ? token.thumb : detailNFT.image}
                 className='display-resource-nft'
                 onError={(e) => {
                   e.target.onerror = null;

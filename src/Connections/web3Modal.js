@@ -20,7 +20,7 @@ const rpcSupport = {
   137: 'https://rpc-mainnet.maticvigil.com/',
   1666600000: 'https://api.harmony.one',
   1285: 'https://rpc.moonriver.moonbeam.network',
-  336: 'https://rpc.shiden.astar.network:8545',
+  336: 'https://shiden.public.blastapi.io',
 };
 
 const providerOptions = {
@@ -111,8 +111,8 @@ const paramsSwitchNetwork = {
         symbol: 'SDN',
         decimals: 18,
       },
-      rpcUrls: ['https://rpc.shiden.astar.network:8545'],
-      blockExplorerUrls: ['https://blockscout.com/shiden/'],
+      rpcUrls: ['https://shiden.public.blastapi.io'],
+      blockExplorerUrls: ['https://shiden.subscan.io/'],
     },
   ],
 };
